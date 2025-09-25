@@ -185,7 +185,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\bin\Release$(Platform)\Models\$
       <OutputFile>.\Debug/DegreeDay.bsc</OutputFile>
     </Bscmake>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\WBSFTools\BioSIM\bin\$(Configuration)(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\WBSFTools\BioSIM\bin\$(Configuration)$(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -302,7 +302,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\bin\Release$(Platform)\Models\$
       <OutputFile>.\Release/DegreeDay.bsc</OutputFile>
     </Bscmake>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\WBSFTools\BioSIM\bin\$(Configuration)(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\WBSFTools\BioSIM\bin\$(Configuration)$(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
