@@ -148,7 +148,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\bin\Release$(Platform)\Models\$
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\WBSF\src;C:\local\boost_1_89_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\WBSF\src;C:\local\boost_1_89_0</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -185,7 +185,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\bin\Release$(Platform)\Models\$
       <OutputFile>.\Debug/DegreeDay.bsc</OutputFile>
     </Bscmake>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\WBSFTools\BioSIM\bin\$(Configuration)$(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\WBSFTools\BioSIM\bin\$(Configuration)$(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -256,7 +256,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\bin\Release$(Platform)\Models\$
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\WBSF\src;C:\local\boost_1_89_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\WBSF\src;C:\local\boost_1_89_0</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>
       </StringPooling>
@@ -302,25 +302,25 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\bin\Release$(Platform)\Models\$
       <OutputFile>.\Release/DegreeDay.bsc</OutputFile>
     </Bscmake>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\WBSFTools\BioSIM\bin\$(Configuration)$(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\WBSFTools\BioSIM\bin\$(Configuration)$(Platform)\Models\$(TargetName)$(TargetExt)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DegreeDaysModel.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="DegreeDaysModel.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\WBSF\build\msvc\Basic.vcxproj">
+    <ProjectReference Include="..\..\..\WBSF\build\msvc\Basic.vcxproj">
       <Project>{6ea02a3c-e845-4db1-a86d-80b9fae21101}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\WBSF\build\msvc\ModelBased.vcxproj">
+    <ProjectReference Include="..\..\..\WBSF\build\msvc\ModelBased.vcxproj">
       <Project>{6bf374d7-930e-49d4-8e56-2d4098e859d1}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\WBSF\build\msvc\WeatherBased.vcxproj">
+    <ProjectReference Include="..\..\..\WBSF\build\msvc\WeatherBased.vcxproj">
       <Project>{57ff5b0d-8185-41b3-8005-d41eefde1028}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\DegreeDaysModel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\DegreeDaysModel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
