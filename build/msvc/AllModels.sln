@@ -1,0 +1,66 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35728.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DegreeDay", "DegreeDay.vcxproj", "{D37BD410-199B-4589-851E-369E4905455B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Basic", "..\..\..\WBSF\build\msvc\Basic.vcxproj", "{6EA02A3C-E845-4DB1-A86D-80B9FAE21101}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelBased", "..\..\..\WBSF\build\msvc\ModelBased.vcxproj", "{6BF374D7-930E-49D4-8E56-2D4098E859D1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WeatherBased", "..\..\..\WBSF\build\msvc\WeatherBased.vcxproj", "{57FF5B0D-8185-41B3-8005-D41EEFDE1028}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AllenWave", "AllenWave.vcxproj", "{B1AAC6D4-0C1E-4F0A-8133-2E1912AB0ECC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Climatic", "Climatic", "{A18BDB03-3969-4BFB-BB65-886102151F31}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DegreeHour", "DegreeHour.vcxproj", "{4F643939-41DC-4229-9C2F-7A451456A67D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D37BD410-199B-4589-851E-369E4905455B}.Debug|x64.ActiveCfg = Debug|x64
+		{D37BD410-199B-4589-851E-369E4905455B}.Debug|x64.Build.0 = Debug|x64
+		{D37BD410-199B-4589-851E-369E4905455B}.Release|x64.ActiveCfg = Release|x64
+		{D37BD410-199B-4589-851E-369E4905455B}.Release|x64.Build.0 = Release|x64
+		{6EA02A3C-E845-4DB1-A86D-80B9FAE21101}.Debug|x64.ActiveCfg = Debug|x64
+		{6EA02A3C-E845-4DB1-A86D-80B9FAE21101}.Debug|x64.Build.0 = Debug|x64
+		{6EA02A3C-E845-4DB1-A86D-80B9FAE21101}.Release|x64.ActiveCfg = Release|x64
+		{6EA02A3C-E845-4DB1-A86D-80B9FAE21101}.Release|x64.Build.0 = Release|x64
+		{6BF374D7-930E-49D4-8E56-2D4098E859D1}.Debug|x64.ActiveCfg = Debug|x64
+		{6BF374D7-930E-49D4-8E56-2D4098E859D1}.Debug|x64.Build.0 = Debug|x64
+		{6BF374D7-930E-49D4-8E56-2D4098E859D1}.Release|x64.ActiveCfg = Release|x64
+		{6BF374D7-930E-49D4-8E56-2D4098E859D1}.Release|x64.Build.0 = Release|x64
+		{57FF5B0D-8185-41B3-8005-D41EEFDE1028}.Debug|x64.ActiveCfg = Debug|x64
+		{57FF5B0D-8185-41B3-8005-D41EEFDE1028}.Debug|x64.Build.0 = Debug|x64
+		{57FF5B0D-8185-41B3-8005-D41EEFDE1028}.Release|x64.ActiveCfg = Release|x64
+		{57FF5B0D-8185-41B3-8005-D41EEFDE1028}.Release|x64.Build.0 = Release|x64
+		{B1AAC6D4-0C1E-4F0A-8133-2E1912AB0ECC}.Debug|x64.ActiveCfg = Debug|x64
+		{B1AAC6D4-0C1E-4F0A-8133-2E1912AB0ECC}.Debug|x64.Build.0 = Debug|x64
+		{B1AAC6D4-0C1E-4F0A-8133-2E1912AB0ECC}.Release|x64.ActiveCfg = Release|x64
+		{B1AAC6D4-0C1E-4F0A-8133-2E1912AB0ECC}.Release|x64.Build.0 = Release|x64
+		{4F643939-41DC-4229-9C2F-7A451456A67D}.Debug|x64.ActiveCfg = Debug|x64
+		{4F643939-41DC-4229-9C2F-7A451456A67D}.Debug|x64.Build.0 = Debug|x64
+		{4F643939-41DC-4229-9C2F-7A451456A67D}.Release|x64.ActiveCfg = Release|x64
+		{4F643939-41DC-4229-9C2F-7A451456A67D}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D37BD410-199B-4589-851E-369E4905455B} = {A18BDB03-3969-4BFB-BB65-886102151F31}
+		{6EA02A3C-E845-4DB1-A86D-80B9FAE21101} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6BF374D7-930E-49D4-8E56-2D4098E859D1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{57FF5B0D-8185-41B3-8005-D41EEFDE1028} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B1AAC6D4-0C1E-4F0A-8133-2E1912AB0ECC} = {A18BDB03-3969-4BFB-BB65-886102151F31}
+		{4F643939-41DC-4229-9C2F-7A451456A67D} = {A18BDB03-3969-4BFB-BB65-886102151F31}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A481D7EF-1634-48A3-803E-88537B0D7F5F}
+	EndGlobalSection
+EndGlobal
