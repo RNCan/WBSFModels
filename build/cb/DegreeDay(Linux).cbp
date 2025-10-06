@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debugx64/DegreeDay" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debugx64/DegreeDay.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="obj/Debugx64/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -37,12 +37,12 @@
 					<Add directory="../../../WBSF/lib/Debugx64" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='$if(yes){cp  &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../RNCan/Models/$(TARGET_OUTPUT_BASENAME).so&quot;}' />
+					<Add after='$if(yes){cp  &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;}' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Releasex64/DegreeDay" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Releasex64/DegreeDay.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="obj/Releasex64/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -62,17 +62,10 @@
 					<Add library="libWeatherBased.a" />
 					<Add library="libModelBased.a" />
 					<Add library="libBasic.a" />
-					<Add library="libboost_filesystem.a" />
-					<Add library="libboost_timer.a" />
-					<Add library="libboost_iostreams.a" />
-					<Add library="libboost_locale.a" />
-					<Add library="libboost_process.a" />
-					<Add library="libboost_serialization.a" />
-					<Add library="libgomp.a" />
 					<Add directory="../../../WBSF/lib/Releasex64" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='$if(yes){cp &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../RNCan/Models/$(TARGET_OUTPUT_BASENAME).so&quot;}' />
+					<Add after='$if(yes){cp &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;}' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
