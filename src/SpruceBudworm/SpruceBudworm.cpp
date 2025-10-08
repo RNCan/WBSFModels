@@ -20,6 +20,7 @@
 // 23/03/2010   Rémi Saint-Amant    Creation from old code
 //*****************************************************************************
 
+#include "Basic/Sun.h"
 #include "SpruceBudwormEquations.h"
 #include "SpruceBudworm.h"
 
@@ -45,7 +46,7 @@ namespace WBSF
 
 	static const double OVIPOSITING_STAGE_AGE = 0.1; //change by RSA 16-05-2018, was 0.05
 	static const double MINIMUM_AGE_LIFTOFF[2] = { 0.15, 0 };
-	
+
 	const double CSpruceBudworm::POTENTIAL_FECUNDITY = 200;
 	//const bool CSpruceBudworm::ALWAYSE_APPLY_ADULT_ATTRITION = true;
 
@@ -71,17 +72,17 @@ namespace WBSF
 		m_Fᴰ = CBioSIMModelBase::VMISS;
 		m_F = CBioSIMModelBase::VMISS;
 		m_A = Equations().get_A(m_sex);					//Generale forewing area [cm²]
-		
+
 		if (m_sex == FEMALE)
 		{
-			m_Fº = Round(Equations().get_Fº(m_A));		//generate fecundity without defoliation
-			m_Fᴰ = Round((1.0 - 0.0054*m_D)*m_Fº, 0);	//compute fecundity with defoliation
+			m_Fº = round(Equations().get_Fº(m_A));		//generate fecundity without defoliation
+			m_Fᴰ = round((1.0 - 0.0054 * m_D) * m_Fº, 0);	//compute fecundity with defoliation
 			m_F = m_Fᴰ;	//set current fecundity
-		} 
+		}
 
 		m_ξ = Equations().get_ξ(m_sex, m_A);			//generater weight term error
-		m_M = Equations().get_M(m_sex, m_A, GetG())*m_ξ;//compute weight
-		
+		m_M = Equations().get_M(m_sex, m_A, GetG()) * m_ξ;//compute weight
+
 		m_p_exodus = Equations().get_p_exodus();		//generate exodus liftoff position
 		m_bExodus = false;
 		m_bAlreadyExodus = false;
@@ -94,9 +95,9 @@ namespace WBSF
 		m_bMissingEnergyAlreadyApplied = false;
 		m_bKillByAttrition = false;
 
-		ASSERT(m_sex==MALE || m_Fº >= 0);
-		ASSERT(m_sex == MALE || m_Fᴰ >= 0);
-		ASSERT(m_M > 0);
+		assert(m_sex == MALE || m_Fº >= 0);
+		assert(m_sex == MALE || m_Fᴰ >= 0);
+		assert(m_M > 0);
 	}
 
 
@@ -130,7 +131,7 @@ namespace WBSF
 			m_p_exodus = in.m_p_exodus;
 			m_Fº = in.m_Fº;
 			m_Fᴰ = in.m_Fᴰ;
-			m_F = in.m_F; 
+			m_F = in.m_F;
 			m_bExodus = in.m_bExodus;
 			m_bAlreadyExodus = in.m_bAlreadyExodus;
 			m_D = in.m_D;
@@ -148,7 +149,8 @@ namespace WBSF
 	}
 	// Object destructor
 	CSpruceBudworm::~CSpruceBudworm(void)
-	{}
+	{
+	}
 
 
 	void CSpruceBudworm::ResetRelativeDevRate()
@@ -197,7 +199,7 @@ namespace WBSF
 				//double OH2 = maxOverheat * Fo;
 				//T += OH2;
 
-				
+
 			}
 		}
 
@@ -243,7 +245,7 @@ namespace WBSF
 		//verify adult longevity
 		if (GetStage() == ADULT && GetStand()->m_adult_longivity_max > NO_MAX_ADULT_LONGEVITY)
 		{
-			ASSERT(m_emergingPupaeDate.IsInit());
+			assert(m_emergingPupaeDate.is_init());
 			if (weather.GetTRef().as(CTM::DAILY) - m_emergingPupaeDate > GetStand()->m_adult_longivity_max)
 			{
 				//adult reach maximum longevity. Kill it.
@@ -274,7 +276,7 @@ namespace WBSF
 			return;
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps&&m_age < DEAD_ADULT; step++)
+		for (size_t step = 0; step < nbSteps && GetStage() < DEAD_ADULT; step++)
 		{
 			size_t h = step * GetTimeStep();
 			Live(weather[h], GetTimeStep());
@@ -296,22 +298,22 @@ namespace WBSF
 		assert(IsAlive() && m_sex == FEMALE);
 
 
-		if (GetStage() == ADULT && 
-			GetStageAge() > OVIPOSITING_STAGE_AGE && 
+		if (GetStage() == ADULT &&
+			GetStageAge() > OVIPOSITING_STAGE_AGE &&
 			weather[H_TNTX][MEAN] >= 10 &&
 			m_F > 0)
 		{
 			assert(m_Fᴰ >= 0);
 			assert(m_totalBroods >= 0 && m_totalBroods <= m_Fᴰ);
-			ASSERT(Round(m_F + m_totalBroods, 0) == m_Fᴰ);
+			assert(round(m_F + m_totalBroods, 0) == m_Fᴰ);
 
 			//brooding
 			double P = Equations().get_P(weather[H_TNTX][MEAN]);
-			ASSERT(P >= 0 && P < 1);
+			assert(P >= 0 && P < 1);
 
 			double broods = m_F * P;
-			ASSERT(broods < m_F);
-			ASSERT((m_totalBroods + broods) <= m_Fᴰ);
+			assert(broods < m_F);
+			assert((m_totalBroods + broods) <= m_Fᴰ);
 
 			//after regniere 1983 Equation [12] at x = 0 :  (29.8 *(1 - exp(-0.214))) = 5.74
 			if (m_F - broods < 5.74)//avoid very small egg deposition
@@ -322,13 +324,13 @@ namespace WBSF
 			m_totalBroods += broods;
 
 			m_F = m_Fᴰ - m_totalBroods;
-			ASSERT(m_totalBroods <= m_Fᴰ);
+			assert(m_totalBroods <= m_Fᴰ);
 
 			//Oviposition module after Régniere 1983
 			if (m_bFertil && m_broods > 0)
 			{
 				CSBWTree* pTree = GetTree();
-				CSBWStand* pStand = GetStand(); ASSERT(pStand);
+				CSBWStand* pStand = GetStand(); assert(pStand);
 
 				double scaleFactor = m_broods * m_scaleFactor;
 				CIndividualPtr object = make_shared<CSpruceBudworm>(GetHost(), weather.GetTRef(), EGG, RANDOM_SEX, pStand->m_bFertilEgg, m_generation + 1, scaleFactor);
@@ -337,7 +339,7 @@ namespace WBSF
 
 
 			//compute weight from forewing area and female gravidity
-			m_M = Equations().get_M(m_sex, m_A, GetG())*m_ξ;
+			m_M = Equations().get_M(m_sex, m_A, GetG()) * m_ξ;
 		}
 	}
 
@@ -358,7 +360,7 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = ATTRITION;
 		}
-		else if (m_overwinteringDate.IsInit() && m_emergingL2oDate.as(CTM::DAILY) == weather.GetTRef())
+		else if (m_overwinteringDate.is_init() && m_emergingL2oDate.as(CTM::DAILY) == weather.GetTRef())
 		{
 			//second generation L2o emerging:compute mortality
 			if (IsDeadByMissingEnergy())
@@ -379,7 +381,7 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = FROZEN;
 		}
-		
+
 
 	}
 
@@ -441,9 +443,9 @@ namespace WBSF
 			//Equation [5] in Régniere 1990
 			//Relative dev rate of L2o depend of the age of L2o
 			//Adjust Relative dev rate
-			double dprime = min(1.0, max(0.25, m_age - L2o));
+			double dprime = min(1.0, max(0.25, m_age - double(L2o)));
 			double tairp = max(T, 5.0);
-			double fat = .091*tairp*pow(dprime, (1.0 - 1.0 / (.091*tairp)));
+			double fat = .091 * tairp * pow(dprime, (1.0 - 1.0 / (.091 * tairp)));
 			RR *= fat;
 		}
 
@@ -507,7 +509,7 @@ namespace WBSF
 		if (T > 0 && P < 2.5 && W > 2.5)//No lift-off if hourly precipitation greater than 2.5 mm
 		{
 			double p = (C + tau - (2 * pow(tau, 3) / 3) + (pow(tau, 5) / 5)) / (2 * C);
-			ASSERT(p >= 0 && p <= 1);
+			assert(p >= 0 && p <= 1);
 
 			//Compute wing-beat
 			double Vᴸ = K * sqrt(m_M) / m_A;//compute liftoff wing-beat to fly with actual weight (Vᴸ)
@@ -524,26 +526,26 @@ namespace WBSF
 
 	double CSpruceBudworm::get_Tair(const CWeatherDay& weather, double h)
 	{
-		ASSERT(h >= 0 && h < 24);
+		assert(h >= 0 && h < 24);
 
 		size_t hº = size_t(h);
 		size_t h¹ = hº + 1;
-		ASSERT(h >= hº && h <= h¹);
-		ASSERT((h - hº) >= 0 && (h - hº) <= 1);
-		ASSERT((h¹ - h) >= 0 && (h¹ - h) <= 1);
+		assert(h >= hº && h <= h¹);
+		assert((h - hº) >= 0 && (h - hº) <= 1);
+		assert((h¹ - h) >= 0 && (h¹ - h) <= 1);
 
 		//temperature interpolation between 2 hours
 		const CHourlyData& wº = weather[hº];
 		const CHourlyData& w¹ = wº.GetNext();
-		double Tair = (h - hº)*w¹[H_TAIR] + (h¹ - h)*wº[H_TAIR];
+		double Tair = (h - hº) * w¹[H_TAIR] + (h¹ - h) * wº[H_TAIR];
 
-		ASSERT(!WEATHER::IsMissing(Tair));
+		assert(!WEATHER::IsMissing(Tair));
 		return Tair;
 	}
 
 	double CSpruceBudworm::get_Prcp(const CWeatherDay& weather, double h)
 	{
-		ASSERT(h >= 0 && h < 24);
+		assert(h >= 0 && h < 24);
 
 		double prcp = -999;
 
@@ -556,22 +558,22 @@ namespace WBSF
 
 	double CSpruceBudworm::get_WndS(const CWeatherDay& weather, double h)
 	{
-		ASSERT(h >= 0 && h < 24);
+		assert(h >= 0 && h < 24);
 
 		double wind = -999;
 
 		size_t hº = size_t(h);
 		size_t h¹ = hº + 1;
-		ASSERT(h >= hº && h <= h¹);
-		ASSERT((h - hº) >= 0 && (h - hº) <= 1);
-		ASSERT((h¹ - h) >= 0 && (h¹ - h) <= 1);
+		assert(h >= hº && h <= h¹);
+		assert((h - hº) >= 0 && (h - hº) <= 1);
+		assert((h¹ - h) >= 0 && (h¹ - h) <= 1);
 
 		if (!WEATHER::IsMissing(weather[hº][H_WNDS]) && !WEATHER::IsMissing(weather[hº][H_WNDS]))
 		{
 			//temperature interpolation between 2 hours
 			const CHourlyData& wº = weather[hº];
 			const CHourlyData& w¹ = wº.GetNext();
-			wind = (h - hº)*w¹[H_WNDS] + (h¹ - h)*wº[H_WNDS];
+			wind = (h - hº) * w¹[H_WNDS] + (h¹ - h) * wº[H_WNDS];
 		}
 
 		return wind;
@@ -583,13 +585,13 @@ namespace WBSF
 	//tᴹ [out]: end of liftoff [s] (since the begginning of the day)
 	//Base on: Modeling the circadian rhythm of migratory flight in spruce budworm
 	//Jacques Régnière, Matthew Garcia and Rémi St-Amant
-	bool CSpruceBudworm::get_t(const CWeatherDay& wº, __int64 &tº, __int64 &tᶜ, __int64 &tᴹ)
+	bool CSpruceBudworm::get_t(const CWeatherDay& wº, __int64& tº, __int64& tᶜ, __int64& tᴹ)
 	{
 		bool bRep = false;
-		
+
 		CSun sun(wº.GetLocation().m_lat, wº.GetLocation().m_lon, wº.GetLocation().GetTimeZone());
-		__int64 tᶳ = sun.GetSunset(wº.GetTRef())*3600;
-		if (tᶳ > 12*3600)//if sunset is after noon (avoid problem in north)
+		__int64 tᶳ = sun.GetSunset(wº.GetTRef()) * 3600;
+		if (tᶳ > 12 * 3600)//if sunset is after noon (avoid problem in north)
 		{
 			static const __int64 H19h30 = 18.5;//s at 18:30 normal time (=19:30 Daylight Saving Time)
 
@@ -613,8 +615,8 @@ namespace WBSF
 				tᶜ = tᶳ + (Δs * 3600);
 				tº = tᶜ + (Δo * 3600);
 				tᴹ = tº + (Δf * 3600);
-				ASSERT(tᶜ >= tº && tᶜ <= tᴹ);
-				ASSERT(tᶜ >= 0 && tᶜ < 24 * 3600);//tᶳ is sunset [s] since the beginning of the day
+				assert(tᶜ >= tº && tᶜ <= tᴹ);
+				assert(tᶜ >= 0 && tᶜ < 24 * 3600);//tᶳ is sunset [s] since the beginning of the day
 
 				bRep = true;
 			}
@@ -649,9 +651,9 @@ namespace WBSF
 		if (s >= L2 && s <= L6)
 		{
 			//Compute relative weight for a specific stage
-			double relativWeight = pow(10.0, (-2.436 + 0.597*(m_age - 0.5))) / AVERAGE_WEIGHT[s];
+			double relativWeight = pow(10.0, (-2.436 + 0.597 * (m_age - 0.5))) / AVERAGE_WEIGHT[s];
 			//Compute eaten foliage: a function of relative weight
-			eatenFoliage = FEDINS[s][m_sex] * RR*relativWeight;
+			eatenFoliage = FEDINS[s][m_sex] * RR * relativWeight;
 		}
 
 		return eatenFoliage;
@@ -697,7 +699,7 @@ namespace WBSF
 
 	bool CSpruceBudworm::IsDeadByMissingEnergy()
 	{
-		ASSERT(m_overwinteringDate.IsInit());
+		assert(m_overwinteringDate.is_init());
 
 		//L2o Survival module
 		bool bDead = false;
@@ -727,10 +729,10 @@ namespace WBSF
 		assert(m_sex == pBug->GetSex());
 
 		CSpruceBudworm* in = (CSpruceBudworm*)(pBug.get());
-		m_OWEnergy = (m_OWEnergy*m_scaleFactor + in->m_OWEnergy*in->m_scaleFactor) / (m_scaleFactor + in->m_scaleFactor);
-		m_eatenFoliage = (m_eatenFoliage*m_scaleFactor + in->m_eatenFoliage*in->m_scaleFactor) / (m_scaleFactor + in->m_scaleFactor);
+		m_OWEnergy = (m_OWEnergy * m_scaleFactor + in->m_OWEnergy * in->m_scaleFactor) / (m_scaleFactor + in->m_scaleFactor);
+		m_eatenFoliage = (m_eatenFoliage * m_scaleFactor + in->m_eatenFoliage * in->m_scaleFactor) / (m_scaleFactor + in->m_scaleFactor);
 
-		m_D = (m_D*m_scaleFactor + in->m_D*in->m_scaleFactor) / (m_scaleFactor + in->m_scaleFactor);
+		m_D = (m_D * m_scaleFactor + in->m_D * in->m_scaleFactor) / (m_scaleFactor + in->m_scaleFactor);
 
 		CIndividual::Pack(pBug);
 	}
@@ -755,7 +757,7 @@ namespace WBSF
 	{
 		if (weather[H_TMIN][MEAN] < -10)
 		{
-			if (weather.GetTRef().GetJDay() > 180 && !m_bAutumnCleaned)
+			if (weather.GetTRef().GetDOY() > 180 && !m_bAutumnCleaned)
 			{
 				m_bAutumnCleaned = true;
 
@@ -789,7 +791,7 @@ namespace WBSF
 
 		for (const_iterator it = begin(); it != end(); it++)
 		{
-			ASSERT((*it)->GetGeneration() == 1);
+			assert((*it)->GetGeneration() == 1);
 
 			CTRef ref = (*it)->GetCreationDate();
 			stat += ref.GetRef();
@@ -797,14 +799,14 @@ namespace WBSF
 
 		if (stat[NB_VALUE] > 0)
 		{
-			hatchDate.SetRef(int(Round(stat[MEAN])), CTM(CTRef::DAILY));
+			hatchDate.SetRef(int(round(stat[MEAN])), CTM(CTM::DAILY));
 			d = stat[VARIANCE];
 		}
 
 
 		return stat[NB_VALUE] > 0;
 	}
-	
+
 
 	//remove all bugs of generation 0 and all non L2o
 	void CSBWTree::CleanUp()

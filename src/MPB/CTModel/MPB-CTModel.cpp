@@ -14,10 +14,10 @@
 
 #include <time.h>
 #include <stdio.h>
-#include <math.h>
-#include <crtdbg.h>
+#include <cmath>
+#include <cassert>
 #include "Basic/UtilMath.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 
 
 namespace WBSF

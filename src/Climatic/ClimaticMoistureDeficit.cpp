@@ -7,10 +7,10 @@
 //**********************************************************************
 
 #include "ClimaticMoistureDeficit.h"
-#include "Basic/Evapotranspiration.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "Modelbased/EntryPoint.h"
 
 
 using namespace std;
@@ -66,7 +66,7 @@ namespace WBSF
 
 	ERMsg CClimaticMoistureDeficitModel::OnExecuteAnnual()
 	{
-		ASSERT(m_nb_years <= m_weather.size());
+		assert(m_nb_years <= m_weather.size());
 
 		ERMsg msg;
 
@@ -119,7 +119,7 @@ namespace WBSF
 
 	ERMsg CClimaticMoistureDeficitModel::OnExecuteMonthly()
 	{
-		ASSERT(m_nb_years <= m_weather.size());
+		assert(m_nb_years <= m_weather.size());
 
 		ERMsg msg;
 
@@ -163,10 +163,10 @@ namespace WBSF
 
 		double lat = m_info.m_loc.m_lat * PI / 180.0;//latitude in radian
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			const CWeatherDay& wDay = weather.GetDay(TRef);
-			double J = TRef.GetJDay() + 1;
+			double J = TRef.GetDOY() + 1;
 			double solar = 0.409 * sin(2 * PI * J / 365 - 1.39);
 			double Ws = acos(-tan(lat) * tan(solar));
 			double Dr = 1 + 0.033 * cos(2 * PI * J / 365);
@@ -245,7 +245,7 @@ namespace WBSF
 		CTPeriod pp(CTRef(year, AUGUST, DAY_01), CTRef(year, DECEMBER, DAY_31));
 
 		double FDD = 0;
-		for (CTRef TRef = pp.Begin(); TRef <= pp.End(); TRef++)
+		for (CTRef TRef = pp.begin(); TRef <= pp.end(); TRef++)
 		{
 			double Tair = weather.GetDay(TRef)[H_TNTX][MEAN];
 			if (Tair < threshold)
@@ -271,7 +271,7 @@ namespace WBSF
 		CTPeriod pp = output.GetTPeriod();
 
 		double CDD = 0;
-		for (CTRef TRef = pp.Begin(); TRef <= pp.End(); TRef++)
+		for (CTRef TRef = pp.begin(); TRef <= pp.end(); TRef++)
 			CDD += output[TRef][CDegreeDays::S_DD];
 
 

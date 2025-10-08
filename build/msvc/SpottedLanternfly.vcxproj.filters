@@ -7,24 +7,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SpottedLanternfly.cpp">
+    <ClCompile Include="..\..\src\SpottedLanternfly\SpottedLanternfly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpottedLanternflyEquations.cpp">
+    <ClCompile Include="..\..\src\SpottedLanternfly\SpottedLanternflyEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpottedLanternflyModel.cpp">
+    <ClCompile Include="..\..\src\SpottedLanternfly\SpottedLanternflyModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SpottedLanternfly.h">
+    <ClInclude Include="..\..\src\SpottedLanternfly\SpottedLanternfly.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpottedLanternflyEquations.h">
+    <ClInclude Include="..\..\src\SpottedLanternfly\SpottedLanternflyEquations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpottedLanternflyModel.h">
+    <ClInclude Include="..\..\src\SpottedLanternfly\SpottedLanternflyModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

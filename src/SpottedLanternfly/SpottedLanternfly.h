@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 //#include "ModelBase/ModelDistribution.h"
 #include "SpottedLanternflyEquations.h"
 
@@ -129,8 +129,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CLDWHost* CSpottedLanternfly::GetHost(){ return static_cast<CLDWHost*>(m_pHost); }
 	inline const CLDWHost* CSpottedLanternfly::GetHost()const{ return static_cast<const CLDWHost*>(m_pHost); }
-	inline CLDWStand* CSpottedLanternfly::GetStand(){ ASSERT(m_pHost); return static_cast<CLDWStand*>(GetHost()->GetStand()); }
-	inline const CLDWStand* CSpottedLanternfly::GetStand()const{ ASSERT(m_pHost); return static_cast<const CLDWStand*>(GetHost()->GetStand()); }
+	inline CLDWStand* CSpottedLanternfly::GetStand(){ assert(m_pHost); return static_cast<CLDWStand*>(GetHost()->GetStand()); }
+	inline const CLDWStand* CSpottedLanternfly::GetStand()const{ assert(m_pHost); return static_cast<const CLDWStand*>(GetHost()->GetStand()); }
 	inline const CSpottedLanternflyEquations& CSpottedLanternfly::Equations()const{ return GetStand()->m_equations; }
 
 

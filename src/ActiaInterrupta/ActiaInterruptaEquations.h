@@ -3,9 +3,9 @@
 //*****************************************************************************
 #pragma once
 
-#include <crtdbg.h>
-#include "ModelBase/EquationTableLookup.h"
-#include "ModelBase/DevRateEquation.h"
+#include <cassert>
+#include "ModelBased/EquationTableLookup.h"
+#include "ModelBased/DevRateEquation.h"
 
 
 namespace WBSF

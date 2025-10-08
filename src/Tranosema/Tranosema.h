@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "TranosemaEquations.h"
 
 
@@ -112,7 +112,7 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	//inline CIndividualPtrContainer* CTranosema::GetHost(){ return dynamic_cast<CIndividualPtrContainer*>(m_pHost); }
 	//inline const CIndividualPtrContainer* CTranosema::GetHost()const{ return dynamic_cast<const CIndividualPtrContainer*>(m_pHost); }
-	inline CTranosemaStand* CTranosema::GetStand(){ ASSERT(m_pHost); return static_cast<CTranosemaStand*>(m_pHost->GetStand()); }
-	inline const CTranosemaStand* CTranosema::GetStand()const{ ASSERT(m_pHost); return static_cast<const CTranosemaStand*>(m_pHost->GetStand()); }
+	inline CTranosemaStand* CTranosema::GetStand(){ assert(m_pHost); return static_cast<CTranosemaStand*>(m_pHost->GetStand()); }
+	inline const CTranosemaStand* CTranosema::GetStand()const{ assert(m_pHost); return static_cast<const CTranosemaStand*>(m_pHost->GetStand()); }
 	inline CTranosemaEquations& CTranosema::Equations(){ return GetStand()->m_equations; }
 }

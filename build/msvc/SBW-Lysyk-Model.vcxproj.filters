@@ -7,12 +7,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SBW-Lysyk-Model.cpp">
+    <ClCompile Include="..\..\src\SpruceBudworm\SBW-Lysyk-Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SBW-Lysyk-Model.h">
+    <ClInclude Include="..\..\src\SpruceBudworm\SBW-Lysyk-Model.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

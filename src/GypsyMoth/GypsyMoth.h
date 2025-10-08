@@ -1,9 +1,9 @@
 #pragma once
 
-#include <crtdbg.h>
+#include <cassert>
 #include <vector>
 #include "EggModel.h"
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 
 namespace WBSF

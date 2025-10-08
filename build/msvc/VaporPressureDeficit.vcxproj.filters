@@ -6,13 +6,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="VaporPressureDeficit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\src\Climatic\VaporPressureDeficit.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VaporPressureDeficit.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\Climatic\VaporPressureDeficit.h" />
   </ItemGroup>
 </Project>

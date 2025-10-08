@@ -7,8 +7,8 @@
 //*****************************************************************************
 
 #include "Basic/UtilStd.h"
-#include "Basic/SnowAnalysis.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "ModelBased/EntryPoint.h"
 #include "ActiaInterruptaModel.h"
 #include "ActiaInterrupta.h"
 
@@ -103,9 +103,9 @@ namespace WBSF
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		size_t maxG = min(NB_GENERATIONS, ActiaInterruptaStat.size()); 
-		m_output.Init(p.size(), p.Begin(), NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
+		m_output.Init(p, NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			for (size_t g = 0; g < maxG; g++)
 			{
@@ -134,7 +134,7 @@ namespace WBSF
 			//	TRef = p.Begin(); //no snow 
 
 			//get initial population 
-			CInitialPopulation initialPopulation(p.Begin(), 0, 1000, 100, MAGGOT, FEMALE, true, 0);
+			CInitialPopulation initialPopulation(p.begin(), 0, 1000, 100, MAGGOT, FEMALE, true, 0);
 
 			//Create stand
 			CActiaInterruptaStand stand(this);
@@ -159,13 +159,13 @@ namespace WBSF
 			
 			
 			//run the model for all days of all years
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
 
 				size_t nbGenerations = stand.GetFirstHost()->GetNbGeneration();
 				if (nbGenerations > stat.size())
-					stat.push_back(CModelStatVector(entirePeriod.GetNbRef(), entirePeriod.Begin(), NB_STATS, 0));
+					stat.push_back(CModelStatVector(entirePeriod, NB_STATS, 0));
 
 				for (size_t g = 0; g < nbGenerations; g++)
 					stand.GetStat(d, stat[g][d], g);
@@ -200,9 +200,9 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, ActiaInterruptaStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
-				CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 				m_output[TRef][O_A_NB_GENERATION] = maxG;
 
@@ -323,7 +323,7 @@ namespace WBSF
 	//
 	//		for(int i=0; i<(int)m_SAResult.size(); i++)
 	//		{
-	//			if( statSim.IsInside(m_SAResult[i].m_ref) )
+	//			if( statSim.is_inside(m_SAResult[i].m_ref) )
 	//			{
 	//				double AISim = statSim[ m_SAResult[i].m_ref ][S_AVERAGE_INSTAR];
 	//				//_ASSERTE( AISim >= 2&&AISim<=8);

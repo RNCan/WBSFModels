@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "Daily vs Hourly.h"
 
 
@@ -44,7 +44,7 @@ namespace WBSF
 		if (m_weather.IsHourly())
 		{
 			CWVariables vars = m_weather.GetVariables();
-			ASSERT(vars.count() == m_info.m_outputVariables.size());
+			assert(vars.count() == m_info.m_outputVariables.size());
 
 			CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 			m_output.Init(p, vars.count(), -999);
@@ -65,16 +65,16 @@ namespace WBSF
 								CTRef ref = wDay.GetTRef();
 								switch (v)
 								{
-								case H_TMIN: m_output[ref][vv] = Round(wDay[H_TMIN][LOWEST], 1); break;
-								case H_TAIR: m_output[ref][vv] = Round(wDay[H_TAIR][MEAN], 1); break;
-								case H_TMAX: m_output[ref][vv] = Round(wDay[H_TMAX][HIGHEST], 1); break;
-								case H_PRCP:  m_output[ref][vv] = Round(wDay[H_PRCP][SUM], 1); break;
-								case H_TDEW:  m_output[ref][vv] = Round(wDay[H_TDEW][MEAN], 1); break;
-								case H_RELH:  m_output[ref][vv] = Round(wDay[H_RELH][MEAN], 1); break;
-								case H_WNDS:  m_output[ref][vv] = Round(wDay[H_WNDS][MEAN], 1); break;
-								case H_WNDD:  m_output[ref][vv] = Round(wDay[H_WNDD][MEAN], 1); break;
-								case H_SRAD:  m_output[ref][vv] = Round(wDay[H_SRAD][MEAN], 1); break;
-								default: ASSERT(false);
+								case H_TMIN: m_output[ref][vv] = round(wDay[H_TMIN][LOWEST], 1); break;
+								case H_TAIR: m_output[ref][vv] = round(wDay[H_TAIR][MEAN], 1); break;
+								case H_TMAX: m_output[ref][vv] = round(wDay[H_TMAX][HIGHEST], 1); break;
+								case H_PRCP:  m_output[ref][vv] = round(wDay[H_PRCP][SUM], 1); break;
+								case H_TDEW:  m_output[ref][vv] = round(wDay[H_TDEW][MEAN], 1); break;
+								case H_RELH:  m_output[ref][vv] = round(wDay[H_RELH][MEAN], 1); break;
+								case H_WNDS:  m_output[ref][vv] = round(wDay[H_WNDS][MEAN], 1); break;
+								case H_WNDD:  m_output[ref][vv] = round(wDay[H_WNDD][MEAN], 1); break;
+								case H_SRAD:  m_output[ref][vv] = round(wDay[H_SRAD][MEAN], 1); break;
+								default: assert(false);
 								}
 								vv++;
 							}
@@ -97,7 +97,7 @@ namespace WBSF
 		if (m_weather.IsDaily())
 		{
 			CWVariables vars = m_weather.GetVariables();
-			ASSERT(vars.count() == m_info.m_outputVariables.size());
+			assert(vars.count() == m_info.m_outputVariables.size());
 
 			m_weather.ComputeHourlyVariables(); 
 
@@ -122,16 +122,16 @@ namespace WBSF
 									CTRef ref = wHour.GetTRef();
 									switch (v)
 									{
-									case H_TMIN: m_output[ref][vv] = Round(wHour[H_TMIN], 1); break;
-									case H_TAIR: m_output[ref][vv] = Round(wHour[H_TAIR], 1); break;
-									case H_TMAX: m_output[ref][vv] = Round(wHour[H_TMAX], 1); break;
-									case H_PRCP:  m_output[ref][vv] = Round(wHour[H_PRCP], 1); break;
-									case H_TDEW:  m_output[ref][vv] = Round(wHour[H_TDEW], 1); break;
-									case H_RELH:  m_output[ref][vv] = Round(wHour[H_RELH], 1); break;
-									case H_WNDS:  m_output[ref][vv] = Round(wHour[H_WNDS], 1); break;
-									case H_WNDD:  m_output[ref][vv] = Round(wHour[H_WNDD], 1); break;
-									case H_SRAD: m_output[ref][vv] = Round(wHour[H_SRAD], 1); break;
-									default: ASSERT(false);
+									case H_TMIN: m_output[ref][vv] = round(wHour[H_TMIN], 1); break;
+									case H_TAIR: m_output[ref][vv] = round(wHour[H_TAIR], 1); break;
+									case H_TMAX: m_output[ref][vv] = round(wHour[H_TMAX], 1); break;
+									case H_PRCP:  m_output[ref][vv] = round(wHour[H_PRCP], 1); break;
+									case H_TDEW:  m_output[ref][vv] = round(wHour[H_TDEW], 1); break;
+									case H_RELH:  m_output[ref][vv] = round(wHour[H_RELH], 1); break;
+									case H_WNDS:  m_output[ref][vv] = round(wHour[H_WNDS], 1); break;
+									case H_WNDD:  m_output[ref][vv] = round(wHour[H_WNDD], 1); break;
+									case H_SRAD: m_output[ref][vv] = round(wHour[H_SRAD], 1); break;
+									default: assert(false);
 									}
 									vv++;
 								}

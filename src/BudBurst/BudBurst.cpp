@@ -2,10 +2,10 @@
 //17/04/2019	1.0.0	Rémi Saint-Amant	Creation
 //*********************************************************************
 #include "BudBurst.h"
-#include "Basic/WeatherDefine.h"
-#include "Basic/DegreeDays.h"
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -113,7 +113,7 @@ namespace WBSF
 				CModelStatVector output;
 				CTRef BB = ExecuteDaily(m_weather[y], output);
 
-				if (BB.IsInit())
+				if (BB.is_init())
 				{
 					m_output[y][O_A_BUDBURST] = BB.GetRef();
 				}
@@ -129,7 +129,7 @@ namespace WBSF
 		ERMsg msg;
 
 		CTPeriod pp(m_weather.GetEntireTPeriod(CTM::ANNUAL));
-		pp.Begin().m_year++;
+		pp.begin().m_year++;
 		m_output.Init(pp, 3);
 
 
@@ -144,7 +144,7 @@ namespace WBSF
 
 			int year = m_weather[y].GetTRef().GetYear();
 			CTPeriod p(CTRef(year, DECEMBER, DAY_01), CTRef(year + 1, DECEMBER, DAY_01));
-			for (CTRef TRef = p.Begin(); TRef < p.End() && !budBurst.IsInit(); TRef++)
+			for (CTRef TRef = p.begin(); TRef < p.end() && !budBurst.is_init(); TRef++)
 			{
 				const CWeatherDay& wDay = m_weather.GetDay(TRef);
 
@@ -160,7 +160,7 @@ namespace WBSF
 				}
 			}
 
-			if (budBurst.IsInit())
+			if (budBurst.is_init())
 			{
 				m_output[y][O_A_DC] = dc;
 				m_output[y][O_A_SW] = Sw150 * exp(α2 * (dc - 150.0));
@@ -190,7 +190,7 @@ namespace WBSF
 			//int year = weather[y].GetTRef().GetYear();
 			//CTPeriod p(CJDayRef(year, m_beginDOY), CJDayRef(year + 1, m_beginDOY - 1));
 
-			//for (CTRef TRef = p.Begin(); TRef <= p.End() && !budBurst.IsInit(); TRef++)
+			//for (CTRef TRef = p.begin(); TRef <= p.end() && !budBurst.is_init(); TRef++)
 			//{
 			//	const CWeatherDay& wDay = weather.GetDay(TRef);
 
@@ -226,12 +226,12 @@ namespace WBSF
 			//int year = weather.GetTRef().GetYear();
 			CTPeriod p = weather[y].GetEntireTPeriod(CTM::DAILY);
 
-			for (CTRef TRef = p.Begin(); TRef <= p.End() & !budBurst.IsInit(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end() & !budBurst.is_init(); TRef++)
 			{
 				const CWeatherDay& wDay = weather[y].GetDay(TRef);
 
 				
-				if (TRef.GetJDay() >= m_beginDOY)
+				if (TRef.GetDOY() >= m_beginDOY)
 					CDD += DD[TRef][0];
 
 				//double BB = 1 / (1 + exp(-(CDD - m_Sw) / m_α2));
@@ -244,15 +244,15 @@ namespace WBSF
 				}
 			}
 
-			if (!budBurst.IsInit())
+			if (!budBurst.is_init())
 				return false;
 
 
 			//double pD = 1 - (CDD - m_Sw) / (DD[budBurst][0]);
 			double pD = ( m_Sw - (CDD- DD[budBurst][0])) / (DD[budBurst][0]);
-			ASSERT(pD >= 0 && pD <= 1);
-			//output[y][O_A_DC] = budBurst.GetJDay() + 1 + pD;
-			output[y][O_A_DC] = budBurst.GetJDay() + 1 - 1 + pD;
+			assert(pD >= 0 && pD <= 1);
+			//output[y][O_A_DC] = budBurst.GetDOY() + 1 + pD;
+			output[y][O_A_DC] = budBurst.GetDOY() + 1 - 1 + pD;
 
 
 
@@ -288,7 +288,7 @@ namespace WBSF
 	CTRef CBudBurst::ExecuteDaily(CWeatherYear& weather, CModelStatVector& output)
 	{
 		CTPeriod pp(weather.GetEntireTPeriod(CTM::DAILY));
-		//pp.Begin().m_year++;
+		//pp.begin().m_year++;
 
 		if (output.empty())
 			output.Init(pp, NB_DAILY_OUTPUTS);
@@ -306,18 +306,18 @@ namespace WBSF
 		int year = weather.GetTRef().GetYear();
 		CTPeriod p = weather.GetEntireTPeriod(CTM::DAILY);
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			const CWeatherDay& wDay = weather.GetDay(TRef);
 
-			if (TRef.GetJDay() >= m_beginDOY)
+			if (TRef.GetDOY() >= m_beginDOY)
 				CDD += DD[TRef][0];
 
 			double BB = 1 / (1 + exp(-(CDD - m_Sw) / m_α2));
 			output[TRef][O_D_DD] = CDD;
 			output[TRef][O_D_BB] = BB;
 
-			if (BB >= 0.5 && !budBurst.IsInit())
+			if (BB >= 0.5 && !budBurst.is_init())
 			{
 				budBurst = TRef;
 			}
@@ -330,7 +330,7 @@ namespace WBSF
 
 	enum { I_D_SPECIES, I_D_SOURCE, I_D_SITE, I_D_LATITUDE, I_D_LONGITUDE, I_D_ELEVATION, I_D_TYPE, I_D_PROVINCE, I_D_YEAR, I_D_DOY, I_D_BB0, I_D_BB1, NB_INPUTS_DAILY };
 
-	void CBudBurst::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CBudBurst::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		static const char* SPECIES_NAME[] = { "bf", "ws", "bs", "ns" };
 		if (data.size() == NB_INPUTS_DAILY)
@@ -339,11 +339,11 @@ namespace WBSF
 			{
 				CSAResult obs;
 
-				obs.m_ref = CJDayRef(stoi(data[I_D_YEAR]), stoi(data[I_D_DOY]) - 1);//convert DOY fropm 1 base to zero base
+				obs.m_ref = CDOYRef(stoi(data[I_D_YEAR]), stoi(data[I_D_DOY]) - 1);//convert DOY fropm 1 base to zero base
 				//obs.m_obs[0] = stod(data[I_D_BB1]) / (stod(data[I_D_BB0])+ stod(data[I_D_BB1]));
 				//obs.m_obs.push_back(stod(data[I_D_BB_DOY]));
-				//ASSERT(obs.m_obs[0] >= 0 && obs.m_obs[0] <= 1);
-				//ASSERT(obs.m_obs[1]==-999 || (obs.m_obs[1] >= 100 && obs.m_obs[1] <= 220));
+				//assert(obs.m_obs[0] >= 0 && obs.m_obs[0] <= 1);
+				//assert(obs.m_obs[1]==-999 || (obs.m_obs[1] >= 100 && obs.m_obs[1] <= 220));
 
 				obs.m_obs[0] = stod(data[I_D_BB0]);
 				obs.m_obs.push_back(stod(data[I_D_BB1]));
@@ -358,7 +358,7 @@ namespace WBSF
 
 
 	enum { I_SPECIES, I_SOURCE, I_SITE, I_LATITUDE, I_LONGITUDE, I_ELEVATION, I_YEAR, I_BUDBURST, I_PROVINCE, I_TYPE, NB_INPUTS };
-	void CBudBurst::AddAnnualResult(const StringVector& header, const StringVector& data)
+	void CBudBurst::AddAnnualResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		static const char* SPECIES_NAME[] = { "bf", "ws", "bs", "ns" };
 		if (data.size() == NB_INPUTS)
@@ -384,11 +384,11 @@ namespace WBSF
 	double GetSimDOY(const CModelStatVector& output, size_t col, CTRef& TRef, double BB)
 	{
 		double DOY = -999.0;
-		CTPeriod p(TRef.GetYear(), JANUARY, DAY_01, TRef.GetYear(), DECEMBER, DAY_31);
-		int pos = output.GetFirstIndex(col, ">", BB, 1, p);
-		if (pos > 0)
+		CTPeriod p(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
+		size_t pos = output.GetFirstIndex(col, ">", BB, 1, p);
+		if (pos != NOT_INIT)
 		{
-			DOY = Round((output.GetFirstTRef() + pos).GetJDay() + (BB - output[pos][col]) / (output[pos + 1][col] - output[pos][col]), 1);
+			DOY = round((output.GetFirstTRef() + int(pos)).GetDOY() + (BB - output[pos][col]) / (output[pos + 1][col] - output[pos][col]), 1);
 		}
 
 		return DOY;
@@ -404,10 +404,11 @@ namespace WBSF
 
 			if (m_data_weather.GetNbYears() == 0)
 			{
-				CTPeriod pp((*m_years.begin()) - 1, JANUARY, DAY_01, *m_years.rbegin(), DECEMBER, DAY_31);
-				pp.Transform(m_weather.GetEntireTPeriod());
-				pp = pp.Intersect(m_weather.GetEntireTPeriod());
-				if (pp.IsInit())
+				CTPeriod pp(CTRef((*m_years.begin()) - 1, JANUARY, DAY_01), CTRef(*m_years.rbegin(), DECEMBER, DAY_31));
+				//pp.Transform(m_weather.GetEntireTPeriod());
+				pp = pp.as(m_weather.GetTM());
+				pp = pp.intersect(m_weather.GetEntireTPeriod());
+				if (pp.is_init())
 				{
 					((CLocation&)m_data_weather) = m_weather;
 					m_data_weather.SetHourly(m_weather.IsHourly());
@@ -430,7 +431,7 @@ namespace WBSF
 			static const double MIN_BB_DOY = 0.05;
 			static const double MAX_BB_DOY = 0.95;
 			//
-			//			if (!m_BB_DOY_stat.IsInit() )
+			//			if (!m_BB_DOY_stat.is_init() )
 			//			{
 			//#pragma omp critical  
 			//				{
@@ -442,7 +443,7 @@ namespace WBSF
 			//						for (auto iit = results.begin(); iit != results.end(); iit++)
 			//						{
 			//							//if (iit->m_obs[0] >= MIN_BB_DOY && iit->m_obs[0] <= MAX_BB_DOY)
-			//							//m_BB_DOY_stat += iit->m_ref.GetJDay();
+			//							//m_BB_DOY_stat += iit->m_ref.GetDOY();
 			//							m_BB_DOY_stat += iit->m_obs[1];
 			//						}
 			//					}
@@ -462,17 +463,17 @@ namespace WBSF
 			double NLL = 0;
 			for (size_t i = 0; i < m_SAResult.size(); i++)
 			{
-				ASSERT(output.IsInside(m_SAResult[i].m_ref));
+				assert(output.is_inside(m_SAResult[i].m_ref));
 
 				/*	double obs_BB = m_SAResult[i].m_obs[0];
 					double sim_BB = output[m_SAResult[i].m_ref][O_D_BB];
 					stat.Add(obs_BB, sim_BB);*/
 
-					//double DOY = m_SAResult[i].m_ref.GetJDay();
+					//double DOY = m_SAResult[i].m_ref.GetDOY();
 					//double p = 1 / (1 + exp(-(DOY- m_Sw)/ m_α2));
 
 				double p = output[m_SAResult[i].m_ref][O_D_BB];
-				ASSERT(p >= 0 && p <= 1);
+				assert(p >= 0 && p <= 1);
 
 				double obs_BB0 = m_SAResult[i].m_obs[0];
 				double b0 = -obs_BB0 * log(max(DBL_MIN, (1 - p)));
@@ -524,10 +525,11 @@ namespace WBSF
 
 			if (m_data_weather.GetNbYears() == 0)
 			{
-				CTPeriod pp((*m_years.begin()) - 1, JANUARY, DAY_01, *m_years.rbegin(), DECEMBER, DAY_31);
-				pp.Transform(m_weather.GetEntireTPeriod());
-				pp = pp.Intersect(m_weather.GetEntireTPeriod());
-				if (pp.IsInit())
+				CTPeriod pp(CTRef((*m_years.begin()) - 1, JANUARY, DAY_01), CTRef(*m_years.rbegin(), DECEMBER, DAY_31));
+				//pp.Transform(m_weather.GetEntireTPeriod());
+				pp = pp.as(m_weather.GetTM());
+				pp = pp.intersect(m_weather.GetEntireTPeriod());
+				if (pp.is_init())
 				{
 					((CLocation&)m_data_weather) = m_weather;
 					m_data_weather.SetHourly(m_weather.IsHourly());
@@ -556,15 +558,15 @@ namespace WBSF
 
 			for (size_t i = 0; i < m_SAResult.size(); i++)
 			{
-				ASSERT(output.IsInside(m_SAResult[i].m_ref));
+				assert(output.is_inside(m_SAResult[i].m_ref));
 
-				//ASSERT(m_SAResult[i].m_obs[0] > -999 && output[m_SAResult[i].m_ref][O_BUDBURST] > -999);
+				//assert(m_SAResult[i].m_obs[0] > -999 && output[m_SAResult[i].m_ref][O_BUDBURST] > -999);
 
 				//CTRef TRef;
 				//TRef.SetRef(int(output[m_SAResult[i].m_ref][O_A_BUDBURST]), CTM(CTM::DAILY));
 
 				double obs_BB = m_SAResult[i].m_obs[0];
-				//double sim_BB = TRef.GetJDay();
+				//double sim_BB = TRef.GetDOY();
 				double sim_BB = output[m_SAResult[i].m_ref][O_A_DC];
 				stat.Add(obs_BB, sim_BB);
 

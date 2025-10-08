@@ -1,12 +1,12 @@
 #pragma once
 
-#include <wtypes.h>
+//#include <wtypes.h>
 #include <map>
 #include <array>
-#include "Basic/ERMsg/ERMsg.h"
-//#include "Basic/WeatherStation.h"
-#include "Basic/modelStat.h"
-#include "ModelBase\InputParam.h"
+#include "Basic/ERMsg.h"
+//#include "WeatherBased/WeatherStation.h"
+#include "Basic/ModelStat.h"
+#include "ModelBased/InputParam.h"
 
 
 namespace WBSF

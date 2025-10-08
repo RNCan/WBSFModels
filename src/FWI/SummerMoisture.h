@@ -1,8 +1,8 @@
 #pragma once
 #include "Basic/ERMsg.h"
-#include "Basic/WeatherStation.h"
-#include "Basic/modelStat.h"
-#include "ModelBase/InputParam.h"
+#include "Basic/ModelStat.h"
+#include "WeatherBased/WeatherStation.h"
+#include "ModelBased/InputParam.h"
 
 
 namespace WBSF

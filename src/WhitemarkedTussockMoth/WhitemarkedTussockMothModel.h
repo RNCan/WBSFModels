@@ -4,7 +4,10 @@
 //   parameters. If not provided, current.cfs in the current
 //   directory is used
 //***********************************************************
-#include "ModelBase/BioSIMModelBase.h"
+#pragma once
+
+
+#include "ModelBased/BioSIMModelBase.h"
 #include "WhitemarkedTussockMoth.h"
 namespace WBSF
 {
@@ -22,7 +25,7 @@ namespace WBSF
 
 		static CBioSIMModelBase* CreateObject(){ return new CWhitemarkedTussockMothModel; }
 
-		virtual void AddDailyResult(const StringVector& header, const StringVector& data)override;
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
 		virtual bool GetFValueDaily(CStatisticXY& stat)override;
 
 

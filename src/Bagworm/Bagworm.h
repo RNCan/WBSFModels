@@ -10,7 +10,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase\IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 
 namespace WBSF
 {

@@ -1,8 +1,9 @@
 ﻿//***********************************************************
 // 20/09/2023   Rémi Saint-Amant    Creation
 //***********************************************************
+#include "ModelBased/EntryPoint.h"
 #include "PopilliaJaponicaModel.h"
-#include "ModelBase/EntryPoint.h"
+
 
 
 using namespace WBSF::HOURLY_DATA;
@@ -87,7 +88,7 @@ namespace WBSF
 		{
 			enum TLocation{ NORTH_AMERICA, EUROPE, NB_LOCATIONS };
 			size_t location = parameters[c++].GetInt();
-			ASSERT(location < NB_LOCATIONS);
+			assert(location < NB_LOCATIONS);
 			
 			m_EOD = location == NORTH_AMERICA?CPopilliaJaponicaEquations::EOD_NA: CPopilliaJaponicaEquations::EOD_EU;
 			m_other = location == NORTH_AMERICA ? CPopilliaJaponicaEquations::OTHER_NA: CPopilliaJaponicaEquations::OTHER_EU;
@@ -108,7 +109,7 @@ namespace WBSF
 		//if (m_model == BILINEAR)
 		AETFactor = min(1.0, SMI / SMIcrit);
 		//		else if (m_model == QUADRATIC_LINEAR)
-			//		AETFactor = min(1.0, 2 * SMI / m_SMIcrit - Square(SMI / m_SMIcrit));
+			//		AETFactor = min(1.0, 2 * SMI / m_SMIcrit - square(SMI / m_SMIcrit));
 
 		return AETFactor;
 	}
@@ -355,7 +356,7 @@ namespace WBSF
 		//Create host
 		CPJNHostPtr pHost(new CPJNHost(&stand));
 
-		pHost->Initialize<CPopilliaJaponica>(CInitialPopulation(p.Begin(), 0, 400, 100, L3, RANDOM_SEX, true));
+		pHost->Initialize<CPopilliaJaponica>(CInitialPopulation(p.begin(), 0, 400, 100, L3, RANDOM_SEX, true));
 
 		//add host to stand			
 		stand.m_host.push_front(pHost);
@@ -363,10 +364,10 @@ namespace WBSF
 
 
 
-		for (CTRef d = p.Begin(); d <= p.End(); d++)
+		for (CTRef d = p.begin(); d <= p.end(); d++)
 		{
 			stand.Live(weather.GetDay(d));
-			//if (output.IsInside(d))
+			//if (output.is_inside(d))
 			stand.GetStat(d, output[d]);
 			output[d][S_TAIR] = weather.GetDay(d)[H_TNTX][MEAN];
 			output[d][S_SNDH] = weather.GetDay(d)[H_SNDH][MEAN];
@@ -386,14 +387,14 @@ namespace WBSF
 				if (s != S_L3)
 				{
 					CStatistic stat = output.GetStat(s, p);
-					if (stat.IsInit() && stat[SUM] > 0)
+					if (stat.is_init() && stat[SUM] > 0)
 					{
 						double S = stat[(s != S_DEAD_ADULT) ? SUM : HIGHEST];
-						output[p.Begin()][s] = 100 * output[p.Begin()][s] / S;
-						for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+						output[p.begin()][s] = 100 * output[p.begin()][s] / S;
+						for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 							output[TRef][s] = ((s != S_DEAD_ADULT) ? output[TRef - 1][s] : 0) + 100 * output[TRef][s] / S;
 
-						for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+						for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 						{
 							if (output[TRef][s] < 0.1)
 								output[TRef][s] = 0.0;
@@ -418,9 +419,9 @@ namespace WBSF
 	}
 
 	enum TInputCatch { I_SOURCE, I_SITE, I_DATE, I_ADULT_EMERGENCE, I_ADULT_EMERGENCE_CUMUL, I_ADULT_CATCH, I_ADULT_CATCH_CUMUL, NB_INPUTS };
-	void CPopilliaJaponicaModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CPopilliaJaponicaModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == NB_INPUTS);
+		assert(data.size() == NB_INPUTS);
 
 		CSAResult obs;
 
@@ -431,7 +432,7 @@ namespace WBSF
 			obs.m_obs[s] = (data[s] != "NA") ? stod(data[s]) : -999.0;
 
 			if (obs.m_obs[s] >= 0)
-				m_DOY[s] += obs.m_ref.GetJDay();
+				m_DOY[s] += obs.m_ref.GetDOY();
 		}
 
 		m_years.insert(obs.m_ref.GetYear());
@@ -672,7 +673,7 @@ namespace WBSF
 								double sim_DOY = GetSimDOY(V_O[v], m_SAResult[i].m_ref, obs, output);
 								if (sim_DOY > -999)
 								{
-									double obs_DOYp = GetDOYPercent(V_I[v], m_SAResult[i].m_ref.GetJDay());
+									double obs_DOYp = GetDOYPercent(V_I[v], m_SAResult[i].m_ref.GetDOY());
 									double sim_DOYp = GetDOYPercent(V_I[v], sim_DOY);
 
 									//for (size_t ii = 0; ii < log(3 * Ne); ii++)
@@ -693,7 +694,7 @@ namespace WBSF
 
 	double CPopilliaJaponicaModel::GetSimDOY(size_t s, CTRef TRefO, double obs, const CModelStatVector& output)
 	{
-		ASSERT(obs > -999);
+		assert(obs > -999);
 
 		double DOY = -999;
 
@@ -703,11 +704,11 @@ namespace WBSF
 		//if (obs >= 100)
 			//obs = 99.99;//to avoid some problem of truncation
 
-		long index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(TRefO.GetYear(), JANUARY, DAY_01, TRefO.GetYear(), DECEMBER, DAY_31));
-		if (index >= 1)
+		size_t index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(CTRef(TRefO.GetYear(), JANUARY, DAY_01), CTRef(TRefO.GetYear(), DECEMBER, DAY_31)));
+		if (index  != NOT_INIT && index >= 1)
 		{
-			double obsX1 = output.GetFirstTRef().GetJDay() + index;
-			double obsX2 = output.GetFirstTRef().GetJDay() + index + 1;
+			double obsX1 = output.GetFirstTRef().GetDOY() + index;
+			double obsX2 = output.GetFirstTRef().GetDOY() + index + 1;
 
 			double obsY1 = output[index][s];
 			double obsY2 = output[index + 1][s];
@@ -715,7 +716,7 @@ namespace WBSF
 			{
 				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 				double obsX = obsX1 + (obs - obsY1) * slope;
-				ASSERT(!_isnan(obsX) && _finite(obsX));
+				assert(!_isnan(obsX) && _finite(obsX));
 
 				DOY = obsX;
 			}

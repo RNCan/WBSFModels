@@ -3,7 +3,7 @@
 #include "../MPBDevRates.h"
 #include "../MPBColdTolerance.h"
 #include "Basic/UtilTime.h"
-#include "ModelBase\IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 
 
 
@@ -175,7 +175,7 @@ namespace WBSF
 
 		static double GetNbInitialAttack(double nbTree, double Amax, double n0)
 		{
-			ASSERT(nbTree >= 1);
+			assert(nbTree >= 1);
 			return (nbTree - 1)*Amax + n0;
 		}
 
@@ -258,7 +258,7 @@ namespace WBSF
 
 		virtual void Live(const CWeatherDay& weaDay)
 		{
-			ASSERT(m_pTree.get());
+			assert(m_pTree.get());
 			if (!m_bInit)
 			{
 				m_nbInfestedTrees = GetNbInitialInfestedTrees();
@@ -278,7 +278,7 @@ namespace WBSF
 
 		virtual CHostPtr GetNearestHost(CHost* pHost){ return m_pTree; }
 
-		const CMPBColdTolerance& GetColdTolerance()const{ ASSERT(m_coldTolerance.GetResult().size() > 0); return m_coldTolerance; }
+		const CMPBColdTolerance& GetColdTolerance()const{ assert(m_coldTolerance.GetResult().size() > 0); return m_coldTolerance; }
 
 
 		bool AdjustPopulation()

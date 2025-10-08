@@ -20,7 +20,7 @@ namespace WBSF
 
 	//*********************************************************************************
 	//CMeteorusTrachynotus_OBL_SBW class
-	CMeteorusTrachynotus_OBL_SBW::CMeteorusTrachynotus_OBL_SBW(CHost* pHost, CTRef creationDate, double age, TSex sex, bool bFertil, size_t generation, double scaleFactor, CIndividualPtr& pAssociateHost) :
+	CMeteorusTrachynotus_OBL_SBW::CMeteorusTrachynotus_OBL_SBW(CHost* pHost, CTRef creationDate, double age, TSex sex, bool bFertil, size_t generation, double scaleFactor, const CIndividualPtr& pAssociateHost) :
 		CMeteorusTrachynotus(pHost, creationDate, age, sex, bFertil, generation, scaleFactor)
 	{
 		m_pAssociateHost = pAssociateHost;
@@ -65,11 +65,11 @@ namespace WBSF
 		//adjust the number of host available
 
 		CMeteorusTrachynotus_OBL_SBW_Stand* pStand = GetStand();
-		ASSERT(pStand->m_OBLStand.m_host.size() == 1);
-		ASSERT(pStand->m_SBWStand.m_host.size() == 1);
+		assert(pStand->m_OBLStand.m_host.size() == 1);
+		assert(pStand->m_SBWStand.m_host.size() == 1);
 
 
-		if (m_sex == FEMALE && m_age >= ADULT && GetStageAge() >= GetStand()->m_preOvip)
+		if (m_sex == FEMALE && GetStage() >= ADULT && GetStageAge() >= GetStand()->m_preOvip)
 		{
 			//m_Nh is only updated for female
 			const std::shared_ptr<WBSF::CHost>& pOBLObjects = pStand->m_OBLStand.m_host.front();
@@ -105,12 +105,12 @@ namespace WBSF
 
 
 		if (!m_pAssociateHost.expired() && 
-			!m_diapauseTRef.IsInit() && 
+			!m_diapauseTRef.is_init() && 
 			GetGeneration()!=0 &&
 			( GetStage() == IMMATURE) )
 		{
 			double dayLength = weather.GetDayLength() / 3600.; //in hours
-			if (weather.GetTRef().GetJDay() > 173 && dayLength < GetStand()->m_criticalDaylength)
+			if (weather.GetTRef().GetDOY() > 173 && dayLength < GetStand()->m_criticalDaylength)
 			{
 				//if the host is induced in diapause, MeteorusTrachynotus enters in diapause. 
 				if (m_pAssociateHost.lock()->IsInDiapause(weather.GetTRef()))
@@ -126,8 +126,8 @@ namespace WBSF
 
 	void CMeteorusTrachynotus_OBL_SBW::Brood(const CWeatherDay& weather)
 	{
-		ASSERT(IsAlive() && m_sex == FEMALE);
-		ASSERT(m_totalBroods <= m_Pmax + 1);
+		assert(IsAlive() && m_sex == FEMALE);
+		assert(m_totalBroods <= m_Pmax + 1);
 
 		CMeteorusTrachynotus::Brood(weather);
 
@@ -137,9 +137,9 @@ namespace WBSF
 		//Oviposition module after Régniere 1983
 		if (m_bFertil && m_broods > 0)
 		{
-			ASSERT(m_age >= ADULT);
+			assert(m_age >= ADULT);
 
-			CMeteorusTrachynotus_OBL_SBW_Stand* pStand = GetStand(); ASSERT(pStand);
+			CMeteorusTrachynotus_OBL_SBW_Stand* pStand = GetStand(); assert(pStand);
 			CIndividualPtr pAssociateHost = pStand->SelectRandomHost(true);
 
 			double attRate = pStand->m_generationAttrition;//1% of survival by default
@@ -269,8 +269,8 @@ namespace WBSF
 		CMeteorusTrachynotusStand::GetStat(d, stat, generation);
 
 
-		ASSERT(m_OBLStand.m_host.size() == 1);
-		ASSERT(m_SBWStand.m_host.size() == 1);
+		assert(m_OBLStand.m_host.size() == 1);
+		assert(m_SBWStand.m_host.size() == 1);
 
 		const std::shared_ptr<WBSF::CHost>& pOBLObjects = m_OBLStand.m_host.front();
 		for (auto it = pOBLObjects->begin(); it != pOBLObjects->end(); it++)
@@ -311,9 +311,9 @@ namespace WBSF
 			for (CIndividualPtrContainer::iterator it = pObjects->begin(); it != pObjects->end(); it++)
 			{
 				CIndividual* pInd = it->get();
-				ASSERT(pInd != NULL);
+				assert(pInd != NULL);
 				CMeteorusTrachynotus_OBL_SBW* pMeteorusTrachynotus = static_cast<CMeteorusTrachynotus_OBL_SBW*>(pInd);
-				ASSERT(pMeteorusTrachynotus);
+				assert(pMeteorusTrachynotus);
 
 				if (pMeteorusTrachynotus->m_pAssociateHost.expired())
 				{
@@ -354,9 +354,9 @@ namespace WBSF
 		CIndividualPtr pHost;
 
 		const std::shared_ptr<WBSF::CHost>& pOBLObjects = m_OBLStand.m_host.front();
-		ASSERT(!pOBLObjects->empty());
+		assert(!pOBLObjects->empty());
 		const std::shared_ptr<WBSF::CHost>& pSBWObjects = m_SBWStand.m_host.front();
-		ASSERT(!pSBWObjects->empty());
+		assert(!pSBWObjects->empty());
 
 
 		double nbAttackable = 0;
@@ -416,7 +416,7 @@ namespace WBSF
 			}
 		}
 
-		ASSERT(pHost);
+		assert(pHost);
 		return pHost;
 	}
 }

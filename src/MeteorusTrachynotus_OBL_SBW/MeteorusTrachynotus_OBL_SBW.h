@@ -9,10 +9,10 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
-#include "MeteorusTrachynotus.h"
-#include "ObliqueBandedLeafroller.h"
-#include "SpruceBudworm.h"
+#include "ModelBased/IndividualBase.h"
+#include "MeteorusTrachynotus/MeteorusTrachynotus.h"
+#include "ObliqueBandedLeafroller/ObliqueBandedLeafroller.h"
+#include "SpruceBudworm/SpruceBudworm.h"
 
 
 namespace WBSF
@@ -35,7 +35,7 @@ namespace WBSF
 	{
 	public:
 
-		CMeteorusTrachynotus_OBL_SBW(CHost* pHost, CTRef creationDate = CTRef(), double age = MeteorusTrachynotus::IMMATURE, WBSF::TSex sex = WBSF::RANDOM_SEX, bool bFertil = true, size_t generation = 0, double scaleFactor = 1, CIndividualPtr& pAssociateHost = CIndividualPtr());
+		CMeteorusTrachynotus_OBL_SBW(CHost* pHost, CTRef creationDate = CTRef(), double age = MeteorusTrachynotus::IMMATURE, WBSF::TSex sex = WBSF::RANDOM_SEX, bool bFertil = true, size_t generation = 0, double scaleFactor = 1, const CIndividualPtr& pAssociateHost = CIndividualPtr());
 		CMeteorusTrachynotus_OBL_SBW(const CMeteorusTrachynotus_OBL_SBW& in) :CMeteorusTrachynotus(in){ operator=(in); }
 		CMeteorusTrachynotus_OBL_SBW& operator=(const CMeteorusTrachynotus_OBL_SBW& in);
 
@@ -115,10 +115,10 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CMeteorusTrachynotus_OBL_SBW_Host* CMeteorusTrachynotus_OBL_SBW::GetHost(){ return static_cast<CMeteorusTrachynotus_OBL_SBW_Host*>(m_pHost); }
 	inline const CMeteorusTrachynotus_OBL_SBW_Host* CMeteorusTrachynotus_OBL_SBW::GetHost()const{ return static_cast<const CMeteorusTrachynotus_OBL_SBW_Host*>(m_pHost); }
-	inline CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW::GetStand(){ ASSERT(m_pHost); return static_cast<CMeteorusTrachynotus_OBL_SBW_Stand*>(GetHost()->GetStand()); }
-	inline const CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW::GetStand()const{ ASSERT(m_pHost); return static_cast<const CMeteorusTrachynotus_OBL_SBW_Stand*>(GetHost()->GetStand()); }
-	inline CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW_Host::GetStand(){ ASSERT(m_pStand); return static_cast<CMeteorusTrachynotus_OBL_SBW_Stand*>(m_pStand); }
-	inline const CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW_Host::GetStand()const{ ASSERT(m_pStand); return static_cast<const CMeteorusTrachynotus_OBL_SBW_Stand*>(m_pStand); }
+	inline CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW::GetStand(){ assert(m_pHost); return static_cast<CMeteorusTrachynotus_OBL_SBW_Stand*>(GetHost()->GetStand()); }
+	inline const CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW::GetStand()const{ assert(m_pHost); return static_cast<const CMeteorusTrachynotus_OBL_SBW_Stand*>(GetHost()->GetStand()); }
+	inline CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW_Host::GetStand(){ assert(m_pStand); return static_cast<CMeteorusTrachynotus_OBL_SBW_Stand*>(m_pStand); }
+	inline const CMeteorusTrachynotus_OBL_SBW_Stand* CMeteorusTrachynotus_OBL_SBW_Host::GetStand()const{ assert(m_pStand); return static_cast<const CMeteorusTrachynotus_OBL_SBW_Stand*>(m_pStand); }
 
 	inline CMeteorusTrachynotusEquations& CMeteorusTrachynotus_OBL_SBW::Equations(){ return GetStand()->m_equations; }
 }

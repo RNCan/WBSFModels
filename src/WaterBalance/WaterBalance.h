@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "Basic/UtilTime.h"
-#include "gdal/include/ogrsf_frmts.h"
+#include "gdal/ogrsf_frmts.h"
 
 
 namespace WBSF

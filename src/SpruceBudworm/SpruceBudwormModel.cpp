@@ -28,7 +28,7 @@
 //*****************************************************************************
 #include "Basic/ModelStat.h"
 #include "Basic/UtilStd.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "SpruceBudwormModel.h"
 #include "SpruceBudworm.h"
 
@@ -114,10 +114,10 @@ namespace WBSF
 						TRef.clear();
 				}
 
-				if (TRef.IsValid() )
+				if (TRef.is_valid() )
 				{
 					m_fixDate = TRef;
-					m_fixAI = as<double>(fixeAI);
+					m_fixAI = std::stod(fixeAI);
 				}
 				else
 				{
@@ -134,7 +134,7 @@ namespace WBSF
 
 		}
 
-		if (msg&&m_fixDate.IsInit())
+		if (msg&&m_fixDate.is_init())
 		{
 			if ( m_weather.GetNbYears() == 1)
 			{
@@ -181,16 +181,16 @@ namespace WBSF
 
 			CStatistic statL22;
 			CTPeriod p = m_weather[y + 1].GetEntireTPeriod(CTM(CTM::DAILY));
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 				statL22 += stat[d][S_L22];
 
 			
 			double gr = statL22[HIGHEST];
-			double L2o2 = stat[p.Begin()][S_L2o2];
-			//if (statL22.IsInit())
+			double L2o2 = stat[p.begin()][S_L2o2];
+			//if (statL22.is_init())
 
 			//here we take the highest because we stop the development at L22. So L22 is cumulative here.
-			ASSERT(gr >= 0 && gr < 3000);
+			assert(gr >= 0 && gr < 3000);
 			stateA[y][O_GROWTH_RATE] = gr / 100; //initial population is 100 insect
 			stateA[y][O_PROGENY_RATE] = L2o2 / 100;
 
@@ -221,7 +221,7 @@ namespace WBSF
 
 		//This is where the model is actually executed
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
-		stat.Init(p.GetNbRef(), p.Begin(), NB_STATS, 0, DAILY_HEADER);
+		stat.Init(p, NB_STATS, 0, DAILY_HEADER);
 
 		//we simulate 2 years at a time. 
 		//we also manager the possibility to have only one year
@@ -245,8 +245,8 @@ namespace WBSF
 			pTree->m_kind = m_treeKind;
 			pTree->m_nbMinObjects = 100;
 			pTree->m_nbMaxObjects = 1000;
-			pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.Begin(), 0, 400, 100, L2o, RANDOM_SEX, m_bFertility, 0));
-			//pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.Begin(), 0, 1, 1, L2o, FEMALE, m_bFertility, 0));
+			pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 400, 100, L2o, RANDOM_SEX, m_bFertility, 0));
+			//pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 1, 1, L2o, FEMALE, m_bFertility, 0));
 
 			//add tree to stand			
 			stand.m_host.push_front(pTree);
@@ -266,7 +266,7 @@ namespace WBSF
 
 				CTPeriod p = m_weather[yy].GetEntireTPeriod(CTM(CTM::DAILY));
 
-				for (CTRef d = p.Begin(); d <= p.End(); d++)
+				for (CTRef d = p.begin(); d <= p.end(); d++)
 				{
 					stand.Live(m_weather.GetDay(d));
 
@@ -294,14 +294,14 @@ namespace WBSF
 
 
 	//simulated annaling 
-	void CSpruceBudwormModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CSpruceBudwormModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		//transform value to date/stage
-		ASSERT(header[3] == "Year");
-		ASSERT(header[4] == "Month");
-		ASSERT(header[5] == "Day");
-		ASSERT(header[12] == "NbInds");
-		ASSERT(header[13] == "AI");
+		assert(header[3] == "Year");
+		assert(header[4] == "Month");
+		assert(header[5] == "Day");
+		assert(header[12] == "NbInds");
+		assert(header[13] == "AI");
 
 		CTRef ref(ToShort(data[3]), ToShort(data[4]) - 1, ToShort(data[5]) - 1);
 		std::vector<double> obs;
@@ -339,14 +339,14 @@ namespace WBSF
 				m_weather.RemoveYear(m_weather.GetNbYear()-1);
 				*/
 
-			ASSERT(m_weather.GetFirstYear() == m_firstYear);
-			ASSERT(m_weather.GetLastYear() == m_lastYear);
+			assert(m_weather.GetFirstYear() == m_firstYear);
+			assert(m_weather.GetLastYear() == m_lastYear);
 			ExecuteDaily(statSim);
 
 
 			for (int i = 0; i < (int)m_SAResult.size(); i++)
 			{
-				if (statSim.IsInside(m_SAResult[i].m_ref))
+				if (statSim.is_inside(m_SAResult[i].m_ref))
 				{
 					double AISim = statSim[m_SAResult[i].m_ref][S_AVERAGE_INSTAR];
 					//_ASSERTE( AISim >= 2&&AISim<=8);

@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ClimaticMPB.cpp">
+    <ClCompile Include="..\..\src\MPB\ClimaticMPB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ClimaticMPB.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="..\..\src\MPB\ClimaticMPB.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

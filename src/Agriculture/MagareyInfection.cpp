@@ -3,11 +3,11 @@
 // 06/04/2013			Rémi Saint-Amant	Create
 //**********************************************************************
 
-#include <math.h>
-#include <crtdbg.h>
-#include "Basic/Evapotranspiration.h"
-#include "ModelBase/EntryPoint.h"
-#include "..\Climatic\WetnessDuration.h"
+#include <cmath>
+#include <cassert>
+#include "WeatherBased/Evapotranspiration.h"
+#include "ModelBased/EntryPoint.h"
+#include "../../src/Climatic/WetnessDuration.h"
 #include "MagareyInfection.h"
 
 using namespace std;
@@ -71,7 +71,7 @@ namespace WBSF
 		m_interruption = parameters[c++].GetReal();
 		m_beginning = parameters[c++].GetTRef();
 
-		if (!m_beginning.IsInit())
+		if (!m_beginning.is_init())
 			msg.ajoute("Invalid beginning date");
 
 
@@ -80,10 +80,10 @@ namespace WBSF
 	}
 	//
 	//
-	//void CMagareyInfectionModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	//void CMagareyInfectionModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	//{
-	//	ASSERT( header.size() == NB_PARAM*2+1 );
-	//	ASSERT( header[0] == "ID");
+	//	assert( header.size() == NB_PARAM*2+1 );
+	//	assert( header[0] == "ID");
 	//	
 	//
 	//	std::vector<double> obs(16);
@@ -444,7 +444,7 @@ namespace WBSF
 			CTRef beginning = m_beginning;
 			beginning.m_year = weather[y].GetTRef().GetYear();
 
-			for (CTRef d = beginning; d <= weather[y].GetEntireTPeriod().End(); d++)
+			for (CTRef d = beginning; d <= weather[y].GetEntireTPeriod().end(); d++)
 			{
 				bool bFirstDay = d == weather[0].GetTRef();
 				const CWeatherDay& wDay = weather.GetDay(d);

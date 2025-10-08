@@ -6,8 +6,8 @@
 //Ung (1999)
 
 #include "SiteIndexClimate.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/WeatherStation.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/WeatherStation.h"
 
 using namespace WBSF::HOURLY_DATA;
 using namespace std;

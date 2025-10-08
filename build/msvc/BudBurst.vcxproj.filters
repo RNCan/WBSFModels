@@ -7,13 +7,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BudBurst.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\src\BudBurst\BudBurst.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BudBurst.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\BudBurst\BudBurst.h" />
   </ItemGroup>
 </Project>

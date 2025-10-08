@@ -19,9 +19,9 @@
 // 23/01/2009   Rémi Saint-Amant    Creation
 //*****************************************************************************
 
-#include <math.h>
+#include <cmath>
 #include "basic/UtilMath.h"
-#include "basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "WSpruceBudworm.h"
 
 using namespace WBSF;
@@ -96,10 +96,10 @@ namespace WBSF
 		double Tmean = weather[H_TNTX][MEAN];
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps&&m_age < DEAD_ADULT; step++)
+		for (size_t step = 0; step < nbSteps&&GetStage() < DEAD_ADULT; step++)
 		{
 			//Develops all individuals, including ovipositing adults
-			ASSERT(m_status == HEALTHY);
+			assert(m_status == HEALTHY);
 
 			size_t h = step*GetTimeStep();
 			size_t s = GetStage();
@@ -108,10 +108,10 @@ namespace WBSF
 
 			const CWSBTableLookup& equations = Equations();
 			double RR = m_relativeDevRate[s] * equations.GetRate(s, T) / nbSteps;
-			ASSERT(RR >= 0);
+			assert(RR >= 0);
 
 			//Postdiapause development of wSBW starts accumulating on Julian day 60 (1 March).
-			if (s == L2o && weather.GetTRef().GetJDay() < 60)
+			if (s == L2o && weather.GetTRef().GetDOY() < 60)
 				RR = 0.0;
 
 			if (s == EGG && ChangeStage(RR))
@@ -135,12 +135,12 @@ namespace WBSF
 
 	void CWSpruceBudworm::Brood(const CWeatherDay& weather)
 	{
-		ASSERT(IsAlive() && m_sex == FEMALE);
+		assert(IsAlive() && m_sex == FEMALE);
 		
 		CIndividual::Brood(weather);
 		//Each day t, at temperature T
 		//Females begin oviposition after 1 day out of 15 at 20 C, 1 days out of 30 at 12 C: 6.7% of lifespan
-		if (m_age >= ADULT + 0.067)
+		if (m_age >= double(ADULT) + 0.067)
 		{
 			_ASSERTE(IsAlive());
 
@@ -156,11 +156,11 @@ namespace WBSF
 			if (m_bFertil && m_broods > 0)
 			{
 				//When the bugs are killed by tree at the end of the day, they must not create eggs
-				CWSBStand* pStand = GetStand(); ASSERT(pStand);
+				CWSBStand* pStand = GetStand(); assert(pStand);
 
 				//attrition turned off,
 				double scaleFactor = m_broods*pStand->m_survivalRate*m_scaleFactor;
-				ASSERT(scaleFactor > 0);
+				assert(scaleFactor > 0);
 
 				CIndividualPtr pBug = make_shared<CWSpruceBudworm>(GetHost(), weather.GetTRef(), EGG, RANDOM_SEX, pStand->m_bFertilEgg, m_generation + 1, scaleFactor);
 				GetHost()->push_front(pBug);
@@ -175,7 +175,7 @@ namespace WBSF
 	
 	void CWSpruceBudworm::Die(const CWeatherDay& weather)
 	{
-		ASSERT(IsAlive());
+		assert(IsAlive());
 		size_t s = GetStage();
 		bool bLookAsynchrony = m_generation== 0 && (s == L2) && HasChangedStage();
 		bool bLookWindow = (s == L6) && HasChangedStage();
@@ -318,8 +318,8 @@ namespace WBSF
 		double AI = CBioSIMModelBase::VMISS;
 		if (IsAlive() || m_death == OLD_AGE)
 		{
-			ASSERT(L2o == 1);
-			AI = std::min(m_age < L2o ? m_age : max(2.0, m_age), double(NB_STAGES) - (includeLast ? 0.0 : 1.0));
+			assert(L2o == 1);
+			AI = std::min(m_age < double(L2o) ? m_age : max(2.0, m_age), double(NB_STAGES) - (includeLast ? 0.0 : 1.0));
 		}
 		return AI; 
 	}
@@ -360,7 +360,7 @@ namespace WBSF
 		bool bDead = false;
 		if (GetStand()->m_bApplyWinterMortality)
 		{
-			if (GetStage() == L2o && T > 0 && m_OWDate.IsInit())
+			if (GetStage() == L2o && T > 0 && m_OWDate.is_init())
 			{
 				m_energy += -0.03295 * pow(max(0.0, T / 10), 3.5675) * dt / 7; //SAS Survival.lst
 				bDead = (m_overwinterLuck >= (1 / (1 + exp(-(m_energy))))*0.6939); //0.4536/0.6537; if true, insect dies. Otherwise, it survives time step.
@@ -528,7 +528,7 @@ namespace WBSF
 		static const double a = 95.9; //dd for 50% of buds mineable
 		static const double b = 2.123;//dd variance around the 50% dd sum
 
-		if (weather.GetTRef().GetJDay() >= START_DATE)
+		if (weather.GetTRef().GetDOY() >= START_DATE)
 		{
 			// Loop over every time step in one day
 			for (size_t h = 0; h < weather.size(); h++)
@@ -558,7 +558,7 @@ namespace WBSF
 		static const double BASE_TEMP = 11.5;    //dd summation of bud development
 		static const double MAX_TEMP = 35.;     //dd summation of bud development
 
-		if (weather.GetTRef().GetJDay() >= START_DATE)
+		if (weather.GetTRef().GetDOY() >= START_DATE)
 		{
 			// Loop over every time step in one day
 			for (size_t h = 0; h < weather.size(); h++)

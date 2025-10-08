@@ -3,13 +3,13 @@
 // 19/02/2024	1.0.1   Rémi Saint-Amant   Compile with VS 2022
 // 17/10/2020	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
-#include "LeucotaraxisModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/DegreeDays.h"
 #include <boost/math/distributions/logistic.hpp>
-#include "ModelBase/SimulatedAnnealingVector.h"
-#include "ModelBase/ModelDistribution.h"
 
+#include "WeatherBased/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
+#include "ModelBased/ModelDistribution.h"
+#include "LeucotaraxisModel.h"
 
 //Best parameters separate, v 1.0.1 (2024-03-30)
 //Best parameters separate, v 1.0.2 (2024-05-03)
@@ -144,7 +144,7 @@ namespace WBSF
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
-			double Tjan = Round(m_weather[y][JANUARY].GetStat(H_TMIN)[MEAN],2);
+			double Tjan = round(m_weather[y][JANUARY].GetStat(H_TMIN)[MEAN],2);
 			
 			for (size_t s = 0; s < NB_SPECIES; s++)
 			{
@@ -160,14 +160,14 @@ namespace WBSF
 
 				boost::math::logistic_distribution<double> emerge_dist(mu, sigma);
 
-				for (CTRef d = p.Begin(); d <= p.End(); d++)
+				for (CTRef d = p.begin(); d <= p.end(); d++)
 				{
 					m_output[d][O_JTMIN] = Tjan;
 
-					if (d.GetJDay() >= m_P[s * NB_CDD_PARAMS + delta])
+					if (d.GetDOY() >= m_P[s * NB_CDD_PARAMS + delta])
 					{
 						m_output[d][O_CDD_LA_G0+s * 2 + 0] = CDD[s][d][0];
-						m_output[d][O_CDD_LA_G0+s * 2 + 1] = Round(100 * cdf(emerge_dist, CDD[s][d][0]), 1);
+						m_output[d][O_CDD_LA_G0+s * 2 + 1] = round(100 * cdf(emerge_dist, CDD[s][d][0]), 1);
 					}
 				}
 			}
@@ -178,7 +178,7 @@ namespace WBSF
 			for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 			{
 				CTPeriod p = m_weather[y].GetEntireTPeriod();
-				for (CTRef d = p.End(); d > p.Begin(); d--)
+				for (CTRef d = p.end(); d > p.begin(); d--)
 				{
 					m_output[d][O_EMERGENCE_LA_G0] = m_output[d][O_EMERGENCE_LA_G0] - m_output[d - 1][O_EMERGENCE_LA_G0];
 					m_output[d][O_EMERGENCE_LP] = m_output[d][O_EMERGENCE_LP] - m_output[d - 1][O_EMERGENCE_LP];
@@ -209,9 +209,9 @@ namespace WBSF
 	enum TInput { I_SYC, I_SITE, I_YEAR, I_COLLECTION, I_SPECIES, I_G, I_DATE, I_CDD, I_TMIN, I_DAILY_COUNT, NB_INPUTS };
 	enum TInputInternal { I_S, I_N, NB_INPUTS_INTERNAL };
 
-	void CLeucotaraxisModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CLeucotaraxisModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == NB_INPUTS);
+		assert(data.size() == NB_INPUTS);
 		//SYC	site	Year	collection	species	G	emerge_date	daily_count
 		CSAResult obs;
 		CStatistic egg_creation_date;
@@ -294,7 +294,7 @@ namespace WBSF
 			{
 				double CDD = std::get<0>(d[i]);
 				CTRef Tref = std::get<1>(d[i]);
-				double p = Round(100 * sum[s] / total[s], 1);
+				double p = round(100 * sum[s] / total[s], 1);
 
 				P[Tref][NB_P_OUT * s + P_CDD] = CDD;
 				P[Tref][NB_P_OUT * s + P_CUMUL_EMERG] = p;
@@ -336,9 +336,9 @@ namespace WBSF
 
 			double CDD = P[TRef][s * NB_P_OUT + P_CDD];
 			double obs = P[TRef][s * NB_P_OUT + P_CUMUL_EMERG];
-			ASSERT(obs >= 0 && obs <= 100);
+			assert(obs >= 0 && obs <= 100);
 
-			double sim = Round(100 * cdf(emerge_dist, max(0.0, CDD)), 1);
+			double sim = round(100 * cdf(emerge_dist, max(0.0, CDD)), 1);
 
 			for (size_t ii = 0; ii < m_SAResult[i].m_obs[I_N]; ii++)
 				stat.Add(obs, sim);

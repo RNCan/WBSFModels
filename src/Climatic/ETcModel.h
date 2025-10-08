@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include "Basic/Evapotranspiration.h"
-#include "ModelBase/BioSIMModelBase.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 //#include "ModelStat.h"
 

@@ -4,8 +4,8 @@
 #pragma once
 
 #include <cassert>
-#include "ModelBase/EquationTableLookup.h"
-#include "Basic/DegreeDays.h"
+#include "ModelBased/EquationTableLookup.h"
+#include "WeatherBased/DegreeDays.h"
 
 
 namespace WBSF

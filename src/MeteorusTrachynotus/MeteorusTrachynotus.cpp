@@ -61,7 +61,8 @@ namespace WBSF
 
 	// Object destructor
 	CMeteorusTrachynotus::~CMeteorusTrachynotus(void)
-	{}
+	{
+	}
 
 
 	//*****************************************************************************
@@ -74,19 +75,19 @@ namespace WBSF
 		assert(m_status == HEALTHY);
 		assert(m_totalBroods + m_broods < m_Pmax);
 		assert(m_broods == 0);//daily brood must be rest
-		assert(m_creationDate.GetJDay() == 0 || GetHost()->m_diapause_age >= 1);
-		
+		assert(m_creationDate.GetDOY() == 0 || GetHost()->m_diapause_age >= 1);
+
 		CIndividual::Live(weather);
 
 		//wait the end of host diapause before begginning Meteorus development
-		if (m_creationDate.GetJDay() > 0 || GetHost()->m_diapause_age>=1)
+		if (m_creationDate.GetDOY() > 0 || GetHost()->m_diapause_age >= 1)
 		{
 			double dayLength = weather.GetDayLength() / 3600.; //in hours
 			CTRef TRef = weather.GetTRef();
-			size_t JDay = TRef.GetJDay();
+			size_t JDay = TRef.GetDOY();
 			size_t nbSteps = GetTimeStep().NbSteps();
 
-			for (size_t step = 0; step < nbSteps&&m_age < DEAD_ADULT; step++)
+			for (size_t step = 0; step < nbSteps && GetStage() < DEAD_ADULT; step++)
 			{
 				size_t h = step * GetTimeStep();
 				size_t s = GetStage();
@@ -100,7 +101,7 @@ namespace WBSF
 					m_age += r;
 
 
-				if (!m_adultDate.IsInit() && m_age >= ADULT)
+				if (!m_adultDate.is_init() && GetStage() >= ADULT)
 					m_adultDate = TRef;
 
 				//compute brooding
@@ -109,7 +110,7 @@ namespace WBSF
 
 				if (s == ADULT && m_sex == FEMALE && GetStageAge() >= pre_ovip_age)
 				{
-					ASSERT(m_age >= ADULT);
+					assert(GetStage() >= ADULT);
 
 					double wmax = 13.865 / nbSteps;
 					double dtOnd20 = Equations().GetRate(ADULT, m_generation, T) / Equations().GetRate(ADULT, m_generation, 20.);
@@ -117,13 +118,13 @@ namespace WBSF
 					double th = 1.089e-5;
 
 					//Densities adjusted to match densities in experimental conditions (petri dishes) with a factor of 16.67 (12*16.67=200)
-					double w = as*(m_Nh/16.67) / (1 + as * th*(m_Nh/16.67)) * (1 - m_totalBroods / m_Pmax) * dtOnd20 / nbSteps; //Number of attacks per time step
+					double w = as * (m_Nh / 16.67) / (1 + as * th * (m_Nh / 16.67)) * (1 - m_totalBroods / m_Pmax) * dtOnd20 / nbSteps; //Number of attacks per time step
 
 					//eggs laid with successful attack is, at most, host find
 					double broods = max(0.0, min(wmax, w));
 					m_broods += broods;
 
-					ASSERT(m_totalBroods + m_broods <= m_Pmax+0.01);
+					assert(m_totalBroods + m_broods <= m_Pmax + 0.01);
 				}
 			}//for all time steps
 
@@ -146,12 +147,12 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = OLD_AGE;
 		}
-		else if (m_generation > 0 && weather[H_TMIN][MEAN] < GetStand()->m_lethalTemp && !m_diapauseTRef.IsInit())
+		else if (m_generation > 0 && weather[H_TMIN][MEAN] < GetStand()->m_lethalTemp && !m_diapauseTRef.is_init())
 		{
 			m_status = DEAD;
 			m_death = FROZEN;
 		}
-		else if (!m_diapauseTRef.IsInit() && weather.GetTRef().GetMonth() == DECEMBER && weather.GetTRef().GetDay() == DAY_31)
+		else if (!m_diapauseTRef.is_init() && weather.GetTRef().GetMonth() == DECEMBER && weather.GetTRef().GetDay() == DAY_31)
 		{
 			//all individual not in diapause are kill at the end of the season
 			m_status = DEAD;
@@ -185,7 +186,7 @@ namespace WBSF
 					stat[S_OVIPOSITING_ADULT] += m_scaleFactor;
 				}
 
-				if (m_diapauseTRef.IsInit())
+				if (m_diapauseTRef.is_init())
 					stat[S_DIAPAUSE] += m_scaleFactor;
 
 				//because attrition is affected when the object change stage,
@@ -230,11 +231,11 @@ namespace WBSF
 		}
 	}
 
-	
+
 	bool CMeteorusTrachynotus::CanPack(const CIndividualPtr& in)const
 	{
 		CMeteorusTrachynotus* pIn = static_cast<CMeteorusTrachynotus*>(in.get());
-		return CIndividual::CanPack(in) && (GetStage() != ADULT || GetSex() != FEMALE) && pIn->m_diapauseTRef.IsInit() == m_diapauseTRef.IsInit();
+		return CIndividual::CanPack(in) && (GetStage() != ADULT || GetSex() != FEMALE) && pIn->m_diapauseTRef.is_init() == m_diapauseTRef.is_init();
 	}
 
 	void CMeteorusTrachynotus::Pack(const CIndividualPtr& pBug)
@@ -260,7 +261,7 @@ namespace WBSF
 		if (m_diapause_age < 1)
 		{
 			CTRef TRef = weather.GetTRef();
-			size_t JDay = TRef.GetJDay();
+			size_t JDay = TRef.GetDOY();
 			size_t nbSteps = GetTimeStep().NbSteps();
 
 			for (size_t step = 0; step < nbSteps; step++)
@@ -271,7 +272,7 @@ namespace WBSF
 
 				//Relative development rate for time step
 				double r = OBL_Equations().GetRate(OBL_POST_DIAPAUSE, T) / nbSteps;
-				ASSERT(r >= 0);
+				assert(r >= 0);
 
 				m_diapause_age += r * m_δ;
 			}//for all time steps

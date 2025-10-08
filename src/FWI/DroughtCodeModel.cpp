@@ -8,9 +8,9 @@
 //17/05/2011	1.0		Rémi Saint-Amant	Creation
 //*********************************************************************
 #include "DroughtCodeModel.h"
-#include "Basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/GrowingSeason.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/GrowingSeason.h"
 
 using namespace WBSF::HOURLY_DATA; 
 using namespace std;

@@ -4,9 +4,9 @@
 //http://digital.csic.es/handle/10261/10002?
 //*********************************************************************
 
-#include "Basic/WeatherDefine.h"
-#include "Basic/Evapotranspiration.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "ModelBased/EntryPoint.h"
 #include "SPEIModel.h"
 
 #include "spei.h"
@@ -62,7 +62,7 @@ namespace WBSF
 		vector<double> Tair(p.size());
 		vector<double> Prcp(p.size());
 		
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++, i++)//for all years
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++, i++)//for all years
 		{
 			const CWeatherMonth& weather = m_weather.GetMonth(TRef);
 			Tair[i] = weather[H_TAIR][MEAN];
@@ -103,7 +103,7 @@ namespace WBSF
 		spei(output[O_BAL].data(), (int)output[O_BAL].size(), output[O_SPEI].data());
 
 		
-		m_output.Init(output[O_SPEI].size(), p.Begin() + m_k - 1, NB_OUTPUTS);
+		m_output.Init(output[O_SPEI].size(), p.begin() + m_k - 1, NB_OUTPUTS);
 		for (size_t i = 0; i<output.size(); i++)
 		{
 			for (size_t j = 0; j<output[i].size(); j++)

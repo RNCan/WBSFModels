@@ -78,7 +78,7 @@ namespace WBSF
 
 	double CSBWHostBudBurst::Weight2Length(size_t s, double w, TW2L type)
 	{
-		ASSERT(type < NB_W2L);
+		assert(type < NB_W2L);
 
 		double l = 0;
 		if (type == W2L_LORENA)
@@ -113,11 +113,11 @@ namespace WBSF
 	//This method is call to compute solution
 	ERMsg CSBWHostBudBurst::Execute(CWeatherStation& weather, CModelStatVector& output, bool bModelEx)
 	{
-		ASSERT(m_SDI_type < NB_SDI_TYPE);
-		ASSERT(weather.IsHourly());
-		ASSERT(weather.GetNbYears() >= 2);
-		ASSERT(m_species < NB_SBW_SPECIES);
-		//ASSERT(m_P.mg2g == 0.001);//parameters are initialized
+		assert(m_SDI_type < NB_SDI_TYPE);
+		assert(weather.IsHourly());
+		assert(weather.GetNbYears() >= 2);
+		assert(m_species < NB_SBW_SPECIES);
+		//assert(m_P.mg2g == 0.001);//parameters are initialized
 
 		ERMsg msg;
 
@@ -142,7 +142,7 @@ namespace WBSF
 
 
 			m_P_last = m_P;
-			m_mean_T_day.resize(pp.GetNbDay());
+			m_mean_T_day.resize(pp.length(CTM::DAILY));
 
 			for (size_t y = 0, dd = 0; y < weather.GetNbYears(); y++)
 			{
@@ -242,7 +242,7 @@ namespace WBSF
 				double ampiezza = 8;
 				double shift = -30;
 
-				size_t dd = p.Begin() - pp.Begin();
+				size_t dd = p.begin() - pp.begin();
 				for (size_t d = 0; d < p.size(); d++, dd++)
 				{
 					m_mean_T_day[dd].Tsoil = media + ampiezza * cos(PI * (d + 1 + shift) / 180);
@@ -277,7 +277,7 @@ namespace WBSF
 
 
 			// Calculate current year Bud removal percentage
-			ASSERT(def.current >= 0 && def.current < 1);
+			assert(def.current >= 0 && def.current < 1);
 			def.def = m_P.Def_min + (1 - m_P.Def_min) / (1 + pow((def.current * 100) / m_P.Def_mid, m_P.Def_slp));
 
 
@@ -310,8 +310,8 @@ namespace WBSF
 
 
 			CVariables x = x0;
-			size_t d = p.Begin() - pp.Begin();
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++, d++)
+			size_t d = p.begin() - pp.begin();
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++, d++)
 			{
 
 				double PS = max(0.0, min(1.0, (x.Mdw - Mdw_0) / (Budburst_thr - Mdw_0)));
@@ -343,12 +343,12 @@ namespace WBSF
 
 				array<double, 6> Sx = SDI_2_Sx(SDI, m_bCumul);
 
-				output[TRef][O_S5] = Round(Sx[5] * 100, 1);
-				output[TRef][O_S4] = Round(Sx[4] * 100, 1);
-				output[TRef][O_S3] = Round(Sx[3] * 100, 1);
-				output[TRef][O_S2] = Round(Sx[2] * 100, 1);
-				output[TRef][O_S1] = Round(Sx[1] * 100, 1);
-				output[TRef][O_S0] = Round(Sx[0] * 100, 1);
+				output[TRef][O_S5] = round(Sx[5] * 100, 1);
+				output[TRef][O_S4] = round(Sx[4] * 100, 1);
+				output[TRef][O_S3] = round(Sx[3] * 100, 1);
+				output[TRef][O_S2] = round(Sx[2] * 100, 1);
+				output[TRef][O_S1] = round(Sx[1] * 100, 1);
+				output[TRef][O_S0] = round(Sx[0] * 100, 1);
 				output[TRef][O_SDI] = SDI;
 
 
@@ -361,7 +361,7 @@ namespace WBSF
 					//Phenological switches
 					x.Budburst_switch |= (x.Mdw >= Budburst_thr);
 					x.Swell_switch |= (x.S / (x.Mdw + x.Bdw) >= 80);
-					//x.Swell_switch = TRef.GetYear() == p.End().GetYear();//swelling only at the second year
+					//x.Swell_switch = TRef.GetYear() == p.end().GetYear();//swelling only at the second year
 
 
 					//double f = 1.0 - (t - 1.0) / (nbSteps - 1.0);

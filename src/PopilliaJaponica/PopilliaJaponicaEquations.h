@@ -3,11 +3,11 @@
 //*****************************************************************************
 #pragma once
 
-#include <crtdbg.h>
+#include <cassert>
 #include <array>
 
-#include "ModelBase/EquationTableLookup.h"
-#include "ModelBase/ModelDistribution.h"
+#include "ModelBased/EquationTableLookup.h"
+#include "ModelBased/ModelDistribution.h"
 
 
 namespace WBSF

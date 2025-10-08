@@ -43,14 +43,14 @@ namespace WBSF
 	//Compute daily development rate for table lookup
 	double COBLPostDiapauseEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s < NB_OBL_STAGES);
+		assert(s < NB_OBL_STAGES);
 
 		vector<double> p(begin(EQ_P[s]), end(EQ_P[s]));
 
 		double Rt = max(0.0, CDevRateEquation::GetRate(EQ_TYPE[s], p, T));
 	
 		_ASSERTE(!_isnan(Rt) && _finite(Rt));
-		ASSERT(Rt >= 0);
+		assert(Rt >= 0);
 
 		return Rt;
 	}
@@ -60,7 +60,7 @@ namespace WBSF
 
 	double COBLPostDiapauseEquations::Getδ(size_t s)const
 	{
-		ASSERT(s < NB_OBL_STAGES);
+		assert(s < NB_OBL_STAGES);
 
 		static const double P[NB_OBL_STAGES][4] =
 		{
@@ -107,14 +107,14 @@ namespace WBSF
 	//Compute daily development rate for table lookup
 	double CMeteorusTrachynotusEquations::ComputeRate(size_t e, double T)const
 	{
-		ASSERT(e < NB_EQUATIONS);
+		assert(e < NB_EQUATIONS);
 
 		vector<double> p(begin(EQ_P[e]), end(EQ_P[e]));
 		
 		double Rt = max(0.0, CDevRateEquation::GetRate(EQ_TYPE[e], p, T));
 
 		_ASSERTE(!_isnan(Rt) && _finite(Rt));
-		ASSERT(Rt >= 0);
+		assert(Rt >= 0);
 
 		return Rt;
 	}
@@ -125,7 +125,7 @@ namespace WBSF
 
 	double CMeteorusTrachynotusEquations::Getδ(size_t e)const
 	{
-		ASSERT(e < NB_EQUATIONS);
+		assert(e < NB_EQUATIONS);
 
 		static const double P[NB_EQUATIONS][4] =
 		{

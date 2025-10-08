@@ -13,8 +13,8 @@
 // 10/11/2022   Rémi Saint-Amant    Creation 
 //*****************************************************************************
 #include "SpottedLanternflyEquations.h"
-#include "ModelBase/DevRateEquation.h"
-#include "ModelBase/SurvivalEquation.h"
+#include "ModelBased/DevRateEquation.h"
+#include "ModelBased/SurvivalEquation.h"
 
 
 
@@ -48,7 +48,7 @@ namespace WBSF
 	//Daily development rate
 	double CSpottedLanternflyEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 
 
@@ -183,7 +183,7 @@ namespace WBSF
 		if (sigma == 0)
 			return 1;
 
-		boost::math::lognormal_distribution<double> dist(-WBSF::Square(sigma) / 2.0, sigma);
+		boost::math::lognormal_distribution<double> dist(-WBSF::square(sigma) / 2.0, sigma);
 		double RDR = boost::math::quantile(dist, m_randomGenerator.Randu());
 
 		//From observation, 0.5 and 2.3
@@ -262,10 +262,10 @@ namespace WBSF
 	//	static const double Fo = 100.4;
 	//	static const double sigma = 0.355;
 	//
-	//	boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::Square(sigma) / 2.0, sigma);
+	//	boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::square(sigma) / 2.0, sigma);
 	//	double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.001, 0.999));
 
-	//	ASSERT(!_isnan(Fi) && _finite(Fi));
+	//	assert(!_isnan(Fi) && _finite(Fi));
 
 
 	//	return Fi;

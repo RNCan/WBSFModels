@@ -11,7 +11,7 @@
 //*****************************************************************************
 #include "Basic/ModelStat.h"
 #include "Basic/UtilStd.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "SpruceBudwormDispersal.h"
 #include "SpruceBudworm.h"
 
@@ -130,9 +130,9 @@ namespace WBSF
 
 
 			//Create tree
-			pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.Begin(), 0, m_nbMoths, m_nbMoths, L2o, RANDOM_SEX, false, 0));
+			pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, m_nbMoths, m_nbMoths, L2o, RANDOM_SEX, false, 0));
 
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				for (CSBWTree::iterator it = pTree->begin(); it != pTree->end(); it++)
 				{
@@ -141,11 +141,11 @@ namespace WBSF
 					{
 						const CHourlyData& w = m_weather.GetHour(TRef);
 
-						ASSERT(w.GetParent());
+						assert(w.GetParent());
 						const CWeatherDay& dayº = (const CWeatherDay&)*w.GetParent();
 
-						bool bBegin = TRef == p.Begin();
-						bool bEnd = TRef == p.End();
+						bool bBegin = TRef == p.begin();
+						bool bEnd = TRef == p.end();
 						if (bBegin || bEnd ||
 							dayº[H_TMIN][MEAN] >= -10)
 						{
@@ -156,7 +156,7 @@ namespace WBSF
 							{
 								size_t sex = budworm.GetSex();
 
-								ASSERT(budworm.GetTotalBroods() == 0);
+								assert(budworm.GetTotalBroods() == 0);
 								flyers.push_back(CBugStat(TRef, sex, budworm.GetA(), budworm.GetM(), budworm.Getξ(), budworm.GetFᴰ()/ budworm.GetFº(), budworm.GetFº(), budworm.GetFᴰ()));
 
 								budworm.SetStatus(CIndividual::DEAD);

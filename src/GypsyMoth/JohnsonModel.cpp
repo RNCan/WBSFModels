@@ -1,5 +1,5 @@
 #include "JohnsonModel.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "Basic/UtilMath.h"
 #include <algorithm>
 
@@ -54,18 +54,18 @@ namespace WBSF
 
 	ERMsg CJohnsonModel::ComputeHatch(const CWeatherStation& weather, const CTPeriod& p)
 	{
-		ASSERT(p.GetLength() == 730 || p.GetLength() == 731);
+		assert(p.size() == 730 || p.size() == 731);
 
 		ERMsg message;
 
 		//resize output array
-		m_eggState.Init(p.GetLength(), p.Begin());
+		m_eggState.Init(p);
 
 
 		double day_deg_sum = 0;
 
 		CTRef d(p.GetLastYear(), 0, 0);
-		while ((day_deg_sum < 282.0) && p.IsInside(d))//(fd < p.GetNbDay()))
+		while ((day_deg_sum < 282.0) && p.is_inside(d))//(fd < p.GetNbDay()))
 		{
 			//day_deg_sum += dayDeg[fd];
 			day_deg_sum += GetDD(weather.GetDay(d), 3.0);
@@ -79,11 +79,11 @@ namespace WBSF
 		day_deg_sum -= 282;//??
 
 		//fd = weather.GetDayIndex(weather.GetNbYear()-2, 273, 0);
-		//fd = p.Begin()+273;
+		//fd = p.begin()+273;
 
 		int num_under_5 = 0;
 		// calculate the number of cold days for the look up table 
-		for (CTRef i = p.Begin() + 273; i <= hatch_day; i++)
+		for (CTRef i = p.begin() + 273; i <= hatch_day; i++)
 		{
 			double Tair = (weather.GetDay(i)[HOURLY_DATA::H_TMIN][MEAN] + weather.GetDay(i)[HOURLY_DATA::H_TMAX][MEAN]) / 2.0;
 			if (Tair <= 5.0)
@@ -111,12 +111,12 @@ namespace WBSF
 		//des simulations avec plusieurs années
 		//_ASSERTE( param.GetOvipDate() >= 0 && param.GetOvipDate() < 366);
 		//int ovipDate = weather.GetDayIndex(weather.GetNbYear()-2, param.GetOvipDate()%365, 0);
-		//int ovipDate = m_param.m_ovipDate-p.Begin();
+		//int ovipDate = m_param.m_ovipDate-p.begin();
 		//for (int i=ovipDate; i<hatch_day; i++)
 		for (CTRef i = m_eggState.GetFirstTRef(); i < hatch_day; i++)
 			m_eggState[i][DIAPAUSE] = MAXEGGS;
 
-		for (CTRef i = hatch_day; i <= p.End(); i++)
+		for (CTRef i = hatch_day; i <= p.end(); i++)
 		{
 			//day_deg_sum += dayDeg[i];
 			day_deg_sum += GetDD(weather.GetDay(i), 3.0);

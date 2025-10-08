@@ -102,7 +102,7 @@ namespace WBSF
 			}
 		}
 
-		ASSERT(creationDate.IsInit());
+		assert(creationDate.IsInit());
 
 		return creationDate;*/
 	}
@@ -115,11 +115,11 @@ namespace WBSF
 		CTRef adult_emergence;
 		double adult_emerging_CDD = Equations().GetAdultEmergingCDD();
 
-		CTRef begin = p.Begin();
+		CTRef begin = p.begin();
 		//CTRef begin = GetStand()->m_diapause_end;
-		CTRef end = p.End();
+		CTRef end = p.end();
 		//if (weather_station[year].HaveNext())
-			//end = min(p.End(), CTRef(begin.GetYear() + 1, JUNE, DAY_30));
+			//end = min(p.end(), CTRef(begin.GetYear() + 1, JUNE, DAY_30));
 
 		//double CDD = 0;
 		
@@ -130,9 +130,9 @@ namespace WBSF
 		DDmodel.Execute(weather_station[year], GDD);
 
 		double CDD = 0;
-		for (CTRef TRef = begin; TRef <= end && !adult_emergence.IsInit(); TRef++)
+		for (CTRef TRef = begin; TRef <= end && !adult_emergence.is_init(); TRef++)
 		{
-			if (TRef.GetJDay() >= GetStand()->m_equations.m_EAS[Tᴼ])//0 base
+			if (TRef.GetDOY() >= GetStand()->m_equations.m_EAS[Tᴼ])//0 base
 			{
 				double DD = GDD[TRef][CDegreeDays::S_DD];
 				CDD += DD;
@@ -221,7 +221,7 @@ namespace WBSF
 
 		//Time step development rate for this individual
 		r *= rr;
-		ASSERT(r >= 0 && r < 1);
+		assert(r >= 0 && r < 1);
 
 		//Adjust age
 		m_age += r;
@@ -238,8 +238,8 @@ namespace WBSF
 		}
 
 		
-
-		if (!m_adult_emergence.IsInit() && m_age >= ADULT)
+		
+		if (!m_adult_emergence.is_init() && GetStage() >= ADULT)
 			m_adult_emergence = weatherD.GetTRef().as(CTM::DAILY);
 
 		/*else if (s == AESTIVAL_DIAPAUSE_ADULT)
@@ -251,7 +251,7 @@ namespace WBSF
 		//else//ACTIVE_ADULT
 		//{
 			//double r = (1.0 / m_adult_longevity) / nb_steps;
-			//ASSERT(r >= 0 && r < 1);
+			//assert(r >= 0 && r < 1);
 
 		//	m_age += r;
 		//}/
@@ -268,7 +268,7 @@ namespace WBSF
 	{
 		CIndividual::Live(weather);
 
-		ASSERT(IsCreated(weather.GetTRef()));
+		assert(IsCreated(weather.GetTRef()));
 
 		if (weather.GetTRef() < m_adult_emergence)
 			return;
@@ -284,13 +284,13 @@ namespace WBSF
 		}*/
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps&&IsAlive() && m_age < DEAD_ADULT && !m_bDiapause; step++)
+		for (size_t step = 0; step < nbSteps&&IsAlive() && GetStage() < DEAD_ADULT && !m_bDiapause; step++)
 		{
 			size_t h = step * GetTimeStep();
 			//Live(weather[h], GetTimeStep());
 			Live(weather, h, GetTimeStep());
 
-			if (GetStage() == PUPA && HasChangedStage() && weather.GetTRef().GetJDay() >= 260)
+			if (GetStage() == PUPA && HasChangedStage() && weather.GetTRef().GetDOY() >= 260)
 			{
 				m_dropToGroundDate = weather.GetTRef();
 				m_bDiapause = true;
@@ -322,8 +322,8 @@ namespace WBSF
 
 			if (m_bFertil && m_broods > 0)
 			{
-				ASSERT(m_age >= ADULT);
-				CTZZStand* pStand = GetStand(); ASSERT(pStand);
+				assert(m_age >= ADULT);
+				CTZZStand* pStand = GetStand(); assert(pStand);
 
 				double gSurvival = pStand->m_generationSurvival;
 				double scaleFactor = m_broods * m_scaleFactor*gSurvival;
@@ -411,7 +411,7 @@ namespace WBSF
 		if (IsCreated(d))
 		{
 			size_t s = GetStage();
-			ASSERT(s <= DEAD_ADULT);
+			assert(s <= DEAD_ADULT);
 
 			if ((IsAlive() && !m_bDiapause) || (s == DEAD_ADULT))
 				stat[S_EGG + s] += m_scaleFactor;
@@ -484,9 +484,9 @@ namespace WBSF
 
 		double sumDD = 0;
 
-		for (size_t ii = (172 - 1); ii <= (m_equations.m_EWD[ʎ0] - 1); ii++)
+		for (int32_t ii = (172 - 1); ii <= (m_equations.m_EWD[ʎ0] - 1); ii++)
 		{
-			CTRef TRef = p.Begin() + ii;
+			CTRef TRef = p.begin() + ii;
 			const CWeatherDay& wday = weather.GetDay(TRef);
 			double T = wday[H_TNTX][MEAN];
 			T = max(m_equations.m_EWD[ʎa], T);
@@ -496,10 +496,10 @@ namespace WBSF
 		}
 
 		boost::math::logistic_distribution<double> begin_dist(m_equations.m_EWD[ʎ2], m_equations.m_EWD[ʎ3]);
-		int begin = (int)Round((m_equations.m_EWD[ʎ0] - 1) + m_equations.m_EWD[ʎ1] * cdf(begin_dist, sumDD), 0);
+		int begin = (int)round((m_equations.m_EWD[ʎ0] - 1) + m_equations.m_EWD[ʎ1] * cdf(begin_dist, sumDD), 0);
 
 
-		return p.Begin() + begin;
+		return p.begin() + begin;
 	}
 
 

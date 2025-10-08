@@ -6,8 +6,8 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "Basic\DegreeDays.h"
-#include "ModelBase/IndividualBase.h"
+#include "WeatherBased/DegreeDays.h"
+#include "ModelBased/IndividualBase.h"
 #include "ALeucopodaEquations.h"
 
 
@@ -150,8 +150,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CTZZHost* CAprocerosLeucopoda::GetHost(){ return static_cast<CTZZHost*>(m_pHost); }
 	inline const CTZZHost* CAprocerosLeucopoda::GetHost()const{ return static_cast<const CTZZHost*>(m_pHost); }
-	inline CTZZStand* CAprocerosLeucopoda::GetStand(){ ASSERT(m_pHost); return static_cast<CTZZStand*>(GetHost()->GetStand()); }
-	inline const CTZZStand* CAprocerosLeucopoda::GetStand()const{ ASSERT(m_pHost); return static_cast<const CTZZStand*>(GetHost()->GetStand()); }
+	inline CTZZStand* CAprocerosLeucopoda::GetStand(){ assert(m_pHost); return static_cast<CTZZStand*>(GetHost()->GetStand()); }
+	inline const CTZZStand* CAprocerosLeucopoda::GetStand()const{ assert(m_pHost); return static_cast<const CTZZStand*>(GetHost()->GetStand()); }
 	inline const CAprocerosLeucopodaEquations& CAprocerosLeucopoda::Equations()const{ return GetStand()->m_equations; }
 
 

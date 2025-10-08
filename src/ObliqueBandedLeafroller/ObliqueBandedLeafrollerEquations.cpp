@@ -32,8 +32,8 @@ namespace WBSF
 		size_t s = e % NB_STAGES;
 		size_t sex = e / NB_STAGES;
 
-		ASSERT( s < NB_STAGES);
-		ASSERT(sex <2);
+		assert( s < NB_STAGES);
+		assert(sex <2);
 
 		//development rate parameters (11 variables (Egg...adult), 3 parameters)
 		enum TParameters{ P_TL, P_A, P_B, NB_PARAMETERS };
@@ -77,14 +77,14 @@ namespace WBSF
 	//Compute daily development rate for table lookup
 	double CObliqueBandedLeafrollerEquations::ComputeRate(size_t e, double T)const
 	{
-		ASSERT(e >= 0 && e < 2*NB_STAGES);
+		assert(e >= 0 && e < 2*NB_STAGES);
 
 		//relative development
 		double r = Equation1(e, T); 
 
 
 		_ASSERTE(!_isnan(r) && _finite(r));
-		ASSERT(r >= 0);
+		assert(r >= 0);
 		return r;
 	}
 
@@ -117,10 +117,10 @@ namespace WBSF
 	//fecundity
 	double CObliqueBandedLeafrollerEquations::GetEᵗ(double A0, double A1)
 	{
-		ASSERT(A0 <= A1);
+		assert(A0 <= A1);
 		
 		double Eᵗ = 200 * (exp(-4 *A0) - exp(-4 *A1));
-		ASSERT(Eᵗ >= 0);
+		assert(Eᵗ >= 0);
 
 		return Eᵗ;
 	}

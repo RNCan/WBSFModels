@@ -66,7 +66,7 @@ namespace WBSF
 	
 	double CMPBDevelopmentTable::ComputeRate(size_t e, double T)const
 	{
-		ASSERT(e >= 0 && e < NB_STAGES);
+		assert(e >= 0 && e < NB_STAGES);
 
 		const double* p = m_p[e];
 
@@ -82,21 +82,21 @@ namespace WBSF
 			r = max(0.0, p[PSI] * tmp4);
 		}
 
-		ASSERT(r >= 0 && r <= 1);
+		assert(r >= 0 && r <= 1);
 
 		return r;
 	}
 
 	double CMPBDevelopmentTable::GetRelativeMean(int e)const
 	{
-		ASSERT(e >= 0 && e < NB_STAGES);
+		assert(e >= 0 && e < NB_STAGES);
 		return m_p[e][F0];
 
 	}
 
 	double CMPBDevelopmentTable::GetRelativeSigma(int e)const
 	{
-		ASSERT(e >= 0 && e < NB_STAGES);
+		assert(e >= 0 && e < NB_STAGES);
 		return m_p[e][SIGMA];
 
 	}

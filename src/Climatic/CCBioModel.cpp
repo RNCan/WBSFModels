@@ -8,10 +8,10 @@
 // 15/11/2010	2.1		Rémi Saint-Amant	Creation
 //**********************************************************************
 
-#include "Basic/Evapotranspiration.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "Modelbased/EntryPoint.h"
 #include "CCBioModel.h"
 
 using namespace std;
@@ -152,16 +152,16 @@ namespace WBSF
 			m_output[y][O_ANNUAL_CDD] = GetCoolingDD(m_weather[y], 0);
 
 			//frost free period
-			m_output[y][O_ANNUAL_FSDAY] = FFp.Begin().GetJDay() + 1;
-			m_output[y][O_ANNUAL_FFDAY] = FFp.End().GetJDay() + 1;
-			m_output[y][O_ANNUAL_FPP] = FFp.GetLength();
+			m_output[y][O_ANNUAL_FSDAY] = FFp.begin().GetDOY() + 1;
+			m_output[y][O_ANNUAL_FFDAY] = FFp.end().GetDOY() + 1;
+			m_output[y][O_ANNUAL_FPP] = FFp.length(CTM::DAILY);
 			m_output[y][O_ANNUAL_FDD] = DD0.GetStat(0, FFp)[SUM]; //m_weather[y].GetDD(0, Fp);
 
 			
 			//growing season period
-			m_output[y][O_ANNUAL_GSSDAY] = GSp.Begin().GetJDay() + 1;
-			m_output[y][O_ANNUAL_GSFDAY] = GSp.End().GetJDay() + 1;
-			m_output[y][O_ANNUAL_GSPP] = GSp.GetLength();
+			m_output[y][O_ANNUAL_GSSDAY] = GSp.begin().GetDOY() + 1;
+			m_output[y][O_ANNUAL_GSFDAY] = GSp.end().GetDOY() + 1;
+			m_output[y][O_ANNUAL_GSPP] = GSp.length(CTM::DAILY);
 			m_output[y][O_ANNUAL_GSDD] = DD0.GetStat(0, GSp)[SUM]; //m_weather[y].GetDD(0, GSp);
 		}
 

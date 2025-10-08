@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "Basic/DegreeDays.h"
-#include "ModelBase/BioSIMModelBase.h"
+#include "WeatherBased/DegreeDays.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 
 

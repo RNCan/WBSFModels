@@ -25,8 +25,8 @@
 // 22/04/2009			Rémi Saint-Amant    Integration with BioSIMModelBase
 // 01/03/2000			Jacques Regniere	Creation 
 //*****************************************************************************
-#include "Basic/DegreeDays.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
 #include "YHSSModel.h"
 
 
@@ -61,7 +61,7 @@ namespace WBSF
 		m_bCumulativeOutput = parameters[0].GetBool();
 		m_adultLongevity = parameters[1].GetInt();
 
-		ASSERT(m_adultLongevity < 89);
+		assert(m_adultLongevity < 89);
 
 		return msg;
 	}
@@ -93,14 +93,14 @@ namespace WBSF
 
 			for (size_t jd = 0; jd < 90; jd++)
 			{
-				CTRef TRef = p.Begin() + jd;
+				CTRef TRef = p.begin() + int32_t(jd);
 				stat[TRef][O_L1] = 100;
 				stat[TRef][O_AI] = 1;
 			}
 
 			for (size_t jd = 89; jd < m_weather[y].GetNbDays(); jd++)
 			{
-				CTRef TRef = p.Begin() + jd;
+				CTRef TRef = p.begin() + int32_t(jd);
 				const CWeatherDay& wDay = m_weather.GetDay(TRef);
 				dd += DD.GetDD(wDay);
 
@@ -155,7 +155,7 @@ namespace WBSF
 		for (int i = 3; i < 9; i++)
 		{
 			freq[i] = max(0.0, (c[i] / (1. + exp(sign[i] * (a[i] - dd) / sqrt(b[i] * dd)))));
-			ASSERT(freq[i] >= 0);
+			assert(freq[i] >= 0);
 
 			if (freq[i] < 0.00001)
 				freq[i] = 0;

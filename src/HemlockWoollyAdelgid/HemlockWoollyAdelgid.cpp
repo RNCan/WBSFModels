@@ -13,8 +13,8 @@
 //  It is provided "as is" without express or implied warranty.
 //**************************************************************************************************************
 
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/ContinuingRatio.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/ContinuingRatio.h"
 #include "HemlockWoollyAdelgid.h"
 #include <queue>
 
@@ -109,7 +109,7 @@ namespace WBSF
 		ExecuteDaily(output);
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM::ANNUAL);
-		p.Begin().m_year++;//skip the first winter
+		p.begin().m_year++;//skip the first winter
 		m_output.Init(p, NB_OUTPUTS_A, -999, HEADER_A);
 		
 		for (size_t y = 0; y < p.size(); y++)
@@ -228,7 +228,7 @@ namespace WBSF
 			double deltaMonth = m_weather[year][JULY][H_TMAX][MEAN] - m_weather[year][JANUARY][H_TMIN][MEAN];
 			
 			std::deque<double> Q3;
-			for (CTRef TRef = p.Begin() - m_nbDays; TRef < p.Begin(); TRef++)
+			for (CTRef TRef = p.begin() - int32_t(m_nbDays); TRef < p.begin(); TRef++)
 			{
 				const CWeatherDay& wDay = m_weather.GetDay(TRef);
 				double Tmin = wDay[H_TMIN][MEAN];
@@ -236,7 +236,7 @@ namespace WBSF
 				Q3.push_back(T);
 			}
 			
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				const CWeatherDay& wDay = m_weather.GetDay(TRef);
 				double Tmin = wDay[H_TMIN][MEAN];
@@ -271,20 +271,20 @@ namespace WBSF
 	}
 
 
-	void CHemlockWoollyAdelgidCMModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CHemlockWoollyAdelgidCMModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		//KeyID	Year	Month	Day	n	no_HWA_alive	dead	per_mortality
 
 		enum TInputFileColumns{	C_KEYID, C_YEAR, C_MONTH, C_DAY, C_N, C_NO_HWA_ALIVE, C_DEAD, C_PER_MORTALITY};
 
-		ASSERT(header[C_KEYID] == "KeyID");
-		ASSERT(header[C_YEAR] == "Year");
-		ASSERT(header[C_MONTH] == "Month");
-		ASSERT(header[C_DAY] == "Day");
-		ASSERT(header[C_N] == "n");
-		ASSERT(header[C_NO_HWA_ALIVE] == "no_HWA_alive");
-		ASSERT(header[C_DEAD] == "dead");
-		ASSERT(header[C_PER_MORTALITY] == "per_mortality");
+		assert(header[C_KEYID] == "KeyID");
+		assert(header[C_YEAR] == "Year");
+		assert(header[C_MONTH] == "Month");
+		assert(header[C_DAY] == "Day");
+		assert(header[C_N] == "n");
+		assert(header[C_NO_HWA_ALIVE] == "no_HWA_alive");
+		assert(header[C_DEAD] == "dead");
+		assert(header[C_PER_MORTALITY] == "per_mortality");
 				
 		CTRef ref(ToInt(data[C_YEAR]), ToSizeT(data[C_MONTH]) - 1, ToSizeT(data[C_DAY]) - 1);
 
@@ -343,7 +343,7 @@ namespace WBSF
 				 
 				int firstYear = (int)years[LOWEST];
 				int lastYear = (int)years[HIGHEST];
-				ASSERT(lastYear - firstYear >= 0);
+				assert(lastYear - firstYear >= 0);
 				for (auto it = m_weather.begin(); it != m_weather.end();)
 				{
 					if (it->first >= firstYear && it->first <= lastYear)
@@ -352,8 +352,8 @@ namespace WBSF
 						it = m_weather.erase(it);
 				}
 
-				ASSERT(m_weather.GetFirstYear() == firstYear);
-				ASSERT(m_weather.GetLastYear() == lastYear);
+				assert(m_weather.GetFirstYear() == firstYear);
+				assert(m_weather.GetLastYear() == lastYear);
 		
 				m_bInit = true;
 			}
@@ -364,7 +364,7 @@ namespace WBSF
 
 			for (size_t i = 0; i<m_SAResult.size(); i++)
 			{
-				if (statSim.IsInside(m_SAResult[i].m_ref))
+				if (statSim.is_inside(m_SAResult[i].m_ref))
 				{
 					double obs = m_SAResult[i].m_obs[0];
 					double sim = statSim[m_SAResult[i].m_ref][D_EQ2];

@@ -7,13 +7,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Climatic.cpp">
+    <ClCompile Include="..\..\src\Climatic\Climatic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Climatic.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\Climatic\Climatic.h" />
   </ItemGroup>
 </Project>

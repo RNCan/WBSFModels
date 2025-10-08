@@ -6,10 +6,10 @@
 #include <functional>   // std::greater
 #include <algorithm>    // std::sort
 #include "Basic/UtilMath.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/Evapotranspiration.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/Evapotranspiration.h"
 #include "ClimdexVariables.h"
-#include "Basic/GrowingSeason.h"
+#include "WeatherBased/GrowingSeason.h"
  
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -20,7 +20,7 @@ namespace WBSF
 	static const size_t NB_MISSING_M = 3;
 	static const size_t NB_MISSING_A = 15;
 
-
+	
 	CClimdexVariables::CClimdexVariables()
 	{
 		m_basePeriod = CTPeriod(CTRef(1961, JANUARY, DAY_01), CTRef(1990, DECEMBER, DAY_31));
@@ -30,12 +30,12 @@ namespace WBSF
 
 	ERMsg CClimdexVariables::Execute(CTM TM, const CWeatherStation& weather, CModelStatVector& output)
 	{
-		ASSERT(TM.Type() == CTM::ANNUAL || TM.Type() == CTM::MONTHLY);
-		ASSERT(weather.GetTM().Type() == CTM::DAILY); //use only daily period
+		assert(TM.Type() == CTM::ANNUAL || TM.Type() == CTM::MONTHLY);
+		assert(weather.GetTM().Type() == CTM::DAILY); //use only daily period
 
 		ERMsg msg;
 
-		if (weather.GetEntireTPeriod().IsInside(m_basePeriod))
+		if (weather.GetEntireTPeriod().is_inside(m_basePeriod))
 		{
 
 			output.Init(weather.GetEntireTPeriod(TM), NB_VARIABLES, -999);
@@ -64,7 +64,7 @@ namespace WBSF
 								case CSDI:	GetCSDI(weather[y], m_N, value); break;
 								case CDD:	GetCDD(weather[y], value); break;
 								case CWD:	GetCWD(weather[y], value); break;
-								default: ASSERT(false);
+								default: assert(false);
 								}
 
 								for (size_t m = 0; m < 12; m++)
@@ -135,11 +135,11 @@ namespace WBSF
 		double value = -999;
 		switch (index)
 		{
-		case FD: value = weather[H_TMIN].IsInit() ? (weather[H_TMIN][LOWEST] < 0) ? 1 : 0 : -999; break;
-		case SU: value = weather[H_TMAX].IsInit() ? (weather[H_TMAX][HIGHEST] > 25) ? 1 : 0 : -999; break;
-		case ID:value = weather[H_TMAX].IsInit() ? (weather[H_TMAX][HIGHEST] < 0) ? 1 : 0 : -999; break;
-		case TR:value = weather[H_TMIN].IsInit() ? (weather[H_TMIN][LOWEST] > 20) ? 1 : 0 : -999; break;
-		default: ASSERT(false);
+		case FD: value = weather[H_TMIN].is_init() ? (weather[H_TMIN][LOWEST] < 0) ? 1 : 0 : -999; break;
+		case SU: value = weather[H_TMAX].is_init() ? (weather[H_TMAX][HIGHEST] > 25) ? 1 : 0 : -999; break;
+		case ID:value = weather[H_TMAX].is_init() ? (weather[H_TMAX][HIGHEST] < 0) ? 1 : 0 : -999; break;
+		case TR:value = weather[H_TMIN].is_init() ? (weather[H_TMIN][LOWEST] > 20) ? 1 : 0 : -999; break;
+		default: assert(false);
 		}
 
 		return value;
@@ -154,7 +154,7 @@ namespace WBSF
 		
 		size_t m = weather.GetTRef().GetMonth();
 
-		for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+		for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 		{
 			double value = GetNumber(weather[d], index);
 
@@ -162,7 +162,7 @@ namespace WBSF
 				stat += value;
 		}
 
-		if(stat.IsInit())
+		if(stat.is_init())
 			N = stat[SUM];
 		
 
@@ -185,14 +185,14 @@ namespace WBSF
 		gsl.fill(0);
 
 		CTPeriod p = weather.GetEntireTPeriod(CTM::DAILY);
-		int year = p.Begin().GetYear();
+		int year = p.begin().GetYear();
 		CTRef mid = CTRef(year,JULY, DAY_01);
 		
 
 		if (weather.GetLocation().m_lat < 0)
 		{
-			p.Begin() = CTRef(year, JULY, FIRST_DAY);
-			p.End() = CTRef(year+1, JUNE, LAST_DAY);
+			p.begin() = CTRef(year, JULY, DAY_01);
+			p.end() = CTRef(year+1, JUNE, DAY_30);
 			mid = CTRef(year, JANUARY, DAY_01);
 		}
 
@@ -200,43 +200,43 @@ namespace WBSF
 
 		
 		size_t hit = 0;
-		for (CTRef TRef = p.Begin(); TRef < mid&&!period.Begin().IsInit(); TRef++)
+		for (CTRef TRef = p.begin(); TRef < mid&&!period.begin().is_init(); TRef++)
 		{
-			if (weather[TRef][H_TNTX].IsInit() && weather[TRef][H_TNTX][MEAN] > 5)
+			if (weather[TRef][H_TNTX].is_init() && weather[TRef][H_TNTX][MEAN] > 5)
 				hit++;
 			else
 				hit = 0;
 
 			if (hit == 6 )
-				period.Begin() = TRef - 5;
+				period.begin() = TRef - 5;
 		}
 
 		
 		hit = 0;
-		for (CTRef TRef = mid; TRef <= p.End() && !period.End().IsInit(); TRef++)
+		for (CTRef TRef = mid; TRef <= p.end() && !period.end().is_init(); TRef++)
 		{
-			if (weather[TRef][H_TNTX].IsInit() && weather[TRef][H_TNTX][MEAN] < 5)
+			if (weather[TRef][H_TNTX].is_init() && weather[TRef][H_TNTX][MEAN] < 5)
 				hit++;
 			else
 				hit = 0;
 
 			if (hit == 6)
-				period.End() = TRef - 5;
+				period.end() = TRef - 5;
 		}
 
-		if (period.Begin().IsInit() && !period.End().IsInit())
-			period.End() = p.End();
+		if (period.begin().is_init() && !period.end().is_init())
+			period.end() = p.end();
 
-		if (period.IsInit())
+		if (period.is_init())
 		{
-			GSL = period.GetLength();
+			GSL = period.length(CTM::DAILY);
 		
 			for (size_t m = 0; m < 12; m++)
 			{
-				CTPeriod p(CTRef(year, m, FIRST_DAY), CTRef(year, m, LAST_DAY));
-				CTPeriod i = period.Intersect(p);
+				CTPeriod p(CTRef(year, m, DAY_01), CTRef(year, m, GetLastDayOfMonth(year, m)));
+				CTPeriod i = period.intersect(p);
 
-				gsl[m] = i.GetLength();
+				gsl[m] = i.length(CTM::DAILY);
 				if (m == FEBRUARY)
 					gsl[m] = min<size_t>(28, gsl[m]);
 			}
@@ -259,7 +259,7 @@ namespace WBSF
 		double value = -999;
 
 		size_t m = weather.GetTRef().GetMonth();
-		size_t nbDays = GetNbDayPerMonth(m);
+		size_t nbDays = GetNbDaysPerMonth(m);
 
 		CStatistic stat;
 		for (size_t d = 0; d < nbDays; d++)
@@ -300,7 +300,7 @@ namespace WBSF
 			double threshold = N.GetTThreshold(365 - d - 1, vv, p);
 			
 			bool bTest = f*wDay[v][MEAN] > f*threshold;
-			if (wDay[v].IsInit() && bTest)
+			if (wDay[v].is_init() && bTest)
 				cnt++;
 			else
 				d=6;//finish here
@@ -324,11 +324,11 @@ namespace WBSF
 		size_t jd = 0;
 		for (size_t m = 0; m < 12; m++)
 		{
-			for (size_t d = 0; d < GetNbDayPerMonth(m); d++, jd++)
+			for (size_t d = 0; d < GetNbDaysPerMonth(m); d++, jd++)
 			{
 				double f = p == P10 ? -1 : 1;
 				double threshold = N.GetTThreshold(jd, vv, p);
-				if (weather[m][d][v].IsInit() && f*weather[m][d][v][MEAN] > f*threshold)
+				if (weather[m][d][v].is_init() && f*weather[m][d][v][MEAN] > f*threshold)
 				{
 					cnt++;
 					if (cnt == 6)
@@ -357,22 +357,22 @@ namespace WBSF
 		CTPeriod period = weather.GetEntireTPeriod(CTM::DAILY);
 
 		if (weather.HavePrevious())
-			period.Begin() -= 4; //start 4 day before the begginning
+			period.begin() -= 4; //start 4 day before the begginning
 
 		//if (!weather.HaveNext())
-			period.End() -= 4; 
+			period.end() -= 4; 
 
 
-		for (CTRef TRef = period.Begin(); TRef <= period.End(); TRef++)
+		for (CTRef TRef = period.begin(); TRef <= period.end(); TRef++)
 		{
 			CStatistic stat;
-			for (size_t dd = 0; dd < 5; dd++)
+			for (int32_t dd = 0; dd < 5; dd++)
 			{
-				//if (weather[TRef + dd][H_PRCP].IsInit())
+				//if (weather[TRef + dd][H_PRCP].is_init())
 				stat += weather[TRef+dd][H_PRCP];
 			}
 
-			if (stat.IsInit() && stat[SUM] > Rx5)
+			if (stat.is_init() && stat[SUM] > Rx5)
 			{
 				Rx5 = stat[SUM];
 			}
@@ -405,17 +405,17 @@ namespace WBSF
 
 			for (size_t m = 0; m < 12; m++)
 			{
-				for (size_t d = 0; d < GetNbDayPerMonth(m); d++, cnt++)
+				for (size_t d = 0; d < GetNbDaysPerMonth(m); d++, cnt++)
 				{
 					//const CWeatherDay& wDay = weather[m][d];
 					// get Rx5day
 					if (cnt >= 5)   // corrected by Imke, original was 'cnt .gt. 5'  -- 2012.7.9
 					{
 						double r5prcp = 0;
-						for (size_t dd = cnt - 4; dd <= cnt; dd++)
+						for (int32_t dd = cnt - 4; dd >= 0; dd++)
 						{
 							const CWeatherDay& wDay = weather.GetDay(weather[m][d].GetTRef() - dd);
-							if (wDay[H_PRCP].IsInit())
+							if (wDay[H_PRCP].is_init())
 								r5prcp += wDay[H_PRCP][SUM];
 						}
 
@@ -442,9 +442,9 @@ namespace WBSF
 		CStatistic stat;
 		size_t m = weather.GetTRef().GetMonth();
 
-		for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+		for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 		{
-			if (weather[d][H_PRCP].IsInit() && weather[d][H_PRCP][SUM] >= nn)
+			if (weather[d][H_PRCP].is_init() && weather[d][H_PRCP][SUM] >= nn)
 				stat += weather[d][H_PRCP][SUM];
 		}
 
@@ -463,12 +463,12 @@ namespace WBSF
 		size_t cnt=0;
 		for (size_t m = 0; m < 12; m++)
 		{
-			for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+			for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 			{
-				const CWeatherDay& wDay = previous[DECEMBER - m][GetNbDayPerMonth(m) - d - 1];
+				const CWeatherDay& wDay = previous[DECEMBER - m][GetNbDaysPerMonth(m) - d - 1];
 				bool bTest = bWet ? wDay[H_PRCP][SUM] >= 1.0 : wDay[H_PRCP][SUM] < 1.0;
 
-				if (wDay[H_PRCP].IsInit() && bTest)
+				if (wDay[H_PRCP].is_init() && bTest)
 				{
 					cnt++;
 				}
@@ -492,11 +492,11 @@ namespace WBSF
 		const CWeatherYear& weather = weatherIn.GetNext();
 		for (size_t m = 0; m < 12; m++)
 		{
-			for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+			for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 			{
 				bool bTest = bWet ? weather[m][d][H_PRCP][SUM] >= 1.0 : weather[m][d][H_PRCP][SUM] < 1.0;
 
-				if (weather[m][d][H_PRCP].IsInit() && bTest)
+				if (weather[m][d][H_PRCP].is_init() && bTest)
 				{
 					cnt++;
 				}
@@ -524,10 +524,10 @@ namespace WBSF
 	
 		for (size_t m = 0; m < 12; m++)
 		{
-			for (size_t d=0; d < GetNbDayPerMonth(m); d++)
+			for (size_t d=0; d < GetNbDaysPerMonth(m); d++)
 			{
 				bool bTest = bWet ? weather[m][d][H_PRCP][SUM] >= 1.0 : weather[m][d][H_PRCP][SUM] < 1.0;
-				if (weather[m][d][H_PRCP].IsInit() && bTest)
+				if (weather[m][d][H_PRCP].is_init() && bTest)
 				{
 					cnt++;
 					if (cnt > cdA)
@@ -564,17 +564,17 @@ namespace WBSF
 		CStatistic stat;
 		size_t m = weather.GetTRef().GetMonth();
 
-		for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+		for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 		{
 			double threshold = N.GetPThreshold(m, p);
-			if (weather[d][H_PRCP].IsInit() && weather[d][H_PRCP][SUM] >= 1.0)//take only wet day
+			if (weather[d][H_PRCP].is_init() && weather[d][H_PRCP][SUM] >= 1.0)//take only wet day
 			{
 				if (weather[d][H_PRCP][SUM] > threshold)
 					stat += weather[d][H_PRCP][SUM];
 			}
 		}// day
 
-		if( stat.IsInit() )
+		if( stat.is_init() )
 			Rp = stat[SUM];
 
 
@@ -589,16 +589,16 @@ namespace WBSF
 
 		for (size_t m = 0; m < 12; m++)
 		{
-			for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+			for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 			{
 				double threshold = N.GetPThreshold(p);
-				if (weather[m][d][H_PRCP].IsInit() && weather[m][d][H_PRCP][SUM] >= 1.0)//take only wet day
+				if (weather[m][d][H_PRCP].is_init() && weather[m][d][H_PRCP][SUM] >= 1.0)//take only wet day
 					if (weather[m][d][H_PRCP][SUM] > threshold)
 						stat += weather[m][d][H_PRCP][SUM];
 			}// day
 		}
 
-		if (stat.IsInit())
+		if (stat.is_init())
 			Rp = stat[SUM];
 
 
@@ -648,7 +648,7 @@ namespace WBSF
 				else if (v == RX5D)
 					s = HIGHEST;
 
-				if (stat.IsInit())
+				if (stat.is_init())
 					value = stat[s];
 			}
 			}
@@ -695,7 +695,7 @@ namespace WBSF
 			case R95P:  value = GetR95p(weather, m_N); break;
 			case R99P:  value = GetR99p(weather, m_N); break;
 			case PRCP:  value = GetPRCP(weather); break;
-			default:	ASSERT(false);
+			default:	assert(false);
 			}
 		}
 
@@ -734,7 +734,7 @@ namespace WBSF
 
 	void CClimdexNormals::Compute(const CWeatherYears& weather)
 	{
-		ASSERT(m_period.GetNbYears() == 30);
+		assert(m_period.GetNbYears() == 30);
 
 		clear();
 
@@ -747,14 +747,14 @@ namespace WBSF
 
 	void CClimdexNormals::Tthreshold(const CWeatherYears& weather, CTPeriod period, bool bUseBootstrap, std::vector<std::vector<CTPercentil>>& Tpercentil)
 	{
-		ASSERT(period.GetNbYears() == 30);
+		assert(period.GetNbYears() == 30);
 
 		static const double PERCENTIL[NB_T_PERCENTILS] = { 10, 50, 90 };
 		static const double NoMissingThreshold = 0.85;
 		static const int WINSIZE = 5;
 		static const int SS = int(WINSIZE / 2);
 		
-		int firstYear = period.Begin().GetYear();
+		int firstYear = period.begin().GetYear();
 		size_t nbYears = bUseBootstrap ? 30 : 1;
 		int Icritical = int(30 * WINSIZE*NoMissingThreshold);
 
@@ -763,9 +763,9 @@ namespace WBSF
 
 		for (size_t m = 0; m < 12; m++)
 		{
-			for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+			for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 			{
-				size_t jd = WBSF::GetJDay(m, d);
+				size_t jd = WBSF::GetDOY(m, d);
 				for (size_t y = 0; y < 30; y++)
 				{
 					int year = firstYear + int(y);
@@ -781,7 +781,7 @@ namespace WBSF
 							for (size_t vv = 0; vv < NB_PERCENTILS_VAR; vv++)
 							{
 								TVarH v = VARIABLES[vv];
-								buffer[jd][y][dd][vv] = (weather[TRef][v].IsInit()) ? weather[TRef][v][MEAN] : -999;
+								buffer[jd][y][dd][vv] = (weather[TRef][v].is_init()) ? weather[TRef][v][MEAN] : -999;
 							}//for all variables
 						}
 					}//take consecutive 5 days
@@ -830,7 +830,7 @@ namespace WBSF
 									size_t n1 = size_t(floor(n));
 									size_t n2 = min(n1 + 1, stat[vv].size() - 1);
 									double f = n - n1;
-									ASSERT(f >= 0 && f <= 1);
+									assert(f >= 0 && f <= 1);
 
 									double percentil = (1 - f)*stat[vv].get_sorted(n1) + f*stat[vv].get_sorted(n2);
 									Tpercentil[i][j][jd][vv][p] = percentil;
@@ -853,7 +853,7 @@ namespace WBSF
 	{
 		static const double PERCENTIL[NB_P_PERCENTILS] = { 95, 99 };
 
-		int firstYear = period.Begin().GetYear();
+		int firstYear = period.begin().GetYear();
 
 
 		//select non - MISSING data for each day covering all base years
@@ -866,14 +866,14 @@ namespace WBSF
 			for (size_t y = 0; y < period.GetNbYears(); y++)
 			{
 				int year = firstYear + int(y);
-				for (size_t d = 0; d < GetNbDayPerMonth(m); d++)
+				for (size_t d = 0; d < GetNbDaysPerMonth(m); d++)
 				{
-					if (weather[year][m][d][H_PRCP].IsInit() && weather[year][m][d][H_PRCP][SUM] >= 1.0)//take only precipitation days
+					if (weather[year][m][d][H_PRCP].is_init() && weather[year][m][d][H_PRCP][SUM] >= 1.0)//take only precipitation days
 						stat += weather[year][m][d][H_PRCP][SUM];
 				}
 			}
 
-			if (stat.IsInit())
+			if (stat.is_init())
 			{
 				for (size_t p = 0; p < NB_P_PERCENTILS; p++)
 				{
@@ -881,7 +881,7 @@ namespace WBSF
 					size_t n1 = size_t(floor(n));
 					size_t n2 = min(n1 + 1, stat.size() - 1);
 					double f = n - n1;
-					ASSERT(f >= 0 && f <= 1);
+					assert(f >= 0 && f <= 1);
 					percentilM[m][p] = (1 - f)*stat.get_sorted(n1) + f*stat.get_sorted(n2);
 				}
 			}
@@ -890,7 +890,7 @@ namespace WBSF
 		}
 	
 	
-		if (statA.IsInit())
+		if (statA.is_init())
 		{
 			for (size_t p = 0; p < NB_P_PERCENTILS; p++)
 			{
@@ -898,7 +898,7 @@ namespace WBSF
 				size_t n1 = size_t(floor(n));
 				size_t n2 = min(n1 + 1, statA.size() - 1);
 				double f = n - n1;
-				ASSERT(f >= 0 && f <= 1);
+				assert(f >= 0 && f <= 1);
 				percentilA[p] = (1 - f)*statA.get_sorted(n1) + f*statA.get_sorted(n2);
 			}
 		}
@@ -911,21 +911,21 @@ namespace WBSF
 		double results = -999;
 
 		CTRef TRef = day.GetTRef();
-		size_t jd = GetJDay(TRef.GetMonth(), TRef.GetDay());
+		size_t jd = GetDOY(TRef.GetMonth(), TRef.GetDay());
 
 		
 		TVarH v = VARIABLES[vv];
-		if (day[v].IsInit())   
+		if (day[v].is_init())   
 		{
-			bool bInside = m_period.IsInside(day.GetTRef());
+			bool bInside = m_period.is_inside(day.GetTRef());
 
 			double f = p == P10 ? -1 : 1;//revers signe for p10
 
 			CStatistic stat;
 			if (m_bUseBootstrap && bInside)
 			{
-				size_t i = size_t(day.GetTRef().GetYear() - m_period.Begin().GetYear());
-				ASSERT(i < 30);
+				size_t i = size_t(day.GetTRef().GetYear() - m_period.begin().GetYear());
+				assert(i < 30);
 				for (size_t j = 0; j < m_period.GetNbYears(); j++)       // inside base years
 				{
 					if (j != i )
@@ -942,7 +942,7 @@ namespace WBSF
 			}
 
 			
-			if (stat.IsInit())
+			if (stat.is_init())
 				results = stat[MEAN];
 		}
 

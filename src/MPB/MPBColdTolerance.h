@@ -3,7 +3,7 @@
 #include <vector>
 #include "Basic/ERMsg.h"
 #include "Basic/utilTime.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 
 
 namespace WBSF

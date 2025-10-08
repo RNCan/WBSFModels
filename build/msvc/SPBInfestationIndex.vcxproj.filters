@@ -7,12 +7,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SPBInfestationIndexModel.cpp">
+    <ClCompile Include="..\..\src\SPBInfestationIndex\SPBInfestationIndexModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SPBInfestationIndexModel.h">
+    <ClInclude Include="..\..\src\SPBInfestationIndex\SPBInfestationIndexModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

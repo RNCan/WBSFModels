@@ -9,7 +9,7 @@
 
 #include "LeucotaraxisArgenticollisEquations.h"
 #include "LeucotaraxisArgenticollis.h"
-#include "Basic/DegreeDays.h"
+#include "WeatherBased/DegreeDays.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/lognormal.hpp>
@@ -40,23 +40,23 @@ namespace WBSF
 	CLeucotaraxisArgenticollis::CLeucotaraxisArgenticollis(CHost* pHost, CTRef creationDate, double age, TSex sex, bool bFertil, size_t generation, double scaleFactor) :
 		CIndividual(pHost, creationDate, age, sex, bFertil, generation, scaleFactor)
 	{
-		ASSERT(age == EGG || age == PUPAE);
+		assert(age == EGG || age == PUPAE);
 
 		
 		//reset creation date
 		int year = creationDate.GetYear();
 
 
-		m_bInDiapause = age == PUPAE;
+		m_bInDiapause = int(age) == PUPAE;
 		m_bWillDiapause = GetStand()->RandomGenerator().Rand(0.0, 1.0) <= 0.75;//diapause in generation 1 (75% of diapause)
 		//if (GetStand()->CALIBRATE_PUPAE_AND_EMERGENCE_G2)
 		//	m_bWillDiapause = false;
 
 
 		m_creationDate = creationDate;
-		if (age == PUPAE)
+		if (int(age) == PUPAE)
 		{
-			m_age = PUPAE + GetPupaAge(year);
+			m_age = double(PUPAE) + GetPupaAge(year);
 			m_end_of_diapause = GetEndOfDiapause(year);
 
 			//m_age = PUPAE + GetPupaAge(year);
@@ -111,7 +111,7 @@ namespace WBSF
 		double adult_emerging_CDD = Equations().GetAdultEmergingCDD(Tjan);
 		const CModelStatVector& CDD = GetStand()->m_adult_emergence_CDD[0];
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End() && !adult_emergence.IsInit(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end() && !adult_emergence.IsInit(); TRef++)
 		{
 			if (CDD[TRef][0] >= adult_emerging_CDD)
 			{
@@ -251,8 +251,8 @@ namespace WBSF
 
 
 		//size_t DOY = equations.m_C_param[C_P2];
-		CJDayRef end_of_diapause(year, DOY);
-		assert(end_of_diapause.IsInit());
+		CDOYRef end_of_diapause(year, DOY);
+		assert(end_of_diapause.is_init());
 		return end_of_diapause;
 
 		
@@ -339,7 +339,7 @@ namespace WBSF
 
 		//Time step development rate for this individual
 		r *= rr;
-		ASSERT(r >= 0 && r < 1);
+		assert(r >= 0 && r < 1);
 
 		//if (s == PUPAE)
 			//r *= pStand->m_equations.m_C_param[C_P1];
@@ -354,9 +354,9 @@ namespace WBSF
 			m_bInDiapause = false;
 		}
 
-		if (!m_adult_emergence_date.IsInit())
+		if (!m_adult_emergence_date.is_init())
 		{
-			if (!(m_generation == 2 && m_age >= PUPAE))
+			if (!(m_generation == 2 && GetStage() >= PUPAE))
 				m_age += min(0.04, r);
 		}
 		else
@@ -368,7 +368,7 @@ namespace WBSF
 			}
 			else
 			{
-				if (!(m_generation == 2 && m_age >= PUPAE))
+				if (!(m_generation == 2 && GetStage() >= PUPAE))
 					m_age += min(0.04, r);
 			}
 		}
@@ -382,7 +382,7 @@ namespace WBSF
 		}
 
 
-		if (m_sex == FEMALE && GetAge() >= ADULT && m_Fi > 0)
+		if (m_sex == FEMALE && GetStage() >= ADULT && m_Fi > 0)
 		{
 
 			double t = timeStep / 24.0;
@@ -390,7 +390,7 @@ namespace WBSF
 			{
 				double λ = 0.3;//Based on 10 000 random longevity, fecundity and pre-oviposition period
 				double brood = m_Fi * (exp(-λ * (m_t - m_to)) - exp(-λ * (m_t + t - m_to)));
-				ASSERT(brood >= 0);
+				assert(brood >= 0);
 
 				m_broods += brood;
 				m_totalBroods += brood;
@@ -413,18 +413,18 @@ namespace WBSF
 	{
 		CIndividual::Live(weather);
 
-		ASSERT(IsCreated(weather.GetTRef()));
+		assert(IsCreated(weather.GetTRef()));
 
 		if (m_bInDiapause && weather.GetTRef() >= m_end_of_diapause)
 		{
-			//ASSERT(GetStage() >= PUPAE && GetStage() < ADULT);
-			ASSERT(m_generation <= 2);
+			//assert(GetStage() >= PUPAE && GetStage() < ADULT);
+			assert(m_generation <= 2);
 			m_bInDiapause = false;
 		}
 
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps && IsAlive() && m_age < DEAD_ADULT; step++)
+		for (size_t step = 0; step < nbSteps && IsAlive() && GetStage() < DEAD_ADULT; step++)
 		{
 			size_t h = step * GetTimeStep();
 			Live(weather[h], GetTimeStep());
@@ -459,8 +459,8 @@ namespace WBSF
 
 		if (m_broods > 0 && bCreateEgg)
 		{
-			ASSERT(m_age >= ADULT);
-			CLAZStand* pStand = GetStand(); ASSERT(pStand);
+			assert(m_age >= ADULT);
+			CLAZStand* pStand = GetStand(); assert(pStand);
 
 			double scaleFactor = m_broods * m_scaleFactor * m_generationSurvival[m_generation];
 			CIndividualPtr object = make_shared<CLeucotaraxisArgenticollis>(m_pHost, weather.GetTRef(), EGG, RANDOM_SEX, true, m_generation + 1, scaleFactor);
@@ -525,7 +525,7 @@ namespace WBSF
 		if (IsCreated(d))
 		{
 			size_t s = GetStage();
-			ASSERT(s <= DEAD_ADULT);
+			assert(s <= DEAD_ADULT);
 
 			if (IsAlive() || (s == DEAD_ADULT))
 			{

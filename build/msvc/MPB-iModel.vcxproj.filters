@@ -10,31 +10,31 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MountainPineBeetle.cpp">
+    <ClCompile Include="..\..\src\MPB\MPBDevRates.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MPBiModel.cpp">
+    <ClCompile Include="..\..\src\MPB\MPBColdTolerance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\MPBColdTolerance.cpp">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClCompile Include="..\..\src\MPB\iModel\MountainPineBeetle.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\MPBDevRates.cpp">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClCompile Include="..\..\src\MPB\iModel\MPBiModel.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MountainPineBeetle.h">
+    <ClInclude Include="..\..\src\MPB\iModel\MountainPineBeetle.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MPBiModel.h">
+    <ClInclude Include="..\..\src\MPB\MPBColdTolerance.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MPBColdTolerance.h">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClInclude Include="..\..\src\MPB\MPBDevRates.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MPBDevRates.h">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClInclude Include="..\..\src\MPB\iModel\MPBiModel.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

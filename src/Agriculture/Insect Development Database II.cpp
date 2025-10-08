@@ -2,14 +2,14 @@
 // 31/01/2020	1.1.3	Rémi Saint-Amant	Bug correction to manage multiple years
 // 06/08/2013			Rémi Saint-Amant	Create from excel file 
 //**********************************************************************
-#include <math.h>
-#include <crtdbg.h>
+#include <cmath>
+#include <cassert>
 
 
 #include "Basic/CSV.h"
 #include "Basic/UtilStd.h"
-#include "Basic/DegreeDays.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
 #include "Insect Development Database II.h"
 
 using namespace std;
@@ -24,14 +24,14 @@ namespace WBSF
 		CModelFactory::RegisterModel(CIDDModel::CreateObject);
 
 
-	CCriticalSection CInsectDevelopmentDatabase::CS;
+	std::mutex CInsectDevelopmentDatabase::CS;
 	std::map<string, CInsectDevelopment> CInsectDevelopmentDatabase::INSECTS_DEVELOPMENT_DATABASE;
 
 	ERMsg CInsectDevelopmentDatabase::Set(const std::string& data)
 	{
 		ERMsg msg;
 
-		CS.Enter();
+		std::unique_lock<std::mutex> lock(CS);
 		if (INSECTS_DEVELOPMENT_DATABASE.empty())
 		{
 			std::stringstream stream(data);
@@ -64,7 +64,7 @@ namespace WBSF
 			}
 		}
 
-		CS.Leave();
+
 
 		return msg;
 
@@ -100,7 +100,7 @@ namespace WBSF
 		m_bCumulative = parameters[c++].GetBool();
 
 
-		ASSERT(m_insectInfo.m_haveStage[EGG] || m_insectInfo.m_haveStage[LARVAE_NYMPH]);
+		assert(m_insectInfo.m_haveStage[EGG] || m_insectInfo.m_haveStage[LARVAE_NYMPH]);
 
 		return msg;
 	}
@@ -119,7 +119,7 @@ namespace WBSF
 
 	void CIDDModel::Execute(CModelStatVector& output)
 	{
-		ASSERT(output.GetTM().IsDaily());
+		assert(output.TM().IsDaily());
 
 		CDegreeDays DD;
 
@@ -131,7 +131,7 @@ namespace WBSF
 			size_t stage = firstStage;
 
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::DAILY);
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				if (m_insectInfo.m_haveStage[stage])
 				{

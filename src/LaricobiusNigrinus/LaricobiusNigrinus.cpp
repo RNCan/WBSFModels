@@ -62,7 +62,7 @@ namespace WBSF
 		CTRef end = CTRef(year, JUNE, DAY_30);
 
 		double CDD = 0;
-		for (CTRef TRef = begin; TRef <= end && !creationDate.IsInit(); TRef++)
+		for (CTRef TRef = begin; TRef <= end && !creationDate.is_init(); TRef++)
 		{
 			const CWeatherDay& wDay = weather_station.GetDay(TRef);
 			double DD = GetStand()->m_DD.GetDD(wDay);
@@ -73,10 +73,10 @@ namespace WBSF
 			}
 		}
 		
-		if (!creationDate.IsInit())
+		if (!creationDate.is_init())
 			creationDate = end;
 
-		ASSERT(creationDate.IsInit());
+		assert(creationDate.is_init());
 
 		return creationDate;
 	}
@@ -90,12 +90,12 @@ namespace WBSF
 		double adult_emerging_CDD = Equations().GetAdultEmergingCDD();
 
 		CTRef begin = GetStand()->m_diapause_end;
-		CTRef end = p.End();
+		CTRef end = p.end();
 		if (weather_station[year].HaveNext())
-			end = min(p.End(), CTRef(begin.GetYear() + 1, JUNE, DAY_30));
+			end = min(p.end(), CTRef(begin.GetYear() + 1, JUNE, DAY_30));
 
 		double CDD = 0;
-		for (CTRef TRef = begin; TRef <= end && !adult_emergence.IsInit(); TRef++)
+		for (CTRef TRef = begin; TRef <= end && !adult_emergence.is_init(); TRef++)
 		{
 			const CWeatherDay& wday = weather_station.GetDay(TRef);
 			double T = wday[H_TNTX][MEAN];
@@ -146,11 +146,11 @@ namespace WBSF
 	//	{
 	//		if (s == -1)
 	//		{
-	//			if (TRef.GetJDay() < CTRef(0, MARCH, DAY_25).GetJDay())
+	//			if (TRef.GetDOY() < CTRef(0, MARCH, DAY_25).GetDOY())
 	//				s = EGG;
-	//			else if (TRef.GetJDay() < CTRef(0, APRIL, DAY_15).GetJDay())
+	//			else if (TRef.GetDOY() < CTRef(0, APRIL, DAY_15).GetDOY())
 	//				s = LARVAE;
-	//			else if (TRef.GetJDay() < CTRef(0, MAY, DAY_25).GetJDay())
+	//			else if (TRef.GetDOY() < CTRef(0, MAY, DAY_25).GetDOY())
 	//				s = PUPAE;
 	//			else
 	//				s = AESTIVAL_DIAPAUSE_ADULT;
@@ -245,12 +245,12 @@ namespace WBSF
 
 			//Time step development rate for this individual
 			r *= rr;// *corr_r;
-			ASSERT(r >= 0 && r < 1);
+			assert(r >= 0 && r < 1);
 
 			//Adjust age
 			m_age += r;
 
-			if (!m_dropToGroundDate.IsInit() && m_age > LARVAE + 0.95)//drop to the soil when 95% competed (guess)
+			if (!m_dropToGroundDate.is_init() && m_age > double(LARVAE) + 0.95)//drop to the soil when 95% competed (guess)
 				m_dropToGroundDate = weather.GetTRef().as(CTM::DAILY);
 
 			if (GetStand()->m_bApplyAttrition)
@@ -268,7 +268,7 @@ namespace WBSF
 		//else//ACTIVE_ADULT
 		//{
 		//	double r = (1.0 / m_adult_longevity) / nb_steps;
-		//	ASSERT(r >= 0 && r < 1);
+		//	assert(r >= 0 && r < 1);
 		//
 		//	m_age += r;
 		//}
@@ -301,13 +301,13 @@ namespace WBSF
 	{
 		CIndividual::Live(weather);
 
-		ASSERT(IsCreated(weather.GetTRef()));
+		assert(IsCreated(weather.GetTRef()));
 
 		if (!IsCreated(weather.GetTRef()))
 			return;
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps && m_age < DEAD_ADULT; step++)
+		for (size_t step = 0; step < nbSteps && GetStage() < DEAD_ADULT; step++)
 		{
 			size_t h = step * GetTimeStep();
 			Live(weather[h], GetTimeStep());
@@ -340,7 +340,7 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = OLD_AGE;
 		}
-		else if (m_deadByAttrition.IsInit())
+		else if (m_deadByAttrition.is_init())
 		{
 			m_status = DEAD;
 			m_death = ATTRITION;
@@ -413,7 +413,7 @@ namespace WBSF
 		if (IsCreated(d))
 		{
 			size_t s = GetStage();
-			ASSERT(s <= DEAD_ADULT);
+			assert(s <= DEAD_ADULT);
 
 			if (IsAlive() || (s == DEAD_ADULT))
 				stat[S_EGGS + s] += m_scaleFactor;
@@ -425,7 +425,7 @@ namespace WBSF
 			if (HasChangedStage())
 				stat[S_M_EGGS + s] += m_scaleFactor;
 
-			if (m_dropToGroundDate.IsInit() && m_dropToGroundDate == d)
+			if (m_dropToGroundDate.is_init() && m_dropToGroundDate == d)
 				stat[S_LARVAL_DROP] += m_scaleFactor;
 
 
@@ -491,7 +491,7 @@ namespace WBSF
 
 		for (size_t ii = (m_equations.m_ADE[ʎ0] - 1); ii <= (m_equations.m_ADE[ʎ1] - 1); ii++)
 		{
-			CTRef TRef = p.Begin() + ii;
+			CTRef TRef = p.begin() + int32_t(ii);
 			const CWeatherDay& wday = weather.GetDay(TRef);
 			double T = wday[H_TNTX][MEAN];
 
@@ -501,10 +501,10 @@ namespace WBSF
 		}
 
 		boost::math::logistic_distribution<double> begin_dist(m_equations.m_ADE[ʎ2], m_equations.m_ADE[ʎ3]);
-		int begin = (int)Round((m_equations.m_ADE[ʎ1] - 1) + m_equations.m_ADE[ʎa] * cdf(begin_dist, sumDD), 0);
+		int begin = (int)round((m_equations.m_ADE[ʎ1] - 1) + m_equations.m_ADE[ʎa] * cdf(begin_dist, sumDD), 0);
 
 
-		return p.Begin() + begin;
+		return p.begin() + begin;
 	}
 
 

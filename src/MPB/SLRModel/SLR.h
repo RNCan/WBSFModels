@@ -12,7 +12,7 @@
 
 #include <vector>
 #include "Basic/ERMsg.h"
-#include "ModelBase/InputParam.h"
+#include "ModelBased/InputParam.h"
 
 
 namespace WBSF

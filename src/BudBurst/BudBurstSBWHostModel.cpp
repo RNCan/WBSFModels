@@ -7,8 +7,8 @@
 //*********************************************************************
 
 #include "BudBurstSBWHostModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic\DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
 #include <boost/math/distributions/Rayleigh.hpp>
@@ -70,7 +70,7 @@ namespace WBSF
 		m_defoliation = 0;//Defoliation no longer used
 
 
-		ASSERT(m_species < HBB::PARAMETERS[0].size());
+		assert(m_species < HBB::PARAMETERS[0].size());
 
 		m_P = HBB::PARAMETERS[0][m_species];
 		
@@ -147,7 +147,7 @@ namespace WBSF
 			m_bUseDefoliation = SDI[ʎa] != 0;
 
 
-			ASSERT(m_species < HBB::PARAMETERS[0].size());
+			assert(m_species < HBB::PARAMETERS[0].size());
 
 
 		}
@@ -166,7 +166,7 @@ namespace WBSF
 		//m_SDI_type = parameters[c++].GetInt();// no longer support Dhont.
 		parameters[c++].GetInt();
 		m_SDI_type = SDI_AUGER;
-		ASSERT(m_SDI_type < NB_SDI_TYPE);
+		assert(m_SDI_type < NB_SDI_TYPE);
 		
 
 		m_bCumul = parameters[c++].GetBool();
@@ -221,7 +221,7 @@ namespace WBSF
 	
 	enum { I_SPECIES, I_SOURCE, I_SITE, I_LATITUDE, I_LONGITUDE, I_ELEVATION, I_DATE, I_STARCH, I_SUGAR, I_B_LENGTH, I_B_MASS, I_N_MASS, I_SDI, I_N, I_DEF, I_DEF_END_N1, I_DEF_END_N, I_PROVINCE, I_TYPE, NB_INPUTS };
 
-	void CSBWHostBudBurstModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CSBWHostBudBurstModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		static const char* SPECIES_NAME[] = { "bf", "ws", "bs", "ns", "rs", "rbs" };
 
@@ -246,7 +246,7 @@ namespace WBSF
 					(USE_MASS && obs.m_obs[3] > -999) || 
 					(USE_LENGTH && obs.m_obs[4] > -999) )
 				{
-					if(obs.m_ref.GetJDay()<213)
+					if(obs.m_ref.GetDOY()<213)
 						m_years.insert(obs.m_ref.GetYear());
 					else
 						m_years.insert(obs.m_ref.GetYear()+1);
@@ -263,9 +263,9 @@ namespace WBSF
 
 	double GetSimDOY(const CModelStatVector& output, const CSAResult& result)
 	{
-		CTPeriod p(result.m_ref.GetYear(), JANUARY, DAY_01, result.m_ref.GetYear(), DECEMBER, DAY_31);
-		int pos = output.GetFirstIndex(O_SDI, ">", result.m_obs[0], 0, p);
-		return pos >= 0 ? double((output.GetFirstTRef() + pos).GetJDay()) : -999.0;
+		CTPeriod p(CTRef(result.m_ref.GetYear(), JANUARY, DAY_01), CTRef(result.m_ref.GetYear(), DECEMBER, DAY_31));
+		size_t pos = output.GetFirstIndex(O_SDI, ">", result.m_obs[0], 0, p);
+		return pos != NOT_INIT ? double((output.GetFirstTRef() + int(pos)).GetDOY()) : -999.0;
 	}
 
 
@@ -277,7 +277,7 @@ namespace WBSF
 
 		if (!m_SAResult.empty())
 		{
-			if (!m_SDI_DOY_stat.IsInit())
+			if (!m_SDI_DOY_stat.is_init())
 			{
 				const CSimulatedAnnealingVector& all_results = GetSimulatedAnnealingVector();
 
@@ -287,7 +287,7 @@ namespace WBSF
 					for (auto iit = results.begin(); iit != results.end(); iit++)
 					{
 						if (iit->m_obs[0] >= MIN_SDI_DOY && iit->m_obs[0] <= MAX_SDI_DOY)
-							m_SDI_DOY_stat += iit->m_ref.GetJDay();
+							m_SDI_DOY_stat += iit->m_ref.GetDOY();
 
 						for (size_t i = 0; i < m_stat.size(); i++)
 						{
@@ -303,8 +303,8 @@ namespace WBSF
 			if (m_data_weather.GetNbYears() == 0)
 			{
 				CTPeriod pp(CTRef((*m_years.begin()) - 1, JANUARY, DAY_01), CTRef(*m_years.rbegin(), DECEMBER, DAY_31));
-				pp = pp.Intersect(m_weather.GetEntireTPeriod(CTM::DAILY));
-				if (pp.IsInit())
+				pp = pp.intersect(m_weather.GetEntireTPeriod(CTM::DAILY));
+				if (pp.is_init())
 				{
 					((CLocation&)m_data_weather) = m_weather;
 					m_data_weather.SetHourly(m_weather.IsHourly());
@@ -360,12 +360,12 @@ namespace WBSF
 
 			for (size_t i = 0; i < m_SAResult.size(); i++)
 			{
-				if (output.IsInside(m_SAResult[i].m_ref) && m_SAResult[i].m_ref.GetJDay() < max_doy_data)
+				if (output.is_inside(m_SAResult[i].m_ref) && m_SAResult[i].m_ref.GetDOY() < max_doy_data)
 				{
-					if (USE_SDI && m_SAResult[i].m_obs[0] > -999 && m_SAResult[i].m_ref.GetJDay() < max_doy_data)
+					if (USE_SDI && m_SAResult[i].m_obs[0] > -999 && m_SAResult[i].m_ref.GetDOY() < max_doy_data)
 					{
-						ASSERT(output[m_SAResult[i].m_ref][O_SDI] > -999);
-						ASSERT(m_SAResult[i].m_ref.GetJDay() < max_doy_data);
+						assert(output[m_SAResult[i].m_ref][O_SDI] > -999);
+						assert(m_SAResult[i].m_ref.GetDOY() < max_doy_data);
 
 						double obs_SDI = (m_SAResult[i].m_obs[0] - m_stat[0][LOWEST]) / m_stat[0][RANGE];
 						double sim_SDI = (output[m_SAResult[i].m_ref][O_SDI] - m_stat[0][LOWEST]) / m_stat[0][RANGE];
@@ -381,7 +381,7 @@ namespace WBSF
 							double DOY = GetSimDOY(output, m_SAResult[i]);
 							if (DOY > -999)
 							{
-								double obs_DOY = (m_SAResult[i].m_ref.GetJDay() - m_SDI_DOY_stat[LOWEST]) / m_SDI_DOY_stat[RANGE];
+								double obs_DOY = (m_SAResult[i].m_ref.GetDOY() - m_SDI_DOY_stat[LOWEST]) / m_SDI_DOY_stat[RANGE];
 								double sim_DOY = (DOY - m_SDI_DOY_stat[LOWEST]) / m_SDI_DOY_stat[RANGE];
 
 								stat.Add(obs_DOY, sim_DOY);
@@ -391,7 +391,7 @@ namespace WBSF
 
 					if (USE_STARCH && m_SAResult[i].m_obs[1] > -999 )
 					{
-						ASSERT(output[m_SAResult[i].m_ref][O_ST_CONC] > -999);
+						assert(output[m_SAResult[i].m_ref][O_ST_CONC] > -999);
 
 						double obs_cSt = (m_SAResult[i].m_obs[1] - m_stat[1][LOWEST]) / m_stat[1][RANGE];
 						double sim_cSt = (output[m_SAResult[i].m_ref][O_ST_CONC] - m_stat[1][LOWEST]) / m_stat[1][RANGE];
@@ -406,7 +406,7 @@ namespace WBSF
 
 					if (USE_SUGAR && m_SAResult[i].m_obs[2] > -999 ) 
 					{
-						ASSERT(output[m_SAResult[i].m_ref][O_S_CONC] > -999);
+						assert(output[m_SAResult[i].m_ref][O_S_CONC] > -999);
 
 						
 						double obs_cS = (m_SAResult[i].m_obs[2] - m_stat[2][LOWEST]) / m_stat[2][RANGE];
@@ -420,9 +420,9 @@ namespace WBSF
 					}
 
 
-					if (USE_MASS && m_SAResult[i].m_obs[3] > -999 && m_SAResult[i].m_ref.GetJDay() < max_doy_data)
+					if (USE_MASS && m_SAResult[i].m_obs[3] > -999 && m_SAResult[i].m_ref.GetDOY() < max_doy_data)
 					{
-						ASSERT(output[m_SAResult[i].m_ref][O_BRANCH_MASS] > -999);
+						assert(output[m_SAResult[i].m_ref][O_BRANCH_MASS] > -999);
 
 						double M = output[m_SAResult[i].m_ref][O_BUDS_MASS];
 						double B = output[m_SAResult[i].m_ref][O_BRANCH_MASS];
@@ -441,9 +441,9 @@ namespace WBSF
 							stat.Add(obs_BM, sim_BM);
 					}
 
-					if (USE_LENGTH && m_SAResult[i].m_obs[4] > -999 && m_SAResult[i].m_ref.GetJDay() < max_doy_data)
+					if (USE_LENGTH && m_SAResult[i].m_obs[4] > -999 && m_SAResult[i].m_ref.GetDOY() < max_doy_data)
 					{
-						ASSERT(output[m_SAResult[i].m_ref][O_BRANCH_LENGTH] > -999);
+						assert(output[m_SAResult[i].m_ref][O_BRANCH_LENGTH] > -999);
 						
 						double obs_BM = (m_SAResult[i].m_obs[4]- m_stat[4][LOWEST]) / m_stat[4][RANGE];//Mass gain
 						double sim_BM = (output[m_SAResult[i].m_ref][O_BRANCH_LENGTH]- m_stat[4][LOWEST]) / m_stat[4][RANGE];//mass gain

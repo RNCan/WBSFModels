@@ -9,7 +9,7 @@
 //*********************************************************************
 #pragma once
 
-#include "modelBase/EquationTableLookup.h"
+#include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
 {

@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include <crtdbg.h>
+#include <cassert>
 #include <vector>
 #include <deque>
 #include "basic/UtilTime.h"
 #include "basic/ModelStat.h"
-#include "modelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "SBBEquations.h"
 
 namespace WBSF
@@ -212,7 +212,7 @@ namespace WBSF
 	protected:
 
 		std::array<double, 2> m_P2Prob;
-		std::auto_ptr<CSpruceBarkBeetleTree> m_pTree;
+		std::unique_ptr<CSpruceBarkBeetleTree> m_pTree;
 	};
 
 }

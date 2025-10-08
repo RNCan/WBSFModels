@@ -50,7 +50,7 @@ Thoughts:
 //*********************************************************************
 #include "MPBiModel.h"
 #include "Basic/timeStep.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 
 using namespace std;
 //using namespace WBSF::HOURLY_DATA;
@@ -120,7 +120,7 @@ namespace WBSF
 			//Do simulation
 			DoSimulation(stat, m_attacks);
 
-			ASSERT(stat.size() == output.size());
+			assert(stat.size() == output.size());
 
 			//compute generation statistics
 			for (size_t g = 0; g < stat.size(); g++)
@@ -129,7 +129,7 @@ namespace WBSF
 				CTRef firstDay = stat[g].GetFirstTRef(S_NB_OBJECT_ALIVE, ">=", 0.05, 0);
 				CTRef lastDay = stat[g].GetLastTRef(S_NB_OBJECT_ALIVE, ">=", 0.05, 0);
 
-				if (firstDay.IsInit())
+				if (firstDay.is_init())
 				{
 					output[g][A_YEAR] = firstDay.GetYear();
 					output[g][A_MONTH] = firstDay.GetMonth() + 1;
@@ -155,7 +155,7 @@ namespace WBSF
 					output[g][A_OVIPADULT] = -9999;
 				}
 
-				if (lastDay.IsInit())
+				if (lastDay.is_init())
 				{
 					output[g][A_YEAR_END] = lastDay.GetYear();
 					output[g][A_MONTH_END] = lastDay.GetMonth() + 1;
@@ -315,12 +315,12 @@ namespace WBSF
 				attacks = stat.GetInitialPopulation(E_OVIPOSITING_ADULT, m_nbObjects, m_totalInitialAttack, E_OVIPOSITING_ADULT, FEMALE);
 				if (attacks.empty())
 				{
-					ASSERT(y >= 0 && y < m_weather.GetNbYears());
+					assert(y >= 0 && y < m_weather.GetNbYears());
 					attacks = m_attacks;
 					attacks.UpdateYear(m_weather[y + 1].GetTRef().GetYear());
 				}
 				y = attacks[0].m_creationDate.GetYear() - m_weather.GetFirstYear();
-				ASSERT(y >= 0 && y < m_weather.GetNbYears());
+				assert(y >= 0 && y < m_weather.GetNbYears());
 			}
 		}
 
@@ -341,8 +341,8 @@ namespace WBSF
 
 	/*CTRef CMPBiModel::GetInitialPeakAttack(int nbRunMax, int y)
 	{
-	ASSERT( m_weather.GetNbYears()>=2);
-	ASSERT( nbRunMax >= 1);
+	assert( m_weather.GetNbYears()>=2);
+	assert( nbRunMax >= 1);
 
 	if( y==m_weather.GetNbYears()-1 )
 	return CTRef();
@@ -351,10 +351,10 @@ namespace WBSF
 	vector<CTRef> originalPeak = m_peakDates;
 	CTRef peak;
 
-	//for(short y=y1; y<=y2&&!peak.IsInit(); y++)
+	//for(short y=y1; y<=y2&&!peak.is_init(); y++)
 	//{
 	peak = m_peakDate;
-	for(short i=0; i<nbRunMax&&peak.IsInit(); i++)
+	for(short i=0; i<nbRunMax&&peak.is_init(); i++)
 	{
 	//fix seed to converge
 	CFL::Randomize(1);
@@ -367,10 +367,10 @@ namespace WBSF
 	DoSimulation(stat, y, y+1);
 
 	peak = GetInitialPeakAttack(stat);
-	if( peak.IsInit() )
+	if( peak.is_init() )
 	peak.m_year = originalPeak.GetYear();
 
-	if( abs(peak.GetJDay() - m_peakDate.GetJDay()) <= 7 )
+	if( abs(peak.GetDOY() - m_peakDate.GetDOY()) <= 7 )
 	{
 	//we have converged. stop here
 	break;
@@ -381,7 +381,7 @@ namespace WBSF
 	//		m_peakDate = peak;
 	//		//try with the last year
 	//		peak = GetInitialPeakAttack(nbRunMax, m_weather.GetNbYears()-2);
-	//		if( peak.IsInit() )
+	//		if( peak.is_init() )
 	//		{
 	//			peak = m_peakDate;
 	//			//we have converged. stop here
@@ -398,7 +398,7 @@ namespace WBSF
 	//		//DoSimulation(stat, y+1, y+2);
 	//
 	//		//CTRef peak2 = GetInitialPeakAttack(stat);
-	//		//if( peak2.IsInit() )
+	//		//if( peak2.is_init() )
 	//		//{
 	//		//	//we have converged. stop here
 	//		//	break;
@@ -430,7 +430,7 @@ namespace WBSF
 	InitRandomGenerator(bFixedSeed?1:0);
 
 	//try an other year if not init
-	if(!peak.IsInit())
+	if(!peak.is_init())
 	peak = GetInitialPeakAttack(nbRunMax, y+1);
 
 	return peak;
@@ -446,8 +446,8 @@ namespace WBSF
 
 	void CMPBiModel::DoSimulation(CMPBStatMatrix& stat, const CInitialPopulation& attacks, size_t y1, size_t y2, bool bAllGeneration)
 	{
-		ASSERT(y1 == NOT_INIT || y1 < m_weather.GetNbYears() - 1);
-		ASSERT(y2 == NOT_INIT || y2 <= m_weather.GetNbYears());
+		assert(y1 == NOT_INIT || y1 < m_weather.GetNbYears() - 1);
+		assert(y2 == NOT_INIT || y2 <= m_weather.GetNbYears());
 
 		if (!m_weather.IsHourly())
 			m_weather.ComputeHourlyVariables();
@@ -466,7 +466,7 @@ namespace WBSF
 		if (y2 == 0 || y2 == NOT_INIT)
 			y2 = m_weather.GetNbYears() - 1;
 
-		CTPeriod p(m_weather[y1].GetEntireTPeriod(CTM::DAILY).Begin(), m_weather[y2].GetEntireTPeriod(CTM::DAILY).End());
+		CTPeriod p(m_weather[y1].GetEntireTPeriod(CTM::DAILY).begin(), m_weather[y2].GetEntireTPeriod(CTM::DAILY).end());
 		//Initialize statistics 
 		for (size_t g = 0; g < stat.size(); g++)
 			stat[g].Init(p);
@@ -514,7 +514,7 @@ namespace WBSF
 		for (size_t y = y1; y <= y2; y++)
 		{
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::DAILY);
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
 				//tree and bugs live for the day
 				stand.Live(m_weather.GetDay(d));
@@ -550,7 +550,7 @@ namespace WBSF
 		if (stat.empty())
 			return;
 
-		ASSERT(output.GetTPeriod().IsInside(stat.GetTPeriod()));
+		assert(output.GetTPeriod().is_inside(stat.GetTPeriod()));
 		//double cumulKm²=m_initialInfestation;
 
 		for (CTRef d = stat.GetFirstTRef(); d <= stat.GetLastTRef(); d++)
@@ -596,7 +596,7 @@ namespace WBSF
 	if(stat.empty() )
 	return;
 
-	ASSERT( output.GetTPeriod().IsInside( stat.GetTPeriod() ) );
+	assert( output.GetTPeriod().is_inside( stat.GetTPeriod() ) );
 
 	//double cumulKm²=m_initialInfestation;
 	for (CTRef d=stat.GetFirstTRef(); d<=stat.GetLastTRef(); d++)
@@ -653,8 +653,8 @@ namespace WBSF
 			CStatistic longivity;
 
 			CTPeriod p = m_weather[y + 1].GetEntireTPeriod(CTM::DAILY);
-			CTRef firstDay = p.Begin(); // m_weather[y + 1].GetFirstTRef();
-			CTRef lastDay = p.End(); // m_weather[y + 1].GetLastTRef();
+			CTRef firstDay = p.begin(); // m_weather[y + 1].GetFirstTRef();
+			CTRef lastDay = p.end(); // m_weather[y + 1].GetLastTRef();
 			for (CTRef d = firstDay; d <= lastDay; d++)
 			{
 				if (stat[d][S_NB_OBJECT] > 0)
@@ -884,14 +884,14 @@ namespace WBSF
 
 	//*****************************************************************************************************
 	//Simulated Annealing
-	void CMPBiModel::AddSAResult(const StringVector& header, const StringVector& data)
+	void CMPBiModel::AddSAResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(header.size() == 5);
-		ASSERT(header[0] == "STATION_ID");
-		ASSERT(header[1] == "Year");
-		ASSERT(header[2] == "R");
-		ASSERT(header[3] == "km²");
-		ASSERT(header[4] == "P");
+		assert(header.size() == 5);
+		assert(header[0] == "STATION_ID");
+		assert(header[1] == "Year");
+		assert(header[2] == "R");
+		assert(header[3] == "km²");
+		assert(header[4] == "P");
 
 
 		CTRef ref(ToInt(data[1]));
@@ -914,7 +914,7 @@ namespace WBSF
 
 			for (size_t k = 0; k < m_SAResult.size(); k++)
 			{
-				if (m_output.IsInside(m_SAResult[k].m_ref))
+				if (m_output.is_inside(m_SAResult[k].m_ref))
 				{
 					if (m_OptimizeOn == 0) //R 
 					{

@@ -14,8 +14,8 @@
 //			and this new SMI_QL model is identical
 //*********************************************************************
 #include "SMI_QLModel.h"
-#include "ModelBase\EntryPoint.h"
-#include "Basic\WeatherStation.h"
+#include "ModelBased\EntryPoint.h"
+#include "weatherBased\WeatherStation.h"
 
 
 using namespace WBSF::HOURLY_DATA;
@@ -95,7 +95,7 @@ namespace WBSF
 					}
 					else
 					{
-						AET = PET*(2 * SMI / m_SMIcrit - Square(SMI / m_SMIcrit));
+						AET = PET*(2 * SMI / m_SMIcrit - square(SMI / m_SMIcrit));
 					}
 
 					//Daily water runoff [mm d-1]

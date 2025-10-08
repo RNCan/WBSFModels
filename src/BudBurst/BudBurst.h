@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "Basic/ModelStat.h"
 
 namespace WBSF
@@ -19,8 +19,8 @@ namespace WBSF
 		virtual ERMsg OnExecuteDaily()override;
 		virtual ERMsg OnExecuteAnnual()override;
 		virtual ERMsg ProcessParameters(const CParameterVector& parameters)override;
-		void AddDailyResult(const StringVector& header, const StringVector& data)override;
-		virtual void AddAnnualResult(const StringVector& header, const StringVector& data)override;
+		void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
+		virtual void AddAnnualResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
 		virtual bool GetFValueDaily(CStatisticXY& stat)override;
 		virtual bool GetFValueAnnual(CStatisticXY& stat)override;
 

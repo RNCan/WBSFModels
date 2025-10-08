@@ -13,7 +13,7 @@
 
 #include <boost\math\distributions.hpp>
 #include "basic/UtilMath.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "SBBEquations.h"
 
 using namespace std;
@@ -23,7 +23,7 @@ namespace WBSF
 {
 	double plnorm(double x, double logmean, double logsd, bool lower_tail = true, bool log_p = false)
 	{
-		ASSERT(logsd > 0);
+		assert(logsd > 0);
 
 		boost::math::lognormal_distribution<double> uniformLogNormal(logmean, logsd);
 
@@ -42,7 +42,7 @@ namespace WBSF
 
 	double qlnorm(double x, double logmean, double logsd, bool lower_tail = true, bool log_p = false)
 	{
-		ASSERT(logsd > 0);
+		assert(logsd > 0);
 
 		boost::math::lognormal_distribution<double> uniformLogNormal(logmean, logsd);
 
@@ -234,9 +234,9 @@ namespace WBSF
 	{
 		_ASSERTE(s >= 0 && s < NB_STAGES);
 
-		double r = RG.RandLogNormal(0, V[s]);
+		double r = RG.RandUnbiasedLogNormal(0, V[s]);
 		while (r<0.4 || r>2.5)
-			r = RG.RandLogNormal(0, V[s]);
+			r = RG.RandUnbiasedLogNormal(0, V[s]);
 
 
 		//modulate relative rate by sex. Male 
@@ -285,7 +285,7 @@ namespace WBSF
 
 	double CSBBOviposition::GetRate(int e, double T)
 	{
-		ASSERT(e >= 0 && e<NB_EQUATIONS);
+		assert(e >= 0 && e<NB_EQUATIONS);
 
 		double Or = 0.0;
 
@@ -309,19 +309,19 @@ namespace WBSF
 	const double CSBBOviposition::V[NB_EQUATIONS] = { 0.12831, 0.0981 };
 	double CSBBOviposition::GetRelativeRate(const CRandomGenerator& RG, int e)
 	{
-		ASSERT(e >= 0 && e < NB_EQUATIONS);
+		assert(e >= 0 && e < NB_EQUATIONS);
 
-		double r = RG.RandLogNormal(0, V[e]);
+		double r = RG.RandUnbiasedLogNormal(0, V[e]);
 		while (r<0.4 || r>2.5)
-			r = RG.RandLogNormal(0, V[e]);
+			r = RG.RandUnbiasedLogNormal(0, V[e]);
 
 		return r;
 	}
 
 	double CSBBOviposition::GetRelativeQuartile(double RR, int e)
 	{
-		ASSERT(e >= 0 && e < NB_EQUATIONS);
-		return plnorm(RR, 0 - Square(V[e]) / 2.0, V[e]);
+		assert(e >= 0 && e < NB_EQUATIONS);
+		return plnorm(RR, 0 - square(V[e]) / 2.0, V[e]);
 	}
 
 	//

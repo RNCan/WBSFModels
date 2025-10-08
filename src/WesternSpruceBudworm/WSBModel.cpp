@@ -37,8 +37,8 @@
 //*****************************************************************************
 
 #include "Basic/timeStep.h"
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 #include "WSpruceBudworm.h"
 #include "WSBModel.h"
 
@@ -102,7 +102,7 @@ namespace WBSF
 	//this method is called to load parameters in variables
 	ERMsg CWSBModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.GetNbYears() > 0);
+		assert(m_weather.GetNbYears() > 0);
 
 		ERMsg msg;
 
@@ -129,7 +129,7 @@ namespace WBSF
 		}
 
 
-		ASSERT(m_defoliation >= 0 && m_defoliation <= 1);
+		assert(m_defoliation >= 0 && m_defoliation <= 1);
 		return msg;
 	}
 
@@ -151,7 +151,7 @@ namespace WBSF
 
 	ERMsg CWSBModel::OnExecuteAnnual()
 	{
-		ASSERT(m_weather.size() > 1);
+		assert(m_weather.size() > 1);
 
 		ERMsg msg;
 
@@ -168,7 +168,7 @@ namespace WBSF
 		{
 			//estimate of missing energy and grow rate : take the last day of the current year
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
-			CTRef lastDay = p.End();
+			CTRef lastDay = p.end();
 
 			double L2o22 = output.GetStat(E_L2o2, p)[SUM];
 			double missE = output[lastDay][S_DEAD_MISSING_ENERGY];
@@ -180,12 +180,12 @@ namespace WBSF
 				//Get the number of individuals that complete the winter L2o -> L2 (next year)
 				CTPeriod p = m_weather[y + 1].GetEntireTPeriod(CTM(CTM::DAILY));
 				CTRef lastDay = output.GetFirstTRef(S_L2o2, "==", 0, 0, p);
-				if (lastDay.IsInit())
+				if (lastDay.is_init())
 					m_output[y][O_A_DEAD_MISSING_ENERGY] = output[lastDay][S_DEAD_MISSING_ENERGY];
 
 				CStatistic gr = output.GetStat(E_L22, p);
 
-				if (gr.IsInit())
+				if (gr.is_init())
 					m_output[y][O_A_GROWTH_RATE] = gr[SUM] / 100; //initial population is 100 insect
 			}
 
@@ -235,7 +235,7 @@ namespace WBSF
 			CHostPtr pTree = make_shared<CWSBTree>(&stand);
 			pTree->m_nbMinObjects = m_nbMinObjects;
 			pTree->m_nbMaxObjects = m_nbMaxObjects;
-			pTree->Initialize<CWSpruceBudworm>(CInitialPopulation(p.Begin(), 0, m_nbObjects, m_initialPopulation, L2o, RANDOM_SEX, m_bFertilEgg, 0));
+			pTree->Initialize<CWSpruceBudworm>(CInitialPopulation(p.begin(), 0, m_nbObjects, m_initialPopulation, L2o, RANDOM_SEX, m_bFertilEgg, 0));
 
 			stand.m_host.push_back(pTree);
 
@@ -253,14 +253,14 @@ namespace WBSF
 				size_t yy = y1 + y;
 
 				CTPeriod pp = m_weather[yy].GetEntireTPeriod(CTM(CTM::DAILY));
-				for (CTRef d = pp.Begin(); d <= pp.End(); d++)
+				for (CTRef d = pp.begin(); d <= pp.end(); d++)
 				{
 					stand.Live(m_weather.GetDay(d));
 					stand.GetStat(d, stat[d]);
 
 					if (y == 1 && stat[d][S_L2o2] == 0 && stat[d][S_L22] == 0)
 					{
-						d = pp.End();//end the simulation here
+						d = pp.end();//end the simulation here
 					}
 
 					stand.AdjustPopulation();
@@ -329,16 +329,16 @@ namespace WBSF
 
 
 	//simulated annaling 
-	void CWSBModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CWSBModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_DATA_EMERGENCE)
 		{
-			ASSERT(header[DE_YEAR] == "Year");
-			ASSERT(header[DE_MONTH] == "Month");
-			ASSERT(header[DE_DAY] == "Day");
-			ASSERT(header[DE_JDAY] == "Jday");
-			ASSERT(header[DE_L2o] == "L2o_(%)");
-			ASSERT(header[DE_N] == "n");
+			assert(header[DE_YEAR] == "Year");
+			assert(header[DE_MONTH] == "Month");
+			assert(header[DE_DAY] == "Day");
+			assert(header[DE_JDAY] == "Jday");
+			assert(header[DE_L2o] == "L2o_(%)");
+			assert(header[DE_N] == "n");
 
 			m_dataType = OPT_EMERGENCE;
 			CTRef ref(ToInt(data[DE_YEAR]), ToSizeT(data[DE_MONTH]) - 1, ToSizeT(data[DE_DAY]) - 1);
@@ -347,25 +347,25 @@ namespace WBSF
 			obs.push_back(ToDouble(data[DE_L2o]));
 			obs.push_back(ToDouble(data[DE_N]));
 
-			ASSERT(obs.size() == NB_OBS_EMERGENCE);
+			assert(obs.size() == NB_OBS_EMERGENCE);
 			m_SAResult.push_back(CSAResult(ref, obs));
 		}
 		else if (header.size() == NB_DATA_STAGE)
 		{
 			//transform value to date/stage
-			ASSERT(header[DS_YEAR] == "Year");
-			ASSERT(header[DS_MONTH] == "Month");
-			ASSERT(header[DS_DAY] == "Day");
-			ASSERT(header[DS_JDAY] == "Jday");
-			ASSERT(header[DS_L2] == "L2");
-			ASSERT(header[DS_L3] == "L3");
-			ASSERT(header[DS_L4] == "L4");
-			ASSERT(header[DS_L5] == "L5");
-			ASSERT(header[DS_L6] == "L6");
-			ASSERT(header[DS_PUPEA] == "Pupae");
-			ASSERT(header[DS_ADULT] == "Adults");
-			ASSERT(header[DS_N] == "total_SBW");
-			ASSERT(header[DS_AI] == "AI");
+			assert(header[DS_YEAR] == "Year");
+			assert(header[DS_MONTH] == "Month");
+			assert(header[DS_DAY] == "Day");
+			assert(header[DS_JDAY] == "Jday");
+			assert(header[DS_L2] == "L2");
+			assert(header[DS_L3] == "L3");
+			assert(header[DS_L4] == "L4");
+			assert(header[DS_L5] == "L5");
+			assert(header[DS_L6] == "L6");
+			assert(header[DS_PUPEA] == "Pupae");
+			assert(header[DS_ADULT] == "Adults");
+			assert(header[DS_N] == "total_SBW");
+			assert(header[DS_AI] == "AI");
 
 
 
@@ -377,7 +377,7 @@ namespace WBSF
 				for (int i = DS_AI; i <= DS_N; i++)
 					obs.push_back(ToDouble(data[i]));
 
-				ASSERT(obs.size() == NB_OBS_AI);
+				assert(obs.size() == NB_OBS_AI);
 				m_SAResult.push_back(CSAResult(ref, obs));
 			}
 			else
@@ -389,11 +389,11 @@ namespace WBSF
 				for (int i = DS_L2; i <= DS_ADULT; i++)
 					obs.push_back(ToDouble(data[i]));
 
-				ASSERT(obs.size() == NB_OBS_STAGE);
+				assert(obs.size() == NB_OBS_STAGE);
 				m_SAResult.push_back(CSAResult(ref, obs));
 			}
 		}
-		else ASSERT(false);
+		else assert(false);
 
 
 	}
@@ -414,7 +414,7 @@ namespace WBSF
 
 				int m_firstYear = (int)years[LOWEST];
 				int m_lastYear = (int)years[HIGHEST];
-				ASSERT(false);//a faire
+				assert(false);//a faire
 				/*while (m_weather.GetNbYears() > 1 && m_weather.GetFirstYear() < m_firstYear)
 					m_weather.RemoveYear(0);
 
@@ -422,8 +422,8 @@ namespace WBSF
 					m_weather.RemoveYear(m_weather.GetNbYear() - 1);
 */
 
-				ASSERT(m_weather.GetFirstYear() == m_firstYear);
-				ASSERT(m_weather.GetLastYear() == m_lastYear);
+				assert(m_weather.GetFirstYear() == m_firstYear);
+				assert(m_weather.GetLastYear() == m_lastYear);
 				m_bInit = true;
 			}
 
@@ -432,7 +432,7 @@ namespace WBSF
 			case OPT_EMERGENCE: GetFValueDailyEmergence(stat); break;
 			case OPT_STAGE: GetFValueDailyStage(stat); break;
 			case OPT_AI: GetFValueDailyAI(stat); break;
-			default: ASSERT(false);
+			default: assert(false);
 			}
 		}
 
@@ -447,15 +447,15 @@ namespace WBSF
 
 		for (int i = 0; i < (int)m_SAResult.size(); i++)
 		{
-			if (statSim.IsInside(m_SAResult[i].m_ref))
+			if (statSim.is_inside(m_SAResult[i].m_ref))
 			{
-				ASSERT(m_SAResult[i].m_obs.size() == NB_OBS_EMERGENCE);
+				assert(m_SAResult[i].m_obs.size() == NB_OBS_EMERGENCE);
 
 				double obsPropL2 = m_SAResult[i].m_obs[OE_L2o];
 				double simPropL2 = statSim[m_SAResult[i].m_ref][S_L2o];
 
-				ASSERT(obsPropL2 >= 0 && obsPropL2 <= 100);
-				double n = Round(sqrt(m_SAResult[i].m_obs[OE_N]));
+				assert(obsPropL2 >= 0 && obsPropL2 <= 100);
+				double n = round(sqrt(m_SAResult[i].m_obs[OE_N]));
 				for (int j = 0; j < n; j++)
 					stat.Add(simPropL2, obsPropL2);
 
@@ -472,9 +472,9 @@ namespace WBSF
 
 		for (int i = 0; i < (int)m_SAResult.size(); i++)
 		{
-			if (statSim.IsInside(m_SAResult[i].m_ref))
+			if (statSim.is_inside(m_SAResult[i].m_ref))
 			{
-				ASSERT(m_SAResult[i].m_obs.size() == NB_OBS_STAGE);
+				assert(m_SAResult[i].m_obs.size() == NB_OBS_STAGE);
 				//CWSBStat& dayStat = (CWSBStat&)statSim[m_SAResult[i].m_ref];
 
 				CStatisticXYEx statLH;
@@ -504,15 +504,15 @@ namespace WBSF
 
 		for (size_t i = 0; i < m_SAResult.size(); i++)
 		{
-			if (statSim.IsInside(m_SAResult[i].m_ref))
+			if (statSim.is_inside(m_SAResult[i].m_ref))
 			{
-				ASSERT(m_SAResult[i].m_obs.size() == NB_OBS_AI);
+				assert(m_SAResult[i].m_obs.size() == NB_OBS_AI);
 
 				double obs = m_SAResult[i].m_obs[OA_AI];
 
 				//				CWSBStat& dayStat = (CWSBStat&)statSim[m_SAResult[i].m_ref];
 				double sim = 0;// dayStat.GetAverageInstar(false);
-				ASSERT(sim = -9999 || (sim >= 2 && sim <= 8));
+				assert(sim = -9999 || (sim >= 2 && sim <= 8));
 
 				//some obs 0 or 100 were set to -9999 
 				if (obs >= 2 && obs <= 8 &&

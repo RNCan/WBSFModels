@@ -16,8 +16,8 @@
 #include <boost/math/distributions.hpp>
 #include <boost/math/distributions/logistic.hpp>
 
-#include "ModelBase/DevRateEquation.h"
-#include "ModelBase/SurvivalEquation.h"
+#include "ModelBased/DevRateEquation.h"
+#include "ModelBased/SurvivalEquation.h"
 
 using namespace WBSF;
 using namespace LAZ;
@@ -51,7 +51,7 @@ namespace WBSF
 	//Daily development rate
 	double CLeucotaraxisArgenticollisEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 
 
@@ -110,7 +110,7 @@ namespace WBSF
 		//double sigma = g == 0 ? m_pupa_param[PUPA_S] : PUPA_PARAM[PUPA_S];
 		
 		double sigma = m_pupa_param[PUPA_S];
-		boost::math::lognormal_distribution<double> ln_dist(-WBSF::Square(sigma) / 2.0, sigma);
+		boost::math::lognormal_distribution<double> ln_dist(-WBSF::square(sigma) / 2.0, sigma);
 		double rT = boost::math::quantile(ln_dist, m_randomGenerator.Rand(0.001, 0.999));
 		//double rT = boost::math::quantile(ln_dist, m_randomGenerator.Randu(true, true));
 		//while (rT < 0.2 || rT>2.6)//base on individual observation
@@ -159,7 +159,7 @@ namespace WBSF
 		}
 		else 
 		{
-			boost::math::lognormal_distribution<double> lndist(-WBSF::Square(rdt) / 2.0, rdt);
+			boost::math::lognormal_distribution<double> lndist(-WBSF::square(rdt) / 2.0, rdt);
 			RDR = boost::math::quantile(lndist, m_randomGenerator.Randu(true, true));
 			while (RDR < 0.2 || RDR>2.6)//base on individual observation
 				RDR = boost::math::quantile(lndist, m_randomGenerator.Randu(true, true));

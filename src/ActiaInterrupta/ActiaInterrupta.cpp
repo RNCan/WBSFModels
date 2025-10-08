@@ -75,7 +75,8 @@ namespace WBSF
 
 	// Object destructor
 	CActiaInterrupta::~CActiaInterrupta(void)
-	{}
+	{
+	}
 
 
 	//*****************************************************************************
@@ -103,7 +104,7 @@ namespace WBSF
 		CIndividual::Live(weather);
 		double dayLength = weather.GetDayLength() / 3600.; //in hours
 		CTRef TRef = weather.GetTRef();
-		size_t JDay = TRef.GetJDay();
+		size_t JDay = TRef.GetDOY();
 		size_t nbSteps = GetTimeStep().NbSteps();
 
 
@@ -135,7 +136,7 @@ namespace WBSF
 			//if (GetStand()->m_bAutoComputeDiapause && TRef.GetJDay() == 0)
 				//m_bDiapause = false;
 
-			for (size_t step = 0; step < nbSteps&&m_age < DEAD_ADULT; step++)
+			for (size_t step = 0; step < nbSteps && m_age < DEAD_ADULT; step++)
 			{
 				size_t h = step * GetTimeStep();
 				size_t s = GetStage();
@@ -146,7 +147,7 @@ namespace WBSF
 				double r = m_δ[s] * Equations().GetRate(s, first_generation, T) / nbSteps;
 
 				if (s == ADULT) //Set maximum longevity to 100 days
-					r = max(1.0 / (100.0*nbSteps), r);
+					r = max(1.0 / (100.0 * nbSteps), r);
 
 				if (GetStand()->m_bApplyAttrition)
 				{
@@ -162,30 +163,30 @@ namespace WBSF
 					m_age += r;
 
 
-				if (!m_adultDate.IsInit() && m_age >= ADULT)
+				if (!m_adultDate.is_init() && m_age >= ADULT)
 					m_adultDate = TRef;
 
 				//compute brooding
 				static const double pre_ovip_age = GetStand()->m_preOvip;
-				
+
 
 				if (s == ADULT && m_sex == FEMALE && GetStageAge() >= pre_ovip_age)
 				{
-					ASSERT(m_age >= ADULT);
+					assert(m_age >= ADULT);
 					double fec = m_Pmax * r / (1.0 - pre_ovip_age);
 
 					//This is Holling's disk equation, with parameters as=0.05 and th=0.8, values guessed at 
 					//in Régnière et al Tranosema model (submitted)
 					double as = 0.05;
 					double th = 0.8;
-					double Na = as * m_Nh / (1 + as * th*m_Nh); //Number of attacks per time step
+					double Na = as * m_Nh / (1 + as * th * m_Nh); //Number of attacks per time step
 
 					//eggs laid with successful attack is, at most, host find
 					double broods = max(0.0, min(fec, Na));
 					//double broods = max(0.0, min( min(fec, m_Pmax- m_totalBroods- m_broods), Na));
 
 					m_broods += broods;
-					ASSERT(m_totalBroods + m_broods < m_Pmax);
+					assert(m_totalBroods + m_broods < m_Pmax);
 				}
 			}//for all time steps
 
@@ -198,15 +199,15 @@ namespace WBSF
 
 	//void CActiaInterrupta::Brood(const CWeatherDay& weather)
 	//{
-	//	ASSERT(IsAlive() && m_sex == FEMALE);
-	//	ASSERT(m_totalBroods <= m_Pmax + 1);
+	//	assert(IsAlive() && m_sex == FEMALE);
+	//	assert(m_totalBroods <= m_Pmax + 1);
 
 	//	m_totalBroods += m_broods;
 
 	//	//Oviposition module after Régniere 1983
 	//	if (m_bFertil && m_broods > 0)
 	//	{
-	//		ASSERT(m_age >= ADULT);
+	//		assert(m_age >= ADULT);
 
 	//		double attRate = GetStand()->m_generationAttrition;
 	//		double scaleFactor = m_broods * m_scaleFactor*attRate;
@@ -219,7 +220,7 @@ namespace WBSF
 	// Output:  Individual's state is updated to follow update
 	void CActiaInterrupta::Die(const CWeatherDay& weather)
 	{
-		//ASSERT(!m_diapauseTRef.IsInit() || fabs(m_age - GetStand()->m_diapauseAge)<0.0001);
+		//assert(!m_diapauseTRef.is_init() || fabs(m_age - GetStand()->m_diapauseAge)<0.0001);
 
 		//attrition mortality. Killed at the end of time step 
 		if (GetStage() == DEAD_ADULT)
@@ -234,12 +235,12 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = ATTRITION;
 		}
-		else if (m_generation > 0 && weather[H_TMIN][MEAN] < GetStand()->m_lethalTemp && !m_diapauseTRef.IsInit())
+		else if (m_generation > 0 && weather[H_TMIN][MEAN] < GetStand()->m_lethalTemp && !m_diapauseTRef.is_init())
 		{
 			m_status = DEAD;
 			m_death = FROZEN;
 		}
-		else if (!m_diapauseTRef.IsInit() && weather.GetTRef().GetMonth() == DECEMBER && weather.GetTRef().GetDay() == DAY_31)
+		else if (!m_diapauseTRef.is_init() && weather.GetTRef().GetMonth() == DECEMBER && weather.GetTRef().GetDay() == DAY_31)
 		{
 			//all individual not in diapause are kill at the end of the season
 			m_status = DEAD;
@@ -282,7 +283,7 @@ namespace WBSF
 					stat[S_OVIPOSITING_ADULT] += m_scaleFactor;
 				}
 
-				if (m_diapauseTRef.IsInit())
+				if (m_diapauseTRef.is_init())
 					stat[S_DIAPAUSE] += m_scaleFactor;
 
 				//because attrition is affected when the object change stage,
@@ -347,7 +348,7 @@ namespace WBSF
 	bool CActiaInterrupta::CanPack(const CIndividualPtr& in)const
 	{
 		CActiaInterrupta* pIn = static_cast<CActiaInterrupta*>(in.get());
-		return CIndividual::CanPack(in) && (GetStage() != ADULT || GetSex() != FEMALE) && pIn->m_diapauseTRef.IsInit() == m_diapauseTRef.IsInit();
+		return CIndividual::CanPack(in) && (GetStage() != ADULT || GetSex() != FEMALE) && pIn->m_diapauseTRef.is_init() == m_diapauseTRef.is_init();
 	}
 
 	void CActiaInterrupta::Pack(const CIndividualPtr& pBug)

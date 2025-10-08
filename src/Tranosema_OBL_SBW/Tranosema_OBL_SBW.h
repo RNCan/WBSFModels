@@ -9,11 +9,10 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
-//#include "TranosemaEquations.h"
-#include "Tranosema.h"
-#include "ObliqueBandedLeafroller.h"
-#include "SpruceBudworm.h"
+#include "ModelBased/IndividualBase.h"
+#include "Tranosema/Tranosema.h"
+#include "ObliqueBandedLeafroller/ObliqueBandedLeafroller.h"
+#include "SpruceBudworm/SpruceBudworm.h"
 
 
 namespace WBSF
@@ -36,7 +35,7 @@ namespace WBSF
 	{
 	public:
 
-		CTranosema_OBL_SBW(CHost* pHost, CTRef creationDate = CTRef(), double age = Tranosema::EGG, WBSF::TSex sex = WBSF::RANDOM_SEX, bool bFertil = true, size_t generation = 0, double scaleFactor = 1, CIndividualPtr& pAssociateHost = CIndividualPtr());
+		CTranosema_OBL_SBW(CHost* pHost, CTRef creationDate = CTRef(), double age = Tranosema::EGG, WBSF::TSex sex = WBSF::RANDOM_SEX, bool bFertil = true, size_t generation = 0, double scaleFactor = 1, const CIndividualPtr& pAssociateHost = CIndividualPtr());
 		CTranosema_OBL_SBW(const CTranosema_OBL_SBW& in) :CTranosema(in){ operator=(in); }
 		CTranosema_OBL_SBW& operator=(const CTranosema_OBL_SBW& in);
 
@@ -107,10 +106,10 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CTranosema_OBL_SBW_Host* CTranosema_OBL_SBW::GetHost(){ return static_cast<CTranosema_OBL_SBW_Host*>(m_pHost); }
 	inline const CTranosema_OBL_SBW_Host* CTranosema_OBL_SBW::GetHost()const{ return static_cast<const CTranosema_OBL_SBW_Host*>(m_pHost); }
-	inline CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW::GetStand(){ ASSERT(m_pHost); return static_cast<CTranosema_OBL_SBW_Stand*>(GetHost()->GetStand()); }
-	inline const CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW::GetStand()const{ ASSERT(m_pHost); return static_cast<const CTranosema_OBL_SBW_Stand*>(GetHost()->GetStand()); }
-	inline CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW_Host::GetStand(){ ASSERT(m_pStand); return static_cast<CTranosema_OBL_SBW_Stand*>(m_pStand); }
-	inline const CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW_Host::GetStand()const{ ASSERT(m_pStand); return static_cast<const CTranosema_OBL_SBW_Stand*>(m_pStand); }
+	inline CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW::GetStand(){ assert(m_pHost); return static_cast<CTranosema_OBL_SBW_Stand*>(GetHost()->GetStand()); }
+	inline const CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW::GetStand()const{ assert(m_pHost); return static_cast<const CTranosema_OBL_SBW_Stand*>(GetHost()->GetStand()); }
+	inline CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW_Host::GetStand(){ assert(m_pStand); return static_cast<CTranosema_OBL_SBW_Stand*>(m_pStand); }
+	inline const CTranosema_OBL_SBW_Stand* CTranosema_OBL_SBW_Host::GetStand()const{ assert(m_pStand); return static_cast<const CTranosema_OBL_SBW_Stand*>(m_pStand); }
 
 	inline CTranosemaEquations& CTranosema_OBL_SBW::Equations(){ return GetStand()->m_equations; }
 }

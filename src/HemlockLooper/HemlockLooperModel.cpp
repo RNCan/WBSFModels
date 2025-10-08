@@ -26,8 +26,8 @@
 //*****************************************************************************
 
 #include "basic/timeStep.h" 
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 #include "HemlockLooper.h"
 #include "HemlockLooperModel.h"
 
@@ -92,7 +92,7 @@ namespace WBSF
 	//this method is called to load parameters into variables
 	ERMsg CHLModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(!m_weather.empty());
+		assert(!m_weather.empty());
 
 		ERMsg msg;
 
@@ -174,7 +174,7 @@ namespace WBSF
 		
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM::DAILY);
-		//p.Begin().m_year++;//skip the first year (initialization)
+		//p.begin().m_year++;//skip the first year (initialization)
 
 		//This is where the model is actually executed
 		stat.Init(p, NB_HL_STAT);
@@ -229,7 +229,7 @@ namespace WBSF
 						{ 
 							CTRef TRef = m_weather[yy][m][d].GetTRef();
 							stand.Live(m_weather[yy][m][d]);
-							if (stat.IsInside(TRef) && yy == y+1)
+							if (stat.is_inside(TRef) && yy == y+1)
 								stand.GetStat(TRef, stat[TRef]); 
 							//	stat[TRef][E_FEMALES] = stand.GetNbObjectAlive();
 							//	stat[TRef][S_DEAD_ATTRITION] = stand.GetFirstHost()->size();
@@ -289,7 +289,7 @@ namespace WBSF
 
 
 		//size_t y = 0ull;
-		CHLStatVector stat(366, m_weather[size_t(1)][FIRST_MONTH][FIRST_DAY].GetTRef());
+		CHLStatVector stat(366, m_weather[size_t(1)][JANUARY][DAY_01].GetTRef());
 
 		for (size_t y = 0; y < 2; y++)
 		{
@@ -348,15 +348,15 @@ namespace WBSF
 	
 
 	//simulated annaling 
-	void CHLModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CHLModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_DATA_ECLOSION)
 		{
-			ASSERT(header[DE_YEAR] == "Year");
-			ASSERT(header[DE_MONTH] == "Month");
-			ASSERT(header[DE_DAY] == "Day");
-			ASSERT(header[DE_JDAY] == "Jday");
-			ASSERT(header[DE_ECLOSION_CUMUL] == "Eclosion Cumul(%)");
+			assert(header[DE_YEAR] == "Year");
+			assert(header[DE_MONTH] == "Month");
+			assert(header[DE_DAY] == "Day");
+			assert(header[DE_JDAY] == "Jday");
+			assert(header[DE_ECLOSION_CUMUL] == "Eclosion Cumul(%)");
 
 			m_dataType = OPT_ECLOSION;
 			CTRef ref(ToInt(data[DE_YEAR]), ToSizeT(data[DE_MONTH]) - 1, ToSizeT(data[DE_DAY]) - 1);
@@ -365,24 +365,24 @@ namespace WBSF
 			obs.push_back(ToDouble(data[DE_ECLOSION_CUMUL]));
 			//obs.push_back(ToDouble(data[DE_N]));
 
-			ASSERT(obs.size() == NB_OBS_ECLOSION);
+			assert(obs.size() == NB_OBS_ECLOSION);
 			m_SAResult.push_back(CSAResult(ref, obs));
 		}
 		else if (header.size() == NB_DATA_STAGE)
 		{
 			//transform value to date/stage
-			ASSERT(header[DS_YEAR] == "Year");
-			ASSERT(header[DS_MONTH] == "Month");
-			ASSERT(header[DS_DAY] == "Day");
-			ASSERT(header[DS_JDAY] == "Jday");
-			ASSERT(header[DS_L2] == "L2");
-			ASSERT(header[DS_L3] == "L3");
-			ASSERT(header[DS_L4] == "L4");
-			ASSERT(header[DS_L5] == "L5");
-			ASSERT(header[DS_PUPA] == "Pupae");
-			ASSERT(header[DS_ADULT] == "Adults");
-			ASSERT(header[DS_N] == "total_SBW");
-			ASSERT(header[DS_AI] == "AI");
+			assert(header[DS_YEAR] == "Year");
+			assert(header[DS_MONTH] == "Month");
+			assert(header[DS_DAY] == "Day");
+			assert(header[DS_JDAY] == "Jday");
+			assert(header[DS_L2] == "L2");
+			assert(header[DS_L3] == "L3");
+			assert(header[DS_L4] == "L4");
+			assert(header[DS_L5] == "L5");
+			assert(header[DS_PUPA] == "Pupae");
+			assert(header[DS_ADULT] == "Adults");
+			assert(header[DS_N] == "total_SBW");
+			assert(header[DS_AI] == "AI");
 
 
 
@@ -394,7 +394,7 @@ namespace WBSF
 				for (int i = DS_AI; i <= DS_N; i++)
 					obs.push_back(ToDouble(data[i]));
 
-				ASSERT(obs.size() == NB_OBS_AI);
+				assert(obs.size() == NB_OBS_AI);
 				m_SAResult.push_back(CSAResult(ref, obs));
 			}
 			else
@@ -406,11 +406,11 @@ namespace WBSF
 				for (int i = DS_L2; i <= DS_ADULT; i++)
 					obs.push_back(ToDouble(data[i]));
 
-				ASSERT(obs.size() == NB_OBS_STAGE);
+				assert(obs.size() == NB_OBS_STAGE);
 				m_SAResult.push_back(CSAResult(ref, obs));
 			}
 		}
-		else ASSERT(false);
+		else assert(false);
 
 
 	}
@@ -445,8 +445,8 @@ namespace WBSF
 				//m_weather.RemoveYear(m_weather.GetNbYear()-1);
 
 
-				ASSERT(m_weather.GetFirstYear() == m_firstYear);
-				ASSERT(m_weather.GetLastYear() == m_lastYear);
+				assert(m_weather.GetFirstYear() == m_firstYear);
+				assert(m_weather.GetLastYear() == m_lastYear);
 				m_bInit = true;
 			}
 
@@ -455,7 +455,7 @@ namespace WBSF
 			case OPT_ECLOSION: GetFValueDailyEclosion(stat); break;
 			case OPT_STAGE: GetFValueDailyStage(stat); break;
 			case OPT_AI: GetFValueDailyAI(stat); break;
-			default: ASSERT(false);
+			default: assert(false);
 			}
 		}
 
@@ -468,17 +468,17 @@ namespace WBSF
 		CHLStatVector statSim;
 		GetDailyStat(statSim);
 
-		for (int i = 0; i < (int)m_SAResult.size(); i++)
+		for (size_t i = 0; i < m_SAResult.size(); i++)
 		{
-			if (statSim.IsInside(m_SAResult[i].m_ref))
+			if (statSim.is_inside(m_SAResult[i].m_ref))
 			{
-				ASSERT(m_SAResult[i].m_obs.size() == NB_OBS_ECLOSION);
+				assert(m_SAResult[i].m_obs.size() == NB_OBS_ECLOSION);
 
 				double obs = m_SAResult[i].m_obs[OE_ECLOSION];
 				double sim = 100 - statSim[m_SAResult[i].m_ref][S_EGGS];
 
-				//ASSERT(obsPropL2 >= 0 && obsPropL2 <= 100);
-				//double n = (double)Round(sqrt(m_SAResult[i].m_obs[OE_N]));
+				//assert(obsPropL2 >= 0 && obsPropL2 <= 100);
+				//double n = (double)round(sqrt(m_SAResult[i].m_obs[OE_N]));
 				//for (int j = 0; j < n; j++)
 				stat.Add(sim, obs);
 			}
@@ -492,15 +492,15 @@ namespace WBSF
 		CHLStatVector statSim;
 		GetDailyStat(statSim);
 
-		for (int i = 0; i<(int)m_SAResult.size(); i++)
+		for (size_t i = 0; i<m_SAResult.size(); i++)
 		{
-			if (statSim.IsInside(m_SAResult[i].m_ref))
+			if (statSim.is_inside(m_SAResult[i].m_ref))
 			{
-				ASSERT(m_SAResult[i].m_obs.size() == NB_OBS_STAGE);
+				assert(m_SAResult[i].m_obs.size() == NB_OBS_STAGE);
 				CModelStat& dayStat = statSim[m_SAResult[i].m_ref];
 
 				CStatisticXYEx statLH;
-				for (int l = OS_L2; l <= OS_ADULT; l++)
+				for (size_t l = OS_L2; l <= OS_ADULT; l++)
 				{
 					double obs = m_SAResult[i].m_obs[l];
 					double sim = statSim[m_SAResult[i].m_ref][S_L2 + l];
@@ -524,20 +524,20 @@ namespace WBSF
 		CHLStatVector statSim;
 		GetDailyStat(statSim);
 
-		for (int i = 0; i < (int)m_SAResult.size(); i++)
+		for (size_t i = 0; i < m_SAResult.size(); i++)
 		{
-			if (statSim.IsInside(m_SAResult[i].m_ref))
+			if (statSim.is_inside(m_SAResult[i].m_ref))
 			{
-				ASSERT(m_SAResult[i].m_obs.size() == NB_OBS_AI);
+				assert(m_SAResult[i].m_obs.size() == NB_OBS_AI);
 
 				double obs = m_SAResult[i].m_obs[OA_AI];
 
 				CModelStat& dayStat = statSim[m_SAResult[i].m_ref];
 				double sim = dayStat.GetAverageInstar(S_EGGS, S_DEAD_ADULTS, EGGS, true);
-				ASSERT(sim = -999 || (sim >= 2 && sim <= 8));
+				assert(sim = -999 || (sim >= 2 && sim <= 8));
 
-				//some obs 0 or 100 were set to -999 
-				if (obs >= 2 && obs <= 8 &&
+				//some obs 0 or 100 were set to -999  
+				if (obs >= 2 && obs <= 8 && 
 					sim >= 2 && sim <= 8)
 				{
 					stat.Add(sim, obs);

@@ -14,7 +14,7 @@
 //*****************************************************************************
 
 #include "Basic/UtilMath.h"
-#include "ModelBase/WeatherBasedSimulation.h"
+#include "ModelBased/WeatherBasedSimulation.h"
 #include "HemlockLooperEquations.h"
 
 
@@ -159,8 +159,8 @@ namespace WBSF
 	//out:	relative development rate in function of stage and sex
 	double HemlockLooperEquations::GetRelativeRate(size_t s, size_t sex)const
 	{
-		ASSERT(s < NB_STAGES);
-		ASSERT(sex == MALE || sex == FEMALE);
+		assert(s < NB_STAGES);
+		assert(sex == MALE || sex == FEMALE);
 
 		//Variability of egg development rate was 0.1172, and was multiplied by 0.5 to reflect the temperature dependence of this variability (smaller at cooler temperature)
 		//						       Egg       L1     L2     L3     L4   Pupae  Adult
@@ -302,16 +302,16 @@ namespace WBSF
 	//Tmin: minimum temperature at witch insect was exposed [ºC]
 	double CHLSurvival::GetEggSurvival(double L, double Sh, double ʃT, double Tmin)
 	{
-		ASSERT(Sh >= 0 && Sh <= 1);
+		assert(Sh >= 0 && Sh <= 1);
 
 		static const double ƙ = 3.046;
 
 		double Sw = Sweight(L);
 		double Se = Senergy(ʃT);
 		double Sc = Scold(Tmin);
-		ASSERT(Sw >= 0 && Sw <= 1);
-		ASSERT(Se >= 0 && Se <= 1);
-		ASSERT(Sc >= 0 && Sc <= 1);
+		assert(Sw >= 0 && Sw <= 1);
+		assert(Se >= 0 && Se <= 1);
+		assert(Sc >= 0 && Sc <= 1);
 
 		return max(0.0, min(1.0, ƙ*Sw*Se*Sc*Sh));
 	}

@@ -1,6 +1,6 @@
 #include "GypsyMothCommon.h"
-#include <math.h>
-#include <crtdbg.h>
+#include <cmath>
+#include <cassert>
 
 //int allen_sin_wave(double tmin1,double tmax,double tmin2,double peak,double *hourly,int step) /* this routines generates temperature by using allen sin wave method */
 //{

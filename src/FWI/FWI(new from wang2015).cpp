@@ -6,7 +6,7 @@
 //Natural Resources Canada
 //**********************************************************************
 
-//#include <math.h>
+//#include <cmath>
 #include "FWI(new from wang2015).h"
 
 using namespace std;

@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E0F91835-E883-4E95-8E6E-229976026583}</ProjectGuid>
     <RootNamespace>Models</RootNamespace>
-    <ProjectName>Standardised Precipitation Evapotranspiration Index</ProjectName>
+    <ProjectName>StandardisedPrecipitationEvapotranspirationIndex</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -41,11 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)$(Platform)\$(TargetName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin\$(Configuration)$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj\$(Configuration)$(Platform)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)$(Platform)\$(TargetName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin\$(Configuration)$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj\$(Configuration)$(Platform)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -58,7 +58,7 @@
       </BrowseInformation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -74,10 +74,21 @@
       <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Debug$(Platform)\Models\$(TargetName)$(TargetExt)"
-copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Models\$(TargetName)$(TargetExt)"
-</Command>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\WBSFInstall\Models\$(TargetName)$(TargetExt)"</Command>
     </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\WBSFInstall\Models\$(TargetName)$(TargetExt)"</Command>
+    </PostBuildEvent>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>..\..\..\WBSF\src;C:\local\boost_1_89_0</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\local\boost_1_89_0\lib</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\WBSF\build\msvc\Basic.vcxproj">
@@ -91,20 +102,20 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Standardized Precipitation Evapotranspiration Index\auxiliary.cpp" />
-    <ClCompile Include="..\..\src\Standardized Precipitation Evapotranspiration Index\lmoments.cpp" />
-    <ClCompile Include="..\..\src\Standardized Precipitation Evapotranspiration Index\pdfs.cpp" />
-    <ClCompile Include="..\..\src\Standardized Precipitation Evapotranspiration Index\spei.cpp" />
-    <ClCompile Include="..\..\src\Standardized Precipitation Evapotranspiration Index\SPEIModel.cpp" />
-    <ClCompile Include="..\..\src\Standardized Precipitation Evapotranspiration Index\thornthwaite.cpp" />
+    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\auxiliary.cpp" />
+    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\lmoments.cpp" />
+    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\pdfs.cpp" />
+    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\spei.cpp" />
+    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\SPEIModel.cpp" />
+    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\thornthwaite.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Standardized Precipitation Evapotranspiration Index\auxiliary.h" />
-    <ClInclude Include="..\..\src\Standardized Precipitation Evapotranspiration Index\lmoments.h" />
-    <ClInclude Include="..\..\src\Standardized Precipitation Evapotranspiration Index\pdfs.h" />
-    <ClInclude Include="..\..\src\Standardized Precipitation Evapotranspiration Index\spei.h" />
-    <ClInclude Include="..\..\src\Standardized Precipitation Evapotranspiration Index\SPEIModel.h" />
-    <ClInclude Include="..\..\src\Standardized Precipitation Evapotranspiration Index\thornthwaite.h" />
+    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\auxiliary.h" />
+    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\lmoments.h" />
+    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\pdfs.h" />
+    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\spei.h" />
+    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\SPEIModel.h" />
+    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\thornthwaite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

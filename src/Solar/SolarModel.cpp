@@ -3,7 +3,8 @@
 // 13/06/2019	1.0.0	Rémi Saint-Amant	Creation
 //**************************************************************************************************************
 
-#include "ModelBase/EntryPoint.h"
+#include "Basic/Sun.h"
+#include "Modelbased/EntryPoint.h"
 #include "SolarModel.h"
 
 
@@ -58,9 +59,9 @@ namespace WBSF
 		CSun sun(m_info.m_loc.m_lat, m_info.m_loc.m_lon);
 		double sumDD = 0;
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
-			if (TRef.GetJDay() == 0)
+			if (TRef.GetDOY() == 0)
 				sumDD = 0;
 
 			m_output[TRef][O_SUNRISE] = sun.GetSunrise(TRef);
@@ -69,18 +70,18 @@ namespace WBSF
 			m_output[TRef][O_DAY_LENGTH] = sun.GetDayLength(TRef);
 
 
-			size_t ii = TRef - p.Begin();
+			size_t ii = TRef - p.begin();
 			const CWeatherDay& wday = m_weather.GetDay(TRef);
-			double day_length = Round(wday.GetDayLength() / 3600.0,1);
-			double threshold = Round(m_ADE[ʎ0] +m_ADE[ʎ1] * 1 / (1 + exp(-(day_length - m_ADE[ʎ2]) / m_ADE[ʎ3])),1);
-			double T = Round(wday[H_TNTX][MEAN],1); 
+			double day_length = round(wday.GetDayLength() / 3600.0,1);
+			double threshold = round(m_ADE[ʎ0] +m_ADE[ʎ1] * 1 / (1 + exp(-(day_length - m_ADE[ʎ2]) / m_ADE[ʎ3])),1);
+			double T = round(wday[H_TNTX][MEAN],1); 
 			double DD = max(0.0, threshold - T);//DD can be negative
-			ASSERT(DD >= 0);
+			assert(DD >= 0);
 
 			if (ii >= m_ADE[ʎa])
-				sumDD += Round(m_ADE[ʎb] + DD,1);
+				sumDD += round(m_ADE[ʎb] + DD,1);
 
-			double sim_y = Round(1 / (1 + exp(-(sumDD - m_ADE[μ]) / m_ADE[ѕ])) * 100,1);
+			double sim_y = round(1 / (1 + exp(-(sumDD - m_ADE[μ]) / m_ADE[ѕ])) * 100,1);
 
 			m_output[TRef][O_TH] = threshold;
 			m_output[TRef][O_DD] = DD;

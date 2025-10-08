@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <conio.h>
-#include <math.h>
+#include <cmath>
 #include <stdlib.h>
 #include <string.h>
 
 #include "SawyerModel.h"
 #include "GypsyMothCommon.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 
 
 using namespace std;
@@ -70,7 +70,7 @@ namespace WBSF
 		ERMsg message;
 
 		//resize output array
-		m_eggState.Init(p.GetLength(), p.Begin());
+		m_eggState.Init(p);
 
 		double r[SUBSTAGES] = { 0 };
 		double Tl[SUBSTAGES] = { 0 };
@@ -103,8 +103,8 @@ namespace WBSF
 			delp[i] = 10000.;
 		}
 
-		double class_size = (double)100 / NCLASS1;
-		//int day=m_param.m_ovipDate - p.Begin();
+		double class_size = 100.0 / double(NCLASS1);
+		//int day=m_param.m_ovipDate - p.begin();
 
 		for (CTRef i = m_eggState.GetFirstTRef(); i < m_param.m_ovipDate; i++)
 			m_eggState[i][DIAPAUSE] = MAXEGGS;
@@ -273,7 +273,7 @@ namespace WBSF
 		phase = 0;
 		for (nClass = 0; nClass < NCLASS1; nClass++)
 		{
-			x = (nClass + 0.5) / NCLASS1;
+			x = (nClass + 0.5) / double(NCLASS1);
 			prediap_variability[nClass] = pow(gammaI + betaI*(-log(1 - x)), (1 / alphaI));
 		}
 

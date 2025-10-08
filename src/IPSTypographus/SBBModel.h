@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "SBBEquations.h"
 #include "SpruceBarkBeetle.h"
 
@@ -25,8 +25,8 @@ namespace WBSF
 		void ComputeRegularStat(CModelStatVector& stat, CModelStatVector& output);
 		//void ComputeCumulativeStat(CModelStatVector& stat, CModelStatVector& output)
 
-		void AddDailyResult(const StringVector& header, const StringVector& data);
-		void GetFValueDaily(CStatisticXY& stat);
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
+		virtual bool GetFValueDaily(CStatisticXY& stat) override;
 		void GetFValueDailyEmergence(CStatisticXY& stat);
 		void Simulate(int year, double longtDayLength, double shortDayLength, double TNight, double TDay, double firstStageShortDay, double lastStageShortDay, int nbShortDay, CSpruceBarkBeetleStatVector& stat);
 		double GetDi50(double T);

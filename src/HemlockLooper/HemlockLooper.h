@@ -11,12 +11,12 @@
 #pragma once
 
 #define NOMINMAX
-#include <crtdbg.h>
+#include <cassert>
 #include <vector>
 #include "Basic/UtilTime.h"
 #include "Basic/ModelStat.h"
-#include "Basic/WeatherStation.h"
-#include "Modelbase/IndividualBase.h"
+#include "WeatherBased/WeatherStation.h"
+#include "ModelBased/IndividualBase.h"
 #include "HemlockLooperEquations.h"
 
 namespace WBSF

@@ -19,11 +19,11 @@
 // 16/03/2020   Rémi Saint-Amant	Add initial values from file
 // 22/02/2024   Rémi Saint-Amant	Bug correction when no snow
 //**********************************************************************
-#include <math.h>
+#include <cmath>
 #include "Basic/CSV.h"
-#include "Basic/GrowingSeason.h"
-#include "Basic/SnowAnalysis.h"
-#include "Basic/WeatherDefine.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "WeatherBased/WeatherDefine.h"
 #include "Basic/UtilMath.h"
 #include "FWI.h"
 //******************************************
@@ -42,7 +42,7 @@ namespace WBSF
 
 	ERMsg CInitialValues::Load(const std::string& data)
 	{
-		ASSERT(!data.empty());
+		assert(!data.empty());
 
 		ERMsg msg;
 
@@ -59,16 +59,16 @@ namespace WBSF
 				CTRef TRef;
 				TRef.FromFormatedString((*loop)[I_START_DATE]);
 
-				if (TRef.IsValid())
+				if (TRef.is_valid())
 				{
-					double begin_DOY = TRef.GetJDay();
+					double begin_DOY = TRef.GetDOY();
 					double end_DOY = -1;
 					if (loop->size() == NB_INPUT_COLUMNS)
 					{
 						CTRef TRef;
 						TRef.FromFormatedString((*loop)[I_END_DATE]);
-						if (TRef.IsValid())
-							end_DOY = TRef.GetJDay();
+						if (TRef.is_valid())
+							end_DOY = TRef.GetDOY();
 						else
 							msg.ajoute("Invalid end date " + (*loop)[I_END_DATE]);
 					}
@@ -289,7 +289,7 @@ namespace WBSF
 	//prcp: precipitation [mm]
 	double CFWI::GetDC(double oldDC, double lat, size_t m, double T, double prcp)
 	{
-		ASSERT(oldDC >= 0);
+		assert(oldDC >= 0);
 
 		//Day length factor for DC Calculations
 		//20N: North of 20 degrees N
@@ -331,7 +331,7 @@ namespace WBSF
 		//Eq. 24 - Wind Effect
 		//the ifelse, also takes care of the ISI modification for the fbp functions
 		// This modification is Equation 53a in FCFDG(1992)
-		double fW = (Ws >= 40 && fbpMod == TRUE) ? 12 * (1 - exp(-0.0818 * (Ws - 28))) : exp(0.05039 * Ws);
+		double fW = (Ws >= 40 && fbpMod == true) ? 12 * (1 - exp(-0.0818 * (Ws - 28))) : exp(0.05039 * Ws);
 		//Eq. 25 - Fine Fuel Moisture
 		double fF = 91.9 * exp(-0.1386 * fm) * (1.0 + pow(fm, 5.31) / 4.93e07);
 		//Eq. 26 - Spread Index Equation
@@ -356,7 +356,7 @@ namespace WBSF
 		//Eq. 24 - Wind Effect
 		//the ifelse, also takes care of the ISI modification for the fbp functions
 		// This modification is Equation 53a in FCFDG(1992)
-		double fW = (Ws >= 40 && fbpMod == TRUE) ? 12 * (1 - exp(-0.0818 * (Ws - 28))) : exp(0.05039 * Ws);
+		double fW = (Ws >= 40 && fbpMod == true) ? 12 * (1 - exp(-0.0818 * (Ws - 28))) : exp(0.05039 * Ws);
 		//Eq. 25 - Fine Fuel Moisture
 		double fF = 91.9 * exp(-0.1386 * fm) * (1.0 + pow(fm, 5.31) / 4.93e07);
 		//Eq. 26 - Spread Index Equation
@@ -438,23 +438,23 @@ namespace WBSF
 			{
 				double LATN = 46 + 23.4 * exp(-0.0360 * (150 - lon));
 				//Calculate Date of minimum foliar moisture content
-				//Eqs. 2 & 4 (FCFDG 1992): Round D0 to the nearest integer because it is a date
-				D0 = Round(151 * (lat / LATN), 0);
+				//Eqs. 2 & 4 (FCFDG 1992): round D0 to the nearest integer because it is a date
+				D0 = round(151 * (lat / LATN), 0);
 			}
 			else
 			{
 				double LATN = 43 + 33.7 * exp(-0.0351 * (150 - lon));
 				//Calculate Date of minimum foliar moisture content
-				//Eqs. 2 & 4 (FCFDG 1992): Round D0 to the nearest integer because it is a date
-				D0 = Round(142.1 * (lat / LATN) + 0.0172 * elev);
+				//Eqs. 2 & 4 (FCFDG 1992): round D0 to the nearest integer because it is a date
+				D0 = round(142.1 * (lat / LATN) + 0.0172 * elev);
 			}
 
 			//double LATN = (elev == -999) ? 46 + 23.4 * exp(-0.0360 * (150 - lon)) : 43 + 33.7 * exp(-0.0351 * (150 - lon));
 			////Calculate Date of minimum foliar moisture content
 			////Eqs. 2 & 4 (FCFDG 1992)
 			//D0 = (elev <= 0) ? 151 * (lat / LATN) : 142.1 * (lat / LATN) + 0.0172 * elev;
-			////Round D0 to the nearest integer because it is a date
-			//D0 = Round(D0, 0);
+			////round D0 to the nearest integer because it is a date
+			//D0 = round(D0, 0);
 		}
 
 		//Number of days between day of year and date of min FMC
@@ -499,7 +499,7 @@ namespace WBSF
 	//
 
 
-	double gfmc(double input, double GFMCold = 85, bool batch = TRUE, double time_step = 1, double roFL = 0.3, string out = "GFMCandMC")
+	double gfmc(double input, double GFMCold = 85, bool batch = true, double time_step = 1, double roFL = 0.3, string out = "GFMCandMC")
 	{
 		/*
 		t0 =time.step
@@ -642,13 +642,13 @@ namespace WBSF
 		double maxSnow = -1;
 
 		CTPeriod period = weather.GetEntireTPeriod(CTM(CTM::DAILY));
-		CTRef end(period.Begin().GetYear(), JULY, 15);
-		for (CTRef TRef = period.Begin(); TRef < end; TRef++)
+		CTRef end(period.begin().GetYear(), JULY, 15);
+		for (CTRef TRef = period.begin(); TRef < end; TRef++)
 		{
 			if (weather[TRef][H_SNDH][MEAN] > maxSnow)
 				maxSnow = weather[TRef][H_SNDH][MEAN];
 
-			if (TRef.GetJDay() < 61 && weather[TRef][H_SNDH][MEAN] > 1)
+			if (TRef.GetDOY() < 61 && weather[TRef][H_SNDH][MEAN] > 1)
 				nbDay++;
 		}
 
@@ -676,15 +676,15 @@ namespace WBSF
 		CTPeriod p = GS.GetPeriod(weather);
 
 		//find freeze-up
-		CTRef TRefFreezeUp = p.End();
+		CTRef TRefFreezeUp = p.end();
 
 		CTPeriod period = weather.GetEntireTPeriod();
-		CTRef TRef = period.End();
+		CTRef TRef = period.end();
 
-		if (TRefSnow.IsInit())
+		if (TRefSnow.is_init())
 			TRef = min(TRefSnow, TRef);
 
-		if (TRefFreezeUp.IsInit())
+		if (TRefFreezeUp.is_init())
 			TRef = min(TRefFreezeUp, TRef);
 
 
@@ -715,10 +715,10 @@ namespace WBSF
 		size_t firstDay = NOT_INIT;
 		CTRef firstSnow = GetFirstSnowDay(weather[y]);
 
-		if (firstSnow.IsInit())
+		if (firstSnow.is_init())
 		{
-			ASSERT(firstSnow.GetJDay() >= 0 && firstSnow.GetJDay() < 366);
-			firstDay = firstSnow.GetJDay();
+			assert(firstSnow.GetDOY() >= 0 && firstSnow.GetDOY() < 366);
+			firstDay = firstSnow.GetDOY();
 			FFMC = 85;
 			DMC = 6;
 			DC = 15;
@@ -733,9 +733,9 @@ namespace WBSF
 
 			CTPeriod p = GS.GetPeriod(weather[y]);
 
-			if (p.Begin().IsInit())
+			if (p.begin().is_init())
 			{
-				firstDay = p.Begin().GetJDay();
+				firstDay = p.begin().GetDOY();
 				size_t nbDay = GetNbDayLastRain(weather[y], firstDay);
 				FFMC = 85;
 				DMC = 2 * nbDay;
@@ -755,8 +755,8 @@ namespace WBSF
 		//now we apply DC transfer
 		if (y > 0 && lastDay >= 0)
 		{
-			ASSERT(y > 0);
-			CTPeriod p(CJDayRef(weather[y - 1].GetTRef().GetYear(), lastDay), CJDayRef(weather[y].GetTRef().GetYear(), firstDay));
+			assert(y > 0);
+			CTPeriod p(CDOYRef(weather[y - 1].GetTRef().GetYear(), lastDay), CDOYRef(weather[y].GetTRef().GetYear(), firstDay));
 			double Rw = weather.GetStat(H_PRCP, p)[SUM];
 
 			if (Rw < 200)
@@ -792,7 +792,7 @@ namespace WBSF
 
 	ERMsg CFWI::Execute(const CWeatherStation& weather, CModelStatVector& output)
 	{
-		ASSERT(weather.IsHourly());
+		assert(weather.IsHourly());
 
 		ERMsg msg;
 		output.clear();
@@ -817,15 +817,15 @@ namespace WBSF
 					firstDay = GetInitialValue(weather, y, lastDay, oldFFMC, oldDMC, oldDC);
 
 				//compute the new last day for this year
-				lastDay = GetLastSnowDay(weather[y]).GetJDay();
+				lastDay = GetLastSnowDay(weather[y]).GetDOY();
 			}
 			else
 			{
 				if (m_init_values.empty())
 				{
 					//take default values
-					firstDay = m_firstDay.GetTRef(year).GetJDay();
-					lastDay = m_lastDay.GetTRef(year).GetJDay();
+					firstDay = m_firstDay.GetTRef(year).GetDOY();
+					lastDay = m_lastDay.GetTRef(year).GetDOY();
 					oldFFMC = m_FFMC;
 					oldDMC = m_DMC;
 					oldDC = m_DC;
@@ -836,17 +836,17 @@ namespace WBSF
 
 					if (m_init_values.find(ID) != m_init_values.end())
 					{
-						ASSERT(size_t(m_init_values[ID][FWI_START_DATE]) < 366);
-						ASSERT(size_t(m_init_values[ID][FWI_END_DATE]) == NOT_INIT || size_t(m_init_values[ID][FWI_END_DATE]) < 366);
+						assert(size_t(m_init_values[ID][FWI_START_DATE]) < 366);
+						assert(size_t(m_init_values[ID][FWI_END_DATE]) == NOT_INIT || size_t(m_init_values[ID][FWI_END_DATE]) < 366);
 
 						//set first day
-						firstDay = CJDayRef(year, size_t(m_init_values[ID][FWI_START_DATE])).GetJDay();
+						firstDay = CDOYRef(year, size_t(m_init_values[ID][FWI_START_DATE])).GetDOY();
 
 						//set last day
 						if (m_init_values[ID][FWI_END_DATE] != NOT_INIT)
-							lastDay = CJDayRef(year, size_t(m_init_values[ID][FWI_END_DATE])).GetJDay();
+							lastDay = CDOYRef(year, size_t(m_init_values[ID][FWI_END_DATE])).GetDOY();
 						else //take default value
-							lastDay = m_lastDay.GetTRef(year).GetJDay();
+							lastDay = m_lastDay.GetTRef(year).GetDOY();
 
 						oldFFMC = m_init_values[ID][FWI_FFMC];
 						oldDMC = m_init_values[ID][FWI_DMC];
@@ -864,12 +864,12 @@ namespace WBSF
 			if (m_method == ALL_HOURS_CALCULATION)
 			{
 				CTPeriod p = weather[y].GetEntireTPeriod(CTM::DAILY);
-				for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)//for all day
+				for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)//for all day
 				{
 					//const CWeatherDay& pday = weather.GetDay(TRef).HavePrevious() ? weather.GetDay(TRef).GetPrevious() : weather.GetDay(TRef);
 					const CWeatherDay& day = weather.GetDay(TRef);
 
-					size_t jd = TRef.GetJDay();
+					size_t jd = TRef.GetDOY();
 
 					if (jd >= firstDay && jd <= lastDay)
 					{
@@ -903,7 +903,7 @@ namespace WBSF
 
 							// compute DSR from FWI
 							double DSR = GetDSR(FWI);
-							ASSERT(DSR < 200);
+							assert(DSR < 200);
 
 							//save result
 							CTRef TRefh = hour.GetTRef();
@@ -932,11 +932,11 @@ namespace WBSF
 			else if (m_method == NOON_CALCULATION)
 			{
 				CTPeriod p = weather[y].GetEntireTPeriod(CTM::DAILY);
-				for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)//for all day
+				for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)//for all day
 				{
 					const CWeatherDay& day = weather.GetDay(TRef);
 
-					size_t jd = TRef.GetJDay();
+					size_t jd = TRef.GetDOY();
 
 					if (jd >= firstDay && jd <= lastDay)
 					{
@@ -968,7 +968,7 @@ namespace WBSF
 
 						// compute DSR from FWI
 						double DSR = GetDSR(FWI);
-						ASSERT(DSR < 200);
+						assert(DSR < 200);
 
 						//save result
 						output[TRef][CFWIStat::TMEAN_NOON] = Tnoon;
@@ -1004,7 +1004,7 @@ namespace WBSF
 		CStatistic::SetVMiss(CFWI::MISSING);
 
 		CTPeriod p = result.GetTPeriod();
-		if (p.GetTM().Type() == CTM::DAILY)
+		if (p.TM().Type() == CTM::DAILY)
 		{
 			resultD = result;
 		}
@@ -1014,7 +1014,7 @@ namespace WBSF
 			resultD.Init(tmp.m_period, CFWIStat::NB_D_STAT, CFWI::MISSING);
 
 
-			for (CTRef d = tmp.m_period.Begin(); d <= tmp.m_period.End(); d++)
+			for (CTRef d = tmp.m_period.begin(); d <= tmp.m_period.end(); d++)
 			{
 				for (size_t v = 0; v < resultD.GetNbStat(); v++)
 					resultD[d][v] = tmp[d][v][v == PRCP ? SUM : MEAN];
@@ -1063,7 +1063,7 @@ namespace WBSF
 					//short s = (v==CFWIStat::PRCP)?SUM:MEAN;
 					if (v == CFWIStat::PRCP)
 					{
-						CTPeriod p(CTRef(year, m, FIRST_DAY), CTRef(year, m, LAST_DAY));
+						CTPeriod p(CTRef(year, m, DAY_01), CTRef(year, m, GetLastDayOfMonth(year,m)));
 						resultM[ref][CFWIStat::TMEAN_NOON + v] = stat[v][SUM];
 						resultM[ref][CFWIStat::TMEAN_MIN + v] = resultD.GetNbDay(CFWIStat::PRCP, "<=1", p, true);
 						resultM[ref][CFWIStat::TMEAN_MAX + v] = resultD.GetNbDay(CFWIStat::PRCP, "<=1", p, false);
@@ -1104,7 +1104,7 @@ namespace WBSF
 				//_ASSERTE( resultD[d][FWI] > -9999 );
 				if (resultD[d][FWI] > CFWI::MISSING)
 				{
-					if (!firstDay.IsInit())
+					if (!firstDay.is_init())
 						firstDay = d;
 
 					for (int v = 0; v < resultD.GetNbStat(); v++)
@@ -1119,14 +1119,14 @@ namespace WBSF
 
 			CTRef ref((short)year);
 			resultA[ref][CFWIStat::NUM_VALUES] = stat[0][NB_VALUE];
-			resultA[ref][CFWIStat::FIRST_FWI_DAY] = firstDay.GetJDay() + 1;
-			resultA[ref][CFWIStat::LAST_FWI_DAY] = lastDay.GetJDay() + 1;
+			resultA[ref][CFWIStat::FIRST_FWI_DAY] = firstDay.GetDOY() + 1;
+			resultA[ref][CFWIStat::LAST_FWI_DAY] = lastDay.GetDOY() + 1;
 
 			for (size_t v = 0; v < resultD.GetNbStat(); v++)
 			{
 				if (v == CFWIStat::PRCP)
 				{
-					CTPeriod p(CTRef(year, FIRST_MONTH, FIRST_DAY), CTRef(year, LAST_MONTH, LAST_DAY));
+					CTPeriod p(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31));
 					resultA[ref][CFWIStat::TMEAN_NOON + v] = stat[v][SUM];
 					resultA[ref][CFWIStat::TMEAN_MIN + v] = resultD.GetNbDay(CFWIStat::PRCP, "<=1", p, true);
 					resultA[ref][CFWIStat::TMEAN_MAX + v] = resultD.GetNbDay(CFWIStat::PRCP, "<=1", p, false);

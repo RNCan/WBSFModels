@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "ActiaInterruptaEquations.h"
 
 
@@ -159,7 +159,7 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CActiaInterruptaHost* CActiaInterrupta::GetHost(){ return dynamic_cast<CActiaInterruptaHost*>(m_pHost); }
 	inline const CActiaInterruptaHost* CActiaInterrupta::GetHost()const{ return dynamic_cast<const CActiaInterruptaHost*>(m_pHost); }
-	inline CActiaInterruptaStand* CActiaInterrupta::GetStand(){ ASSERT(m_pHost); return static_cast<CActiaInterruptaStand*>(m_pHost->GetStand()); }
-	inline const CActiaInterruptaStand* CActiaInterrupta::GetStand()const{ ASSERT(m_pHost); return static_cast<const CActiaInterruptaStand*>(m_pHost->GetStand()); }
+	inline CActiaInterruptaStand* CActiaInterrupta::GetStand(){ assert(m_pHost); return static_cast<CActiaInterruptaStand*>(m_pHost->GetStand()); }
+	inline const CActiaInterruptaStand* CActiaInterrupta::GetStand()const{ assert(m_pHost); return static_cast<const CActiaInterruptaStand*>(m_pHost->GetStand()); }
 	inline CActiaInterruptaEquations& CActiaInterrupta::Equations(){ return GetStand()->m_equations; }
 }

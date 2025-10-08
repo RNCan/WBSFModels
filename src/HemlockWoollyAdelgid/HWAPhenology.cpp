@@ -13,8 +13,8 @@
 //  It is provided "as is" without express or implied warranty.
 //**************************************************************************************************************
 
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/ContinuingRatio.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/ContinuingRatio.h"
 #include "HWAPhenology.h"
 #include <queue>
 
@@ -113,22 +113,22 @@ namespace WBSF
 		int year = weather.GetTRef().GetYear();
 		CTPeriod p = weather.GetEntireTPeriod(CTM(CTM::DAILY));
 			
-		output[p.Begin()][O_P_EGG] = 0;
+		output[p.begin()][O_P_EGG] = 0;
 		for (size_t e = 0; e < 4; e++)
-			output[p.Begin()][O_P_BROOD + e] = 0;
+			output[p.begin()][O_P_BROOD + e] = 0;
 
 		CDegreeDays DD(CDegreeDays::MODIFIED_ALLEN_WAVE, 4.0);
 
 		double CDD = 0;
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			CDD += DD.GetDD(m_weather.GetDay(TRef));
 
 			output[TRef][O_CDD] = CDD;
 			for (size_t e = 0; e < 4; e++)
-				output[TRef][O_P_BROOD_CUMUL + e] = Round(Eq1(e, CDD),1);
+				output[TRef][O_P_BROOD_CUMUL + e] = round(Eq1(e, CDD),1);
 
-			if (TRef > p.Begin())
+			if (TRef > p.begin())
 			{
 				for (size_t e = 0; e < 4; e++)
 					output[TRef][O_P_BROOD + e] = output[TRef][O_P_BROOD_CUMUL + e] - output[TRef - 1][O_P_BROOD_CUMUL + e];

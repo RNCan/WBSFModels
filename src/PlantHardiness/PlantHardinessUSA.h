@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Basic/ERMsg.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "Basic/modelStat.h"
 
 namespace WBSF

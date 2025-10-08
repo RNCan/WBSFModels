@@ -2,7 +2,7 @@
 // 15/01/2020 	Rémi Saint-Amant	Creation
 //**********************************************************************
 #include "PlantHardinessUSA.h"
-#include "Basic/WeatherDefine.h"
+#include "WeatherBased/WeatherDefine.h"
 
 using namespace std;
 
@@ -64,14 +64,14 @@ namespace WBSF
 		for (size_t y = 0; y < weather.GetNbYears() - 1; y++)
 		{
 			CStatistic statY;
-			CTPeriod p(first_year, JULY, FIRST_DAY, first_year + 1, JUNE, LAST_DAY);
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			CTPeriod p(CTRef(first_year, JULY, DAY_01), CTRef(first_year + 1, JUNE, DAY_30));
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 				statY += weather.GetDay(d)[H_TMIN][MEAN];
 
 			stat += statY[LOWEST];
 		}
 
-		ASSERT(stat[NB_VALUE] == weather.GetNbYears() - 1);
+		assert(stat[NB_VALUE] == weather.GetNbYears() - 1);
 		double zone = GetZoneIndex(stat[MEAN]);
 
 		return zone;
@@ -79,15 +79,15 @@ namespace WBSF
 
 	void CPlantHardinessUSA::Compute(const CWeatherStation& weather, CModelStatVector& result)
 	{
-		ASSERT(weather.size() > 20);
+		assert(weather.size() > 20);
 
 
-		result.Init(CTPeriod(CTRef(CTRef::ANNUAL, 0, 0, 0, 0), CTRef(CTRef::ANNUAL, 0, 0, 0, 0)), 2);
+		result.Init(CTPeriod(CTRef(CTM::ANNUAL, 0, 0, 0, 0), CTRef(CTM::ANNUAL, 0, 0, 0, 0)), 2);
 		double SI = GetSuitabilityIndex(weather);
 		int CZ = int(SI / 10.0);
-		int type = Round( (SI - CZ * 10)/10.0, 0); //zone a (0) or zone b (1)
+		int type = round( (SI - CZ * 10)/10.0, 0); //zone a (0) or zone b (1)
 
-		result[0][0] = Round(SI, 1);
+		result[0][0] = round(SI, 1);
 		result[0][1] = CZ + type*0.5;
 	}
 

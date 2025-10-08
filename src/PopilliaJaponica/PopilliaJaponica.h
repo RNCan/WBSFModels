@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 //#include "ModelBase/ModelDistribution.h"
 #include "PopilliaJaponicaEquations.h"
 
@@ -153,8 +153,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CPJNHost* CPopilliaJaponica::GetHost(){ return static_cast<CPJNHost*>(m_pHost); }
 	inline const CPJNHost* CPopilliaJaponica::GetHost()const{ return static_cast<const CPJNHost*>(m_pHost); }
-	inline CPJNStand* CPopilliaJaponica::GetStand(){ ASSERT(m_pHost); return static_cast<CPJNStand*>(GetHost()->GetStand()); }
-	inline const CPJNStand* CPopilliaJaponica::GetStand()const{ ASSERT(m_pHost); return static_cast<const CPJNStand*>(GetHost()->GetStand()); }
+	inline CPJNStand* CPopilliaJaponica::GetStand(){ assert(m_pHost); return static_cast<CPJNStand*>(GetHost()->GetStand()); }
+	inline const CPJNStand* CPopilliaJaponica::GetStand()const{ assert(m_pHost); return static_cast<const CPJNStand*>(GetHost()->GetStand()); }
 	inline const CPopilliaJaponicaEquations& CPopilliaJaponica::Equations()const{ return GetStand()->m_equations; }
 
 

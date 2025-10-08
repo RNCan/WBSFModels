@@ -26,7 +26,7 @@ namespace WBSF
 	//CMPBDevelopmentTable CMPBDevelopmentVector::;
 	//void CMPBDevelopmentVector::Init(const CDailyWaveVector& T)
 	//{
-	//	ASSERT(T.m_period.GetTM().IsDaily());
+	//	assert(T.m_period.GetTM().IsDaily());
 	//	//NOTE: the number of day is truck to the entire day
 	//	size_t nbDay = T.m_period.GetNbDay();
 	//	resize(nbDay);

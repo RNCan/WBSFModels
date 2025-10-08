@@ -19,11 +19,11 @@
 #include "../MPBDevRates.h"
 #include "../DevelopementVector.h"
 
-#include "Basic/GrowingSeason.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/weatherStation.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/WeatherStation.h"
 #include "Basic/TimeStep.h"
-#include "Basic/Evapotranspiration.h"
+#include "WeatherBased/Evapotranspiration.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -81,17 +81,17 @@ namespace WBSF
 
 
 			//CTPeriod p = GS.GetGrowingSeason(weatherYear);
-			p.Transform(CTM::DAILY);
+			p = p.as(CTM::DAILY);
 
 			//est-ce que c'est la même chose qu'avant???
 			//			CTPeriod p = weatherYear.GetGrowingSeason();
 
 			CAccumulatorData data;
 			//Th = 42 F, Aug 1 to end of effective growing season
-			if (p.End().GetMonth() >= AUGUST)
+			if (p.end().GetMonth() >= AUGUST)
 			{
-				p.Begin().SetJDay(FIRST_DAY);
-				p.Begin().m_month = AUGUST;
+				p.begin().SetDOY(DAY_01);
+				p.begin().m_month = AUGUST;
 
 				CDegreeDays DD(CDegreeDays::DAILY_AVERAGE, 5.56);
 				data.m_DDHatch = DD.GetDD(weatherYear, p);
@@ -213,7 +213,7 @@ namespace WBSF
 		{
 			CDailyWaveVector t;
 			weatherYear.GetDay(d).GetHourlyGeneration(t, HG_ALLEN_WAVE, 1, 3, m_overheat);
-			ASSERT(t.size() == 24);
+			assert(t.size() == 24);
 
 			for (int s = 0; s < NB_STAGES; s++)
 			{

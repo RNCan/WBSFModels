@@ -1,9 +1,10 @@
 //*********************************************************************
 // 10/09/2024	1.0		Rémi Saint-Amant	Create from java code
 //*********************************************************************
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/WeatherStation.h"
+
 #include "WaterBalance.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/WeatherStation.h"
 #include "McCabeWBM.h"
 
 

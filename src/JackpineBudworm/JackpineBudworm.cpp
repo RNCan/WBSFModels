@@ -63,9 +63,9 @@
 
 //**********************************************************************
 #include "JackPineBudworm.h"
-#include "ModelBase/EntryPoint.h"
-#include <math.h>
-#include <crtdbg.h>
+#include "Modelbased/EntryPoint.h"
+#include <cmath>
+#include <cassert>
 
 
 namespace WBSF
@@ -289,7 +289,7 @@ namespace WBSF
 				//------------------------------------------------------------
 				//    output results                                          
 				//------------------------------------------------------------
-				CTRef TRef = p.Begin() + d;
+				CTRef TRef = p.begin() + int32_t(d);
 				stat[TRef][O_NB_OVERWIN_BUGS] = nbOverWinBugs;
 				for (int i = L2; i < NB_INSTAR; i++)
 					stat[TRef][O_L2 + i - L2] = total[i];
@@ -329,7 +329,7 @@ namespace WBSF
 				double AI = 0;
 				Therrien(DDAYS, PINS, AI);
 
-				CTRef TRef = p.Begin() + d;
+				CTRef TRef = p.begin() + int32_t(d); 
 				for (size_t i = OVERWINDEV; i < NB_INSTAR; i++)
 					stat[TRef][O_NB_OVERWIN_BUGS + i - OVERWINDEV] = PINS[i + 1] * 100;
 

@@ -42,11 +42,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)$(Platform)\$(TargetName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin\$(Configuration)$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj\$(Configuration)$(Platform)\$(TargetName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)$(Platform)\$(TargetName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin\$(Configuration)$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj\$(Configuration)$(Platform)\$(TargetName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -95,7 +95,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\External;..\..\wbs\src;..\tranosema;..\ObliqueBandedLeafroller;..\SpruceBudworm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\WBSF\src;..\..\src;C:\local\boost_1_89_0</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -106,7 +106,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -120,7 +120,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
       </DataExecutionPrevention>
       <ImportLibrary>
       </ImportLibrary>
-      <AdditionalLibraryDirectories>..\..\external\lib$(PlatformArchitecture);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\local\boost_1_89_0\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Xdcmake>
@@ -130,9 +130,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
       <OutputFile>$(OutputPath)$(TargetName).bsc</OutputFile>
     </Bscmake>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Debug$(Platform)\Models\$(TargetName)$(TargetExt)"
-copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Models\$(TargetName)$(TargetExt)"
-</Command>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\WBSFInstall\Models\$(TargetName)$(TargetExt)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -178,7 +176,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\External;..\..\wbs\src;..\tranosema;..\ObliqueBandedLeafroller;..\SpruceBudworm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\WBSF\src;..\..\src;C:\local\boost_1_89_0</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OpenMPSupport>
@@ -190,7 +188,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -208,7 +206,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalLibraryDirectories>C:\local\boost_1_89_0\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <Xdcmake>
       <OutputFile>$(OutputPath)$(TargetName).xml</OutputFile>
@@ -217,9 +215,7 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
       <OutputFile>$(OutputPath)$(TargetName).bsc</OutputFile>
     </Bscmake>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Debug$(Platform)\Models\$(TargetName)$(TargetExt)"
-copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Models\$(TargetName)$(TargetExt)"
-</Command>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\WBSFInstall\Models\$(TargetName)$(TargetExt)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -234,24 +230,24 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "..\..\..\bin\Release$(Platform)\Model
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\ObliqueBandedLeafroller\ObliqueBandedLeafroller.cpp" />
-    <ClCompile Include="..\ObliqueBandedLeafroller\ObliqueBandedLeafrollerEquations.cpp" />
-    <ClCompile Include="..\SpruceBudworm\SpruceBudworm.cpp" />
-    <ClCompile Include="..\SpruceBudworm\SpruceBudwormEquations.cpp" />
-    <ClCompile Include="..\Tranosema\Tranosema.cpp" />
-    <ClCompile Include="..\Tranosema\TranosemaEquations.cpp" />
-    <ClCompile Include="Tranosema_OBL_SBW.cpp" />
-    <ClCompile Include="Tranosema_OBL_SBW_Model.cpp" />
+    <ClCompile Include="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafroller.cpp" />
+    <ClCompile Include="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafrollerEquations.cpp" />
+    <ClCompile Include="..\..\src\SpruceBudworm\SpruceBudworm.cpp" />
+    <ClCompile Include="..\..\src\SpruceBudworm\SpruceBudwormEquations.cpp" />
+    <ClCompile Include="..\..\src\Tranosema\Tranosema.cpp" />
+    <ClCompile Include="..\..\src\Tranosema\TranosemaEquations.cpp" />
+    <ClCompile Include="..\..\src\Tranosema_OBL_SBW\Tranosema_OBL_SBW.cpp" />
+    <ClCompile Include="..\..\src\Tranosema_OBL_SBW\Tranosema_OBL_SBW_Model.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ObliqueBandedLeafroller\ObliqueBandedLeafroller.h" />
-    <ClInclude Include="..\ObliqueBandedLeafroller\ObliqueBandedLeafrollerEquations.h" />
-    <ClInclude Include="..\SpruceBudworm\SpruceBudworm.h" />
-    <ClInclude Include="..\SpruceBudworm\SpruceBudwormEquations.h" />
-    <ClInclude Include="..\Tranosema\Tranosema.h" />
-    <ClInclude Include="..\Tranosema\TranosemaEquations.h" />
-    <ClInclude Include="Tranosema_OBL_SBW.h" />
-    <ClInclude Include="Tranosema_OBL_SBW_Model.h" />
+    <ClInclude Include="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafroller.h" />
+    <ClInclude Include="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafrollerEquations.h" />
+    <ClInclude Include="..\..\src\SpruceBudworm\SpruceBudworm.h" />
+    <ClInclude Include="..\..\src\SpruceBudworm\SpruceBudwormEquations.h" />
+    <ClInclude Include="..\..\src\Tranosema\Tranosema.h" />
+    <ClInclude Include="..\..\src\Tranosema\TranosemaEquations.h" />
+    <ClInclude Include="..\..\src\Tranosema_OBL_SBW\Tranosema_OBL_SBW.h" />
+    <ClInclude Include="..\..\src\Tranosema_OBL_SBW\Tranosema_OBL_SBW_Model.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

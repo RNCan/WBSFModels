@@ -6,12 +6,14 @@
 //	2011 International Conference on Life Science and Technology
 //	IPCBEE vol.3 (2011)
 //**********************************************************************
-#include "EuropeanElmScaleModel.h"
+
+#include <cmath>
+#include <cassert>
 #include "Basic/Statistic.h"
-#include <math.h>
-#include <crtdbg.h>
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
+
+#include "EuropeanElmScaleModel.h"
 
 using namespace std;
 
@@ -311,25 +313,25 @@ b = 1.39300
 		//m_DD.Execute(m_weather, dd);
 		//double DD = 0;
 		m_output.Init(m_weather.GetEntireTPeriod(CTM::DAILY), NB_OUTPUTS);
-		ASSERT(output_m.size() == output_m.size());
+		assert(output_m.size() == output_m.size());
 		for (size_t d = 0; d < output_m.size(); d++)
 		{
 
-			m_output[d][O_M_NYPH2o] = WBSF::Round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 0], 1);
-			m_output[d][O_M_NYPH2] = WBSF::Round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 1], 1);
-			m_output[d][O_M_PREPUPA] = WBSF::Round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 2], 1);
-			m_output[d][O_M_PUPA] = WBSF::Round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 3], 1);
-			m_output[d][O_M_ADULT] = WBSF::Round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 4], 1);
-			m_output[d][O_M_DEADADULT] = WBSF::Round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 5], 1);
-			m_output[d][O_F_NYPH2o] = WBSF::Round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 0], 1);
-			m_output[d][O_F_NYPH2] = WBSF::Round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 1], 1);
-			m_output[d][O_F_ADULT] = WBSF::Round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 2], 1);
-			m_output[d][O_F_DEAD_ADULT] = WBSF::Round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 3], 1);
-			m_output[d][O_NYPH1] = WBSF::Round(output_b[d][CEuropeanElmScaleCRb::O_FIRST_STAGE + 1], 1);
-			m_output[d][O_NYPH2] = WBSF::Round(output_b[d][CEuropeanElmScaleCRb::O_FIRST_STAGE + 2], 1);
-			m_output[d][O_D_NYPH2] = WBSF::Round(output_d[d][CEuropeanElmScaleCRd::O_FIRST_STAGE + 0], 1);
-			m_output[d][O_D_ADULT] = WBSF::Round(output_d[d][CEuropeanElmScaleCRd::O_FIRST_STAGE + 1], 1);
-			m_output[d][O_D_DEAD_ADULT] = WBSF::Round(output_d[d][CEuropeanElmScaleCRd::O_FIRST_STAGE + 2], 1);
+			m_output[d][O_M_NYPH2o] = WBSF::round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 0], 1);
+			m_output[d][O_M_NYPH2] = WBSF::round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 1], 1);
+			m_output[d][O_M_PREPUPA] = WBSF::round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 2], 1);
+			m_output[d][O_M_PUPA] = WBSF::round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 3], 1);
+			m_output[d][O_M_ADULT] = WBSF::round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 4], 1);
+			m_output[d][O_M_DEADADULT] = WBSF::round(output_m[d][CEuropeanElmScaleCRm::O_FIRST_STAGE + 5], 1);
+			m_output[d][O_F_NYPH2o] = WBSF::round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 0], 1);
+			m_output[d][O_F_NYPH2] = WBSF::round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 1], 1);
+			m_output[d][O_F_ADULT] = WBSF::round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 2], 1);
+			m_output[d][O_F_DEAD_ADULT] = WBSF::round(output_f[d][CEuropeanElmScaleCRf::O_FIRST_STAGE + 3], 1);
+			m_output[d][O_NYPH1] = WBSF::round(output_b[d][CEuropeanElmScaleCRb::O_FIRST_STAGE + 1], 1);
+			m_output[d][O_NYPH2] = WBSF::round(output_b[d][CEuropeanElmScaleCRb::O_FIRST_STAGE + 2], 1);
+			m_output[d][O_D_NYPH2] = WBSF::round(output_d[d][CEuropeanElmScaleCRd::O_FIRST_STAGE + 0], 1);
+			m_output[d][O_D_ADULT] = WBSF::round(output_d[d][CEuropeanElmScaleCRd::O_FIRST_STAGE + 1], 1);
+			m_output[d][O_D_DEAD_ADULT] = WBSF::round(output_d[d][CEuropeanElmScaleCRd::O_FIRST_STAGE + 2], 1);
 
 			//if(d>60)
 				//DD+=dd[d][0];
@@ -359,11 +361,11 @@ b = 1.39300
 	}
 
 
-	void CEuropeanElmScaleModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CEuropeanElmScaleModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		CTRef ref(ToShort(data[1]), ToShort(data[2]) - 1, ToShort(data[3]) - 1);
 
-		ASSERT(header.size() == 18);
+		assert(header.size() == 18);
 
 		std::vector<double> obs(NB_INPUT+1);
 		for (size_t i = 0; i < NB_INPUT; i++)
@@ -486,7 +488,7 @@ b = 1.39300
 							{
 								double obs = m_SAResult[i].m_obs[I_M_NYPH2o + v];
 								if (obs > -999 &&
-									output.IsInside(m_SAResult[i].m_ref))
+									output.is_inside(m_SAResult[i].m_ref))
 								{
 									double sim = output[m_SAResult[i].m_ref][CEuropeanElmScaleCRm::O_FIRST_STAGE + v] * c;
 									stat.Add(sim, obs);
@@ -534,7 +536,7 @@ b = 1.39300
 							{
 								double obs = m_SAResult[i].m_obs[I_F_NYPH2o + v];
 								if (obs > -999 &&
-									output.IsInside(m_SAResult[i].m_ref))
+									output.is_inside(m_SAResult[i].m_ref))
 								{
 									double sim = output[m_SAResult[i].m_ref][CEuropeanElmScaleCRf::O_FIRST_STAGE + v] * c;
 									stat.Add(sim, obs);
@@ -583,7 +585,7 @@ b = 1.39300
 						{
 							double obs = m_SAResult[i].m_obs[I_EGG + v];
 							if (obs > -999 &&
-								output.IsInside(m_SAResult[i].m_ref))
+								output.is_inside(m_SAResult[i].m_ref))
 							{
 								double sim = output[m_SAResult[i].m_ref][CEuropeanElmScaleCRb::O_FIRST_STAGE + v] * c;
 								stat.Add(sim, obs);
@@ -615,7 +617,7 @@ b = 1.39300
 						}
 						if (peakTRef.IsInit())
 						{
-							ASSERT(m_SAResult.size() == 1);
+							assert(m_SAResult.size() == 1);
 
 							size_t i = (m_SAResult[0].m_obs[NB_INPUT]<=4)?0:1;
 							//static const double obs[2] = { 301, 305 };
@@ -625,7 +627,7 @@ b = 1.39300
 								//double sim = statDD[t == 0 ? MEAN : STD_DEV];
 								//double DD = output[peakTRef][CEuropeanElmScaleCRd::O_DD];
 								//stat.Add(DD, obs[i]);
-								stat.Add(peakTRef.GetJDay(), obs[i]);
+								stat.Add(peakTRef.GetDOY(), obs[i]);
 							}
 						}
 					}

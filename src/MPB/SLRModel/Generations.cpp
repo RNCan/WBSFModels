@@ -11,7 +11,7 @@
 // 30/10/2007	Rémi Saint-Amant    Integration with all MPB models, removing NEWMAP
 //									New Algo, take care of the new stage 
 //*********************************************************************
-#include <math.h>
+#include <cmath>
 #include <stdlib.h>
 #include "Generations.h"
 #include "../MPBDevRates.h"
@@ -122,10 +122,10 @@ namespace WBSF
 			for (size_t n = 0; n < size(); n++)
 			{
 				for (size_t s = 0; s < NB_GENERATION_STAGES; s++)
-					fprintf(pFile, "%3d,", m_d(n, s) + 1);
+					fprintf(pFile, "%3zu,", m_d(n, s) + 1);
 
-				fprintf(pFile, "%3d,", m_d(n, EGG) + 1);
-				fprintf(pFile, "%3d,", m_d_e2(n, OVIPOSITING_ADULT) + 1);
+				fprintf(pFile, "%3zu,", m_d(n, EGG) + 1);
+				fprintf(pFile, "%3zu,", m_d_e2(n, OVIPOSITING_ADULT) + 1);
 				fprintf(pFile, "%.5lf", y_p_g(n));
 
 				fprintf(pFile, "\n");
@@ -305,7 +305,7 @@ namespace WBSF
 
 	bool CAccumulator::EvaluateP(size_t model, size_t y)const
 	{
-		ASSERT(y < size());
+		assert(y < size());
 
 		bool p = false;
 
@@ -419,10 +419,10 @@ namespace WBSF
 		for (size_t i = 0; i<size(); i++)
 		{
 			sum += at(i).m_precAMJ;
-			sum2 += Square(at(i).m_precAMJ);
+			sum2 += square(at(i).m_precAMJ);
 		}
 
-		double var = (sum2 - Square(sum) / size()) / (size() - 1);
+		double var = (sum2 - square(sum) / size()) / (size() - 1);
 		double mean = sum / size();
 
 		double CV = sqrt(var) / mean;

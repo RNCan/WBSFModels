@@ -14,8 +14,8 @@
 #include "ALeucopodaEquations.h"
 #include <boost/math/distributions.hpp>
 #include <boost/math/distributions/logistic.hpp>
-#include "ModelBase/DevRateEquation.h"
-#include "ModelBase/SurvivalEquation.h"
+#include "ModelBased/DevRateEquation.h"
+#include "ModelBased/SurvivalEquation.h"
 
 using namespace WBSF;
 using namespace std;
@@ -51,7 +51,7 @@ namespace WBSF
 	//Daily development rate
 	double CAprocerosLeucopodaEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 
 
@@ -128,7 +128,7 @@ namespace WBSF
 			//0.253597,//Adult
 		};
 
-		boost::math::lognormal_distribution<double> RDR_dist(-WBSF::Square(SIGMA[s]) / 2.0, SIGMA[s]);
+		boost::math::lognormal_distribution<double> RDR_dist(-WBSF::square(SIGMA[s]) / 2.0, SIGMA[s]);
 		double RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
 		while (RDR < 0.2 || RDR>2.6)//base on individual observation
 			RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
@@ -287,7 +287,7 @@ namespace WBSF
 
 
 	//	double w = m_randomGenerator.RandNormal(P[sex][0], P[sex][1]);
-	//	ASSERT(w > 3);
+	//	assert(w > 3);
 
 	//	//adjustment for attrition
 	//	return w * 7 * 0.65;//active life [day]

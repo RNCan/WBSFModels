@@ -3,10 +3,13 @@
 // 06/03/2020	3.0.1	Rémi Saint-Amant   recompile
 // 20/09/2016	1.2.0	Rémi Saint-Amant   WBSF
 //***********************************************************
-#include "ForestTentCaterpillarModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic\DegreeDays.h"
+
+#include "WeatherBased/DegreeDays.h"
+#include "ModelBased/EntryPoint.h"
+
+
 #include "ForestTentCaterpillar.h"
+#include "ForestTentCaterpillarModel.h"
 
 using namespace WBSF::HOURLY_DATA;
 using namespace WBSF::FTC;
@@ -70,7 +73,7 @@ namespace WBSF
 
 		//CFTCStatVector stat(m_weather.GetNbYears() - 1, CTRef(m_weather[size_t(1)].GetTRef().GetYear()));
 		CTPeriod outputPeriod = m_weather.GetEntireTPeriod(CTM::ANNUAL);
-		outputPeriod.Begin()++;//begin output at the second year
+		outputPeriod.begin()++;//begin output at the second year
 		CModelStatVector stat(outputPeriod, CFTCStat::NB_VARIABLES);
 		
 		for (size_t y = 0; y < m_weather.GetNbYears() - 1; y++)
@@ -83,7 +86,7 @@ namespace WBSF
 			switch (m_type)
 			{
 			case ORIGINAL:
-				begin = CTRef(year + 1, FIRST_MONTH, FIRST_DAY);
+				begin = CTRef(year + 1, JANUARY, DAY_01);
 				threshold = 2.2;
 				sumDD = 222.2;
 				break;//original
@@ -100,7 +103,7 @@ namespace WBSF
 			CDegreeDays DDhatch(CDegreeDays::DAILY_AVERAGE, threshold);
 			
 			CTPeriod period = m_weather[y + 1].GetEntireTPeriod(CTM::DAILY);
-			for (CTRef d = begin; d <= period.End(); d++)
+			for (CTRef d = begin; d <= period.end(); d++)
 			{
 				DD += DDhatch.GetDD(m_weather.GetDay(d));
 				if (DD >= sumDD)
@@ -111,11 +114,11 @@ namespace WBSF
 			}
 
 			int Jday = 366;
-			if (hatchDay.IsInit())
+			if (hatchDay.is_init())
 			{
 				Jday = -1;
-				if (hatchDay.GetYear() == period.Begin().GetYear())
-					Jday = (int)hatchDay.GetJDay();
+				if (hatchDay.GetYear() == period.begin().GetYear())
+					Jday = (int)hatchDay.GetDOY();
 			}
 
 			stat[y][CFTCStat::HATCH_PEAK] = Jday + 1;
@@ -125,7 +128,7 @@ namespace WBSF
 			double DDPupation = 0;
 			CDegreeDays DD0(CDegreeDays::DAILY_AVERAGE, 0);
 			
-			for (CTRef d = period.Begin(); d <= period.End(); d++)
+			for (CTRef d = period.begin(); d <= period.end(); d++)
 			{
 				DDPupation += DD0.GetDD( m_weather.GetDay(d) );
 				if (DDPupation >= 800)
@@ -136,11 +139,11 @@ namespace WBSF
 			}
 
 			int Jday2 = 366;
-			if (pupationDay.IsInit())
+			if (pupationDay.is_init())
 			{
 				Jday2 = -1;
-				if (pupationDay.GetYear() == period.Begin().GetYear())
-					Jday2 = (int)pupationDay.GetJDay();
+				if (pupationDay.GetYear() == period.begin().GetYear())
+					Jday2 = (int)pupationDay.GetDOY();
 			}
 
 			stat[y][CFTCStat::PUPATION_PEAK] = Jday2 + 1;
@@ -150,7 +153,7 @@ namespace WBSF
 			double DDFlight = 0;
 
 			//for (CTRef d = m_weather[y + 1].GetFirstTRef(); d <= m_weather[y + 1].GetLastTRef(); d++)
-			for (CTRef d = period.Begin(); d <= period.End(); d++)
+			for (CTRef d = period.begin(); d <= period.end(); d++)
 			{
 				//DDFlight += m_weather[d].GetDD(0);
 				DDFlight += DD0.GetDD(m_weather.GetDay(d));
@@ -162,12 +165,12 @@ namespace WBSF
 			}
 
 			int Jday3 = 366;
-			if (flightDay.IsInit())
+			if (flightDay.is_init())
 			{
 				Jday3 = -1;
 				//if (flightDay.GetYear() == m_weather[y + 1].GetYear())
-				if (flightDay.GetYear() == period.Begin().GetYear())
-					Jday3 = (int)flightDay.GetJDay();
+				if (flightDay.GetYear() == period.begin().GetYear())
+					Jday3 = (int)flightDay.GetDOY();
 			}
 
 			stat[y][CFTCStat::EMERGENCE_PEAK] = Jday3 + 1;
@@ -189,7 +192,7 @@ namespace WBSF
 
 	//	//CFTCStatVector stat(m_weather.GetNbYears() - 1, CTRef(m_weather[size_t(1)].GetTRef().GetYear()));
 	//	CTPeriod outputPeriod = m_weather.GetEntireTPeriod(CTM::DAILY);
-	//	//outputPeriod.Begin()++;//begin output at the second year
+	//	//outputPeriod.begin()++;//begin output at the second year
 	//	m_output.Init(outputPeriod, 1, 0);
 
 	//	for (size_t y = 0; y < m_weather.GetNbYears(); y++)
@@ -211,7 +214,7 @@ namespace WBSF
 	//		CTRef hatchDay;
 	//		double sumDD = 0;
 	//		CTPeriod period = m_weather[y].GetEntireTPeriod(CTM::DAILY);
-	//		for (CTRef d = begin; d <= period.End(); d++)
+	//		for (CTRef d = begin; d <= period.end(); d++)
 	//		{
 	//			const CWeatherDay& w_day = m_weather.GetDay(d);
 	//			double m = w_day[H_TMIN][MEAN];
@@ -253,7 +256,7 @@ namespace WBSF
 
 		//This is where the model is actually executed
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
-	//	p.Begin().m_year++;//skip the first year in result
+	//	p.begin().m_year++;//skip the first year in result
 		stat.Init(p, FTC::NB_STATS, 0);
 
 		//we simulate 2 years at a time. 
@@ -277,8 +280,8 @@ namespace WBSF
 			pTree->m_kind = m_treeKind;
 			pTree->m_nbMinObjects = 100;
 			pTree->m_nbMaxObjects = 1000;
-			//pTree->Initialize<CForestTentCaterpillar>(CInitialPopulation(p.Begin(), 0, 4, 100, EGG));
-			pTree->Initialize<CForestTentCaterpillar>(CInitialPopulation(py.Begin(), 0, 400, 100, EGG));
+			//pTree->Initialize<CForestTentCaterpillar>(CInitialPopulation(p.begin(), 0, 4, 100, EGG));
+			pTree->Initialize<CForestTentCaterpillar>(CInitialPopulation(py.begin(), 0, 400, 100, EGG));
 
 			//add tree to stand			
 			stand.m_host.push_front(pTree);
@@ -299,13 +302,13 @@ namespace WBSF
 
 				//CTPeriod p = m_weather[yy].GetEntireTPeriod(CTM(CTM::DAILY));
 
-			for (CTRef d = py.Begin(); d <= py.End(); d++)
+			for (CTRef d = py.begin(); d <= py.end(); d++)
 			{
-				//if(d.GetJDay()>=75)
+				//if(d.GetDOY()>=75)
 				stand.Live(m_weather.GetDay(d));
 
 				int shift = 0;
-				if(stat.IsInside(d- shift))
+				if(stat.is_inside(d- shift))
 					stand.GetStat(d, stat[d- shift]);
 
 				stand.AdjustPopulation();
@@ -320,16 +323,16 @@ namespace WBSF
 
 
 	//simulated annealing 
-	void CForestTentCaterpillarModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CForestTentCaterpillarModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		//transform value to date/stage
-		ASSERT(header[3] == "Year");
-		ASSERT(header[4] == "Month");
-		ASSERT(header[5] == "Day");
-		ASSERT(header[12] == "NbInds");
-		ASSERT(header[13] == "AI");
+		assert(header[3] == "Year");
+		assert(header[4] == "Month");
+		assert(header[5] == "Day");
+		assert(header[12] == "NbInds");
+		assert(header[13] == "AI");
 
-		CTRef ref(ToShort(data[3]), ToShort(data[4]) - 1, ToShort(data[5]) - 1);
+		CTRef ref(ToInt(data[3]), ToShort(data[4]) - 1, ToShort(data[5]) - 1);
 		std::vector<double> obs;
 		obs.push_back(ToDouble(data[13]));
 		obs.push_back(ToDouble(data[12]));
@@ -365,14 +368,14 @@ namespace WBSF
 				m_weather.RemoveYear(m_weather.GetNbYear()-1);
 				*/
 
-			ASSERT(m_weather.GetFirstYear() == m_firstYear);
-			ASSERT(m_weather.GetLastYear() == m_lastYear);
+			assert(m_weather.GetFirstYear() == m_firstYear);
+			assert(m_weather.GetLastYear() == m_lastYear);
 			ExecuteDaily(statSim);
 
 
 			for (int i = 0; i < (int)m_SAResult.size(); i++)
 			{
-				if (statSim.IsInside(m_SAResult[i].m_ref))
+				if (statSim.is_inside(m_SAResult[i].m_ref))
 				{
 					double AISim = statSim[m_SAResult[i].m_ref][S_AVERAGE_INSTAR];
 					//_ASSERTE( AISim >= 2&&AISim<=8);

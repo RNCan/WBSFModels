@@ -5,9 +5,9 @@
 //***********************************************************
 #include "LeucotaraxisArgenticollisModel.h"
 #include "LeucotaraxisArgenticollisEquations.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/DegreeDays.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 #include <boost/math/distributions/weibull.hpp>
 
 
@@ -135,10 +135,10 @@ namespace WBSF
 			output.Init(p, NB_STATS, 0);
 
 
-		for (CTRef d = p.Begin(); d <= p.End(); d++)
+		for (CTRef d = p.begin(); d <= p.end(); d++)
 		{
 			stand.Live(weather.GetDay(d));
-			if (output.IsInside(d))
+			if (output.is_inside(d))
 				stand.GetStat(d, output[d]);
 
 			stand.AdjustPopulation();
@@ -155,10 +155,10 @@ namespace WBSF
 				if (CUM_STAT[s])
 				{
 					CStatistic stat = output.GetStat(s, p);
-					if (stat.IsInit() && stat[SUM] > 0)
+					if (stat.is_init() && stat[SUM] > 0)
 					{
 						output[0][s] = output[0][s] * 100 / stat[SUM];//when first day is not 0
-						for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+						for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 						{
 							output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
 							_ASSERTE(!_isnan(output[d][s]));
@@ -172,9 +172,9 @@ namespace WBSF
 	enum TSpecies { S_LA_G0, S_LA_G1, S_LP, S_LN };
 	enum TInput { I_SYC, I_SITE, I_YEAR, I_COLLECTION, I_SPECIES, I_G, I_DATE, I_CDD, I_TMIN, I_DAILY_COUNT, I_P, NB_INPUTS };
 	enum TInputInternal { O_G, O_N, O_P, NB_INPUTS_INTERNAL };
-	void CLeucotaraxisArgenticollisModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CLeucotaraxisArgenticollisModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == NB_INPUTS);
+		assert(data.size() == NB_INPUTS);
 
 		CSAResult obs;
 
@@ -189,13 +189,13 @@ namespace WBSF
 			obs.m_obs[O_P] = stod(data[I_P]);
 
 
-			ASSERT(obs.m_obs[O_N] >= 0);
-			ASSERT(obs.m_obs[O_P] >= 0 && obs.m_obs[O_P] <= 100);
+			assert(obs.m_obs[O_N] >= 0);
+			assert(obs.m_obs[O_P] >= 0 && obs.m_obs[O_P] <= 100);
 			m_SAResult.push_back(obs);
 
 			if (obs.m_obs[O_P] >= 5 && obs.m_obs[O_P] <= 95)
 			{
-				m_DOY[obs.m_obs[O_G]].insert(obs.m_ref.GetJDay());
+				m_DOY[obs.m_obs[O_G]].insert(obs.m_ref.GetDOY());
 			}
 		}
 		
@@ -216,11 +216,11 @@ namespace WBSF
 			if (obs >= 100)
 				obs = 99.99;//to avoid some problem of truncation
 
-			long index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(TRefO.GetYear(), JANUARY, DAY_01, TRefO.GetYear(), DECEMBER, DAY_31));
-			if (index >= 1)
+			size_t index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(CTRef(TRefO.GetYear(), JANUARY, DAY_01), CTRef(TRefO.GetYear(), DECEMBER, DAY_31)));
+			if (index != NOT_INIT && index >= 1)
 			{
-				double obsX1 = output.GetFirstTRef().GetJDay() + index;
-				double obsX2 = output.GetFirstTRef().GetJDay() + index + 1;
+				double obsX1 = output.GetFirstTRef().GetDOY() + index;
+				double obsX2 = output.GetFirstTRef().GetDOY() + index + 1;
 
 				double obsY1 = output[index][s];
 				double obsY2 = output[index + 1][s];
@@ -228,7 +228,7 @@ namespace WBSF
 				{
 					double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 					double obsX = obsX1 + (obs - obsY1) * slope;
-					ASSERT(!_isnan(obsX) && _finite(obsX));
+					assert(!_isnan(obsX) && _finite(obsX));
 
 					x = obsX;
 				}
@@ -293,7 +293,7 @@ namespace WBSF
 		//	{
 		//		CTRef Tref = std::get<1>(d[i]);
 		//		double CDD = std::get<0>(d[i]);
-		//		double p = Round(100 * sum[s] / total[s], 1);
+		//		double p = round(100 * sum[s] / total[s], 1);
 		//
 		//		P[Tref][P_CDD] = CDD;
 		//		P[Tref][P_CE + s] = p;
@@ -328,7 +328,7 @@ namespace WBSF
 			//	for (size_t i = 0; i < m_SAResult.size(); i++)
 			//	{
 			//		double cumul_obs = P[m_SAResult[i].m_ref][P_LA_G2];
-			//		ASSERT(cumul_obs >= 0 && cumul_obs <= 100);
+			//		assert(cumul_obs >= 0 && cumul_obs <= 100);
 			//
 			//		m_SAResult[i].m_obs.push_back(cumul_obs);
 			//	}
@@ -350,12 +350,12 @@ namespace WBSF
 
 				for (size_t i = 0; i < m_SAResult.size(); i++)
 				{
-					if (output.IsInside(m_SAResult[i].m_ref))
+					if (output.is_inside(m_SAResult[i].m_ref))
 					{
 						size_t G = m_SAResult[i].m_obs[O_G];
 						size_t stage =  G == 0 ? S_EMERGENCE0 : S_EMERGENCE1a;
-						double obs_y = Round(m_SAResult[i].m_obs[O_P], 4);
-						double sim_y = Round(output[m_SAResult[i].m_ref][stage], 4);
+						double obs_y = round(m_SAResult[i].m_obs[O_P], 4);
+						double sim_y = round(output[m_SAResult[i].m_ref][stage], 4);
 						
 
 						if (obs_y > -999)
@@ -366,13 +366,13 @@ namespace WBSF
 
 							if (obs_y >= 5 && obs_y<= 95)
 							{
-								double obs_x = m_SAResult[i].m_ref.GetJDay();
+								double obs_x = m_SAResult[i].m_ref.GetDOY();
 								double sim_x = GetSimX(stage, m_SAResult[i].m_ref, obs_y, output);
 
 								if (sim_x > -999)
 								{
-									obs_x = Round(100 * (obs_x - m_DOY[G][LOWEST]) / m_DOY[G][RANGE], 4);
-									sim_x = Round(100 * (sim_x - m_DOY[G][LOWEST]) / m_DOY[G][RANGE], 4);
+									obs_x = round(100 * (obs_x - m_DOY[G][LOWEST]) / m_DOY[G][RANGE], 4);
+									sim_x = round(100 * (sim_x - m_DOY[G][LOWEST]) / m_DOY[G][RANGE], 4);
 									
 									//for (size_t ii = 0; ii < m_SAResult[i].m_obs[O_N]; ii++)
 										stat.Add(obs_x, sim_x);

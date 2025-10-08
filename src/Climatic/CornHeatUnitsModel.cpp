@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "CornHeatUnitsModel.h"
 
 using namespace std;
@@ -68,7 +68,7 @@ namespace WBSF
 
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
-			CTRef TRef = m_weather[y].GetEntireTPeriod().End();
+			CTRef TRef = m_weather[y].GetEntireTPeriod().end();
 			m_output[y][O_CHU] = output[TRef][LOWEST];
 		}
 
@@ -105,7 +105,7 @@ namespace WBSF
 					CTRef ref = m_weather[y][m][d].GetTRef();
 					if (ref >= m_planting_date.GetTRef(ref))
 					{
-						if(ref.GetJDay()>182 && m_weather[y][m][d][H_TMIN][LOWEST] <= m_frost_threshold)
+						if(ref.GetDOY()>182 && m_weather[y][m][d][H_TMIN][LOWEST] <= m_frost_threshold)
 							bFrosted = true;
 
 						if (!bFrosted)
@@ -127,7 +127,7 @@ namespace WBSF
 	{
 		double Tmin = weather[H_TMIN][HIGHEST];
 		double Tmax = weather[H_TMAX][LOWEST];
-		double CHU = max(0.0, (1.8 *(Tmin - 4.4) + 3.3 *(Tmax - 10) - 0.084*Square (Tmax - 10) ) / 2.0);
+		double CHU = max(0.0, (1.8 *(Tmin - 4.4) + 3.3 *(Tmax - 10) - 0.084*square (Tmax - 10) ) / 2.0);
 
 		return CHU;
 	}

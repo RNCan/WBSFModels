@@ -22,12 +22,12 @@
 //*********************************************************************
 #include <stdio.h>
 #include <conio.h>
-#include <math.h>
+#include <cmath>
 #include <stdlib.h>
 #include <string.h>
 
 #include "GrayModel.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 
 using namespace std;
 
@@ -126,11 +126,11 @@ namespace WBSF
 
 		//resize output array
 		//Resize( weather.GetNbDay() );
-		m_eggState.Init(p.GetLength(), p.Begin());
+		m_eggState.Init(p);
 
 		//alocate internal array
-		allocate_arrays(p.GetNbDay());
-		GrayReset(p.GetNbDay());
+		allocate_arrays(int(p.length(CTM::DAILY)));
+		GrayReset(int(p.length(CTM::DAILY)));
 
 		calc_rates();			//construct rate tables for each phase
 		//construct depletion table for diapause
@@ -142,13 +142,13 @@ namespace WBSF
 		CEggState tot_eggs(NB_EGG_OUTPUT);      //used for accounting 
 		tot_eggs[PREDIAPAUSE] = MAXEGGS;
 
-		for (CTRef day = p.Begin(); day < m_param.m_ovipDate; day++)
+		for (CTRef day = p.begin(); day < m_param.m_ovipDate; day++)
 			m_eggState[day][PREDIAPAUSE] = MAXEGGS;
 
 		//int last_day = weather.GetNbDay();
-		CTRef lastDay = p.End();
+		CTRef lastDay = p.end();
 		//for (int day=param.GetOvipDate(); day<weather.GetNbDay(); day++)
-		for (CTRef day = m_param.m_ovipDate; day <= p.End(); day++)
+		for (CTRef day = m_param.m_ovipDate; day <= p.end(); day++)
 		{
 			//compute total Eggs
 			ComputeTotalEgg(day, weather, tot_eggs);
@@ -166,7 +166,7 @@ namespace WBSF
 
 
 		//fill egg array up to the end
-		for (CTRef day = lastDay + 1; day <= p.End(); day++)
+		for (CTRef day = lastDay + 1; day <= p.end(); day++)
 			m_eggState[day][HATCH] = MAXEGGS;
 
 
@@ -583,7 +583,7 @@ namespace WBSF
 	//Remove all the spaces, newlines, and null at the end of a string
 	void strip(char *line)
 	{
-		register int i;
+		int i;
 		i = int(strlen(line)) - 1;
 		while ((line[i] == '\0' || line[i] == '\n' || line[i] == ' ') && (i > -1))
 			--i;

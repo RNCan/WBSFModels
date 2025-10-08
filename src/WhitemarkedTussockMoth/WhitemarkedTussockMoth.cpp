@@ -36,7 +36,7 @@ namespace WBSF
 		//These are independent in successive life stages
 		for (size_t s = 0; s < NB_STAGES; s++)
 			m_RDR[s] = Equations().GetRelativeDevRate(s);
-		
+
 		m_GDD = 0;
 		m_F = Equations().GetFecondity();
 		m_transit[int(age)] = creationDate.as(CTM::DAILY);
@@ -65,7 +65,8 @@ namespace WBSF
 	}
 	// Object destructor
 	CWhitemarkedTussockMoth::~CWhitemarkedTussockMoth(void)
-	{}
+	{
+	}
 
 	/*static double Zalom83(double Tmin, double Tmax, double Tresh)
 	{
@@ -101,7 +102,7 @@ namespace WBSF
 		//double Tmax = weather[H_TMAX][MEAN];
 		//double DDAY = Zalom83(Tmin, Tmax, Equations().m_H[Τᴴ], 999);
 		//m_GDD += DDAY;
-		if(weather.GetTRef().GetJDay()>=Equations().m_H[startᴴ])
+		if (weather.GetTRef().GetDOY() >= Equations().m_H[startᴴ])
 			m_GDD += GetStand()->m_DD.GetDD(weather);
 	}
 
@@ -122,16 +123,16 @@ namespace WBSF
 		size_t g = GetGeneration();
 		size_t s = GetStage();
 
-	/*	if (GetGeneration() == 1 && s == EGG)
-		{
-			if (m_GDD >= m_hatchGDD)
-				m_age = LARVAE;
-		}
-		else*/
-		
+		/*	if (GetGeneration() == 1 && s == EGG)
+			{
+				if (m_GDD >= m_hatchGDD)
+					m_age = LARVAE;
+			}
+			else*/
+
 		{
 			//begin development after output diapause
-			//if (weather.GetTRef().GetJDay() >= Equations().m_H[startᴴ])
+			//if (weather.GetTRef().GetDOY() >= Equations().m_H[startᴴ])
 			if (m_GDD > m_diapauseGDD)
 			{
 				double T = weather[H_TAIR];
@@ -143,13 +144,13 @@ namespace WBSF
 				//Relative development rate for this individual
 				double rr = m_RDR[s];
 
-				if(IsChangingStage(rr))
-					m_transit[s+1] = weather.GetTRef().as(CTM::DAILY);
-				
+				if (IsChangingStage(rr))
+					m_transit[s + 1] = weather.GetTRef().as(CTM::DAILY);
+
 				//Time step development rate for this individual
 				r *= rr;
 
-				
+
 				//Adjust age
 				m_age = min(double(DEAD_ADULT), m_age + r);
 			}
@@ -170,7 +171,7 @@ namespace WBSF
 			return;
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps&&m_age < DEAD_ADULT; step++)
+		for (size_t step = 0; step < nbSteps && GetStage() < DEAD_ADULT; step++)
 		{
 			size_t h = step * GetTimeStep();
 			Live(weather[h], GetTimeStep());
@@ -195,10 +196,10 @@ namespace WBSF
 				m_F = 0;
 
 				//Oviposition 
-				if (/*m_bFertil */GetGeneration()==0)
+				if (/*m_bFertil */GetGeneration() == 0)
 				{
 					CWTMHost* pHost = GetHost();
-					CWTMStand* pStand = GetStand(); ASSERT(pStand);
+					CWTMStand* pStand = GetStand(); assert(pStand);
 
 					//add 2 individual per female to keep variability
 					double scaleFactor = m_broods * m_scaleFactor;
@@ -241,7 +242,7 @@ namespace WBSF
 	//*****************************************************************************
 	void CWhitemarkedTussockMoth::GetStat(CTRef d, CModelStat& stat)
 	{
-		ASSERT(IsCreated(d));
+		assert(IsCreated(d));
 
 		size_t s = GetStage();
 		size_t g = GetGeneration();
@@ -257,11 +258,11 @@ namespace WBSF
 			if (m_broods > 0)
 				stat[S_EGG_MASS0] += m_scaleFactor;//we compute mass and not eggs
 
-			if(HasChangedStage() && s == ADULT)
+			if (HasChangedStage() && s == ADULT)
 				stat[S_EMERGENCE0] += m_scaleFactor;
 		}
 
-		
+
 		if (g == 1)
 		{
 			if (IsAlive() || s == DEAD_ADULT)

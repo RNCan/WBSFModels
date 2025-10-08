@@ -7,8 +7,8 @@
 // 08/05/2012			Rémi Saint-Amant	Create from Lucie Voyer data
 //**************************************************************************************************************
 
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/ContinuingRatio.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/ContinuingRatio.h"
 #include "WhitePineWeevil.h"
 
 using namespace std;
@@ -131,7 +131,7 @@ namespace WBSF
 	//*****************************************************************************************************************
 	//Next 4 methods are for Simulated Annealing
 
-	void CWhitePineWeevilModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CWhitePineWeevilModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		enum TInputAllStage{ E_ID, E_YEAR, E_MONTH, E_DAY, E_DD, E_EGG, E_EGG_CUMUL, E_L1, E_CUMUL_L1, E_L2, E_CUMUL_L2, E_L3, E_CUMUL_L3, E_L4, E_CUMUL_L4, E_PUPA, E_CUMUL_PUPA, E_ADULT, E_CUMUL_ADULT, NB_INPUTS_STAGE };
 		enum TInputDD{ P_YEAR, P_MONTH, P_DAY, P_DD, NB_INPUTS_DD };
@@ -171,7 +171,7 @@ namespace WBSF
 	//		DD += (20 - m_threshold)*m_SAResult[i].m_obs[PUP_NB_DAYS];
 
 	//		int year = m_SAResult[i].m_ref.GetYear();
-	//		int index = statSim.GetFirstIndex(CWhitePineWeevilCR::O_DD, DD, 1, CTPeriod(year, FIRST_MONTH, FIRST_DAY, year, LAST_MONTH, LAST_DAY));
+	//		int index = statSim.GetFirstIndex(CWhitePineWeevilCR::O_DD, DD, 1, CTPeriod(year, JANUARY, DAY_01, year, DECEMBER, DAY_31));
 	//		if (index >= 0)
 	//		{
 	//			obsStat += m_SAResult[i].m_obs[1];
@@ -303,7 +303,7 @@ namespace WBSF
 					for (size_t p = S_EGG; p <= S_ADULT; p++)
 					{
 						if (m_SAResult[i].m_obs[p]>-999 &&
-							statSim.IsInside(m_SAResult[i].m_ref))
+							statSim.is_inside(m_SAResult[i].m_ref))
 						{
 							double obsV = m_SAResult[i].m_obs[p];
 							double simV = statSim[m_SAResult[i].m_ref][CWhitePineWeevilCR::O_FIRST_STAGE + p + 1];

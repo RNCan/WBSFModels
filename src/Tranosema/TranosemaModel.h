@@ -1,4 +1,7 @@
-#include "ModelBase/BioSIMModelBase.h"
+#pragma once
+
+
+#include "ModelBased/BioSIMModelBase.h"
 #include "Tranosema.h"
 
 namespace WBSF
@@ -19,7 +22,7 @@ namespace WBSF
 		static CBioSIMModelBase* CreateObject(){ return new CTranosemaModel; }
 
 		//function for simulated annealing
-		//virtual void AddDailyResult(const StringVector& header, const StringVector& data);
+		//virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
 		//virtual void GetFValueDaily(CFL::CStatisticXY& stat);
 
 	protected:

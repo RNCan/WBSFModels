@@ -4,8 +4,8 @@
 // 08/05/2017	1.0.0	Rémi Saint-Amant	Create from articles Cuddington 2018
 //**************************************************************************************************************
 
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/ContinuingRatio.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/ContinuingRatio.h"
 #include "EmeraldAshBorerColdHardiness.h"
 #include "TreeMicroClimate.h"
 
@@ -71,12 +71,12 @@ namespace WBSF
 		if (!m_weather.IsHourly())
 			m_weather.ComputeHourlyVariables();
 
-		ASSERT(m_weather.IsHourly());
+		assert(m_weather.IsHourly());
 
 		m_output.Init(m_weather.GetEntireTPeriod(CTM::ANNUAL), NB_OUTPUTS_A, -999, HEADER_A);
 		for (size_t y = 1; y < m_weather.GetNbYears(); y++)
 		{
-			CTPeriod p = CTPeriod(CTRef(m_weather[y - 1].GetTRef().GetYear(), SEPTEMBER, FIRST_DAY, FIRST_HOUR), CTRef(m_weather[y].GetTRef().GetYear(), APRIL, LAST_DAY, LAST_HOUR));
+			CTPeriod p = CTPeriod(CTRef(m_weather[y - 1].GetTRef().GetYear(), SEPTEMBER, DAY_01, 0), CTRef(m_weather[y].GetTRef().GetYear(), APRIL, DAY_30, 23));
 
 			CStatistic statA;
 			statA += m_weather[y - 1].GetStat(H_TMIN, p);
@@ -104,7 +104,7 @@ namespace WBSF
 
 	double get_wT(CModelStatVector& output, CTRef TRef, int n_Δt, double a0)
 	{
-		assert(TRef.GetTM().Type() == CTM::HOURLY);
+		assert(TRef.TM().Type() == CTM::HOURLY);
 		assert(n_Δt > 0);
 
 		CStatistic T;
@@ -125,7 +125,7 @@ namespace WBSF
 
 	double get_SCP(double wT, double wTº, double λ, double SCPᶫ, double SCPᴴ)
 	{
-		ASSERT(SCPᶫ <= SCPᴴ);
+		assert(SCPᶫ <= SCPᴴ);
 
 		double ΔSCP = SCPᴴ - SCPᶫ;
 		double SCP = SCPᶫ + ΔSCP * (1.0 / (1.0 + exp(-λ * (wT - wTº))));
@@ -144,14 +144,14 @@ namespace WBSF
 		CTStatMatrix stats(outputH, CTM::DAILY);
 		outputD.Init(stats.m_period, NB_OUTPUTS_D, -999, HEADER_D);
 
-		for (CTRef TRef = stats.m_period.Begin(); TRef <= stats.m_period.End(); TRef++)
+		for (CTRef TRef = stats.m_period.begin(); TRef <= stats.m_period.end(); TRef++)
 		{
 			outputD[TRef][O_TMIN] = stats[TRef][O_TAIR][LOWEST];
 			outputD[TRef][O_TBARK_MIN] = stats[TRef][O_TBARK][LOWEST];
 			outputD[TRef][O_D_WT] = stats[TRef][O_H_WT][MEAN];
 			outputD[TRef][O_D_SCP] = stats[TRef][O_H_SCP][MEAN];
 			outputD[TRef][O_D_MORTALITY] = stats[TRef][O_H_MORTALITY][MEAN];
-			if (stats[TRef][O_TBARK].IsInit() && stats[TRef][O_H_SCP].IsInit())
+			if (stats[TRef][O_TBARK].is_init() && stats[TRef][O_H_SCP].is_init())
 				outputD[TRef][O_D_DIFF_TMIN_SCP] = stats[TRef][O_TBARK][LOWEST] - stats[TRef][O_H_SCP][LOWEST];
 		}
 
@@ -162,7 +162,7 @@ namespace WBSF
 		//get the minimum date pof the 28 days's mean
 		CTRef loTRef;
 		double lo_wT = 999;
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			double wT = get_wT(output, TRef, 672, 0);
 			if (wT < lo_wT)
@@ -186,7 +186,7 @@ namespace WBSF
 			{
 			case LINEAR:Tbark = -2.38 + 0.747*Tair; break;
 			case NONLINEAR:Tbark = -44.6 + 62.4*exp(0.0398*Tair); break;
-			default: ASSERT(false);
+			default: assert(false);
 			}
 		}
 
@@ -211,14 +211,14 @@ namespace WBSF
 		if (!m_weather.IsHourly())
 			m_weather.ComputeHourlyVariables();
 
-		ASSERT(m_weather.IsHourly());
+		assert(m_weather.IsHourly());
 
 		output.Init(m_weather.GetEntireTPeriod(), NB_OUTPUTS_H, -999, HEADER_H);
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM::HOURLY);
 
 		//first step: compute Tair and Tbark from regression
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			const CHourlyData& w = m_weather.GetHour(TRef);
 			double Tair = w[H_TAIR];
@@ -232,17 +232,17 @@ namespace WBSF
 		//second step: compute SCP and mortality
 		for (size_t y = 0; y < p.GetNbYears() - 1; y++)
 		{
-			CTPeriod p2 = CTPeriod(CTRef(m_weather[y].GetTRef().GetYear(), SEPTEMBER, FIRST_DAY, FIRST_HOUR), CTRef(m_weather[y + 1].GetTRef().GetYear(), APRIL, LAST_DAY, LAST_HOUR));
+			CTPeriod p2 = CTPeriod(CTRef(m_weather[y].GetTRef().GetYear(), SEPTEMBER, DAY_01, 0), CTRef(m_weather[y + 1].GetTRef().GetYear(), APRIL, DAY_30, 23));
 			CTRef lowTRef = GetLoTRef(p2, output);
 
-			double cur_wT = get_wT(output, p2.Begin(), m_n_Δt, 0);
+			double cur_wT = get_wT(output, p2.begin(), m_n_Δt, 0);
 			double cur_SCP = m_SCPᴴ;
 			double ΣwT = 0;
 			double mortality = 0;
 
 			TPhase phase = ACCLIMATATION;
 
-			for (CTRef TRef = p2.Begin(); TRef <= p2.End(); TRef++)
+			for (CTRef TRef = p2.begin(); TRef <= p2.end(); TRef++)
 			{
 				double wT = get_wT(output, TRef, m_n_Δt, 0);
 				wT = max(m_wTmin, wT);
@@ -274,7 +274,7 @@ namespace WBSF
 	enum TInputChistianson { Ch_N = I_DAY + 1, Ch_SCP_MIN, CH_SCP_MEDIAN, Ch_SCP_MEAN, Ch_SCP_SME, NB_CHRISTIANSON_COLUMNS };
 
 
-	void CEmeraldAshBorerColdHardinessModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CEmeraldAshBorerColdHardinessModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == 3)
 		{
@@ -356,7 +356,7 @@ namespace WBSF
 				for (size_t i = 0; i < m_SAResult.size(); i++)
 				{
 					if (m_SAResult[i].m_obs[Cr_SCP] > -999 &&
-						sim.IsInside(m_SAResult[i].m_ref))
+						sim.is_inside(m_SAResult[i].m_ref))
 					{
 						double obsV = m_SAResult[i].m_obs[Cr_SCP];
 						double simV = sim[m_SAResult[i].m_ref][O_D_SCP];

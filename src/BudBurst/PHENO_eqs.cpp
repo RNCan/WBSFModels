@@ -55,7 +55,7 @@ namespace WBSF
 				boost::math::beta_distribution<double> K_dist(1, max(0.001, abs(m_K[t])));
 				for (size_t i = 0; i < NB_BINS + 1; i++)
 				{
-					double S = double(i) / NB_BINS;
+					double S = double(i) / double(NB_BINS);
 					m_beta_function[t][i] = cdf(K_dist, m_K[t] < 0 ? (1 - S) : S);
 					//	m_beta_function[t][i] = (m_K[t] < 0) ? 1 - S / (S + fabs(m_K[t])) : S / (S + fabs(m_K[t]));
 				}

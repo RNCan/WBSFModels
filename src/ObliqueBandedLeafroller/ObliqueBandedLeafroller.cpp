@@ -44,9 +44,9 @@ namespace WBSF
 			m_δ[s] = Equations().Getδ(s);
 		}
 
-		
+
 		//Individuals are created as non-diapause individuals
-		m_bRequireDiapause = FALSE;
+		m_bRequireDiapause = false;
 		m_ovipAge = 0;
 
 	}
@@ -67,7 +67,8 @@ namespace WBSF
 
 	// Object destructor
 	CObliqueBandedLeafroller::~CObliqueBandedLeafroller(void)
-	{}
+	{
+	}
 
 
 	//*****************************************************************************
@@ -83,12 +84,12 @@ namespace WBSF
 
 		double DayLength = weather.GetDayLength() / 3600.; //in hours
 		CTRef TRef = weather.GetTRef();
-		size_t JDay = TRef.GetJDay();
+		size_t JDay = TRef.GetDOY();
 		size_t nbSteps = GetTimeStep().NbSteps();
-	
-		for (size_t step = 0; step < nbSteps&&m_age<DEAD_ADULT; step++)
+
+		for (size_t step = 0; step < nbSteps && GetStage() < DEAD_ADULT; step++)
 		{
-			size_t h = step*GetTimeStep();
+			size_t h = step * GetTimeStep();
 			size_t s = GetStage();
 			double T = weather[h][H_TAIR];
 
@@ -97,9 +98,9 @@ namespace WBSF
 
 			//Check if individual's diapause trigger is set this time step. As soon as an L1 or first 50% of L2 is exposed to short daylength after solstice, diapause is set. It occurs in the L3D stage
 			if ((s == L1 || (s == 2 && m_age < 2.5)) && JDay > 173 && DayLength < GetStand()->m_criticalDaylength)
-				m_bRequireDiapause = TRUE;
-			
-            
+				m_bRequireDiapause = true;
+
+
 			//Check if this individual enters diapause this time step (it was triggered in the L1 or L2). If it does, it skips L3, becomes L3D and stops developing
 			if (s == L2 && IsChangingStage(r) && m_bRequireDiapause)
 			{
@@ -108,7 +109,7 @@ namespace WBSF
 			}
 
 			//Skip the L3D stage in non-diapausing individuals
-			if (s == L3 && IsChangingStage(r) && !m_diapauseTRef.IsInit())
+			if (s == L3 && IsChangingStage(r) && !m_diapauseTRef.is_init())
 			{
 				m_age += 1;
 			}
@@ -126,9 +127,9 @@ namespace WBSF
 			//Adjust age
 			m_age += r;
 
-			
+
 			//compute brooding only once per day
-			if (m_sex == FEMALE && GetStage() == ADULT )
+			if (m_sex == FEMALE && GetStage() == ADULT)
 			{
 				double Eᵗ = Equations().GetEᵗ(m_ovipAge, m_ovipAge + r);
 				m_broods += Eᵗ;
@@ -142,19 +143,19 @@ namespace WBSF
 
 	void CObliqueBandedLeafroller::Brood(const CWeatherDay& weather)
 	{
-		ASSERT(IsAlive() && m_sex == FEMALE);
-		//ASSERT(m_totalBroods <= m_Pmax+1);
+		assert(IsAlive() && m_sex == FEMALE);
+		//assert(m_totalBroods <= m_Pmax+1);
 
 		m_totalBroods += m_broods;
 
 		//Oviposition module after Régniere 1983
 		if (m_bFertil && m_broods > 0)
 		{
-			ASSERT(m_age >= ADULT);
-			CObliqueBandedLeafrollerStand* pStand = GetStand(); ASSERT(pStand);
+			assert(m_age >= ADULT);
+			CObliqueBandedLeafrollerStand* pStand = GetStand(); assert(pStand);
 
 			double attRate = GetStand()->m_bApplyAttrition ? pStand->m_generationAttrition : 1;//1% of survival by default
-			double scaleFactor = m_broods*m_scaleFactor*attRate;
+			double scaleFactor = m_broods * m_scaleFactor * attRate;
 			CIndividualPtr object = make_shared<CObliqueBandedLeafroller>(m_pHost, weather.GetTRef(), EGG, RANDOM_SEX, true, m_generation + 1, scaleFactor);
 			m_pHost->push_front(object);
 		}
@@ -190,47 +191,47 @@ namespace WBSF
 		{
 			//if (GetGeneration() == 0)//test temporaire RSA
 			//{
-				size_t s = GetStage();
-				stat[S_BROOD] += m_broods*m_scaleFactor;
+			size_t s = GetStage();
+			stat[S_BROOD] += m_broods * m_scaleFactor;
 
 
-				if (IsAlive())
+			if (IsAlive())
+			{
+				if (s >= EGG && s < DEAD_ADULT)
+					stat[s] += m_scaleFactor;
+
+
+				if (s == ADULT)
 				{
-					if (s >= EGG && s < DEAD_ADULT)
-						stat[s] += m_scaleFactor;
-
-
-					if (s == ADULT)
+					if (m_sex == FEMALE)
 					{
-						if (m_sex == FEMALE)
-						{
-							stat[S_OVIPOSITING_ADULT] += m_scaleFactor;
-						}
+						stat[S_OVIPOSITING_ADULT] += m_scaleFactor;
 					}
 				}
-				else
-				{
-					if (m_death == OLD_AGE)
-						stat[DEAD_ADULT] += m_scaleFactor;
+			}
+			else
+			{
+				if (m_death == OLD_AGE)
+					stat[DEAD_ADULT] += m_scaleFactor;
 
-					if (m_death == FROZEN)
-						stat[S_FROZEN] += m_scaleFactor;
-				}
+				if (m_death == FROZEN)
+					stat[S_FROZEN] += m_scaleFactor;
+			}
 
 
-				if (GetStage() != GetLastStage())
-				{
-					stat[E_EGG + s] += m_scaleFactor;
-					if (s == ADULT && m_sex == FEMALE)
-						stat[E_OVIPOSITING_ADULT] += m_scaleFactor;
+			if (GetStage() != GetLastStage())
+			{
+				stat[E_EGG + s] += m_scaleFactor;
+				if (s == ADULT && m_sex == FEMALE)
+					stat[E_OVIPOSITING_ADULT] += m_scaleFactor;
 
-				}
+			}
 
 			//}
 		}
 	}
 
-	
+
 
 	bool CObliqueBandedLeafroller::CanPack(const CIndividualPtr& in)const
 	{

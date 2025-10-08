@@ -10,9 +10,9 @@
 // 25/02/2015	Remi Saint-Amant	Update with new BioSIMModelBase
 // 17/04/2014   Jacques Régnière    Creation from wsb model
 //*****************************************************************************
-#include <math.h>
+#include <cmath>
 #include "basic/UtilMath.h"
-#include "basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "HemlockLooper.h"
 
 using namespace std;
@@ -49,7 +49,7 @@ namespace WBSF
 		m_Tmin = 999;
 
 		//no pre-diapause for insects created on January first
-		m_preDiapause = creationDate.GetJDay() == 0 ? 1 : 0;
+		m_preDiapause = creationDate.GetDOY() == 0 ? 1 : 0;
 		//first year insect are set at September 15
 		//m_preDiapause = 0;
 
@@ -73,7 +73,7 @@ namespace WBSF
 	//*****************************************************************************
 	void CHemlockLooper::AssignRelativeDevRate()
 	{
-		ASSERT(GetStand());
+		assert(GetStand());
 		const CHLStand& stand = *GetStand();
 		double lat = stand.GetModel()->m_weather.m_lat;
 
@@ -99,7 +99,7 @@ namespace WBSF
 
 	void CHemlockLooper::Live(const CWeatherDay& weather)
 	{
-		ASSERT(GetStand());
+		assert(GetStand());
 
 		const CHLStand& stand = *GetStand();
 		double lat = stand.GetModel()->m_weather.m_lat;
@@ -141,7 +141,7 @@ namespace WBSF
 				}
 			}
 
-			if (m_creationDate.GetJDay() == 0 ||
+			if (m_creationDate.GetDOY() == 0 ||
 				weather.GetTRef().GetYear() > m_creationDate.GetYear())//aging starts January first of the next year
 				m_age += r;
 		}
@@ -150,8 +150,8 @@ namespace WBSF
 
 	void CHemlockLooper::Brood(const CWeatherDay& weather)
 	{
-		ASSERT(GetStand());
-		ASSERT(m_sex == FEMALE);
+		assert(GetStand());
+		assert(m_sex == FEMALE);
 
 		const CHLStand& stand = *GetStand();
 		double lat = stand.GetModel()->m_weather.m_lat;
@@ -179,11 +179,11 @@ namespace WBSF
 
 			if (m_bFertil&&m_broods > 0)
 			{
-				//CHLTree* pTree = GetTree(); ASSERT(pTree);
-				CHLStand* pStand = GetStand(); ASSERT(pStand);
+				//CHLTree* pTree = GetTree(); assert(pTree);
+				CHLStand* pStand = GetStand(); assert(pStand);
 
 				double scaleFactor = m_broods*m_scaleFactor;
-				ASSERT(scaleFactor > 0);
+				assert(scaleFactor > 0);
 
 				m_pHost->push_front(make_shared<CHemlockLooper>(m_pHost, weather.GetTRef(), EGGS, RANDOM_SEX, pStand->m_bFertilEgg, m_generation + 1, scaleFactor));
 			}
@@ -266,7 +266,7 @@ namespace WBSF
 
 		if (IsAlive() || stage == DEAD_ADULTS)
 		{
-			ASSERT(m_generation == 0);
+			assert(m_generation == 0);
 			stat[S_EGGS + stage] += m_scaleFactor;
 		}
 		
@@ -280,7 +280,7 @@ namespace WBSF
 
 		if (d == m_hatchTRef)
 		{
-			if (m_creationDate.GetJDay() == 0)
+			if (m_creationDate.GetDOY() == 0)
 			{
 				const CHLStand& stand = *GetStand();
 				double L = stand.GetModel()->m_weather.m_lat;
@@ -311,8 +311,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	CHLTree* CHemlockLooper::GetTree(){ return static_cast<CHLTree*>(m_pHost); }
 	const CHLTree* CHemlockLooper::GetTree()const{ return static_cast<const CHLTree*>(m_pHost); }
-	CHLStand* CHemlockLooper::GetStand(){ ASSERT(m_pHost); return (CHLStand*)m_pHost->GetStand(); }
-	const CHLStand* CHemlockLooper::GetStand()const{ ASSERT(m_pHost); return (const CHLStand*)m_pHost->GetStand(); }
+	CHLStand* CHemlockLooper::GetStand(){ assert(m_pHost); return (CHLStand*)m_pHost->GetStand(); }
+	const CHLStand* CHemlockLooper::GetStand()const{ assert(m_pHost); return (const CHLStand*)m_pHost->GetStand(); }
 
 
 

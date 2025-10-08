@@ -4,7 +4,7 @@
 
 
 #include "Basic/ModelStat.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "PHENO_eqs.h"
 
 namespace WBSF

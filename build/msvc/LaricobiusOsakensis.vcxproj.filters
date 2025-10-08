@@ -7,25 +7,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LaricobiusOsakensis.cpp">
+    <ClCompile Include="..\..\src\LaricobiusOsakensis\LaricobiusOsakensis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LaricobiusOsakensisEquations.cpp">
+    <ClCompile Include="..\..\src\LaricobiusOsakensis\LaricobiusOsakensisEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LaricobiusOsakensisModel.cpp">
+    <ClCompile Include="..\..\src\LaricobiusOsakensis\LaricobiusOsakensisModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LaricobiusOsakensis.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LaricobiusOsakensisEquations.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LaricobiusOsakensisModel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\LaricobiusOsakensis\LaricobiusOsakensis.h" />
+    <ClInclude Include="..\..\src\LaricobiusOsakensis\LaricobiusOsakensisEquations.h" />
+    <ClInclude Include="..\..\src\LaricobiusOsakensis\LaricobiusOsakensisModel.h" />
   </ItemGroup>
 </Project>

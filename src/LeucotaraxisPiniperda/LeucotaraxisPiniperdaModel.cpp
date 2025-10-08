@@ -5,9 +5,9 @@
 //***********************************************************
 #include "LeucotaraxisPiniperdaModel.h"
 #include "LeucotaraxisPiniperdaEquations.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/DegreeDays.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 #include <boost/math/distributions/logistic.hpp>
 
 
@@ -121,7 +121,7 @@ namespace WBSF
 
 
 		//pHost->Initialize<CLeucotaraxisPiniperda>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, PUPAE));
-		pHost->Initialize<CLeucotaraxisPiniperda>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, LARVAE+ m_C_param[0]));
+		pHost->Initialize<CLeucotaraxisPiniperda>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, double(LARVAE)+ m_C_param[0]));
 
 		//add host to stand			
 		stand.m_host.push_front(pHost);
@@ -133,10 +133,10 @@ namespace WBSF
 
 
 
-		for (CTRef d = p.Begin(); d <= p.End(); d++)
+		for (CTRef d = p.begin(); d <= p.end(); d++)
 		{
 			stand.Live(weather.GetDay(d));
-			if (output.IsInside(d))
+			if (output.is_inside(d))
 				stand.GetStat(d, output[d]);
 
 			stand.AdjustPopulation();
@@ -156,10 +156,10 @@ namespace WBSF
 
 
 				CStatistic stat = output.GetStat(s, p);
-				if (stat.IsInit() && stat[SUM] > 0)
+				if (stat.is_init() && stat[SUM] > 0)
 				{
 					output[0][s] = output[0][s] * 100 / stat[SUM];//when first day is not 0
-					for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+					for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					{
 						output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
 						_ASSERTE(!_isnan(output[d][s]));
@@ -173,9 +173,9 @@ namespace WBSF
 	enum TSpecies { S_LA_G1, S_LA_G2, S_LP, S_LN };
 	enum TInput { I_SYC, I_SITE, I_YEAR, I_COLLECTION, I_SPECIES, I_G, I_DATE, I_CDD, I_TMIN, I_N, I_P, NB_INPUTS };
 	enum TInputInternal { O_S, O_N, O_P, NB_INPUTS_INTERNAL };
-	void CLeucotaraxisPiniperdaModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CLeucotaraxisPiniperdaModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == NB_INPUTS);
+		assert(data.size() == NB_INPUTS);
 
 		CSAResult obs;
 
@@ -190,8 +190,8 @@ namespace WBSF
 			obs.m_obs[O_P] = stod(data[I_P]);
 
 
-			ASSERT(obs.m_obs[I_N] >= 0);
-			ASSERT(obs.m_obs[I_P] >= 0 && obs.m_obs[I_P]<=100);
+			assert(obs.m_obs[I_N] >= 0);
+			assert(obs.m_obs[I_P] >= 0 && obs.m_obs[I_P]<=100);
 			m_SAResult.push_back(obs);
 		}
 	}
@@ -283,7 +283,7 @@ namespace WBSF
 			//	for (size_t i = 0; i < m_SAResult.size(); i++)
 			//	{
 			//		double cumul_obs = P[m_SAResult[i].m_ref][P_LP];
-			//		ASSERT(cumul_obs >= 0 && cumul_obs <= 100);
+			//		assert(cumul_obs >= 0 && cumul_obs <= 100);
 			//
 			//		m_SAResult[i].m_obs[O_P] = cumul_obs;
 			//	}
@@ -303,11 +303,11 @@ namespace WBSF
 
 				for (size_t i = 0; i < m_SAResult.size(); i++)
 				{
-					if (output.IsInside(m_SAResult[i].m_ref))
+					if (output.is_inside(m_SAResult[i].m_ref))
 					{
 
-						double obs_y = Round(m_SAResult[i].m_obs[O_P], 4);
-						double sim_y = Round(output[m_SAResult[i].m_ref][S_EMERGENCE0], 4);
+						double obs_y = round(m_SAResult[i].m_obs[O_P], 4);
+						double sim_y = round(output[m_SAResult[i].m_ref][S_EMERGENCE0], 4);
 
 						if (obs_y > -999)
 						{

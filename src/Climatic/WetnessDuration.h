@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 namespace WBSF
 {
@@ -30,9 +30,9 @@ namespace WBSF
 		virtual ERMsg OnExecuteDaily();
 		virtual ERMsg OnExecuteHourly();
 
-		virtual void AddHourlyResult(const StringVector& header, const StringVector& data);
-		virtual void AddDailyResult(const StringVector& header, const StringVector& data);
-		virtual void AddMonthlyResult(const StringVector& header, const StringVector& data);
+		virtual void AddHourlyResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
+		virtual void AddMonthlyResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
 		virtual bool GetFValueHourly(CStatisticXY& stat);
 		virtual bool GetFValueDaily(CStatisticXY& stat);
 		virtual bool GetFValueMonthly(CStatisticXY& stat);
@@ -48,10 +48,10 @@ namespace WBSF
 
 		double GetWetnessDuration( CWeatherStation& weather, CTRef ref);
 		double GetWetnessDurationSinus( CWeatherDay& wDay)const;
-		double GetWetnessDurationExtT( CDay& hourlyDay)const;
-		double GetWetnessDurationFixT( CDay& hourlyDay)const;
-		double GetWetnessDurationDPD( CDay& hourlyDay)const;
-		double GetWetnessDurationCART( CDay& hourlyDay)const;
+		double GetWetnessDurationExtT(CWeatherDay& hourlyDay)const;
+		double GetWetnessDurationFixT(CWeatherDay& hourlyDay)const;
+		double GetWetnessDurationDPD(CWeatherDay& hourlyDay)const;
+		double GetWetnessDurationCART(CWeatherDay& hourlyDay)const;
 		double GetWetnessDurationPM( CWeatherStation& weather, CTRef ref)const;
 		double GetWetnessDurationSWEB( CWeatherStation& weather, CTRef ref)const;
 

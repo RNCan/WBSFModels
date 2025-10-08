@@ -14,7 +14,7 @@
 #include <iostream>
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "ModelBase/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "SoilTemperature.h"
 //#include "LAI.h"
 
@@ -364,7 +364,7 @@ namespace WBSF
 
 		//	double Ca = (m_Cs + m_Cice)*1E6;
 		//	double Tair = weather[H_TAIR][MEAN];
-		//	double DRz = F*dt * m_Kt / (Ca * Square(2.0 * Zs));
+		//	double DRz = F*dt * m_Kt / (Ca * square(2.0 * Zs));
 		//	_ASSERTE(!isnan(DRz));
 		//	
 
@@ -409,9 +409,9 @@ namespace WBSF
 	}
 
 	enum TInputEmergence { I_TAIR, I_TSOIL5, I_TSOIL10, I_TSOIL20, I_TSOIL50, I_TSOIL100, NB_INPUTS };
-	void CSoilTemperatureModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CSoilTemperatureModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == NB_INPUTS + 2);
+		assert(data.size() == NB_INPUTS + 2);
 
 		CSAResult obs;
 
@@ -456,7 +456,7 @@ namespace WBSF
 			v = I_TSOIL50 - I_TSOIL5;
 		if (fabs(m_z - 100) < 0.1)
 			v = I_TSOIL100 - I_TSOIL5;
-			ASSERT(v != NOT_INIT);
+			assert(v != NOT_INIT);
 		
 
 		//static const double SOIL_DEPTH[5] = { 5,10,20,50,100 };

@@ -17,8 +17,8 @@
 #include "LaricobiusOsakensisEquations.h"
 #include <boost/math/distributions.hpp>
 #include <boost/math/distributions/logistic.hpp>
-#include "ModelBase/DevRateEquation.h"
-#include "ModelBase/SurvivalEquation.h"
+#include "ModelBased/DevRateEquation.h"
+#include "ModelBased/SurvivalEquation.h"
 
 using namespace WBSF;
 using namespace LOF;
@@ -78,7 +78,7 @@ namespace WBSF
 	//Daily development rate
 	double CLaricobiusOsakensisEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 
 
@@ -148,7 +148,7 @@ namespace WBSF
 			{0.401}//adult
 		};
 
-		boost::math::lognormal_distribution<double> RDR_dist(-WBSF::Square(SIGMA[s]) / 2.0, SIGMA[s]);
+		boost::math::lognormal_distribution<double> RDR_dist(-WBSF::square(SIGMA[s]) / 2.0, SIGMA[s]);
 		double RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
 		while (RDR < 0.2 || RDR>2.6)//base on individual observation
 			RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
@@ -244,10 +244,10 @@ namespace WBSF
 		static const double Fo = 100.4;
 		static const double sigma = 0.355;
 	
-		boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::Square(sigma) / 2.0, sigma);
+		boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::square(sigma) / 2.0, sigma);
 		double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.001, 0.999));
 
-		ASSERT(!_isnan(Fi) && _finite(Fi));
+		assert(!_isnan(Fi) && _finite(Fi));
 
 
 		return Fi;

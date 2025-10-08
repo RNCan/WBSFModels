@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 
 namespace WBSF
@@ -29,7 +29,7 @@ namespace WBSF
 
 		void ExecuteDaily(CModelStatVector& output);
 
-		void AddDailyResult(const StringVector& header, const StringVector& data);
+		void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
 		bool GetFValueDaily(CStatisticXY& stat);
 
 

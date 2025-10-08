@@ -6,8 +6,9 @@
 //**********************************************************************
 
 
-#include "ModelBase/EntryPoint.h"
-#include "Basic/Evapotranspiration.h"
+#include "Basic/Sun.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/Evapotranspiration.h"
 #include "WetnessDuration.h"
 
 
@@ -77,7 +78,7 @@ namespace WBSF
 	CWetnessDurationModel::~CWetnessDurationModel()
 	{}
 
-	//void CWetnessDurationModel::GetHourlyDat(CDay& hourlyDay, CTRef ref)
+	//void CWetnessDurationModel::GetHourlyDat(CWeatherDay& hourlyDay, CTRef ref)
 	//{
 	//	//const CWeatherDay& wDay = m_weather[ref];
 	//	//CSun sun(m_info.weather.GetLocation().m_lat, m_info.m_loc.GetLon());
@@ -89,8 +90,8 @@ namespace WBSF
 		double WD = 0;
 
 		CWeatherDay& wDay = weather.GetDay(ref);
-		//ASSERT(ref.GetType()==CTRef::DAILY);
-		//const CDay& hDay = (const CDay& )weather.Get(ref);
+		//assert(ref.GetType()==CTM::DAILY);
+		//const CWeatherDay& hDay = (const CWeatherDay& )weather.Get(ref);
 
 
 		switch (m_model)
@@ -102,7 +103,7 @@ namespace WBSF
 		case CART:				WD = GetWetnessDurationCART(wDay); break;
 		case PM:				WD = GetWetnessDurationPM(weather, ref); break;
 		case SWEB:				WD = GetWetnessDurationSWEB(weather, ref); break;
-		default: ASSERT(false);
+		default: assert(false);
 		}
 
 		return WD;
@@ -236,7 +237,7 @@ namespace WBSF
 	*/
 
 	//2.  For the extended threshold leaf wetness model the RH is classified as follows 
-	double CWetnessDurationModel::GetWetnessDurationExtT(CDay& hourlyDay)const
+	double CWetnessDurationModel::GetWetnessDurationExtT(CWeatherDay& hourlyDay)const
 	{
 		//if( m_x0>m_x1)
 			//return -999;
@@ -342,7 +343,7 @@ namespace WBSF
 	}
 
 	//3.       For the fixed threshold  model (FixT)
-	double CWetnessDurationModel::GetWetnessDurationFixT(CDay& hourlyDay)const
+	double CWetnessDurationModel::GetWetnessDurationFixT(CWeatherDay& hourlyDay)const
 	{
 		double WD = 0;
 
@@ -358,7 +359,7 @@ namespace WBSF
 	}
 
 	//4.       difference between T and the dew point temperature (DPD)
-	double CWetnessDurationModel::GetWetnessDurationDPD(CDay& hourlyDay)const
+	double CWetnessDurationModel::GetWetnessDurationDPD(CWeatherDay& hourlyDay)const
 	{
 
 
@@ -377,7 +378,7 @@ namespace WBSF
 		//x4                  	=   0.18136  
 
 			//if( h1==-1 && (DPD<0.17023 && sRad<0.24141) ) 
-		const CDay& nextHourlyDay = hourlyDay.GetNext();
+		const CWeatherDay& nextHourlyDay = hourlyDay.GetNext();
 
 
 
@@ -389,7 +390,7 @@ namespace WBSF
 		for (int hh = 0; hh < 24; hh++)
 		{
 			int h = (hh + 12) % 24;
-			const CDay& hDay = hh < 12 ? hourlyDay : nextHourlyDay;
+			const CWeatherDay& hDay = hh < 12 ? hourlyDay : nextHourlyDay;
 			double DPD = max(0.0f, hDay[h][H_TAIR] - hDay[h][H_TDEW]);
 			double RH = hDay[h][H_RELH];
 			double sRad = hDay[h][H_SRAD];
@@ -417,7 +418,7 @@ namespace WBSF
 	{
 		double Eq1 = 0;
 		if (T >= 0)
-			Eq1 = 1.6064*sqrt(T) + 0.0036*Square(T) + 0.1531*RH - 0.4599*U*DPD - 0.0035*T*RH;
+			Eq1 = 1.6064*sqrt(T) + 0.0036*square(T) + 0.1531*RH - 0.4599*U*DPD - 0.0035*T*RH;
 		return Eq1;
 	}
 
@@ -431,16 +432,16 @@ namespace WBSF
 	}
 
 	//5.		non-parametric procedure of classification tree
-	double CWetnessDurationModel::GetWetnessDurationCART(CDay& hourlyDay)const
+	double CWetnessDurationModel::GetWetnessDurationCART(CWeatherDay& hourlyDay)const
 	{
 		double WD = 0;
 		double prcp = 0;
-		const CDay& nextHourlyDay = hourlyDay.GetNext();
+		const CWeatherDay& nextHourlyDay = hourlyDay.GetNext();
 
 		for (int hh = 0; hh < 24; hh++)
 		{
 			int h = (hh + 12) % 24;
-			const CDay& hDay = hh < 12 ? hourlyDay : nextHourlyDay;
+			const CWeatherDay& hDay = hh < 12 ? hourlyDay : nextHourlyDay;
 
 			double T = hDay[h][H_TAIR];
 			double RH = hDay[h][H_RELH];
@@ -641,9 +642,9 @@ namespace WBSF
 		double a = GetC1();
 		double b = GetC2();
 		double c = GetC3();
-		double Q = (Square(a)-3*b)/9;
+		double Q = (square(a)-3*b)/9;
 		double R = (2*Cube(a)-9*a*b+27*c)/54;
-		if( Square(R) < Cube(Q) )
+		if( square(R) < Cube(Q) )
 		{
 			double ϴ = acos(R/sqrt(Cube(Q)) );
 			double x1 = -2*sqrt(Q)*cos(ϴ/3)-a/3;
@@ -884,7 +885,7 @@ namespace WBSF
 
 	void CWetnessDurationModel::ExecuteHourly(CWetnessDurationStat& stat)
 	{
-		ASSERT(m_weather.IsHourly());
+		assert(m_weather.IsHourly());
 		stat.Init(m_weather.GetEntireTPeriod());
 
 		/*if( m_obs.empty() )
@@ -912,7 +913,7 @@ namespace WBSF
 
 	//********************************************************************************************************************
 	//simulated annaling 
-	void CWetnessDurationModel::AddHourlyResult(const StringVector& header, const StringVector& data)
+	void CWetnessDurationModel::AddHourlyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_INPUT_HOURLY + 6)
 		{
@@ -925,7 +926,7 @@ namespace WBSF
 				obs[c] = ToDouble(data[6 + c]);
 
 
-			ASSERT(obs.size() == NB_INPUT_HOURLY);
+			assert(obs.size() == NB_INPUT_HOURLY);
 			m_SAResult.push_back(CSAResult(TRef, obs));
 
 		}
@@ -947,7 +948,7 @@ namespace WBSF
 		//	for(size_t i=0; i<m_SAResult.size(); i++)
 		//	{
 		//		CTRef ref = m_SAResult[i].m_ref;
-		//		if (m_weather.GetEntireTPeriod().IsInside(m_SAResult[i].m_ref))
+		//		if (m_weather.GetEntireTPeriod().is_inside(m_SAResult[i].m_ref))
 		//		{
 		//			if( m_SAResult[i].m_obs[H_T]>-999)
 		//				me.m_obsWeather[ref][H_TAIR] = (float)m_SAResult[i].m_obs[H_T];
@@ -971,7 +972,7 @@ namespace WBSF
 		//	for(size_t i=0; i<m_SAResult.size(); i++)
 		//	{
 		//		CTRef ref = m_SAResult[i].m_ref;
-		//		//if( me.m_obs.GetTPeriod().IsInside(m_SAResult[i].m_ref) )
+		//		//if( me.m_obs.GetTPeriod().is_inside(m_SAResult[i].m_ref) )
 		//		{
 
 		//			//double Fcd = me.m_obs[ref].GetCloudiness(m_info.m_loc);
@@ -1022,7 +1023,7 @@ namespace WBSF
 		//	SWEB.Execute(m_obsWeather, stat);
 		//	break;
 		//}
-		//default: ASSERT(false);
+		//default: assert(false);
 		//}//switch
 
 		//
@@ -1050,7 +1051,7 @@ namespace WBSF
 			//{ 
 			//
 			//	CTRef TRef = m_SAResult[h].m_ref;
-			//	if (simStat.IsInside(TRef) && m_SAResult[h].m_obs[H_WETNESS]>-999)
+			//	if (simStat.is_inside(TRef) && m_SAResult[h].m_obs[H_WETNESS]>-999)
 			//	{
 			//		double obsDP = m_SAResult[h].m_obs[H_WETNESS];
 			//		double simDP = simStat[TRef][WETNESS_DURATION];
@@ -1068,7 +1069,7 @@ namespace WBSF
 
 
 	//********************************************************************************************************************
-	void CWetnessDurationModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CWetnessDurationModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_INPUT_DAILY + 5)
 		{
@@ -1078,7 +1079,7 @@ namespace WBSF
 			for (int c = 0; c < NB_INPUT_DAILY; c++)
 				obs[c] = ToDouble(data[5 + c]);
 
-			ASSERT(obs.size() == NB_INPUT_DAILY);
+			assert(obs.size() == NB_INPUT_DAILY);
 
 			m_SAResult.push_back(CSAResult(TRef, obs));
 		}
@@ -1110,7 +1111,7 @@ namespace WBSF
 		//		{
 		//			//CTRef dailyRef = m_SAResult[h].m_ref;
 		//			CTRef ref = m_SAResult[i].m_ref;
-		//			if (m_obsWeather.GetEntireTPeriod().IsInside(m_SAResult[i].m_ref))
+		//			if (m_obsWeather.GetEntireTPeriod().is_inside(m_SAResult[i].m_ref))
 		//			{
 		//				CWeatherDay& wDay = me.m_obsWeather.GetDay(ref);
 		//				if (m_SAResult[i].m_obs[D_TMIN] > -999 && m_SAResult[i].m_obs[D_TMAX] > -999)
@@ -1149,7 +1150,7 @@ namespace WBSF
 		//	{
 		//		for(size_t  d=0; d<m_obs[y][m].size(); d++)
 		//		{
-		//			const CDay& hourlyDay = m_obs[y][m][d];
+		//			const CWeatherDay& hourlyDay = m_obs[y][m][d];
 
 		//			double WD=0;
 		//			double Tdew=0;
@@ -1210,7 +1211,7 @@ namespace WBSF
 		//					WD = m_SWEBStat[m_dailyData[y][m][d].GetTRef()][WETNESS_DURATION];
 		//					break;
 		//				}
-		//			default: ASSERT(false);
+		//			default: assert(false);
 		//			}//switch
 
 		//			stat[m_obs[y][m][d].GetTRef()][0] = WD;
@@ -1234,7 +1235,7 @@ namespace WBSF
 			{
 
 				CTRef TRef = m_SAResult[i].m_ref;
-				if (m_SAResult[i].m_obs[D_WETNESS_DURATION] > -999 && sim.IsInside(TRef) && sim[TRef][WETNESS_DURATION] > -999)
+				if (m_SAResult[i].m_obs[D_WETNESS_DURATION] > -999 && sim.is_inside(TRef) && sim[TRef][WETNESS_DURATION] > -999)
 				{
 					double obsWD = m_SAResult[i].m_obs[D_WETNESS_DURATION];
 					double simWD = sim[TRef][WETNESS_DURATION];
@@ -1253,7 +1254,7 @@ namespace WBSF
 			//{
 			//	
 			//	CTRef TRef = m_SAResult[i].m_ref;
-			//	if(m_SAResult[i].m_obs[D_WETNESS]>-999 && m_obs.IsInside(TRef) && m_obs[TRef][0] >-999)
+			//	if(m_SAResult[i].m_obs[D_WETNESS]>-999 && m_obs.is_inside(TRef) && m_obs[TRef][0] >-999)
 			//	{
 			//		double obsWD = m_SAResult[i].m_obs[D_WETNESS];
 			//		double simWD = m_obs[TRef][0];
@@ -1269,7 +1270,7 @@ namespace WBSF
 	}
 
 	//********************************************************************************************************************
-	void CWetnessDurationModel::AddMonthlyResult(const StringVector& header, const StringVector& data)
+	void CWetnessDurationModel::AddMonthlyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_INPUT_MONTHY + 4)
 		{
@@ -1281,7 +1282,7 @@ namespace WBSF
 				for (int c = 0; c < NB_INPUT_MONTHY; c++)
 					obs[c] = ToDouble(data[4 + c]);
 
-				ASSERT(obs.size() == NB_INPUT_MONTHY);
+				assert(obs.size() == NB_INPUT_MONTHY);
 				m_SAResult.push_back(CSAResult(TRef, obs));
 			}
 		}
@@ -1298,7 +1299,7 @@ namespace WBSF
 
 			for (size_t i = 0; i < m_SAResult.size(); i++)
 			{
-				if (m_SAResult[i].m_obs[M_WETNESS_DURATION] > -999 && data.IsInside(m_SAResult[i].m_ref))
+				if (m_SAResult[i].m_obs[M_WETNESS_DURATION] > -999 && data.is_inside(m_SAResult[i].m_ref))
 				{
 					double obs = m_SAResult[i].m_obs[M_WETNESS_DURATION];
 					double sim = data[m_SAResult[i].m_ref][WETNESS_DURATION];
@@ -1391,8 +1392,8 @@ namespace WBSF
 		//Equation [1]
 		//The energy balance of an individual leaf can be solved for the difference between leaf and air temperature
 		//as suggested by Kreith and Sellers (1975) and Norman (1979)
-		double num = a * Rs*(1 + oo[m_canopy]) + ϵ * RL - ϵ * σ*Quart(Ta + 273) - (0.622 / P) * 2 * hw*(esa - e);
-		double denom = 4 * ϵ*σ*Cube(Ta + 273) + 2 * hc + (0.622 / P) * 2 * hw*s;
+		double num = a * Rs*(1 + oo[m_canopy]) + ϵ * RL - ϵ * σ*quart(Ta + 273) - (0.622 / P) * 2 * hw*(esa - e);
+		double denom = 4 * ϵ*σ*cube(Ta + 273) + 2 * hc + (0.622 / P) * 2 * hw*s;
 		double ΔT = num / denom;
 
 		return ΔT;
@@ -1449,8 +1450,8 @@ namespace WBSF
 	//Rst[out]: total estimated clear sky solar radiation [W/m²]
 	double CDewDuration::GetRst(double λ, double δ, double t, double tn)
 	{
-		ASSERT(t >= 0 && t < 24);
-		ASSERT(tn >= 0 && tn < 24);
+		assert(t >= 0 && t < 24);
+		assert(tn >= 0 && tn < 24);
 
 		static const double A = 0.84;//clear sky atmospheric transmission coefficient
 		static const double Rspo = 1361.0; //Solar constant (W/m²)
@@ -1547,7 +1548,7 @@ namespace WBSF
 		double k = K[ALTOCUMULUS]; //arbitrary choice??
 
 
-		double RL = σ * Quart(Tws + 273)*(0.82 - 0.25*exp(-2.3*0.094*ews))*(1 + k * Square(c));
+		double RL = σ * quart(Tws + 273)*(0.82 - 0.25*exp(-2.3*0.094*ews))*(1 + k * square(c));
 		return RL;
 	}
 
@@ -1568,7 +1569,7 @@ namespace WBSF
 		//RLt = total incoming longwave radiation (Wm -2) at the measurement site in the tree. 
 		//No such correction was used for the corn and soybean canopies since DD measurements were made near the canopy tops.
 
-		double RLt = 0.58*RL + 0.42*σ*Quart(Ta + 273);
+		double RLt = 0.58*RL + 0.42*σ*quart(Ta + 273);
 		return RLt;
 	}
 
@@ -1609,7 +1610,7 @@ namespace WBSF
 		//while the second and third terms assume a longwave absorptivity or emissivity of 0.95.
 		//Rs and RL were estimated from astronomical parameters and cloud cover fraction as described above.
 
-		double Rn = 0.75*Rs + 0.95*RL - 0.95*σ*Quart(Tws + 273);
+		double Rn = 0.75*Rs + 0.95*RL - 0.95*σ*quart(Tws + 273);
 
 		return max(0.0, Rn);//???
 	}
@@ -1667,7 +1668,7 @@ namespace WBSF
 		//For apples, the wind estimates were complicated further because the
 		//measurement site was at 3/4 canopy height rather than near the crop top.
 		//Accordingly, wind at the measurement height (Uh) was determined from
-		double Uh = Uc / Square(1 + j * (1 - Zh / Zc));
+		double Uh = Uc / square(1 + j * (1 - Zh / Zc));
 		return Uh;
 	}
 
@@ -1711,7 +1712,7 @@ namespace WBSF
 	//void CDewDuration::Execute(const CWeatherStation& weather, CWetnessDurationStat& stat)
 	//{
 	//	//CWeatherStation weather(weatherIn);
-	//	ASSERT( weatherIn.IsHourlyAdjusted() == weather.IsHourlyAdjusted() );
+	//	assert( weatherIn.IsHourlyAdjusted() == weather.IsHourlyAdjusted() );
 	//	//weather.AjusteMeanForHourlyRequest(m_loc);
 	//
 	//
@@ -1727,7 +1728,7 @@ namespace WBSF
 
 	void CDewDuration::Execute(const CWeatherStation& weather, CWetnessDurationStat& stat)
 	{
-		ASSERT(weather.GetEntireTPeriod().GetNbRef() % 24 == 0);
+		assert(weather.GetEntireTPeriod().size() % 24 == 0);
 
 		stat.Init(weather.GetEntireTPeriod());
 
@@ -1740,11 +1741,11 @@ namespace WBSF
 			{
 				for (size_t d = 0; d < weather[y][m].size(); d++)
 				{
-					const CDay& hDay1 = weather[y][m][d];
-					const CDay& hDay2 = weather[y][m][d].GetNext();
+					const CWeatherDay& hDay1 = weather[y][m][d];
+					const CWeatherDay& hDay2 = weather[y][m][d].GetNext();
 
 					//Julian day
-					double jDay = (double)hDay2.GetTRef().GetJDay();
+					double jDay = (double)hDay2.GetTRef().GetDOY();
 
 					//latitude [radians]:
 					double λ = Deg2Rad(weather.GetLocation().m_lat);
@@ -1759,9 +1760,9 @@ namespace WBSF
 					for (int h = 0; h < 24; h++)
 					{
 						//int h = (hh+12)%24;
-						//const CDay& hDay = (hh<12)?hDay1:hDay2;
+						//const CWeatherDay& hDay = (hh<12)?hDay1:hDay2;
 						//int h = hh;
-						const CDay& hDay = hDay2;
+						const CWeatherDay& hDay = hDay2;
 
 						//In the model, the onset of dew occurred when LE>0 and the ending occurred when the condensate which
 						//had accumulated during the night evaporated during the morning (Mintah,1977).
@@ -1826,7 +1827,7 @@ namespace WBSF
 
 						double ΔT = GetΔT(Rs, RL, Ta, hc, hw, P, esa, e);
 						double Tl = GetTl(Ta, ΔT);
-						double esl = eᵒ(Tl) * 10;	//[mb]
+						double esl = e0(Tl) * 10;	//[mb]
 
 						//latent heat flux 
 						double LE = GetLE(hw, P, esl, e);	//[W/m²]
@@ -1920,7 +1921,7 @@ namespace WBSF
 	//void CSWEB::Execute(const CWeatherStation& weatherIn, CWetnessDurationStat& stat)
 	//{
 	//	CWeatherStation weather(weatherIn);
-	//	ASSERT( weatherIn.IsHourlyAdjusted() == weather.IsHourlyAdjusted() );
+	//	assert( weatherIn.IsHourlyAdjusted() == weather.IsHourlyAdjusted() );
 	//	//weather.AjusteMeanForHourlyRequest(m_loc);
 	//
 	//	//CYearsVector hourlyData;
@@ -1930,7 +1931,7 @@ namespace WBSF
 	//	Execute(hourlyData, hStat);
 	//
 	//	CWetnessDurationModel::Hourly2Daily(hStat, stat);
-	//	//ASSERT( hStat.size() == weatherIn.GetNbDay()*24);
+	//	//assert( hStat.size() == weatherIn.GetNbDay()*24);
 	//	//stat.Init(weatherIn.GetNbDay(), weatherIn.GetFirstTRef() );
 	//	//
 	//	//int WD=0;
@@ -1949,7 +1950,7 @@ namespace WBSF
 	//}
 	void CSWEB::Execute(const CWeatherStation& weather, CModelStatVector& stat)
 	{
-		ASSERT(weather.IsHourly());
+		assert(weather.IsHourly());
 
 
 		//specific gas constant for dry air 
@@ -1985,7 +1986,7 @@ namespace WBSF
 			{
 				for (size_t d = 0; d < weather[y][m].size(); d++)
 				{
-					const CDay& hDay = weather[y][m][d];
+					const CWeatherDay& hDay = weather[y][m][d];
 
 					for (size_t hh = 0; hh < 24; hh++)
 					{
@@ -2194,7 +2195,7 @@ namespace WBSF
 
 		//W is dependant on Wind and a factor that accounts for the relative wettability of the leaf
 		//Equation [4]
-		double W = Wind * Wmax; ASSERT(W >= 0);
+		double W = Wind * Wmax; assert(W >= 0);
 		return W;
 	}
 
@@ -2286,7 +2287,7 @@ namespace WBSF
 		//According to the original assumptions of the model, daytime net radiation is assumed not to contribute to evaporation in a shaded grape canopy. 
 		//Equation 10
 		double Ep = Δ / (λ*(Δ + δ))*(p*Cp*(h / Δ)*(Es - Ea));
-		ASSERT(Ep >= 0);
+		assert(Ep >= 0);
 		return Ep;
 	}
 
@@ -2392,8 +2393,8 @@ namespace WBSF
 
 	void CWetnessDurationModel::Hourly2Daily(const CWetnessDurationStat& hStat, CWetnessDurationStat& stat)
 	{
-		ASSERT(hStat.size() % 24 == 0);
-		stat.Init(hStat.GetTPeriod().Transform(CTRef::DAILY));
+		assert(hStat.size() % 24 == 0);
+		stat.Init(hStat.GetTPeriod().as(CTM::DAILY));
 
 		int WD = 0;
 		for (size_t h = 0; h < hStat.size(); h++)
@@ -2450,7 +2451,7 @@ namespace WBSF
 		{
 			for(size_t d=0; d<hourlyData[y][m].size(); d++)
 			{
-				const CDay& hDay = hourlyData[y][m][d];
+				const CWeatherDay& hDay = hourlyData[y][m][d];
 				//hourlyData[y][m][d].CompileDailyStat();
 
 				//Atmopheric pressure [kPa]
@@ -2483,7 +2484,7 @@ namespace WBSF
 						//Net canopy in calorie/(min·cm²)
 						CNR = CNR*60/(4.1876*10000);		//W/m²   --> cal/(min·cm²)
 
-						//ASSERT(Rn>=0);
+						//assert(Rn>=0);
 						//double Rn =	max(0.0, -hDay.GetNetRadiation(weather.GetLocation().m_lat,m_loc.GetLon(),m_loc.GetElev(),hh));
 						//Canopy net radiant flux [J/(cm²·min)]
 						//double Rnc = Rn*1000/600;				//MJ/(m²·h) --> J/(cm²·min)
@@ -2507,7 +2508,7 @@ namespace WBSF
 						//double λ = 2260; //(2.5023e6 - 2430.54 * Tdl)/1000;
 						//slope of the saturation vapor pressure-temperature curve [mbar/°C]
 						//double Δ = CASCE_ETsz::GetSlopeOfSaturationVaporPressure(T)*10;
-						double Δ = Ea*(6790.4985/Square(T+273) - 5.02808/(T+273));
+						double Δ = Ea*(6790.4985/square(T+273) - 5.02808/(T+273));
 						double ΔP = Δ + 0.66;
 						double Rn = CNR*Δ/ΔP;
 

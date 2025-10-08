@@ -20,10 +20,10 @@
 
 //#define NO_MINMAX
 
-#include "basic/timeStep.h"
-#include "basic/UtilMath.h"
-#include "modelBase/EntryPoint.h"
-#include "modelBase/SnowMelt.h"
+#include "Basic/timeStep.h"
+#include "Basic/UtilMath.h"
+#include "WeatherBased/SnowMelt.h"
+#include "Modelbased/EntryPoint.h"
 #include "SpruceBarkBeetleLiteratureModel.h"
 
 using namespace std;
@@ -55,7 +55,7 @@ namespace WBSF
 	//uncomment this line to activate version for simulated annealing
 	//static const bool ACTIVATE_PARAMETRIZATION = true;
 	//static const bool P1_ONLY = true;
-	static CCriticalSection CS;
+	static std::mutex CS;
 
 
 
@@ -67,7 +67,7 @@ namespace WBSF
 
 
 
-	enum TOuput{
+	enum TOuput {
 		O_OVERWINTER, O_FIRST_FLIGHT, O_INFESTATION, O_RE_EMERGENCE1, O_RE_EMERGENCE2, O_ADULT_ALIVE, O_ADULT_DEAD,
 		O_FILIAL_EMERGENCE1, O_FILIAL_EMERGENCE2, O_FILIAL_ALIVE, O_FILIAL_DEAD,
 		NB_OUTPUT
@@ -75,10 +75,10 @@ namespace WBSF
 
 	typedef CModelStatVectorTemplate<NB_OUTPUT> CDailyOutputVector;
 
-	enum TOuputA{ O_A_SWARMING_OBS, O_A_SWARMING_SIM, O_A_SWARMING, O_A_DIAPAUSE, O_A_W_STAT, O_A_DT_STAT, O_A_DDL_STAT, O_A_DAY_LENGTH, O_A_DI50, O_A_T_MEAN, O_A_TI50, NB_OUTPUT_A };
+	enum TOuputA { O_A_SWARMING_OBS, O_A_SWARMING_SIM, O_A_SWARMING, O_A_DIAPAUSE, O_A_W_STAT, O_A_DT_STAT, O_A_DDL_STAT, O_A_DAY_LENGTH, O_A_DI50, O_A_T_MEAN, O_A_TI50, NB_OUTPUT_A };
 	typedef CModelStatVectorTemplate<NB_OUTPUT_A> CAnnualOutputVector;
 
-	enum TOuputH{ O_T_AIR_ALLEN_WAVE, O_SRAD, O_SNOW, O_T_PHLOEM_OPEN_TOP, O_T_PHLOEM_OPEN_BOTTOM, O_T_PHLOEM_CLOSE, O_T_SOIL, NB_OUTPUT_H };
+	enum TOuputH { O_T_AIR_ALLEN_WAVE, O_SRAD, O_SNOW, O_T_PHLOEM_OPEN_TOP, O_T_PHLOEM_OPEN_BOTTOM, O_T_PHLOEM_CLOSE, O_T_SOIL, NB_OUTPUT_H };
 
 	typedef CModelStatVectorTemplate<NB_OUTPUT_H> CHourlyOutputVector;
 
@@ -111,21 +111,24 @@ namespace WBSF
 
 		virtual void TransformWeather(CWeatherDay& weaDay)const
 		{
-			ASSERT(weaDay[DAILY_DATA::TMIN] > -999 && weaDay[DAILY_DATA::TMAX] > -999);
+			assert(weaDay[H_TMIN].is_init() && weaDay[H_TMAX].is_init());
 
 
-			double Tmin = weaDay.GetTMin();
-			//double Tmax   = weaDay.GetTMean()*(1+weaDay[SRAD]/21)+4;
-			double Tmax = weaDay.GetTMax()*(1 + weaDay[SRAD] / 38) + 2;
+			double Tmin = weaDay[H_TMIN][LOWEST];
+			double Tmax = weaDay[H_TMAX][HIGHEST] * (1 + weaDay[H_SRAD][MEAN] / 38) + 2;
 			double Trange = Tmax - Tmin;//weaDay.GetTRange();
-			double Sin = sin(2 * 3.14159*(weaDay.GetJDay() / 365. - 0.25));
+			double Sin = sin(2 * 3.14159 * (weaDay.GetTRef().GetDOY() / 365. - 0.25));
 
-			//convert air temperature to bark temperature
-			weaDay(DAILY_DATA::TMIN) = -0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*weaDay.GetTRange() + 0.00000*Tmin*Sin + 0.005741*Tmin*weaDay.GetTRange() + 0.02370*Sin*weaDay.GetTRange();
-			weaDay(DAILY_DATA::TMAX) = 0.4196 + 0.9372*Tmax - 0.4265*Sin + 0.05171*Trange + 0.03125*Tmax*Sin - 0.004270*Tmax*Trange + 0.09888*Sin*Trange;
+			double ohTmin = -0.1493 + 0.8359 * Tmin + 0.5417 * Sin + 0.16980 * Trange + 0.00000 * Tmin * Sin + 0.005741 * Tmin * Trange + 0.02370 * Sin * Trange;
+			double ohTmax = 0.4196 + 0.9372 * Tmax - 0.4265 * Sin + 0.05171 * Trange + 0.03125 * Tmax * Sin - 0.004270 * Tmax * Trange + 0.09888 * Sin * Trange;
 
-			if (weaDay(DAILY_DATA::TMIN) > weaDay(DAILY_DATA::TMAX))
-				Switch(weaDay(DAILY_DATA::TMIN), weaDay(DAILY_DATA::TMAX));
+			if(ohTmin> ohTmax)
+				Switch(ohTmin, ohTmax);
+			
+			weaDay.SetStat(H_TMIN, ohTmin);
+			weaDay.SetStat(H_TMAX, ohTmax);
+
+			
 		}
 	};
 
@@ -135,20 +138,23 @@ namespace WBSF
 
 		virtual void TransformWeather(CWeatherDay& weaDay)const
 		{
-			ASSERT(weaDay[DAILY_DATA::TMIN] > -999 && weaDay[DAILY_DATA::TMAX] > -999);
+			assert(weaDay[H_TMIN].is_init() && weaDay[H_TMAX].is_init());
 
-			double Tmin = weaDay.GetTMin();
+			double Tmin = weaDay[H_TMIN][LOWEST];
 			//double Tmax   = weaDay.GetTMean()*(1+weaDay[SRAD]/33.7);
-			double Tmax = weaDay.GetTMax()*(1 + weaDay[SRAD] / 139) + 1;
+			double Tmax = weaDay[H_TMAX][HIGHEST] * (1 + weaDay[H_SRAD][MEAN] / 139) + 1;
 			double Trange = Tmax - Tmin;//weaDay.GetTRange();
-			double Sin = sin(2 * 3.14159*(weaDay.GetJDay() / 365. - 0.25));
+			double Sin = sin(2 * 3.14159 * (weaDay.GetTRef().GetDOY() / 365. - 0.25));
 
 			//convert air temperature to bark temperature
-			weaDay(DAILY_DATA::TMIN) = -0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*weaDay.GetTRange() + 0.00000*Tmin*Sin + 0.005741*Tmin*weaDay.GetTRange() + 0.02370*Sin*weaDay.GetTRange();
-			weaDay(DAILY_DATA::TMAX) = 0.4196 + 0.9372*Tmax - 0.4265*Sin + 0.05171*Trange + 0.03125*Tmax*Sin - 0.004270*Tmax*Trange + 0.09888*Sin*Trange;
+			double ohTmin = -0.1493 + 0.8359 * Tmin + 0.5417 * Sin + 0.16980 * Trange + 0.00000 * Tmin * Sin + 0.005741 * Tmin * Trange + 0.02370 * Sin * Trange;
+			double ohTmax = 0.4196 + 0.9372 * Tmax - 0.4265 * Sin + 0.05171 * Trange + 0.03125 * Tmax * Sin - 0.004270 * Tmax * Trange + 0.09888 * Sin * Trange;
 
-			if (weaDay(DAILY_DATA::TMIN) > weaDay(DAILY_DATA::TMAX))
-				Switch(weaDay(DAILY_DATA::TMIN), weaDay(DAILY_DATA::TMAX));
+			if (ohTmin > ohTmax)
+				Switch(ohTmin, ohTmax);
+
+			weaDay.SetStat(H_TMIN, ohTmin);
+			weaDay.SetStat(H_TMAX, ohTmax);
 		}
 	};
 
@@ -159,19 +165,22 @@ namespace WBSF
 
 		virtual void TransformWeather(CWeatherDay& weaDay)const
 		{
-			ASSERT(weaDay[DAILY_DATA::TMIN] > -999 && weaDay[DAILY_DATA::TMAX] > -999);
+			assert(weaDay[H_TMIN].is_init() && weaDay[H_TMAX].is_init());
 
-			double Tmin = weaDay.GetTMin() - 0.5;
-			double Tmax = weaDay.GetTMean() + 2;
+			double Tmin = weaDay[H_TMIN][LOWEST] - 0.5;
+			double Tmax = weaDay[H_TNTX][MEAN] + 2;
 			double Trange = Tmax - Tmin;//weaDay.GetTRange();
-			double Sin = sin(2 * 3.14159*(weaDay.GetJDay() / 365. - 0.25));
+			double Sin = sin(2 * 3.14159 * (weaDay.GetTRef().GetDOY() / 365. - 0.25));
 
 			//convert air temperature to bark temperature
-			weaDay(DAILY_DATA::TMIN) = -0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*Trange + 0.00000*Tmin*Sin + 0.005741*Tmin*Trange + 0.02370*Sin*Trange;
-			weaDay(DAILY_DATA::TMAX) = 0.4196 + 0.9372*Tmax - 0.4265*Sin + 0.05171*Trange + 0.03125*Tmax*Sin - 0.004270*Tmax*Trange + 0.09888*Sin*Trange;
+			double ohTmin = -0.1493 + 0.8359 * Tmin + 0.5417 * Sin + 0.16980 * Trange + 0.00000 * Tmin * Sin + 0.005741 * Tmin * Trange + 0.02370 * Sin * Trange;
+			double ohTmax = 0.4196 + 0.9372 * Tmax - 0.4265 * Sin + 0.05171 * Trange + 0.03125 * Tmax * Sin - 0.004270 * Tmax * Trange + 0.09888 * Sin * Trange;
 
-			if (weaDay(DAILY_DATA::TMIN) > weaDay(DAILY_DATA::TMAX))
-				Switch(weaDay(DAILY_DATA::TMIN), weaDay(DAILY_DATA::TMAX));
+			if (ohTmin > ohTmax)
+				Switch(ohTmin, ohTmax);
+
+			weaDay.SetStat(H_TMIN, ohTmin);
+			weaDay.SetStat(H_TMAX, ohTmax);
 		}
 	};
 
@@ -181,29 +190,30 @@ namespace WBSF
 
 		virtual void TransformWeather(CWeatherDay& weaDay)const
 		{
-			ASSERT(weaDay[DAILY_DATA::TMIN] > -999 && weaDay[DAILY_DATA::TMAX] > -999);
+			assert(weaDay[H_TMIN].is_init() && weaDay[H_TMAX].is_init());
 
+			double ohTmin = -1;
+			double ohTmax = 1;
 			//after Annila 1969: coarse approximation
-			if (weaDay[SNDH] <= 2)
+			if (weaDay[H_SNDH][MEAN] <= 2)
 			{
-				double Tmin = weaDay.GetTMin() - 0.5;
-				double Tmax = max(Tmin, weaDay.GetTMean() + 1.2);
+				double Tmin = weaDay[H_TMIN][LOWEST] - 0.5;
+				double Tmax = max(Tmin, weaDay[H_TNTX][MEAN] + 1.2);
 				double Trange = Tmax - Tmin;
-				double Sin = sin(2 * 3.14159*(weaDay.GetJDay() / 365. - 0.25));
+				double Sin = sin(2 * 3.14159 * (weaDay.GetTRef().GetDOY() / 365. - 0.25));
 
 				//convert air temperature to bark temperature
-				weaDay(DAILY_DATA::TMIN) = -0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*Trange + 0.00000*Tmin*Sin + 0.005741*Tmin*Trange + 0.02370*Sin*Trange;
-				weaDay(DAILY_DATA::TMAX) = 0.4196 + 0.9372*Tmax - 0.4265*Sin + 0.05171*Trange + 0.03125*Tmax*Sin - 0.004270*Tmax*Trange + 0.09888*Sin*Trange;
+				ohTmin = -0.1493 + 0.8359 * Tmin + 0.5417 * Sin + 0.16980 * Trange + 0.00000 * Tmin * Sin + 0.005741 * Tmin * Trange + 0.02370 * Sin * Trange;
+				ohTmax = 0.4196 + 0.9372 * Tmax - 0.4265 * Sin + 0.05171 * Trange + 0.03125 * Tmax * Sin - 0.004270 * Tmax * Trange + 0.09888 * Sin * Trange;
 			}
-			else
-			{
-				weaDay(DAILY_DATA::TMIN) = -1;
-				weaDay(DAILY_DATA::TMAX) = 1;
-			}
+			
 
 
-			if (weaDay(DAILY_DATA::TMIN) > weaDay(DAILY_DATA::TMAX))
-				Switch(weaDay(DAILY_DATA::TMIN), weaDay(DAILY_DATA::TMAX));
+			if (ohTmin > ohTmax)
+				Switch(ohTmin, ohTmax);
+
+			weaDay.SetStat(H_TMIN, ohTmin);
+			weaDay.SetStat(H_TMAX, ohTmax);
 		}
 	};
 
@@ -213,12 +223,12 @@ namespace WBSF
 
 	virtual void TransformWeather(CWeatherDay& weaDay)const
 	{
-	ASSERT( weaDay[DAILY_DATA::TMIN] > -999 && weaDay[DAILY_DATA::TMAX] > -999);
+	assert( weaDay[DAILY_DATA::TMIN] > -999 && weaDay[DAILY_DATA::TMAX] > -999);
 
-	double Tmin   = weaDay.GetTMin();
-	double Tmax   = weaDay.GetTMax()*max(1.0, weaDay[SRAD]/24);
+	double Tmin   = weaDay[H_TMIN][LOWEST];
+	double Tmax   = weaDay[H_TMAX][HIGHEST]*max(1.0, weaDay[SRAD]/24);
 	double Trange = Tmax-Tmin;//weaDay.GetTRange();
-	double Sin    = sin(2*3.14159*(weaDay.GetJDay()/365. -0.25));
+	double Sin    = sin(2*3.14159*(weaDay..GetTRef().GetDOY()/365. -0.25));
 
 	//convert air temperature to bark temperature
 	weaDay(DAILY_DATA::TMIN)=-0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*Trange + 0.00000*Tmin*Sin + 0.005741*Tmin*Trange + 0.02370*Sin*Trange;
@@ -229,25 +239,26 @@ namespace WBSF
 	}
 	};
 	*/
-	typedef auto_ptr<COverheat> COverheatPtr;
+	typedef unique_ptr<COverheat> COverheatPtr;
 	ERMsg CSpruceBarkBeetleLiteratureModel::OnExecuteHourly()
 	{
 		ERMsg msg;
 
-		CHourlyOutputVector output(m_weather.GetNbDay() * 24, m_weather.GetFirstTRef().Transform(CTM(CTM::HOURLY)));
+		CTPeriod p = m_weather.GetEntireTPeriod().as(CTM::HOURLY);
+		CHourlyOutputVector output(p);
 
 		//compute snow
-		CSnowMelt snow;
-		snow.SetLon(-120);
-		snow.Compute(m_weather);
-
-		for (CTRef d = m_weather.GetFirstTRef(); d <= m_weather.GetLastTRef(); d++)
-		{
-			CWeatherDay day = m_weather[d];
-			day(SNOW) = snow.GetResult()[d].m_hs;//mm
-			day(SNDH) = snow.GetResult()[d].m_hs;//cm
-			m_weather.SetData(d, day);
-		}
+		//CSnowMelt snow;
+		//snow.SetLon(-120);
+		//snow.Compute(m_weather);
+		//
+		//for (CTRef d = p.begin(); d <= p.end(); d++)
+		//{
+		//	CWeatherDay day = m_weather.GetDay(d);
+		//	day(H_SNOW) = snow.GetResult()[d].m_hs;//mm
+		//	day(H_SNDH) = snow.GetResult()[d].m_hs;//cm
+		//	m_weather.SetData(d, day);
+		//}
 
 
 		//CPOverheat barkOverheat;
@@ -264,41 +275,45 @@ namespace WBSF
 
 
 
-		CWeather adjustWeather(m_weather);
-		adjustWeather.AjusteMeanForHourlyRequest(m_info.m_loc);
-		CYearsVector weather;
-		adjustWeather.GetHourlyVar(weather, m_info.m_loc);
+		//CWeather adjustWeather(m_weather);
+		//adjustWeather.AjusteMeanForHourlyRequest(m_info.m_loc);
+		//CYearsVector weather;
+		//adjustWeather.GetHourlyVar(weather, m_info.m_loc);
 
 
-
+		if (!m_weather.IsHourly())
+			m_weather.ComputeHourlyVariables();
 
 
 		//CTRef TRef = m_weather.GetFirstTRef();
-		for (int y = 0; y < m_weather.GetNbYear(); y++)
+		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
-			int year = m_weather[y].GetYear();
+			int year = m_weather[y].GetTRef().GetYear();
 
-			for (int m = 0; m < 12; m++)
+			for (size_t m = 0; m < 12; m++)
 			{
-				for (int d = 0; d < m_weather[y][m].GetNbDay(); d++)
+				for (size_t d = 0; d < m_weather[y][m].size(); d++)
 				{
 					//Regniere Bark Temperature
-					CDailyWaveVector Tallen;// hourly temperature array 
-					m_weather[y][m][d].GetAllenWave(Tallen, 16, 1);//16 is a factor of 4. Number usually used
+					//CDailyWaveVector Tallen;// hourly temperature array 
+					//m_weather[y][m][d].GetAllenWave(Tallen, 16, 1);//16 is a factor of 4. Number usually used
 
-					CDailyWaveVector T[4];// hourly temperature array 
-					for (int i = 0; i < 4; i++)
-						m_weather[y][m][d].GetAllenWave(T[i], 16, 1, *overheat[i]);//16 is a factor of 4. Number usually used
+					//CDailyWaveVector T[4];// hourly temperature array 
+					//for (size_t i = 0; i < 4; i++)
+					//{
+					//	//m_weather[y][m][d].GetAllenWave(T[i], 16, 1, *overheat[i]);//16 is a factor of 4. Number usually used
+					//	T[i] = overheat[i]->GetOverheat(>GetT(m_weather[y][m][d], 16);
+					//}
 
-					for (int h = 0; h < 24; h++)
+					for (size_t h = 0; h < 24; h++)
 					{
 						CTRef TRef(year, m, d, h);
-						output[TRef][O_T_AIR_ALLEN_WAVE] = Tallen[h];
-						output[TRef][O_SRAD] = weather[TRef][H_SRAD];
-						output[TRef][O_SNOW] = m_weather[y][m][d][SNDH];
+						output[TRef][O_T_AIR_ALLEN_WAVE] = m_weather[y][m][d][h][H_TAIR];
+						output[TRef][O_SRAD] = m_weather[y][m][d][H_SRAD];
+						output[TRef][O_SNOW] = m_weather[y][m][d][H_SNDH];
 
-						for (int i = 0; i < 4; i++)
-							output[TRef][O_T_PHLOEM_OPEN_TOP + i] = T[i][h];
+						for (size_t i = 0; i < 4; i++)
+							output[TRef][O_T_PHLOEM_OPEN_TOP + i] = overheat[i]->GetT(m_weather[y][m][d], h);
 					}
 				}
 			}
@@ -343,7 +358,7 @@ namespace WBSF
 		//for(int y=0; y<m_weather.GetNbYear(); y++)
 		//{
 		//	int year = m_weather[y].GetYear();
-		//	CTPeriod p(CTRef(year, FIRST_MONTH, FIRST_DAY), CTRef(year, LAST_MONTH, LAST_DAY));
+		//	CTPeriod p(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31));
 
 		//	double sumDiapause = stat.GetStat(S_DIAPAUSE_1, p)[SUM];
 		//	double sumSwarming = stat.GetStat(S_SWARMING_1_F1_i+m_swarmingNo, p)[SUM];
@@ -352,11 +367,11 @@ namespace WBSF
 		//	if( sumSwarming>0 )
 		//	{
 		//		CStatistic swarmingStat;
-		//		for(CTRef d=p.Begin(); d<=p.End(); d++)
-		//			swarmingStat += d.GetJDay()*stat[d][S_SWARMING_1_F1_i+m_swarmingNo];
+		//		for(CTRef d=p.begin(); d<=p.end(); d++)
+		//			swarmingStat += d..GetTRef().GetDOY()*stat[d][S_SWARMING_1_F1_i+m_swarmingNo];
 
 		//		swarmingJday = swarmingStat[SUM]/sumSwarming;
-		//		ASSERT( swarmingJday>=0 && swarmingJday<=360);
+		//		assert( swarmingJday>=0 && swarmingJday<=360);
 		//	}
 
 		//	//output[y][O_A_SWARMING_OBS] = swarmingJday;
@@ -364,13 +379,13 @@ namespace WBSF
 		//	//
 		//	//output[0][O_A_SWARMING] = sumSwarming;
 		//	//output[0][O_A_DIAPAUSE] = sumDiapause;
-		//	//output[0][O_A_W_STAT] = stat[p.End()][O_W_STAT];
-		//	//output[0][O_A_DT_STAT] = stat[p.End()][O_DT_STAT];
-		//	//output[0][O_A_DDL_STAT] = stat[p.End()][O_DDL_STAT];
-		//	//output[0][O_A_DAY_LENGTH] = stat[p.End()][O_DAY_LENGTH];
-		//	//output[0][O_A_DI50] = stat[p.End()][O_DI50];
-		//	//output[0][O_A_T_MEAN] = stat[p.End()][O_T_MEAN];
-		//	//output[0][O_A_TI50] = stat[p.End()][O_TI50];
+		//	//output[0][O_A_W_STAT] = stat[p.end()][O_W_STAT];
+		//	//output[0][O_A_DT_STAT] = stat[p.end()][O_DT_STAT];
+		//	//output[0][O_A_DDL_STAT] = stat[p.end()][O_DDL_STAT];
+		//	//output[0][O_A_DAY_LENGTH] = stat[p.end()][O_DAY_LENGTH];
+		//	//output[0][O_A_DI50] = stat[p.end()][O_DI50];
+		//	//output[0][O_A_T_MEAN] = stat[p.end()][O_T_MEAN];
+		//	//output[0][O_A_TI50] = stat[p.end()][O_TI50];
 		//}
 		//
 
@@ -389,9 +404,9 @@ namespace WBSF
 		static const double TMAX_REQUIRED[NB_EVENTS] = { -999, 16.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
 		int ev = OVERWINTER;
-		for (int e = 0; e<NB_EVENTS; e++)
+		for (int e = 0; e < NB_EVENTS; e++)
 		{
-			if (DD>DD_REQUIRED[e] && day[TMAX] > TMAX_REQUIRED[e])
+			if (DD > DD_REQUIRED[e] && day[H_TMAX][HIGHEST] > TMAX_REQUIRED[e])
 				ev = e;
 		}
 
@@ -402,16 +417,16 @@ namespace WBSF
 	{
 
 		//This is where the model is actually executed
-		stat.resize(m_weather.GetNbDay());
-		stat.SetFirstTRef(m_weather.GetFirstTRef());
+		CTPeriod p = m_weather.GetEntireTPeriod();
+		stat.Init(p);
 
 		//we simulate 2 years at a time. 
 		//we also manager the possibility to have only one year
-		for (int y1 = 0; y1 < m_weather.GetNbYear(); y1++)
+		for (size_t y1 = 0; y1 < p.GetNbYears(); y1++)
 		{
 
-			int nbYear = 1;//m_bFertilEgg?2:1;
-			for (int y = 0; y < nbYear && y1 + y < m_weather.GetNbYear(); y++)
+			size_t nbYear = 1;//m_bFertilEgg?2:1;
+			for (size_t y = 0; y < nbYear && y1 + y < p.GetNbYears(); y++)
 			{
 				static const double DD_MEAN[NB_EVENTS] = { 0, 4.336, 3.370, 4.662, 4.679, 6.081, 6.224 };
 				static const double DD_SD[NB_EVENTS] = { 0, 0.400, 0.537, 0.451, 0.573, 0.249, 0.521 };
@@ -431,12 +446,12 @@ namespace WBSF
 
 				for (int i = FIRST_FLIGHT; i < NB_EVENTS; i++)
 				{
-					DDRequired[i] = RandomGenerator().RandLogNormal(DD_MEAN[i], DD_SD[i]);
+					DDRequired[i] = RandomGenerator().RandUnbiasedLogNormal(DD_MEAN[i], DD_SD[i]);
 
-					while (i>0 && DDRequired[i] <= DDRequired[i - 1])//avoid non sense
+					while (i > 0 && DDRequired[i] <= DDRequired[i - 1])//avoid non sense
 					{
 						while (log(DDRequired[i]) < DD_MEAN[i] / 2 || log(DDRequired[i]) > DD_MEAN[i] * 2)
-							DDRequired[i] = RandomGenerator().RandLogNormal(DD_MEAN[i], DD_SD[i]);
+							DDRequired[i] = RandomGenerator().RandUnbiasedLogNormal(DD_MEAN[i], DD_SD[i]);
 
 						switch (i)
 						{
@@ -446,7 +461,7 @@ namespace WBSF
 						case FILIAL_EMERGENCE_1_START: DDRequired[i] += DDRequired[ONSET_INFESTATION]; break;
 						case RE_EMERGENCE_1:		DDRequired[i] += DDRequired[RE_EMERGENCE_1_START]; break;
 						case FILIAL_EMERGENCE_1:	DDRequired[i] += DDRequired[FILIAL_EMERGENCE_1_START]; break;
-						default: ASSERT(false);
+						default: assert(false);
 						}
 					}
 
@@ -456,20 +471,23 @@ namespace WBSF
 				}
 
 
-				int yy = y1 + y;
+				size_t yy = y1 + y;
 
 				enum TState { EVENT, ACTIF, ALIVE, DEAD, NB_STATES };
 				double parent[NB_STATES] = { OVERWINTER, 100, 0, 0 };
 				double filial[NB_STATES] = { -1, 100, 0, 0 };
 
 				//int e = OVERWINTER;
+
+				CTPeriod pp = m_weather[yy].GetEntireTPeriod();
 				double DD = 0;
-				for (CTRef d = m_weather[yy].GetFirstTRef(); d <= m_weather[yy].GetLastTRef(); d++)
+				for (CTRef d = pp.begin(); d <= pp.end(); d++)
 				{
-					const CWeatherDay& day = m_weather[d];
+					const CWeatherDay& day = m_weather.GetDay(d);
 
 					//spring emergence
-					DD += day.GetDD(5);
+					//DD += day.GetDD(5);
+					assert(false);//todo
 
 					int ee = GetEvent(DD, day);
 
@@ -524,7 +542,7 @@ namespace WBSF
 	//this method is called to load parameters in variables
 	ERMsg CSpruceBarkBeetleLiteratureModel::ProcessParameter(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.GetNbYear() > 0);
+		assert(m_weather.GetNbYears() > 0);
 
 		ERMsg msg;
 
@@ -540,14 +558,14 @@ namespace WBSF
 
 
 	//Simulated Annealing 
-	void CSpruceBarkBeetleLiteratureModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CSpruceBarkBeetleLiteratureModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (data.size() == 8)
 		{
 			std::vector<double> obs(1);
 
-			CTRef ref(data[2].ToInt(), data[3].ToInt() - 1, data[4].ToInt() - 1);
-			obs[0] = data[6].ToDouble();//=="BEGIN"?0:data[6]=="PEAK"?1:data[6]=="END"?2:-1;
+			CTRef ref(ToInt(data[2]), ToInt(data[3]) - 1, ToInt(data[4]) - 1);
+			obs[0] = ToDouble(data[6]);//=="BEGIN"?0:data[6]=="PEAK"?1:data[6]=="END"?2:-1;
 
 			m_SAResult.push_back(CSAResult(ref, obs));
 		}
@@ -555,7 +573,7 @@ namespace WBSF
 
 
 
-	void CSpruceBarkBeetleLiteratureModel::GetFValueDaily(CStatisticXY& stat)
+	bool CSpruceBarkBeetleLiteratureModel::GetFValueDaily(CStatisticXY& stat)
 	{
 		ERMsg msg;
 
@@ -600,6 +618,8 @@ namespace WBSF
 				}
 				}*/
 		}
+
+		return true;
 	}
 
 

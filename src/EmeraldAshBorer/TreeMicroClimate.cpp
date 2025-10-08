@@ -3,8 +3,8 @@
 // 08/05/2017	1.0.0	Rémi Saint-Amant	Create from articles
 //**************************************************************************************************************
 
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/ContinuingRatio.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/ContinuingRatio.h"
 #include "TreeMicroClimate.h"
 
 using namespace std;
@@ -21,7 +21,7 @@ namespace WBSF
 		double Tmin = weather[H_TMIN][MEAN];
 		double Tmax = weather[H_TMAX][MEAN];
 		double Trange = Tmax - Tmin;
-		double Sin = sin(2 * 3.14159*(weather.GetTRef().GetJDay() / 365. - 0.25));
+		double Sin = sin(2 * 3.14159*(weather.GetTRef().GetDOY() / 365. - 0.25));
 
 		//convert air temperature to bark temperature
 		//After Regnière for MPB
@@ -53,7 +53,7 @@ namespace WBSF
 		m_Tt(0)
 	{
 		
-		ASSERT(Tair > -60 && Tair < 60);
+		assert(Tair > -60 && Tair < 60);
 		
 		//after Vermunt 2012
 		//We used an initial condition of T0 = 0 ◦C, 
@@ -63,18 +63,18 @@ namespace WBSF
 			next_step(Tair);
 		}
 
-		ASSERT(m_Tt > -60 && m_Tt < 60);
+		assert(m_Tt > -60 && m_Tt < 60);
 	}
 
 	double CNewtonianBarkTemperature::GetTbark()const
 	{
-		ASSERT(m_Tt > -60 && m_Tt < 60);
+		assert(m_Tt > -60 && m_Tt < 60);
 		return m_Tt;
 	}
 
 	double CNewtonianBarkTemperature::next_step(double Tair)
 	{
-		ASSERT(m_Tt > -60 && m_Tt < 60);
+		assert(m_Tt > -60 && m_Tt < 60);
 		m_Tt = m_Tt + m_K * (Tair - m_Tt);
 		return m_Tt;
 	}

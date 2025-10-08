@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "HemlockLooperEquations.h"
 
 namespace WBSF
@@ -29,7 +29,7 @@ namespace WBSF
 		void ComputeRegularStat(CModelStatVector& stat, CModelStatVector& output);
 		CInitialPopulation GetFirstOviposition();
 
-		void AddDailyResult(const StringVector& header, const StringVector& data);
+		void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
 		bool GetFValueDaily(CStatisticXY& stat);
 		void GetFValueDailyEclosion(CStatisticXY& stat);
 		void GetFValueDailyStage(CStatisticXY& stat);

@@ -7,31 +7,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SBBModel.cpp">
+    <ClCompile Include="..\..\src\IPSTypographus\SBBColdTolerance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpruceBarkBeetle.cpp">
+    <ClCompile Include="..\..\src\IPSTypographus\SBBEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SBBColdTolerance.cpp">
+    <ClCompile Include="..\..\src\IPSTypographus\SBBModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SBBEquations.cpp">
+    <ClCompile Include="..\..\src\IPSTypographus\SpruceBarkBeetle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SBBModel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpruceBarkBeetle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SBBColdTolerance.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SBBEquations.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\IPSTypographus\SBBColdTolerance.h" />
+    <ClInclude Include="..\..\src\IPSTypographus\SBBEquations.h" />
+    <ClInclude Include="..\..\src\IPSTypographus\SBBModel.h" />
+    <ClInclude Include="..\..\src\IPSTypographus\SpruceBarkBeetle.h" />
   </ItemGroup>
 </Project>

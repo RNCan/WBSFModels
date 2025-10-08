@@ -4,6 +4,7 @@
 // 15/05/2020	Rémi Saint-Amant	ORIGINIAL LABORATORY PARAMETERS
 //*****************************************************************************
 
+#include "Basic/Sun.h"
 #include "SpruceBudwormEquations.h"
 #include "SpruceBudworm.h"
 
@@ -58,8 +59,8 @@ namespace WBSF
 		
 		if (m_sex == FEMALE)
 		{
-			m_Fº = Round(Equations().get_Fº(m_A));		//generate fecundity without defoliation
-			m_Fᴰ = Round((1.0 - 0.0054*m_D)*m_Fº, 0);	//compute fecundity with defoliation
+			m_Fº = round(Equations().get_Fº(m_A));		//generate fecundity without defoliation
+			m_Fᴰ = round((1.0 - 0.0054*m_D)*m_Fº, 0);	//compute fecundity with defoliation
 			m_F = m_Fᴰ;	//set current fecundity
 		} 
 
@@ -78,9 +79,9 @@ namespace WBSF
 		m_bMissingEnergyAlreadyApplied = false;
 		m_bKillByAttrition = false;
 
-		ASSERT(m_sex==MALE || m_Fº >= 0);
-		ASSERT(m_sex == MALE || m_Fᴰ >= 0);
-		ASSERT(m_M > 0);
+		assert(m_sex==MALE || m_Fº >= 0);
+		assert(m_sex == MALE || m_Fᴰ >= 0);
+		assert(m_M > 0);
 	}
 
 
@@ -207,7 +208,7 @@ namespace WBSF
 		//verify adult longevity
 		if (GetStage() == ADULT && GetStand()->m_adult_longivity_max > NO_MAX_ADULT_LONGEVITY)
 		{
-			ASSERT(m_emergingPupaeDate.IsInit());
+			assert(m_emergingPupaeDate.is_init());
 			if (weather.GetTRef().as(CTM::DAILY) - m_emergingPupaeDate > GetStand()->m_adult_longivity_max)
 			{
 				//adult reach maximum longevity. Kill it.
@@ -238,7 +239,7 @@ namespace WBSF
 			return;
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps&&m_age < DEAD_ADULT; step++)
+		for (size_t step = 0; step < nbSteps&&GetStage() < DEAD_ADULT; step++)
 		{
 			size_t h = step * GetTimeStep();
 			Live(weather[h], GetTimeStep());
@@ -267,15 +268,15 @@ namespace WBSF
 		{
 			assert(m_Fᴰ >= 0);
 			assert(m_totalBroods >= 0 && m_totalBroods <= m_Fᴰ);
-			ASSERT(Round(m_F + m_totalBroods, 0) == m_Fᴰ);
+			assert(round(m_F + m_totalBroods, 0) == m_Fᴰ);
 
 			//brooding
 			double P = Equations().get_P(weather[H_TNTX][MEAN]);
-			ASSERT(P >= 0 && P < 1);
+			assert(P >= 0 && P < 1);
 
 			double broods = m_F * P;
-			ASSERT(broods < m_F);
-			ASSERT((m_totalBroods + broods) <= m_Fᴰ);
+			assert(broods < m_F);
+			assert((m_totalBroods + broods) <= m_Fᴰ);
 
 			//after regniere 1983 Equation [12] at x = 0 :  (29.8 *(1 - exp(-0.214))) = 5.74
 			if (m_F - broods < 5.74)//avoid very small egg deposition
@@ -289,13 +290,13 @@ namespace WBSF
 			m_totalBroods += broods;
 
 			m_F = m_Fᴰ - m_totalBroods;
-			ASSERT(m_totalBroods <= m_Fᴰ);
+			assert(m_totalBroods <= m_Fᴰ);
 
 			//Oviposition module after Régniere 1983
 			if (m_bFertil && m_broods > 0)
 			{
 				CSBWTree* pTree = GetTree();
-				CSBWStand* pStand = GetStand(); ASSERT(pStand);
+				CSBWStand* pStand = GetStand(); assert(pStand);
 
 				double scaleFactor = m_broods * m_scaleFactor;
 				CIndividualPtr object = make_shared<CSpruceBudworm>(GetHost(), weather.GetTRef(), EGG, RANDOM_SEX, pStand->m_bFertilEgg, m_generation + 1, scaleFactor);
@@ -326,7 +327,7 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = ATTRITION;
 		}
-		else if (m_overwinteringDate.IsInit() && m_emergingL2oDate == weather.GetTRef())
+		else if (m_overwinteringDate.is_init() && m_emergingL2oDate == weather.GetTRef())
 		{
 			//second generation L2o emerging:compute mortality
 			if (IsDeadByMissingEnergy())
@@ -349,7 +350,7 @@ namespace WBSF
 		}
 		//else if (GetStage() == ADULT && GetStand()->m_adult_longivity_max > NO_MAX_ADULT_LONGEVITY)
 		//{
-		//	ASSERT(m_emergingPupaeDate.IsInit());
+		//	assert(m_emergingPupaeDate.is_init());
 		//	if (weather.GetTRef().as(CTM::DAILY) - m_emergingPupaeDate > GetStand()->m_adult_longivity_max)
 		//	{
 		//		//adult reach maximum longevity. Kill it.
@@ -425,7 +426,7 @@ namespace WBSF
 			//Equation [5] in Régniere 1990
 			//Relative dev rate of L2o depend of the age of L2o
 			//Adjust Relative dev rate
-			double dprime = min(1.0, max(0.25, m_age - L2o));
+			double dprime = min(1.0, max(0.25, m_age - double(L2o)));
 			double tairp = max(T, 5.0);
 			double fat = .091*tairp*pow(dprime, (1.0 - 1.0 / (.091*tairp)));
 			RR *= fat;
@@ -491,7 +492,7 @@ namespace WBSF
 		if (T > 0 && P < 2.5 && W > 2.5)//No lift-off if hourly precipitation greater than 2.5 mm
 		{
 			double p = (C + tau - (2 * pow(tau, 3) / 3) + (pow(tau, 5) / 5)) / (2 * C);
-			ASSERT(p >= 0 && p <= 1);
+			assert(p >= 0 && p <= 1);
 
 			//Compute wing-beat
 			double Vᴸ = K * sqrt(m_M) / m_A;//compute liftoff wing-beat to fly with actual weight (Vᴸ)
@@ -508,26 +509,26 @@ namespace WBSF
 
 	double CSpruceBudworm::get_Tair(const CWeatherDay& weather, double h)
 	{
-		ASSERT(h >= 0 && h < 24);
+		assert(h >= 0 && h < 24);
 
 		size_t hº = size_t(h);
 		size_t h¹ = hº + 1;
-		ASSERT(h >= hº && h <= h¹);
-		ASSERT((h - hº) >= 0 && (h - hº) <= 1);
-		ASSERT((h¹ - h) >= 0 && (h¹ - h) <= 1);
+		assert(h >= hº && h <= h¹);
+		assert((h - hº) >= 0 && (h - hº) <= 1);
+		assert((h¹ - h) >= 0 && (h¹ - h) <= 1);
 
 		//temperature interpolation between 2 hours
 		const CHourlyData& wº = weather[hº];
 		const CHourlyData& w¹ = wº.GetNext();
 		double Tair = (h - hº)*w¹[H_TAIR] + (h¹ - h)*wº[H_TAIR];
 
-		ASSERT(!WEATHER::IsMissing(Tair));
+		assert(!WEATHER::IsMissing(Tair));
 		return Tair;
 	}
 
 	double CSpruceBudworm::get_Prcp(const CWeatherDay& weather, double h)
 	{
-		ASSERT(h >= 0 && h < 24);
+		assert(h >= 0 && h < 24);
 
 		double prcp = -999;
 
@@ -540,15 +541,15 @@ namespace WBSF
 
 	double CSpruceBudworm::get_WndS(const CWeatherDay& weather, double h)
 	{
-		ASSERT(h >= 0 && h < 24);
+		assert(h >= 0 && h < 24);
 
 		double wind = -999;
 
 		size_t hº = size_t(h);
 		size_t h¹ = hº + 1;
-		ASSERT(h >= hº && h <= h¹);
-		ASSERT((h - hº) >= 0 && (h - hº) <= 1);
-		ASSERT((h¹ - h) >= 0 && (h¹ - h) <= 1);
+		assert(h >= hº && h <= h¹);
+		assert((h - hº) >= 0 && (h - hº) <= 1);
+		assert((h¹ - h) >= 0 && (h¹ - h) <= 1);
 
 		if (!WEATHER::IsMissing(weather[hº][H_WNDS]) && !WEATHER::IsMissing(weather[hº][H_WNDS]))
 		{
@@ -585,7 +586,7 @@ namespace WBSF
 	//		tᴹ = tᶳ + 4 * 3600; // maximum at 1:00 daylight saving time next day, -1 for normal time
 
 
-	//		ASSERT(tº > 0);
+	//		assert(tº > 0);
 	//		for (__int64 t = tº; t <= tᴹ && tᵀº == 0; t += Δt)
 	//		{
 	//			//sunset hour shifted by t
@@ -598,7 +599,7 @@ namespace WBSF
 	//				tᵀº = t;
 	//		}
 
-	//		ASSERT(tᵀº != 0);
+	//		assert(tᵀº != 0);
 	//		if (tᵀº == 0)//if tᵀº equal 0, no temperature under Tº. set tᵀº at 22:00 Normal time
 	//			tᵀº = 22 * 3600;
 
@@ -645,8 +646,8 @@ namespace WBSF
 				tᶜ = tᶳ + (Δs * 3600);
 				tº = tᶜ + (Δo * 3600);
 				tᴹ = tº + (Δf * 3600);
-				ASSERT(tᶜ >= tº && tᶜ <= tᴹ);
-				ASSERT(tᶜ >= 0 && tᶜ < 24 * 3600);//tᶳ is sunset [s] since the beginning of the day
+				assert(tᶜ >= tº && tᶜ <= tᴹ);
+				assert(tᶜ >= 0 && tᶜ < 24 * 3600);//tᶳ is sunset [s] since the beginning of the day
 
 				bRep = true;
 			}
@@ -729,7 +730,7 @@ namespace WBSF
 
 	bool CSpruceBudworm::IsDeadByMissingEnergy()
 	{
-		ASSERT(m_overwinteringDate.IsInit());
+		assert(m_overwinteringDate.is_init());
 
 		//L2o Survival module
 		bool bDead = false;
@@ -785,7 +786,7 @@ namespace WBSF
 	{
 		if (weather[H_TMIN][MEAN] < -10)
 		{
-			if (weather.GetTRef().GetJDay() > 180 && !m_bAutumnCleaned)
+			if (weather.GetTRef().GetDOY() > 180 && !m_bAutumnCleaned)
 			{
 				m_bAutumnCleaned = true;
 
@@ -823,7 +824,7 @@ namespace WBSF
 		//	}
 		//}
 
-		//stat[S_FEMALE_AGE] = (weight.IsInit() && weight[SUM] > 0) ? sum[SUM] / weight[SUM] : CBioSIMModelBase::VMISS;;
+		//stat[S_FEMALE_AGE] = (weight.is_init() && weight[SUM] > 0) ? sum[SUM] / weight[SUM] : CBioSIMModelBase::VMISS;;
 	}
 
 
@@ -834,7 +835,7 @@ namespace WBSF
 
 		for (const_iterator it = begin(); it != end(); it++)
 		{
-			ASSERT((*it)->GetGeneration() == 1);
+			assert((*it)->GetGeneration() == 1);
 
 			CTRef ref = (*it)->GetCreationDate();
 			stat += ref.GetRef();
@@ -842,7 +843,7 @@ namespace WBSF
 
 		if (stat[NB_VALUE] > 0)
 		{
-			hatchDate.SetRef(int(Round(stat[MEAN])), CTM(CTRef::DAILY));
+			hatchDate.SetRef(int(round(stat[MEAN])), CTM(CTM::DAILY));
 			d = stat[VARIANCE];
 		}
 

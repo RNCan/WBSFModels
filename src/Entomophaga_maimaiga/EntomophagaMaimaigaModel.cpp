@@ -2,12 +2,14 @@
 // 03/06/2025	1.0		Rémi Saint-Amant	Creation
 //**********************************************************************
 
-#include "EntomophagaMaimaigaModel.h"
-#include "Basic/Evapotranspiration.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
+
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "ModelBased/EntryPoint.h"
 #include "eco-climate.h"
+
+#include "EntomophagaMaimaigaModel.h"
 
 //#include "inputdata.h"
 
@@ -53,7 +55,7 @@ namespace WBSF
 		int c = 0;
 		m_host_density = parameters[c++].GetReal();// *250 / 10000;//egg masses/ha --> larvae/m²
 		size_t fd = parameters[c++].GetInt();
-		ASSERT(fd < EMParameters::NB_FUNGUS_DESITIES);
+		assert(fd < EMParameters::NB_FUNGUS_DESITIES);
 		m_fungus_density = EMParameters::INITIAL_R[fd];
 		
 
@@ -87,7 +89,7 @@ namespace WBSF
 			//for (size_t DOY = 0; DOY < 365; y++)
 			for (size_t m = 0; m < 12; m++)
 			{
-				for (size_t d = 0; d < GetNbDayPerMonth(m); d++, DOY++)//fixed year at 365 days, don't use 29 of february
+				for (size_t d = 0; d < GetNbDaysPerMonth(m); d++, DOY++)//fixed year at 365 days, don't use 29 of february
 				{
 					const CWeatherDay& wDay = m_weather[y][m][d];
 
@@ -106,12 +108,12 @@ namespace WBSF
 			int year = m_weather[y].GetTRef().GetYear();
 			for (size_t d = 0; d < 365; d++)
 			{
-				output[CJDayRef(year,d)][O_INFECTION] = infected[y][d];
+				output[CDOYRef(year,d)][O_INFECTION] = infected[y][d];
 			}
 
 			//copy lastd day for leap year
 			if(IsLeap(year))
-				output[CJDayRef(year, 365)][O_INFECTION] = infected[y][364];//take the last days
+				output[CDOYRef(year, 365)][O_INFECTION] = infected[y][364];//take the last days
 		}
 
 		return msg;
@@ -137,7 +139,7 @@ namespace WBSF
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
 			int year = m_weather[y].GetTRef().GetYear();
-			m_output[y][O_INFECTION] = daily[CJDayRef(year,364)][O_INFECTION];//take the last days
+			m_output[y][O_INFECTION] = daily[CDOYRef(year,364)][O_INFECTION];//take the last days
 		}
 
 		return msg;

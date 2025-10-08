@@ -7,24 +7,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WhitemarkedTussockMoth.cpp">
+    <ClCompile Include="..\..\src\WhitemarkedTussockMoth\WhitemarkedTussockMoth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WhitemarkedTussockMothEquations.cpp">
+    <ClCompile Include="..\..\src\WhitemarkedTussockMoth\WhitemarkedTussockMothEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WhitemarkedTussockMothModel.cpp">
+    <ClCompile Include="..\..\src\WhitemarkedTussockMoth\WhitemarkedTussockMothModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WhitemarkedTussockMoth.h">
+    <ClInclude Include="..\..\src\WhitemarkedTussockMoth\WhitemarkedTussockMoth.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="WhitemarkedTussockMothEquations.h">
+    <ClInclude Include="..\..\src\WhitemarkedTussockMoth\WhitemarkedTussockMothEquations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="WhitemarkedTussockMothModel.h">
+    <ClInclude Include="..\..\src\WhitemarkedTussockMoth\WhitemarkedTussockMothModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,8 +8,8 @@
 // 25/07/2011	1.0		Rémi Saint-Amant	Creation
 //*********************************************************************
 #include "SMIModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/WeatherStation.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/WeatherStation.h"
 
 
 using namespace WBSF::HOURLY_DATA;
@@ -118,7 +118,7 @@ namespace WBSF
 		if (m_model == BILINEAR)
 			AETFactor = min(1.0, SMI / m_SMIcrit);
 		else if (m_model == QUADRATIC_LINEAR)
-			AETFactor = min(1.0, 2 * SMI / m_SMIcrit - Square(SMI / m_SMIcrit));
+			AETFactor = min(1.0, 2 * SMI / m_SMIcrit - square(SMI / m_SMIcrit));
 
 		return AETFactor;
 	}

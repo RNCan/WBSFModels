@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "Basic/UtilTime.h"
 
 namespace WBSF
@@ -34,7 +34,7 @@ namespace WBSF
 		double GetAETFactor(double SMI)const;
 		void ComputeDailyValue(CModelStatVector& output)const;
 
-		double m_model;
+		size_t m_model;
 		double m_SMIcrit; //Critical soil moisture (mm)
 		double m_SMImax; //Maximum soil moisture (mm)
 

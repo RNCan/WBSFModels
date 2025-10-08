@@ -3,7 +3,7 @@
 //**********************************************************************
 
 #include <iostream>
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 //#include "Climatic.h"
 #include "ClimaticWind.h"
 
@@ -57,10 +57,10 @@ namespace WBSF
 		{
 			double wnds = m_weather[y][H_WNDS][MEAN];
 			array<double, 36> wndd = GetWindD(m_weather[y]);
-			m_output[y][ANNUAL_MEAN_WNDS] = Round(wnds, 1);
+			m_output[y][ANNUAL_MEAN_WNDS] = round(wnds, 1);
 
 			for (size_t i = 0; i < 36; i++)
-				m_output[y][ANNUAL_MEAN_WNDS0 + i] = Round(wndd[i], 1);
+				m_output[y][ANNUAL_MEAN_WNDS0 + i] = round(wndd[i], 1);
 		}
 
 		return msg;
@@ -80,10 +80,10 @@ namespace WBSF
 					double wnds = m_weather[y][m].GetStat(H_WNDS)[MEAN];
 					array<double, 36> wndd = GetWindD(m_weather[y][m]);
 
-					m_output[y * 12 + m][MONTHLY_MEAN_WNDS] = Round(wnds, 1);
+					m_output[y * 12 + m][MONTHLY_MEAN_WNDS] = round(wnds, 1);
 
 					for (size_t i = 0; i < 36; i++)
-						m_output[y * 12 + m][MONTHLY_MEAN_WNDS0 + i] = Round(wndd[i], 1);
+						m_output[y * 12 + m][MONTHLY_MEAN_WNDS0 + i] = round(wndd[i], 1);
 				
 			}
 		}
@@ -107,7 +107,7 @@ namespace WBSF
 					double ws = weather.GetDay(d).at(h).at(H_WNDS);
 					double wd = weather.GetDay(d).at(h).at(H_WNDD);
 					size_t i = ((size_t)((wd + 5.0) / 10.0)) % 36;
-					ASSERT(i < 36);
+					assert(i < 36);
 					wndd[i] += ws;
 					stat += ws;
 				}
@@ -117,7 +117,7 @@ namespace WBSF
 				double ws = weather.GetDay(d)[H_WNDS][MEAN];
 				double wd = weather.GetDay(d)[H_WNDD][MEAN];
 				size_t i = ((size_t)((wd + 5.0) / 10.0)) % 36;
-				ASSERT(i < 36);
+				assert(i < 36);
 				wndd[i] += ws;
 				stat += ws;
 			}
@@ -148,7 +148,7 @@ namespace WBSF
 					double ws = weather[d].at(h).at(H_WNDS);
 					double wd = weather[d].at(h).at(H_WNDD);
 					size_t i = ((size_t)((wd + 5.0) / 10.0)) % 36;
-					ASSERT(i < 36);
+					assert(i < 36);
 					wndd[i] += ws;
 					stat += ws;
 
@@ -161,7 +161,7 @@ namespace WBSF
 				double ws = weather[d][H_WNDS][MEAN];
 				double wd = weather[d][H_WNDD][MEAN];
 				size_t i = ((size_t)((wd + 5.0) / 10.0)) % 36;
-				ASSERT(i < 36);
+				assert(i < 36);
 				wndd[i] += ws;
 				stat += ws;
 			}

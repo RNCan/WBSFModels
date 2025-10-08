@@ -1,5 +1,11 @@
-#include "ModelBase/BioSIMModelBase.h"
+#pragma once
+
+
+#include "ModelBased/BioSIMModelBase.h"
 #include "LaricobiusNigrinus.h"
+
+
+
 namespace WBSF
 {
 
@@ -24,7 +30,7 @@ namespace WBSF
 
 		static CBioSIMModelBase* CreateObject(){ return new CLaricobiusNigrinusModel; }
 
-		virtual void AddDailyResult(const StringVector& header, const StringVector& data)override;
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
 		virtual bool GetFValueDaily(CStatisticXY& stat)override;
 
 		protected:

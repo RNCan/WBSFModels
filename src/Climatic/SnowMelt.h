@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 
 namespace WBSF

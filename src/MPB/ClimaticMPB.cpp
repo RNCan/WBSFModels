@@ -1,14 +1,14 @@
 ﻿//**********************************************************************
 // 14/04/2022	1.0.0	Rémi Saint-Amant    Model create for Kishan
 //**********************************************************************
-#include <stdio.h>
-#include <math.h>
-#include <crtdbg.h>
-#include <float.h>
+#include <cstdio>
+#include <cmath>
+#include <cassert>
+#include <cfloat>
 #include <limits>
 
-#include "basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "ModelBased/EntryPoint.h"
 #include "ClimaticMPB.h"
 
 
@@ -62,7 +62,7 @@ namespace WBSF
 		ERMsg message;
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::ANNUAL));
-		p.Begin().m_year++;
+		p.begin().m_year++;
 
 		m_output.Init(p, NB_OUTPUTS, -999);
 
@@ -70,13 +70,13 @@ namespace WBSF
 		for (size_t y = 1; y < m_weather.size(); y++)
 		{
 			int year = m_weather[y].GetTRef().GetYear();
-			CTPeriod winterPeriod(CTRef(year-1, DECEMBER, FIRST_DAY), CTRef(year, FEBRUARY, LAST_DAY));
-			CTPeriod summerPeriod(CTRef(year, MAY, FIRST_DAY), CTRef(year, SEPTEMBER, LAST_DAY));
+			CTPeriod winterPeriod(CTRef(year-1, DECEMBER, DAY_01), CTRef(year, FEBRUARY, DAY_28));
+			CTPeriod summerPeriod(CTRef(year, MAY, DAY_01), CTRef(year, SEPTEMBER, DAY_30));
 
 			
 
 			int nbDaysLower20 = 0;
-			for (CTRef TRef = winterPeriod.Begin(); TRef <= winterPeriod.End(); TRef++)
+			for (CTRef TRef = winterPeriod.begin(); TRef <= winterPeriod.end(); TRef++)
 			{
 				double T = m_weather[TRef][H_TMIN][LOWEST];
 				if (T <= -20.0)
@@ -84,7 +84,7 @@ namespace WBSF
 			}
 			
 			int nbDaysGreater32 = 0;
-			for (CTRef TRef = summerPeriod.Begin(); TRef <= summerPeriod.End(); TRef++)
+			for (CTRef TRef = summerPeriod.begin(); TRef <= summerPeriod.end(); TRef++)
 			{
 				double T = m_weather[TRef][H_TMAX][HIGHEST];
 				if (T >= 32.0)
@@ -92,9 +92,9 @@ namespace WBSF
 			}
 
 			m_output[y-1][O_NB_DAYS_LOWER20] = nbDaysLower20;
-			m_output[y-1][O_PERCENT_LOWER20] = 100.0 * nbDaysLower20/ winterPeriod.GetNbDay(); //[%]
+			m_output[y-1][O_PERCENT_LOWER20] = 100.0 * nbDaysLower20/ winterPeriod.length(CTM::DAILY); //[%]
 			m_output[y-1][NB_DAYS_GREATER32] = nbDaysGreater32;
-			m_output[y-1][NB_PERCENT_GREATER32] = 100.0*nbDaysGreater32 / summerPeriod.GetNbDay();//[%]
+			m_output[y-1][NB_PERCENT_GREATER32] = 100.0*nbDaysGreater32 / summerPeriod.length(CTM::DAILY);//[%]
 			
 			HxGridTestConnection();
 		}

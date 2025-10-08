@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "SpruceBudwormEquations.h"
 
 namespace WBSF
@@ -188,8 +188,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CSBWTree* CSpruceBudworm::GetTree(){ return static_cast<CSBWTree*>(m_pHost); }
 	inline const CSBWTree* CSpruceBudworm::GetTree()const{ return static_cast<const CSBWTree*>(m_pHost); }
-	inline CSBWStand* CSpruceBudworm::GetStand(){ ASSERT(m_pHost); return static_cast<CSBWStand*>(GetTree()->GetStand()); }
-	inline const CSBWStand* CSpruceBudworm::GetStand()const{ ASSERT(m_pHost); return static_cast<const CSBWStand*>(GetTree()->GetStand()); }
+	inline CSBWStand* CSpruceBudworm::GetStand(){ assert(m_pHost); return static_cast<CSBWStand*>(GetTree()->GetStand()); }
+	inline const CSBWStand* CSpruceBudworm::GetStand()const{ assert(m_pHost); return static_cast<const CSBWStand*>(GetTree()->GetStand()); }
 	inline CSpruceBudwormEquations& CSpruceBudworm::Equations(){ return GetStand()->m_equations; }
 
 

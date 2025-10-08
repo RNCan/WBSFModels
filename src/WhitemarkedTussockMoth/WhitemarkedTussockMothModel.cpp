@@ -2,8 +2,8 @@
 // 22/04/2019	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
 #include "WhitemarkedTussockMothModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic\DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
 
 using namespace WBSF::HOURLY_DATA;
 using namespace WBSF::WTM;
@@ -172,7 +172,7 @@ namespace WBSF
 
 		pHost->m_nbMinObjects = 10;
 		pHost->m_nbMaxObjects = 1000;
-		pHost->Initialize<CWhitemarkedTussockMoth>(CInitialPopulation(p.Begin(), 0, 400, 100, EGG));
+		pHost->Initialize<CWhitemarkedTussockMoth>(CInitialPopulation(p.begin(), 0, 400, 100, EGG));
 
 		//add host to stand			
 		stand.m_host.push_front(pHost);
@@ -180,7 +180,7 @@ namespace WBSF
 
 
 		//double GDD = 0;
-		for (CTRef d = p.Begin(); d <= p.End(); d++)
+		for (CTRef d = p.begin(); d <= p.end(); d++)
 		{
 
 			//if (d >= March1)
@@ -212,14 +212,14 @@ namespace WBSF
 				CStatistic stat = output.GetStat(S_EGG0 + s, p);
 				if (stat[SUM] > 0)
 				{
-					for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+					for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 						output[d][S_EGG0 + s] = output[d - 1][S_EGG0 + s] + output[d][S_EGG0 + s] * 100 / stat[SUM];
 				}
 
 				stat = output.GetStat(S_EGG1 + s, p);
 				if (stat[SUM] > 0)
 				{
-					for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+					for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 						output[d][S_EGG1 + s] = output[d - 1][S_EGG1 + s] + output[d][S_EGG1 + s] * 100 / stat[SUM];
 				}
 			}
@@ -227,14 +227,14 @@ namespace WBSF
 			CStatistic stat = output.GetStat(S_DEAD_ADULT0, p);
 			if (stat[HIGHEST] > 0)
 			{
-				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					output[d][S_DEAD_ADULT0] = output[d][S_DEAD_ADULT0] * 100 / stat[HIGHEST];
 			}
 
 			stat = output.GetStat(S_EGG1, p);
 			if (stat[SUM] > 0)
 			{
-				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					output[d][S_EGG1] = output[d - 1][S_EGG1] + output[d][S_EGG1] * 100 / stat[SUM];
 			}
 
@@ -242,35 +242,35 @@ namespace WBSF
 			stat = output.GetStat(S_DEAD_ADULT1, p);
 			if (stat[HIGHEST] > 0)
 			{
-				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					output[d][S_DEAD_ADULT1] = output[d][S_DEAD_ADULT1] * 100 / stat[HIGHEST];
 			}
 
 			stat = output.GetStat(S_EGG_MASS0, p);
 			if (stat[SUM] > 0)
 			{
-				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					output[d][S_EGG_MASS0] = output[d - 1][S_EGG_MASS0] + output[d][S_EGG_MASS0] * 100 / stat[SUM];
 			}
 
 			stat = output.GetStat(S_EMERGENCE0, p);
 			if (stat[SUM] > 0)
 			{
-				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					output[d][S_EMERGENCE0] = output[d - 1][S_EMERGENCE0] + output[d][S_EMERGENCE0] * 100 / stat[SUM];
 			}
 
 			stat = output.GetStat(S_EGG_MASS1, p);
 			if (stat[SUM] > 0)
 			{
-				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					output[d][S_EGG_MASS1] = output[d - 1][S_EGG_MASS1] + output[d][S_EGG_MASS1] * 100 / stat[SUM];
 			}
 
 			stat = output.GetStat(S_EMERGENCE1, p);
 			if (stat[SUM] > 0)
 			{
-				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					output[d][S_EMERGENCE1] = output[d - 1][S_EMERGENCE1] + output[d][S_EMERGENCE1] * 100 / stat[SUM];
 			}
 
@@ -278,10 +278,10 @@ namespace WBSF
 	}
 
 	enum { I_GENERATION, I_STAGEID, I_GDD, I_N, I_CUMUL, I_N2, NB_INPUTS };
-	void CWhitemarkedTussockMothModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CWhitemarkedTussockMothModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		//SiteID	Stage	StageID	Year	Generation	GDD12.8	Corrected N	Cumul
-		ASSERT(data.size() == NB_INPUTS + 2);
+		assert(data.size() == NB_INPUTS + 2);
 
 		CSAResult obs;
 		obs.m_ref.FromFormatedString(data[1]);
@@ -289,13 +289,13 @@ namespace WBSF
 		for (size_t i = 0; i < NB_INPUTS; i++)
 		{
 			obs.m_obs[i] = stod(data[i + 2]);
-			ASSERT(obs.m_obs[i] > -999);
+			assert(obs.m_obs[i] > -999);
 		}
 
 		size_t g = obs.m_obs[I_GENERATION];
 		size_t s = obs.m_obs[I_STAGEID];
-		ASSERT(s <= 4 && g < 2);
-		m_Jday[g][s] += obs.m_ref.GetJDay();
+		assert(s <= 4 && g < 2);
+		m_Jday[g][s] += obs.m_ref.GetDOY();
 
 		m_SAResult.push_back(obs);
 
@@ -305,7 +305,7 @@ namespace WBSF
 
 	double GetSimX(size_t s, size_t g, CTRef TRefO, double obsY, const CModelStatVector& output)
 	{
-		ASSERT(obsY > 0 && obsY < 100);//0 and 100 can't be estimated
+		assert(obsY > 0 && obsY < 100);//0 and 100 can't be estimated
 		double x = -999;
 
 		//if (obsY > 0 && obsY < 100)//0 and 100 can't be estimated
@@ -314,11 +314,11 @@ namespace WBSF
 		//	if (obsY >= 100)
 			//	obsY = 99.99;//to avoid some problem of truncation
 
-			long index = output.GetFirstIndex(s, ">=", obsY, 1, CTPeriod(TRefO.GetYear(), FIRST_MONTH, FIRST_DAY, TRefO.GetYear(), LAST_MONTH, LAST_DAY));
-			if (index >= 1)
+			size_t index = output.GetFirstIndex(s, ">=", obsY, 1, CTPeriod(CTRef(TRefO.GetYear(), JANUARY, DAY_01), CTRef(TRefO.GetYear(), DECEMBER, DAY_31)));
+			if (index !=NOT_INIT && index >= 1)
 			{
-				double simX1 = output.GetFirstTRef().GetJDay() + index;
-				double simX2 = output.GetFirstTRef().GetJDay() + index + 1;
+				double simX1 = output.GetFirstTRef().GetDOY() + index;
+				double simX2 = output.GetFirstTRef().GetDOY() + index + 1;
 
 				double simY1 = output[index][s];
 				double simY2 = output[index + 1][s];
@@ -326,7 +326,7 @@ namespace WBSF
 				{
 					double slope = (simX2 - simX1) / (simY2 - simY1);
 					double obsX = simX1 + (obsY - simY1)*slope;
-					ASSERT(!_isnan(obsX) && _finite(obsX));
+					assert(!_isnan(obsX) && _finite(obsX));
 
 					x = obsX;
 				}
@@ -359,7 +359,7 @@ namespace WBSF
 					rH += r;
 			}
 
-			if (rL.IsInit() && rH.IsInit())
+			if (rL.is_init() && rH.is_init())
 				equal = fabs(rL[SUM] - rH[SUM]) < 5.3; //in Régnière (2012) obtain a max of 5.3. We multiply by 3 because it was not enought variable
 			else
 				equal = false;
@@ -370,7 +370,7 @@ namespace WBSF
 
 	bool CWhitemarkedTussockMothModel::GetFValueDaily(CStatisticXY& stat)
 	{
-		ASSERT(!m_SAResult.empty());
+		assert(!m_SAResult.empty());
 
 		static const size_t COLPOS[2][5] = { { S_EGG0, S_LARVAE0, S_PUPA0, S_ADULT0, S_EGG_MASS0 },{ S_EGG1, S_LARVAE1, S_PUPA1, S_ADULT1, S_EGG_MASS1 } };
 
@@ -414,9 +414,9 @@ namespace WBSF
 		//	int year = m_weather[y].GetTRef().GetYear();
 		//	CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
 		//	CTRef March1(year, MARCH, DAY_01);
-		//	for (CTRef d = p.Begin(); d <= p.End(); d++)
+		//	for (CTRef d = p.begin(); d <= p.end(); d++)
 		//	{
-		//		if (d.GetJDay() >= m_H[start])
+		//		if (d.GetDOY() >= m_H[start])
 		//		{
 		//			double Tmin = m_weather.GetDay(d)[H_TMIN][MEAN];
 		//			double Tmax = m_weather.GetDay(d)[H_TMAX][MEAN];
@@ -485,7 +485,7 @@ namespace WBSF
 		
 						if (obs_y > 0 && obs_y<100)
 						{
-							double obs_x = m_SAResult[i].m_ref.GetJDay();
+							double obs_x = m_SAResult[i].m_ref.GetDOY();
 							double sim_x = GetSimX(COLPOS[g][s], g, m_SAResult[i].m_ref, obs_y, output);
 
 							obs_x = 100 * (obs_x - m_Jday[g][s][LOWEST]) / m_Jday[g][2][RANGE];
@@ -503,9 +503,9 @@ namespace WBSF
 		return true;
 	}
 
-	//void CWhitemarkedTussockMothModel::AddAnnualResult(const StringVector& header, const StringVector& data)
+	//void CWhitemarkedTussockMothModel::AddAnnualResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	//{
-	//	ASSERT(data.size() == 2);
+	//	assert(data.size() == 2);
 
 	//	CSAResult obs;
 	//	obs.m_ref.FromFormatedString(data[1]);
@@ -555,7 +555,7 @@ namespace WBSF
 	//					{
 	//						if (m_SAResult[j].m_ref.GetYear() == d.GetYear())
 	//						{
-	//							stat.Add(d.GetJDay(), m_SAResult[j].m_ref.GetJDay());
+	//							stat.Add(d.GetDOY(), m_SAResult[j].m_ref.GetDOY());
 	//						}
 	//					}
 	//				}

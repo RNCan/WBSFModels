@@ -7,25 +7,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ALeucopoda.cpp">
+    <ClCompile Include="..\..\src\AprocerosLeucopoda\ALeucopoda.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ALeucopodaEquations.cpp">
+    <ClCompile Include="..\..\src\AprocerosLeucopoda\ALeucopodaEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ALeucopodaModel.cpp">
+    <ClCompile Include="..\..\src\AprocerosLeucopoda\ALeucopodaModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ALeucopoda.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ALeucopodaEquations.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ALeucopodaModel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\AprocerosLeucopoda\ALeucopoda.h" />
+    <ClInclude Include="..\..\src\AprocerosLeucopoda\ALeucopodaEquations.h" />
+    <ClInclude Include="..\..\src\AprocerosLeucopoda\ALeucopodaModel.h" />
   </ItemGroup>
 </Project>

@@ -7,8 +7,8 @@
 //*****************************************************************************
 
 #include "Basic/UtilStd.h"
-#include "Basic/SnowAnalysis.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "Modelbased/EntryPoint.h"
 #include "ObliqueBandedLeafrollerModel.h"
 #include "ObliqueBandedLeafroller.h"
 
@@ -74,7 +74,7 @@ namespace WBSF
 		m_lethalTemp = parameters[c++].GetReal();
 		m_criticalDaylength = parameters[c++].GetReal();
 		m_startDateShift = parameters[c++].GetInt();
-		ASSERT(m_diapauseAge >= 0. && m_diapauseAge <= 2.);*/
+		assert(m_diapauseAge >= 0. && m_diapauseAge <= 2.);*/
 
 		return msg;
 	}
@@ -85,7 +85,7 @@ namespace WBSF
 	//{
 	//	//This is where the model is actually executed
 	//	CTPeriod p = weather.GetEntireTPeriod(CTM(CTM::DAILY));
-	//	stat.Init(p.GetNbRef(), p.Begin(), SBW::TSpruceBudwormStats::NB_STATS, 0, DAILY_HEADER);
+	//	stat.Init(p.GetNbRef(), p.begin(), SBW::TSpruceBudwormStats::NB_STATS, 0, DAILY_HEADER);
 
 	//	//we simulate 2 years at a time. 
 	//	//we also manager the possibility to have only one year
@@ -103,7 +103,7 @@ namespace WBSF
 	//		pHost->m_kind = CSBWTree::BALSAM_FIR;
 	//		pHost->m_nbMinObjects = 100;
 	//		pHost->m_nbMaxObjects = 1000;
-	//		pHost->Initialize<CSpruceBudworm>(CInitialPopulation(p.Begin(), 0, 400, 100, SBW::L2o, NOT_INIT, false));
+	//		pHost->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 400, 100, SBW::L2o, NOT_INIT, false));
 
 
 	//		//Init stand
@@ -112,7 +112,7 @@ namespace WBSF
 	//		stand.m_bStopL22 = true;
 	//		stand.m_host.push_back(pHost);
 
-	//		for (CTRef d = p.Begin(); d <= p.End(); d++)
+	//		for (CTRef d = p.begin(); d <= p.end(); d++)
 	//		{
 	//			stand.Live(weather.GetDay(d));
 	//			stand.GetStat(d, stat[d]);
@@ -144,10 +144,10 @@ namespace WBSF
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		size_t maxG = min(NB_GENERATIONS, ObliqueBandedLeafrollerStat.size()); 
-		//m_output.Init(p.size(), p.Begin(), NB_GENERATIONS*NB_DAILY_OUTPUT, 0, DAILY_HEADER);
-		m_output.Init(p.size(), p.Begin(), NB_DAILY_OUTPUT, 0, DAILY_HEADER);
+		//m_output.Init(p.size(), p.begin(), NB_GENERATIONS*NB_DAILY_OUTPUT, 0, DAILY_HEADER);
+		m_output.Init(p.size(), p.begin(), NB_DAILY_OUTPUT, 0, DAILY_HEADER);
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			for (size_t g = 0; g < maxG; g++)
 			{
@@ -173,7 +173,7 @@ namespace WBSF
 		{
 			//This is where the model is actually executed
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
-			CInitialPopulation initialPopulation(p.Begin(), 0, 1000, 100, L3D, RANDOM_SEX, true, 0);
+			CInitialPopulation initialPopulation(p.begin(), 0, 1000, 100, L3D, RANDOM_SEX, true, 0);
 
 			//Create stand
 			CObliqueBandedLeafrollerStand stand(this);
@@ -189,13 +189,13 @@ namespace WBSF
 
 			//run the model for all days of all years
 			//get the annual period 
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
 
 				size_t nbGenerations = stand.GetFirstHost()->GetNbGeneration();
 				if (nbGenerations > stat.size())
-					stat.push_back(CModelStatVector(entirePeriod.GetNbRef(), entirePeriod.Begin(), NB_STATS, 0));
+					stat.push_back(CModelStatVector(entirePeriod, NB_STATS, 0));
 
 				for (size_t g = 0; g < nbGenerations; g++)
 					stand.GetStat(d, stat[g][d], g);
@@ -232,9 +232,9 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, ObliqueBandedLeafrollerStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
-				CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 				m_output[TRef][O_A_NB_GENERATION] = maxG;
 
@@ -243,14 +243,14 @@ namespace WBSF
 				double pupaBegin = 100;
 				for (size_t g = 1; g < maxG; g++)
 				{
-					double pupaEnd = ObliqueBandedLeafrollerStat[g][season.End()][S_PUPA];
+					double pupaEnd = ObliqueBandedLeafrollerStat[g][season.end()][S_PUPA];
 						
 					alive += pupaEnd;
 					m_output[TRef][O_A_ALIVE1 + (g-1)] = pupaEnd;
 					meanG += g *pupaEnd;
 				}
 
-				ASSERT(alive.IsInit());
+				assert(alive.is_init());
 				m_output[TRef][O_A_GROW_RATE] = alive[SUM] / pupaBegin;
 				m_output[TRef][O_A_MEAN_GENERATION] = meanG[SUM]/alive[SUM];
 			}
@@ -282,17 +282,17 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, ObliqueBandedLeafrollerStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				double diapauseBegin = 100;
 				for (size_t g = 1; g < maxG; g++)
 				{
-					CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+					CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 					CStatistic diapauseStat = ObliqueBandedLeafrollerStat[g].GetStat(E_DIAPAUSE, season);
-					if (diapauseStat.IsInit() && diapauseBegin>0)
+					if (diapauseStat.is_init() && diapauseBegin>0)
 					{
-						size_t y = TRef - p.Begin();
+						size_t y = TRef - p.begin();
 						size_t gg = y*(NB_GENERATIONS-1) + (g - 1);
 						m_output[gg][O_G_DIAPAUSE] = diapauseStat[SUM];
 						m_output[gg][O_G_GROW_RATE] = diapauseStat[SUM] / diapauseBegin;
@@ -309,14 +309,14 @@ namespace WBSF
 	//************************************************************************************************
 
 	//simulated annaling 
-	//void CObliqueBandedLeafrollerModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	//void CObliqueBandedLeafrollerModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	//{
 	//	//transform value to date/stage
-	//	ASSERT( header[3] == "Year");
-	//	ASSERT( header[4] == "Month");
-	//	ASSERT( header[5] == "Day");
-	//	ASSERT( header[12] == "NbInds");
-	//	ASSERT( header[13] == "AI");
+	//	assert( header[3] == "Year");
+	//	assert( header[4] == "Month");
+	//	assert( header[5] == "Day");
+	//	assert( header[12] == "NbInds");
+	//	assert( header[13] == "AI");
 	//
 	//	CTRef ref(ToShort(data[3]), ToShort(data[4]) - 1, ToShort(data[5]) - 1);
 	//	std::vector<double> obs;
@@ -339,14 +339,14 @@ namespace WBSF
 	//		int m_firstYear = (int)years[LOWEST];
 	//		int m_lastYear = (int)years[HIGHEST];
 	//
-	//		ASSERT( m_weather.GetFirstYear() == m_firstYear );
-	//		ASSERT( m_weather.GetLastYear() == m_lastYear );
+	//		assert( m_weather.GetFirstYear() == m_firstYear );
+	//		assert( m_weather.GetLastYear() == m_lastYear );
 	//		ExecuteDaily(statSim);
 	// 
 	//
 	//		for(int i=0; i<(int)m_SAResult.size(); i++)
 	//		{
-	//			if( statSim.IsInside(m_SAResult[i].m_ref) )
+	//			if( statSim.is_inside(m_SAResult[i].m_ref) )
 	//			{
 	//				double AISim = statSim[ m_SAResult[i].m_ref ][S_AVERAGE_INSTAR];
 	//				//_ASSERTE( AISim >= 2&&AISim<=8);
@@ -379,7 +379,7 @@ namespace WBSF
 	//	{
 	//		CStatistic statL22;
 	//		CTPeriod p = m_weather[y + 1].GetEntireTPeriod();
-	//		for (CTRef d = p.Begin(); d <= p.End(); d++)
+	//		for (CTRef d = p.begin(); d <= p.end(); d++)
 	//			statL22 += stat[d][S_L22];
 	//		
 	//		double gr = statL22[CFL::HIGHEST];

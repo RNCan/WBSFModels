@@ -19,7 +19,7 @@
 // 21/01/2016	2.4.0	Rémi Saint-Amant	Using Weather-based simulation framework (WBSF)
 // 04/03/2011			Rémi Saint-Amant	New compile
 //*****************************************************************************
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "Basic/Statistic.h"
 #include "ReverseDegreeDay.h"
 
@@ -46,8 +46,8 @@ namespace WBSF
 		
 		m_DDSummation = 0;
 
-		CMonthDay m_firstDate = CMonthDay(FIRST_MONTH, FIRST_DAY);
-		CMonthDay m_lastDate = CMonthDay(LAST_MONTH, LAST_DAY);
+		CMonthDay m_firstDate = CMonthDay(JANUARY, DAY_01);
+		CMonthDay m_lastDate = CMonthDay(DECEMBER, DAY_31);
 		m_summationType = YEAR_BY_YEAR;
 	}
 
@@ -86,7 +86,7 @@ namespace WBSF
 				DD += m_DD.GetDD(m_weather[y].GetDay(TRef));
 
 				if (DD >= m_DDSummation)
-					stat[y][O_JDAY] = TRef.GetJDay();
+					stat[y][O_JDAY] = TRef.GetDOY();
 			}
 		}
 	}
@@ -136,7 +136,7 @@ namespace WBSF
 	//this method is called to load parameters in variables
 	ERMsg CReverseDegreeDayModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.size() > 0);
+		assert(m_weather.size() > 0);
 
 		ERMsg msg;
 
@@ -162,8 +162,8 @@ namespace WBSF
 			return GetErrorMessage(ERROR_ENDING_DATE);
 
 
-		ASSERT(m_DD.m_cutoffType >= 0 && m_DD.m_cutoffType < CDegreeDays::NB_CUTOFF);
-		ASSERT(m_summationType >= 0 && m_summationType < NB_SUMMATION_TYPE);
+		assert(m_DD.m_cutoffType >= 0 && m_DD.m_cutoffType < CDegreeDays::NB_CUTOFF);
+		assert(m_summationType >= 0 && m_summationType < NB_SUMMATION_TYPE);
 
 		return msg;
 	}

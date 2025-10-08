@@ -104,7 +104,7 @@ namespace WBSF
 	double CWSBRelativeDevRate::GetRate(size_t s, size_t sex)
 	{
 		_ASSERTE(s >= 0 && s < NB_STAGES);
-		ASSERT(sex == 0 || sex == 1);
+		assert(sex == 0 || sex == 1);
 
 		return (1 + S[sex][s])*RandLogNormal(0, V[s]);
 	}

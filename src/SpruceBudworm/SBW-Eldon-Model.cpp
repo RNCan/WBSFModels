@@ -9,9 +9,9 @@
 //**********************************************************************
 
 #include "SBW-Eldon-Model.h"
-#include <math.h>
-#include <crtdbg.h>
-#include "ModelBase/EntryPoint.h"
+#include <cmath>
+#include <cassert>
+#include "Modelbased/EntryPoint.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -107,10 +107,10 @@ namespace WBSF
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::DAILY);
-			CTRef start_date(p.Begin().GetYear(), MARCH, DAY_01);
+			CTRef start_date(p.begin().GetYear(), MARCH, DAY_01);
 			double DD_sum = 0.0;
 
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				const CWeatherDay& day = m_weather.GetDay(TRef);
 				if (TRef >= start_date)
@@ -128,8 +128,8 @@ namespace WBSF
 				double AI = findAI(DD_sum);
 
 				size_t c = 0;
-				stat[TRef][c++] = WBSF::Round(DD_sum, 1);
-				stat[TRef][c++] = WBSF::Round(AI, 1);
+				stat[TRef][c++] = WBSF::round(DD_sum, 1);
+				stat[TRef][c++] = WBSF::round(AI, 1);
 			}
 		}
 

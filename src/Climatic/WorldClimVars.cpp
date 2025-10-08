@@ -23,10 +23,10 @@
 
 #include "WorldClimVars.h"
 #include <valarray>
-//#include "Basic/Evapotranspiration.h"
-//#include "Basic/DegreeDays.h"
-//#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
+//#include "WeatherBased/Evapotranspiration.h"
+//#include "WeatherBased/DegreeDays.h"
+//#include "WeatherBased/GrowingSeason.h"
+#include "Modelbased/EntryPoint.h"
 
 
 using namespace std;

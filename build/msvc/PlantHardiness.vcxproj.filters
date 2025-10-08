@@ -7,24 +7,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PlantHardiness-Model.cpp">
+    <ClCompile Include="..\..\src\PlantHardiness\PlantHardinessCanada.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlantHardinessUSA.cpp">
+    <ClCompile Include="..\..\src\PlantHardiness\PlantHardiness-Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlantHardinessCanada.cpp">
+    <ClCompile Include="..\..\src\PlantHardiness\PlantHardinessUSA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PlantHardiness-Model.h">
+    <ClInclude Include="..\..\src\PlantHardiness\PlantHardinessCanada.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlantHardinessUSA.h">
+    <ClInclude Include="..\..\src\PlantHardiness\PlantHardiness-Model.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlantHardinessCanada.h">
+    <ClInclude Include="..\..\src\PlantHardiness\PlantHardinessUSA.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

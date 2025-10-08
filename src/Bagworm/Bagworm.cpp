@@ -7,7 +7,7 @@
 //*****************************************************************************
 
 #include "Bagworm.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "Basic/UtilMath.h"
 
 using namespace std;
@@ -114,8 +114,8 @@ namespace WBSF
 
 	void CBagworm::Brood(const CWeatherDay& weather)
 	{
-		ASSERT(IsAlive());
-		ASSERT(m_sex == FEMALE);
+		assert(IsAlive());
+		assert(m_sex == FEMALE);
 
 		CIndividual::Brood(weather);
 
@@ -128,9 +128,9 @@ namespace WBSF
 		if (m_bFertil && m_broods > 0)
 		{
 
-			if (m_sex == FEMALE && m_totalBroods == 0 && m_age >= ADULT)
+			if (m_sex == FEMALE && m_totalBroods == 0 && GetStage() >= ADULT)
 			{
-				size_t Tf = weather.GetTRef().GetJDay();
+				size_t Tf = weather.GetTRef().GetDOY();
 				double clusterWeight = max(0.0, 1351 - 3.95*Tf);
 
 				//adjust fecondity in function of clusterWeight
@@ -200,7 +200,7 @@ namespace WBSF
 		case EGG: DD = max(0.0, T - 14.4); break;
 		case LARVAL:DD = max(0.0, T - (-4)); break;
 		case ADULT: DD = 0.2; break;//how many day live adult????? (I take 5 days by default)
-		default: ASSERT(false);
+		default: assert(false);
 		}
 
 		return DD;
@@ -242,7 +242,7 @@ namespace WBSF
 	//*****************************************************************************
 	void CBagworm::GetStat(CTRef d, CModelStat& stat)
 	{
-		ASSERT(stat.size() == NB_BAGWORM_STAT);
+		assert(stat.size() == NB_BAGWORM_STAT);
 		size_t stage = GetStage();
 
 		if (IsAlive())

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "ModelBased/BioSIMModelBase.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 #include "Basic/ModelStat.h"
 #include "BudBurstSBWHost.h"
 
@@ -22,7 +22,7 @@ namespace WBSF
 
 		virtual ERMsg OnExecuteDaily()override;
 		virtual ERMsg ProcessParameters(const CParameterVector& parameters)override;
-		virtual void AddDailyResult(const StringVector& header, const StringVector& data)override;
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
 		virtual bool GetFValueDaily(CStatisticXY& stat)override;
 
 

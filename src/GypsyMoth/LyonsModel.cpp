@@ -1,5 +1,5 @@
 #include "LyonsModel.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 
 namespace WBSF
 {
@@ -16,12 +16,12 @@ namespace WBSF
 
 	ERMsg CLyonsModel::ComputeHatch(const CWeatherStation& weather, const CTPeriod& p)
 	{
-		ASSERT(p.GetLength() == 730 || p.GetLength() == 731);
+		assert(p.size() == 730 || p.size() == 731);
 
 		ERMsg message;
 
 		//resize output array
-		m_eggState.Init(p.GetLength(), p.Begin());
+		m_eggState.Init(p);
 
 
 
@@ -29,15 +29,15 @@ namespace WBSF
 		double  x = 0.0;
 		//int		day	= weather.GetDayIndex(weather.GetNbYear()-1, 89, 0);
 		//int		day	= CJDayRef(p.GetLastYear(), 89) - weather.GetFirstTRef();
-		CTRef day = CJDayRef(p.GetLastYear(), 89);
-		ASSERT(weather.GetEntireTPeriod(CTM::DAILY).IsInside(day));
+		CTRef day = CDOYRef(p.GetLastYear(), 89);
+		assert(weather.GetEntireTPeriod(CTM::DAILY).is_inside(day));
 
 		for (CTRef i = m_eggState.GetFirstTRef(); i < day; i++)
 			m_eggState[i][DIAPAUSE] = MAXEGGS;
 
 
 		//while ((x <= 0.7519) && (day < weather.GetNbDay()))
-		while ((x <= 0.7519) && p.IsInside(day))
+		while ((x <= 0.7519) && p.is_inside(day))
 		{
 			m_eggState[day][DIAPAUSE] = MAXEGGS;
 
@@ -57,7 +57,7 @@ namespace WBSF
 
 
 		//if (day < weather.GetNbDay()) // emergence occured 
-		if (p.IsInside(day))
+		if (p.is_inside(day))
 		{
 			day--;
 			//hatch.first_hatch = day;
@@ -67,7 +67,7 @@ namespace WBSF
 			double f_previous = f;
 
 			//while ((f < .9995) && (day < weather.GetNbDay()))
-			while ((f < .9995) && p.IsInside(day))
+			while ((f < .9995) && p.is_inside(day))
 			{
 				day++;
 				double sum = 0.0;

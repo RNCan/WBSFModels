@@ -8,9 +8,9 @@
 //		http://www.kimberly.uidaho.edu/water/asceewri/ascestzdetmain2005.pdf
 //*********************************************************************
 
-#include "Basic/WeatherDefine.h"
-#include "Basic/DegreeDays.h"
-#include "Modelbase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
 #include "ASCE-ETsz.h"
 
 using namespace WBSF::HOURLY_DATA;

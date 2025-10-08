@@ -4,7 +4,7 @@
 // 21/01/2016	1.2.0	Rémi Saint-Amant	Using Weather-based simulation framework (WBSF)
 // 25/05/2013			Rémi Saint-Amant	Creation from old climatic model
 //**********************************************************************
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "EvapotranspirationModel.h"
 
 
@@ -146,7 +146,7 @@ namespace WBSF
 	//			obs[i] = data[i+6].ToDouble();
 	//		
 	//
-	//		ASSERT( obs.size() == 4 );
+	//		assert( obs.size() == 4 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
 	//	} 
 	//
@@ -158,7 +158,7 @@ namespace WBSF
 	//			obs[h] = data[h+2].ToDouble();
 	//	
 	//
-	//		ASSERT( obs.size() == 24 );
+	//		assert( obs.size() == 24 );
 	//		m_SAResult.push_back( CSAResult(CTRef(), obs ) );
 	//	}
 	//	else if( header.size()==13)
@@ -170,7 +170,7 @@ namespace WBSF
 	//			obs[c] = data[c+6].ToDouble();
 	//	
 	//
-	//		ASSERT( obs.size() == 7 );
+	//		assert( obs.size() == 7 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
 	//	}
 	//	else if( header.size()==12)
@@ -182,7 +182,7 @@ namespace WBSF
 	//			obs[c] = data[c+5].ToDouble();
 	//	
 	//
-	//		ASSERT( obs.size() == 7 );
+	//		assert( obs.size() == 7 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
 	//	}
 	//	else if( header.size()==11)
@@ -194,7 +194,7 @@ namespace WBSF
 	//			obs[c] = data[c+4].ToDouble();
 	//	
 	//
-	//		ASSERT( obs.size() == 7 );
+	//		assert( obs.size() == 7 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
 	//	}*/
 	//}
@@ -208,7 +208,7 @@ namespace WBSF
 	//
 	//		for(size_t d=0; d<m_SAResult.size(); d++) 
 	//		{ 
-	//			if( m_SAResult[d].m_obs[m_varType] >-999 && data.IsInside( m_SAResult[d].m_ref))
+	//			if( m_SAResult[d].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[d].m_ref))
 	//			{
 	//				static const int HOURLY_TYPE[6] = {HOURLY_T,HOURLY_TDEW,HOURLY_REL_HUM,HOURLY_WIND_SPEED,HOURLY_VPD,HOURLY_VPD};
 	//				double obs = m_SAResult[d].m_obs[m_varType];
@@ -266,8 +266,8 @@ namespace WBSF
 	//			//}
 	//	
 	//
-	//			//ASSERT( m_SAResult.size() == 1 );
-	//			//ASSERT( m_SAResult[0].m_obs.size() == 24 );
+	//			//assert( m_SAResult.size() == 1 );
+	//			//assert( m_SAResult[0].m_obs.size() == 24 );
 	//			//for(int h=0; h<24; h++)
 	//			//{
 	//			//	stat.Add(statH[h][MEAN], m_SAResult[0].m_obs[h]);
@@ -280,7 +280,7 @@ namespace WBSF
 	//			for(size_t i=0; i<m_SAResult.size(); i++)
 	//			{
 	//				
-	//				if( m_SAResult[i].m_obs[m_varType] >-999 && data.IsInside( m_SAResult[i].m_ref))
+	//				if( m_SAResult[i].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[i].m_ref))
 	//				{
 	//					double obs =  m_SAResult[i].m_obs[m_varType];
 	//					double sim = data[m_SAResult[i].m_ref][m_varType];
@@ -306,7 +306,7 @@ namespace WBSF
 	//		for(size_t i=0; i<m_SAResult.size(); i++)
 	//		{
 	//				
-	//			if( m_SAResult[i].m_obs[m_varType] >-999 && data.IsInside( m_SAResult[i].m_ref))
+	//			if( m_SAResult[i].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[i].m_ref))
 	//			{
 	//					
 	//				static const int DAILY_TYPE[6] = {DAILY_TMIN, DAILY_TMAX, DAILY_MEAN_TDEW, DAILY_MEAN_REL_HUM, DAILY_MEAN_WNDS, DAILY_MEAN_VPD};
@@ -334,7 +334,7 @@ namespace WBSF
 	//		for(size_t i=0; i<m_SAResult.size(); i++)
 	//		{
 	//				
-	//			if( m_SAResult[i].m_obs[m_varType] >-999 && data.IsInside( m_SAResult[i].m_ref))
+	//			if( m_SAResult[i].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[i].m_ref))
 	//			{
 	//
 	//					

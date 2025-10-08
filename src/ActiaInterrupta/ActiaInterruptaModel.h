@@ -1,4 +1,7 @@
-#include "ModelBase/BioSIMModelBase.h"
+#pragma once
+
+
+#include "ModelBased/BioSIMModelBase.h"
 #include "ActiaInterrupta.h"
 
 namespace WBSF

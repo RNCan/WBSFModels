@@ -13,8 +13,8 @@
 // 20/09/2023   Rémi Saint-Amant    Creation
 //*****************************************************************************
 #include "PopilliaJaponicaEquations.h"
-#include "ModelBase/DevRateEquation.h"
-#include "ModelBase/SurvivalEquation.h"
+#include "ModelBased/DevRateEquation.h"
+#include "ModelBased/SurvivalEquation.h"
 
 
 
@@ -63,7 +63,7 @@ namespace WBSF
 		//Daily development rate
 	double CPopilliaJaponicaEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 
 
@@ -187,7 +187,7 @@ namespace WBSF
 		if (sigma == 0)
 			return 1;
 
-		boost::math::lognormal_distribution<double> dist(-WBSF::Square(sigma) / 2.0, sigma);
+		boost::math::lognormal_distribution<double> dist(-WBSF::square(sigma) / 2.0, sigma);
 		double RDR = boost::math::quantile(dist, m_randomGenerator.Randu());
 
 		//From observation, 0.5 and 2.3

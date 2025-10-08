@@ -12,9 +12,9 @@
 //**********************************************************************
 
 #include "SBW-Lysyk-Model.h"
-#include <math.h>
-#include <crtdbg.h>
-#include "ModelBase/EntryPoint.h"
+#include <cmath>
+#include <cassert>
+#include "Modelbased/EntryPoint.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -83,10 +83,10 @@ namespace WBSF
 		for(size_t y=0; y<m_weather.GetNbYears(); y++)
 		{
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::DAILY);
-			CTRef start_date(p.Begin().GetYear(), MARCH, DAY_01);
+			CTRef start_date(p.begin().GetYear(), MARCH, DAY_01);
 			double DD_sum = 0.0;
 			
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				const CWeatherDay& day = m_weather.GetDay(TRef);
 				if (TRef >= start_date)
@@ -108,11 +108,11 @@ namespace WBSF
 				}
 	
 				size_t c=0;
-				stat[TRef][c++] = WBSF::Round(DD_sum,1);
+				stat[TRef][c++] = WBSF::round(DD_sum,1);
 				for(int i=0; i< NB_STAGES; i++)
-					stat[TRef][c++] = WBSF::Round(p[i]*100,1);
+					stat[TRef][c++] = WBSF::round(p[i]*100,1);
 			
-				stat[TRef][c++] = WBSF::Round(AI,1);
+				stat[TRef][c++] = WBSF::round(AI,1);
 			}
 		}
 	
@@ -137,15 +137,15 @@ namespace WBSF
 		{
 			std::array<double, NB_PARAMS> v = { 0 };
 			//Exiting first (initial) stage
-			p[L2]=1./(1.+exp(-((P[s][A2]-ddays)/sqrt(Square(P[s][B])*ddays))));
+			p[L2]=1./(1.+exp(-((P[s][A2]-ddays)/sqrt(square(P[s][B])*ddays))));
 	
 			//Intermediate stages
 			for(size_t L=L3; L < L8; L++)
 			{
-				ASSERT(P[s][L] >= P[s][L -1] );
+				assert(P[s][L] >= P[s][L -1] );
 				size_t A = L;
-				double Pi2 = 1./(1.+exp(-((P[s][A]-ddays)/sqrt(Square(P[s][B])*ddays))));
-				double Pi1 = 1./(1.+exp(-((P[s][A-1]-ddays)/sqrt(Square(P[s][B])*ddays))));
+				double Pi2 = 1./(1.+exp(-((P[s][A]-ddays)/sqrt(square(P[s][B])*ddays))));
+				double Pi1 = 1./(1.+exp(-((P[s][A-1]-ddays)/sqrt(square(P[s][B])*ddays))));
 				
 				//if( (Pi2<0.98 || Pi1<0.98) && (Pi2>0.02 || Pi1>0.02) && (Pi2-Pi1) < 0 )
 					//bValid = false;
@@ -155,7 +155,7 @@ namespace WBSF
 			}
 			
 			//Entering final stage (could be death of last stage, for example, if last parameters are a longevity)
-			p[L8]=1./(1.+exp((P[s][A7]-ddays)/sqrt(Square(P[s][B])*ddays)));
+			p[L8]=1./(1.+exp((P[s][A7]-ddays)/sqrt(square(P[s][B])*ddays)));
 		}
 	
 		return p;

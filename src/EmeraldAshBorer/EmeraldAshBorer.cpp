@@ -5,13 +5,13 @@
 // 08/05/2017	1.0.0	Rémi Saint-Amant	Create from articles Lyons and Jones 2006
 //**************************************************************************************************************
 
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/ContinuingRatio.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/ContinuingRatio.h"
 #include "EmeraldAshBorer.h"
 #include "TreeMicroClimate.h"
 
 
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
 #include <boost/math/distributions/Rayleigh.hpp>
@@ -88,7 +88,7 @@ namespace WBSF
 			case FISHER:	   p_extreme_value_distribution.reset(new boost::math::extreme_value_distribution<double>(p1, p2)); break;
 			case EXTREME_VALUE:p_gamma_distribution.reset(new boost::math::gamma_distribution<double>(p1, p2)); break;
 			case MODIFIED_LOGISTIC: break;
-			default:ASSERT(false);
+			default:assert(false);
 			}
 
 		}
@@ -107,7 +107,7 @@ namespace WBSF
 			case FISHER:	   CDF = cdf(*p_extreme_value_distribution, v); break;
 			case EXTREME_VALUE:CDF = cdf(*p_gamma_distribution, v); break;
 			case MODIFIED_LOGISTIC:CDF = 1 / (1 + exp(-(v - m_p1) / sqrt(m_p2 * v))); break;
-			default:ASSERT(false);
+			default:assert(false);
 			}
 
 			return CDF;
@@ -226,7 +226,7 @@ namespace WBSF
 	//		//double DD = 0.0;
 	//		CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::DAILY);
 
-	//		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+	//		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 	//		{
 	//			const CWeatherDay& wDay = m_weather.GetDay(TRef);
 	//			CMicroClimate micro(wDay);
@@ -236,7 +236,7 @@ namespace WBSF
 	//			{
 	//				if (stage[s] < ADULT)
 	//				{
-	//					//if (TRef.GetJDay() >= m_startJday)
+	//					//if (TRef.GetDOY() >= m_startJday)
 	//					DD[s] += max(0.0, T - T_THRESHOLD[s][stage[s]]);
 	//					if (DD[s] > DD_THRESHOLD[s][stage[s]])
 	//					{
@@ -298,24 +298,24 @@ namespace WBSF
 		CTPeriod p = weather.GetEntireTPeriod(CTM::DAILY);
 		bool bColdEvent = false;
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
-			if (TRef.GetJDay() >= 200 && weather.GetDay(TRef)[H_TMIN][LOWEST] < -5.0)
+			if (TRef.GetDOY() >= 200 && weather.GetDay(TRef)[H_TMIN][LOWEST] < -5.0)
 				bColdEvent = true;
 
 
 			//double logis = 1 / pow((1 + m_adult_emerg[alpha] * exp(-(CDDe[TRef][0]-m_adult_emerg[μ])/ m_adult_emerg[ѕ])), 1/ m_adult_emerg[beta]);
 			//double logis_e = 1 / (1 + exp(-(CDDe[TRef][0] - m_adult_emerg[μ]) / pow(m_adult_emerg[alpha] * CDDe[TRef][0], m_adult_emerg[beta])));
-			//double emergence = Round(100 * logis_e, 1);
-			double emergence = Round(100 * emerge_dist.get_cdf(CDDe[TRef][0]), 1);
+			//double emergence = round(100 * logis_e, 1);
+			double emergence = round(100 * emerge_dist.get_cdf(CDDe[TRef][0]), 1);
 			if (emergence <= 0.1)
 				emergence = 0.0;
 			if (emergence >= 99.9)
 				emergence = 100.0;
 
-			double dead = bColdEvent ? 100 : Round(100 * dead_dist.get_cdf(CDDd[TRef][0]), 1);
+			double dead = bColdEvent ? 100 : round(100 * dead_dist.get_cdf(CDDd[TRef][0]), 1);
 			//double logis_d = 1 / (1 + exp(-(CDDd[TRef][0] - m_adult_dead[μ]) / pow(m_adult_dead[alpha] * CDDd[TRef][0], m_adult_dead[beta])));
-			//double dead = bColdEvent ? 100 : Round(100 * logis_d, 1);
+			//double dead = bColdEvent ? 100 : round(100 * logis_d, 1);
 			if (dead <= 0.1)
 				dead = 0.0;
 			if (dead >= 99.9)
@@ -329,26 +329,26 @@ namespace WBSF
 			output[TRef][O_PUPAE] = 100 - emergence;
 			output[TRef][O_ADULT] = adult;
 			output[TRef][O_DEAD_ADULT] = dead;
-			output[TRef][O_EMERGENCE] = emergence - ((TRef == p.Begin()) ? 0 : output[TRef - 1][O_CUMUL_EMERGENCE]);
+			output[TRef][O_EMERGENCE] = emergence - ((TRef == p.begin()) ? 0 : output[TRef - 1][O_CUMUL_EMERGENCE]);
 			output[TRef][O_CUMUL_EMERGENCE] = emergence;
 			output[TRef][O_CDD_EMERGENCE] = CDDe[TRef][0];
 			output[TRef][O_CDD_DEAD] = CDDd[TRef][0];
 		}
 
 		CStatistic stat = output.GetStat(O_ADULT, p);
-		if (stat.IsInit() && stat[SUM] > 0)
+		if (stat.is_init() && stat[SUM] > 0)
 		{
-			output[p.Begin()][O_CUMUL_ADULT] = 0;
-			for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+			output[p.begin()][O_CUMUL_ADULT] = 0;
+			for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 				output[TRef][O_CUMUL_ADULT] = output[TRef - 1][O_CUMUL_ADULT] + 100 * output[TRef][O_ADULT] / stat[SUM];
 		}
 
 	}
 
 	enum TInput { I_EMERGENCE, I_CUMUL_EMERGENCE, I_CATCH, I_CUMUL_CATCH };
-	void CEmeraldAshBorerModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CEmeraldAshBorerModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == 6);
+		assert(data.size() == 6);
 
 		CSAResult obs;
 
@@ -360,8 +360,8 @@ namespace WBSF
 		obs.m_obs[I_CUMUL_CATCH] = stod(data[5]);//Catch
 
 		m_years.insert(obs.m_ref.GetYear());
-		//m_DOY[obs.m_ref.GetYear()] += obs.m_ref.GetJDay();
-		m_DOY += obs.m_ref.GetJDay();
+		//m_DOY[obs.m_ref.GetYear()] += obs.m_ref.GetDOY();
+		m_DOY += obs.m_ref.GetDOY();
 
 		m_SAResult.push_back(obs);
 
@@ -382,10 +382,10 @@ namespace WBSF
 		for (size_t y = 0; y < weather.GetNbYears(); y++)
 		{
 			CTPeriod p = weather[y].GetEntireTPeriod(CTM::DAILY);
-			p.Begin() = p.Begin() + int(params[delta]);
+			p.begin() = p.begin() + int(params[delta]);
 
-			CDD[p.Begin()][0] = DD_daily[p.Begin()][CDegreeDays::S_DD];
-			for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+			CDD[p.begin()][0] = DD_daily[p.begin()][CDegreeDays::S_DD];
+			for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 				CDD[TRef][0] = CDD[TRef - 1][0] + DD_daily[TRef][CDegreeDays::S_DD];
 		}
 
@@ -400,10 +400,10 @@ namespace WBSF
 		CDD.Init(DD_daily.GetTPeriod(), 1, 0);
 
 		CTPeriod p = weather.GetEntireTPeriod(CTM::DAILY);
-		p.Begin() = p.Begin() + int(params[delta]);
+		p.begin() = p.begin() + int(params[delta]);
 
-		CDD[p.Begin()][0] = DD_daily[p.Begin()][CDegreeDays::S_DD];
-		for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+		CDD[p.begin()][0] = DD_daily[p.begin()][CDegreeDays::S_DD];
+		for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 			CDD[TRef][0] = CDD[TRef - 1][0] + DD_daily[TRef][CDegreeDays::S_DD];
 
 
@@ -449,7 +449,7 @@ namespace WBSF
 			{
 				CTRef Tref = std::get<1>(d[i]);
 				double CDD = std::get<0>(d[i]);
-				double p = Round(100 * sum / total, 1);
+				double p = round(100 * sum / total, 1);
 
 				P[Tref][P_CDD] = CDD;
 				P[Tref][P_CE] = p;
@@ -461,7 +461,7 @@ namespace WBSF
 
 	double CEmeraldAshBorerModel::GetSimDOY(size_t s, CTRef TRefO, double obs, const CModelStatVector& output)
 	{
-		ASSERT(obs > -999);
+		assert(obs > -999);
 
 		double DOY = -999;
 
@@ -471,11 +471,11 @@ namespace WBSF
 		//if (obs >= 100)
 			//obs = 99.99;//to avoid some problem of truncation
 
-		long index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(TRefO.GetYear(), JANUARY, DAY_01, TRefO.GetYear(), DECEMBER, DAY_31));
-		if (index >= 1)
+		size_t index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(CTRef(TRefO.GetYear(), JANUARY, DAY_01), CTRef(TRefO.GetYear(), DECEMBER, DAY_31)));
+		if (index != NOT_INIT && index >= 1)
 		{
-			double obsX1 = output.GetFirstTRef().GetJDay() + index;
-			double obsX2 = output.GetFirstTRef().GetJDay() + index + 1;
+			double obsX1 = output.GetFirstTRef().GetDOY() + index;
+			double obsX2 = output.GetFirstTRef().GetDOY() + index + 1;
 
 			double obsY1 = output[index][s];
 			double obsY2 = output[index + 1][s];
@@ -483,7 +483,7 @@ namespace WBSF
 			{
 				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 				double obsX = obsX1 + (obs - obsY1) * slope;
-				ASSERT(!_isnan(obsX) && _finite(obsX));
+				assert(!_isnan(obsX) && _finite(obsX));
 
 				DOY = obsX;
 			}
@@ -495,7 +495,7 @@ namespace WBSF
 
 	double  CEmeraldAshBorerModel::GetDOYPercent(double DOY)const
 	{
-		//ASSERT(m_DOY.find(year) != m_DOY.end());
+		//assert(m_DOY.find(year) != m_DOY.end());
 		//return value can be negative of greater than 100%
 		return 100 * (DOY - m_DOY[LOWEST]) / m_DOY[RANGE];
 	}
@@ -533,8 +533,8 @@ namespace WBSF
 						for (size_t ii = 0; ii < log(3 * Ne); ii++)
 							stat.Add(obs, sim);
 
-						ASSERT(obs >= 0 && obs <= 100);
-						ASSERT(sim >= 0 && sim <= 100);
+						assert(obs >= 0 && obs <= 100);
+						assert(sim >= 0 && sim <= 100);
 
 
 						if (obs >= 0.5 && obs <= 99.5)
@@ -543,7 +543,7 @@ namespace WBSF
 							double sim_DOY = GetSimDOY(O_CUMUL_EMERGENCE, m_SAResult[i].m_ref, obs, output);
 							if (sim_DOY > -999)
 							{
-								double obs_DOYp = GetDOYPercent(m_SAResult[i].m_ref.GetJDay());
+								double obs_DOYp = GetDOYPercent(m_SAResult[i].m_ref.GetDOY());
 								double sim_DOYp = GetDOYPercent(sim_DOY);
 
 								for (size_t ii = 0; ii < log(3 * Ne); ii++)
@@ -568,7 +568,7 @@ namespace WBSF
 							double sim_DOY = GetSimDOY(O_CUMUL_ADULT, m_SAResult[i].m_ref, obs, output);
 							if (sim_DOY > -999)
 							{
-								double obs_DOYp = GetDOYPercent(m_SAResult[i].m_ref.GetJDay());
+								double obs_DOYp = GetDOYPercent(m_SAResult[i].m_ref.GetDOY());
 								double sim_DOYp = GetDOYPercent(sim_DOY);
 
 								for (size_t ii = 0; ii < log(3 * Ne); ii++)

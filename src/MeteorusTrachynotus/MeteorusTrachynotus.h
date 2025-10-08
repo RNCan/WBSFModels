@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "MeteorusTrachynotusEquations.h"
 
 
@@ -122,8 +122,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CMeteorusTrachynotusHost* CMeteorusTrachynotus::GetHost(){ return dynamic_cast<CMeteorusTrachynotusHost*>(m_pHost); }
 	inline const CMeteorusTrachynotusHost* CMeteorusTrachynotus::GetHost()const{ return dynamic_cast<const CMeteorusTrachynotusHost*>(m_pHost); }
-	inline CMeteorusTrachynotusStand* CMeteorusTrachynotus::GetStand(){ ASSERT(m_pHost); return static_cast<CMeteorusTrachynotusStand*>(m_pHost->GetStand()); }
-	inline const CMeteorusTrachynotusStand* CMeteorusTrachynotus::GetStand()const{ ASSERT(m_pHost); return static_cast<const CMeteorusTrachynotusStand*>(m_pHost->GetStand()); }
+	inline CMeteorusTrachynotusStand* CMeteorusTrachynotus::GetStand(){ assert(m_pHost); return static_cast<CMeteorusTrachynotusStand*>(m_pHost->GetStand()); }
+	inline const CMeteorusTrachynotusStand* CMeteorusTrachynotus::GetStand()const{ assert(m_pHost); return static_cast<const CMeteorusTrachynotusStand*>(m_pHost->GetStand()); }
 	inline CMeteorusTrachynotusEquations& CMeteorusTrachynotus::Equations(){ return GetStand()->m_equations; }
 	inline COBLPostDiapauseEquations& CMeteorusTrachynotusHost::OBL_Equations() { return ((CMeteorusTrachynotusStand*)m_pStand)->m_OBL_equations; }
 }

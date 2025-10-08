@@ -12,9 +12,9 @@
 //*********************************************************************
 
 #include "CMIModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/WeatherStation.h"
-#include "Basic/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/WeatherStation.h"
+#include "WeatherBased/DegreeDays.h"
 
 using namespace WBSF::HOURLY_DATA;
 using namespace std;
@@ -35,7 +35,7 @@ namespace WBSF
 
 	ERMsg CCMIModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.size() > 0);
+		assert(m_weather.size() > 0);
 
 		ERMsg msg;
 	
@@ -67,13 +67,13 @@ namespace WBSF
 		for (size_t y = 1; y < m_weather.GetNbYears(); y++)
 		{
 			int year = m_weather.GetFirstYear() + int(y);
-			CTPeriod p1(CTRef(year - 1, AUGUST, FIRST_DAY, FIRST_HOUR, TM), CTRef(year, JULY, LAST_DAY, LAST_HOUR,TM));
-			CTPeriod p2(CTRef(year, JANUARY, FIRST_DAY, FIRST_HOUR,TM), CTRef(year, JULY, LAST_DAY, LAST_HOUR, TM) ); 
+			CTPeriod p1(CTRef(year - 1, AUGUST, DAY_01, 0, TM), CTRef(year, JULY, DAY_31, 23,TM));
+			CTPeriod p2(CTRef(year, JANUARY, DAY_01, 0,TM), CTRef(year, JULY, DAY_31, 23, TM) );
 
 			double gddwyr = DD5.GetStat(CDegreeDays::S_DD, p1)[SUM];
 			double gddcum = DD5.GetStat(CDegreeDays::S_DD, p2)[SUM];
 
-			CTPeriod p3(CTRef( year, MARCH, FIRST_DAY, FIRST_HOUR,TM), CTRef( year, JUNE, LAST_DAY, LAST_HOUR,TM)); 
+			CTPeriod p3(CTRef( year, MARCH, DAY_01, 0,TM), CTRef( year, JUNE, DAY_31, 23,TM));
 			double pptSummer = m_weather[y](H_PRCP, p3)[SUM] / 10;//in cm
 
 			//conversion from mm to cm
@@ -110,7 +110,7 @@ namespace WBSF
 
 		
 		//Create output vector
-		m_output.Init(m_weather.GetNbYears() * 12, CTRef(m_weather.GetFirstYear(), FIRST_MONTH), NB_M_OUTPUT);
+		m_output.Init(m_weather.GetNbYears() * 12, CTRef(m_weather.GetFirstYear(), JANUARY), NB_M_OUTPUT);
 
 		//compute CMI for each months of all years
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
@@ -145,7 +145,7 @@ namespace WBSF
 	double CCMIModel::GetSPMPET(const CWeatherMonth& weather)
 	{
 		double elev = weather.GetLocation().m_elev;
-		ASSERT(elev > -999);
+		assert(elev > -999);
 
 		//input monthly tmax, tmin, prec and calculate tmean
 		double TMax = weather[H_TMAX][MEAN];
@@ -185,7 +185,7 @@ namespace WBSF
 			for (size_t m = 0; m < 12; m++)
 			{
 				CTPeriod pp = weather[y][m].GetEntireTPeriod();
-				if (p.IsInside(pp) )//is this month is used
+				if (p.is_inside(pp) )//is this month is used
 				{
 					double PET = GetSPMPET(weather[y][m]);
 					PETwyr += PET;

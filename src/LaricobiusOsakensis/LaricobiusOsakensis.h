@@ -9,9 +9,9 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "LaricobiusOsakensisEquations.h"
-#include "Basic\DegreeDays.h"
+#include "WeatherBased/DegreeDays.h"
 
 namespace WBSF
 {
@@ -170,8 +170,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CLNFHost* CLaricobiusOsakensis::GetHost(){ return static_cast<CLNFHost*>(m_pHost); }
 	inline const CLNFHost* CLaricobiusOsakensis::GetHost()const{ return static_cast<const CLNFHost*>(m_pHost); }
-	inline CLNFStand* CLaricobiusOsakensis::GetStand(){ ASSERT(m_pHost); return static_cast<CLNFStand*>(GetHost()->GetStand()); }
-	inline const CLNFStand* CLaricobiusOsakensis::GetStand()const{ ASSERT(m_pHost); return static_cast<const CLNFStand*>(GetHost()->GetStand()); }
+	inline CLNFStand* CLaricobiusOsakensis::GetStand(){ assert(m_pHost); return static_cast<CLNFStand*>(GetHost()->GetStand()); }
+	inline const CLNFStand* CLaricobiusOsakensis::GetStand()const{ assert(m_pHost); return static_cast<const CLNFStand*>(GetHost()->GetStand()); }
 	inline const CLaricobiusOsakensisEquations& CLaricobiusOsakensis::Equations()const{ return GetStand()->m_equations; }
 
 

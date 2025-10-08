@@ -41,7 +41,7 @@ namespace WBSF
 
 		//m_EOD = Equations().GetEndOfDiapauseCDD();
 		//m_EODDate = GetStand()->m_EOD_CDD.GetFirstTRef(0, ">", m_EOD,0);
-		//if (!m_EODDate.IsInit() ||m_EODDate.GetJDay() > 151)
+		//if (!m_EODDate.is_init() ||m_EODDate.GetDOY() > 151)
 			//m_EODDate = CTRef(creationDate.GetYear(), JUNE, DAY_01);
 
 
@@ -113,7 +113,7 @@ namespace WBSF
 		double rrr = Equations().m_psy[s];
 		r *= rrr;
 
-		ASSERT(r >= 0 && r < 1);
+		assert(r >= 0 && r < 1);
 
 		//Adjust age
 		m_age += r;
@@ -152,7 +152,7 @@ namespace WBSF
 	{
 		CIndividual::Live(weather);
 
-		ASSERT(IsCreated(weather.GetTRef()));
+		assert(IsCreated(weather.GetTRef()));
 
 		if (!IsCreated(weather.GetTRef()))
 			return;
@@ -286,7 +286,7 @@ namespace WBSF
 		if (IsCreated(d))
 		{
 			size_t s = GetStage();
-			ASSERT(s <= DEAD_ADULT);
+			assert(s <= DEAD_ADULT);
 
 			if (IsAlive() || (s == DEAD_ADULT))
 				stat[S_EGG + s] += m_scaleFactor;
@@ -358,7 +358,7 @@ namespace WBSF
 		CHost::GetStat(d, stat, generation);
 
 		stat[S_AVEARGE_INSTAR] = stat.GetAverageInstar(S_EGG, 0, S_DEAD_ADULT);
-		ASSERT(stat[S_AVEARGE_INSTAR] <= DEAD_ADULT);
+		assert(stat[S_AVEARGE_INSTAR] <= DEAD_ADULT);
 
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 enum TAllenMinMaxHour { ALLEN_FIXED, ALLEN_SUN, NB_ALLEN_TYPE };
 

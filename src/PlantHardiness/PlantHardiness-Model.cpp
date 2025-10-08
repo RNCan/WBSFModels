@@ -6,8 +6,8 @@
 #include "PlantHardiness-Model.h"
 #include "PlantHardinessCanada.h"
 #include "PlantHardinessUSA.h"
-#include "Basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "Modelbased/EntryPoint.h"
 
 
 using namespace std;

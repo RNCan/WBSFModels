@@ -7,12 +7,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SBW-Eldon-Model.cpp">
+    <ClCompile Include="..\..\src\SpruceBudworm\SBW-Eldon-Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SBW-Eldon-Model.h">
+    <ClInclude Include="..\..\src\SpruceBudworm\SBW-Eldon-Model.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

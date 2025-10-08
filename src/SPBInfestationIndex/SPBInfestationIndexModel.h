@@ -1,4 +1,6 @@
-#include "ModelBase/BioSIMModelBase.h"
+#pragma once
+
+#include "ModelBased/BioSIMModelBase.h"
 
 
 namespace WBSF

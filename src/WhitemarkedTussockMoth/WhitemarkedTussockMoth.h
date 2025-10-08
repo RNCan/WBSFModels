@@ -9,9 +9,9 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "WhitemarkedTussockMothEquations.h"
-#include "Basic\DegreeDays.h"
+#include "WeatherBased/DegreeDays.h"
 
 namespace WBSF
 {
@@ -121,8 +121,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CWTMHost* CWhitemarkedTussockMoth::GetHost(){ return static_cast<CWTMHost*>(m_pHost); }
 	inline const CWTMHost* CWhitemarkedTussockMoth::GetHost()const{ return static_cast<const CWTMHost*>(m_pHost); }
-	inline CWTMStand* CWhitemarkedTussockMoth::GetStand(){ ASSERT(m_pHost); return static_cast<CWTMStand*>(GetHost()->GetStand()); }
-	inline const CWTMStand* CWhitemarkedTussockMoth::GetStand()const{ ASSERT(m_pHost); return static_cast<const CWTMStand*>(GetHost()->GetStand()); }
+	inline CWTMStand* CWhitemarkedTussockMoth::GetStand(){ assert(m_pHost); return static_cast<CWTMStand*>(GetHost()->GetStand()); }
+	inline const CWTMStand* CWhitemarkedTussockMoth::GetStand()const{ assert(m_pHost); return static_cast<const CWTMStand*>(GetHost()->GetStand()); }
 	inline CWhitemarkedTussockMothEquations& CWhitemarkedTussockMoth::Equations(){ return GetStand()->m_equations; }
 
 

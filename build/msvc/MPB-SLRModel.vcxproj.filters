@@ -10,43 +10,43 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Generations.cpp">
+    <ClCompile Include="..\..\src\MPB\DevelopementVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MPB-SLRModel.cpp">
+    <ClCompile Include="..\..\src\MPB\MPBDevRates.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SLR.cpp">
+    <ClCompile Include="..\..\src\MPB\MPBColdTolerance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\MPBColdTolerance.cpp">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClCompile Include="..\..\src\MPB\SLRModel\Generations.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\DevelopementVector.cpp">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClCompile Include="..\..\src\MPB\SLRModel\MPB-SLRModel.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\MPBDevRates.cpp">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClCompile Include="..\..\src\MPB\SLRModel\SLR.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Generations.h">
+    <ClInclude Include="..\..\src\MPB\DevelopementVector.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MPB-SLRModel.h">
+    <ClInclude Include="..\..\src\MPB\SLRModel\Generations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SLR.h">
+    <ClInclude Include="..\..\src\MPB\MPBColdTolerance.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MPBColdTolerance.h">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClInclude Include="..\..\src\MPB\MPBDevRates.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\DevelopementVector.h">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClInclude Include="..\..\src\MPB\SLRModel\MPB-SLRModel.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MPBDevRates.h">
-      <Filter>Source Files\MPBBase</Filter>
+    <ClInclude Include="..\..\src\MPB\SLRModel\SLR.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

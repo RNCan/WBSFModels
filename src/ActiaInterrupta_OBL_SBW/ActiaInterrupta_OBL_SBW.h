@@ -9,11 +9,11 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 //#include "ActiaInterruptaEquations.h"
-#include "ActiaInterrupta.h"
-#include "ObliqueBandedLeafroller.h"
-#include "SpruceBudworm.h"
+#include "ActiaInterrupta/ActiaInterrupta.h"
+#include "ObliqueBandedLeafroller/ObliqueBandedLeafroller.h"
+#include "SpruceBudworm/SpruceBudworm.h"
 
 
 namespace WBSF
@@ -149,10 +149,10 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CActiaInterrupta_OBL_SBW_Host* CActiaInterrupta_OBL_SBW::GetHost(){ return static_cast<CActiaInterrupta_OBL_SBW_Host*>(m_pHost); }
 	inline const CActiaInterrupta_OBL_SBW_Host* CActiaInterrupta_OBL_SBW::GetHost()const{ return static_cast<const CActiaInterrupta_OBL_SBW_Host*>(m_pHost); }
-	inline CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW::GetStand(){ ASSERT(m_pHost); return static_cast<CActiaInterrupta_OBL_SBW_Stand*>(GetHost()->GetStand()); }
-	inline const CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW::GetStand()const{ ASSERT(m_pHost); return static_cast<const CActiaInterrupta_OBL_SBW_Stand*>(GetHost()->GetStand()); }
-	inline CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW_Host::GetStand(){ ASSERT(m_pStand); return static_cast<CActiaInterrupta_OBL_SBW_Stand*>(m_pStand); }
-	inline const CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW_Host::GetStand()const{ ASSERT(m_pStand); return static_cast<const CActiaInterrupta_OBL_SBW_Stand*>(m_pStand); }
+	inline CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW::GetStand(){ assert(m_pHost); return static_cast<CActiaInterrupta_OBL_SBW_Stand*>(GetHost()->GetStand()); }
+	inline const CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW::GetStand()const{ assert(m_pHost); return static_cast<const CActiaInterrupta_OBL_SBW_Stand*>(GetHost()->GetStand()); }
+	inline CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW_Host::GetStand(){ assert(m_pStand); return static_cast<CActiaInterrupta_OBL_SBW_Stand*>(m_pStand); }
+	inline const CActiaInterrupta_OBL_SBW_Stand* CActiaInterrupta_OBL_SBW_Host::GetStand()const{ assert(m_pStand); return static_cast<const CActiaInterrupta_OBL_SBW_Stand*>(m_pStand); }
 
 	inline CActiaInterruptaEquations& CActiaInterrupta_OBL_SBW::Equations(){ return GetStand()->m_equations; }
 }

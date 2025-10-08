@@ -2,8 +2,8 @@
 //05/06/2020	1.0		Rémi Saint-Amant	Creation
 //*********************************************************************
 #include "SummerMoistureModel.h"
-#include "Basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "ModelBased/EntryPoint.h"
 
 using namespace WBSF::HOURLY_DATA; 
 using namespace std;

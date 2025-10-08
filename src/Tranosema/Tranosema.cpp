@@ -81,7 +81,8 @@ namespace WBSF
 
 	// Object destructor
 	CTranosema::~CTranosema(void)
-	{}
+	{
+	}
 
 
 	//*****************************************************************************
@@ -97,21 +98,21 @@ namespace WBSF
 
 		double dayLength = weather.GetDayLength() / 3600.; //in hours
 		CTRef TRef = weather.GetTRef();
-		size_t JDay = TRef.GetJDay();
+		size_t JDay = TRef.GetDOY();
 		size_t nbSteps = GetTimeStep().NbSteps();
 
-		
-		for (size_t step = 0; step < nbSteps&&m_age<DEAD_ADULT; step++)
+
+		for (size_t step = 0; step < nbSteps && GetStage() < DEAD_ADULT; step++)
 		{
-			size_t h = step*GetTimeStep();
+			size_t h = step * GetTimeStep();
 			size_t s = GetStage();
 			double T = weather[h][H_TAIR];
 
 			//Relative development rate for time step
 			double r = m_δ[s] * Equations().GetRate(s, T) / nbSteps;
-			
+
 			//Check if individual enters diapause this time step
-			
+
 			if (GetStand()->m_bAutoComputeDiapause)
 			{
 				if (m_age < GetStand()->m_diapauseAge && (m_age + r) > GetStand()->m_diapauseAge)
@@ -125,7 +126,7 @@ namespace WBSF
 					}
 				}
 			}
-			
+
 			if (s == ADULT) //Set maximum longevity's to 150 days
 				r = max(1.0 / (150 * nbSteps), r);//By RSA 03/03/2020
 
@@ -143,30 +144,30 @@ namespace WBSF
 				m_age += r;
 
 			//compute brooding
-			if (m_sex == FEMALE && m_age >= ADULT)
+			if (m_sex == FEMALE && GetStage() >= ADULT)
 			{
 				//Ot: rate of oogenesis
 				//Rᵗ: rate of resorption
-				double Oᵗ = max(0.0, ((m_Pmax - m_Pᵗ) / m_Pmax)*Equations().GetOᵗ(T)) / nbSteps;
-				double Rᵗ = max(0.0, (m_Pᵗ / m_Pmax)*Equations().GetRᵗ(T)) / nbSteps;
+				double Oᵗ = max(0.0, ((m_Pmax - m_Pᵗ) / m_Pmax) * Equations().GetOᵗ(T)) / nbSteps;
+				double Rᵗ = max(0.0, (m_Pᵗ / m_Pmax) * Equations().GetRᵗ(T)) / nbSteps;
 
 				//This is Holling's disk equation, with parameters as=0.05 and th=0.8, values guessed at 
 				//in Régnière et al Tranosema model (submitted)
 				double as = 0.05;
 				double th = 0.8;
-				double Na = as * m_Nh*Equations().GetOᵗ(T) / (1 + as * th*m_Nh); //Number of attacks per time step
+				double Na = as * m_Nh * Equations().GetOᵗ(T) / (1 + as * th * m_Nh); //Number of attacks per time step
 
 				//the actual number of eggs laid is, at most, Attacks, at least m_Eᵗ + Oᵗ - Rᵗ:
 				double broods = max(0.0, min(m_Eᵗ + Oᵗ - Rᵗ, Na));
 
 				//m_Pᵗ: egg production
 				//m_Eᵗ: eggs in the oviducts
-				m_Pᵗ = max(0.0, m_Pᵗ + Oᵗ - 0.8904*Rᵗ);
+				m_Pᵗ = max(0.0, m_Pᵗ + Oᵗ - 0.8904 * Rᵗ);
 				m_Eᵗ = max(0.0, m_Eᵗ + Oᵗ - Rᵗ - broods);//correction 09/03/2020
 
 				//adjust daily brood
 				m_broods += broods;
-				ASSERT(m_totalBroods + m_broods < m_Pmax*1.5);
+				assert(m_totalBroods + m_broods < m_Pmax * 1.5);
 			}
 		}
 
@@ -176,19 +177,19 @@ namespace WBSF
 
 	void CTranosema::Brood(const CWeatherDay& weather)
 	{
-		ASSERT(IsAlive() && m_sex == FEMALE);
-		ASSERT(m_totalBroods <= m_Pmax*1.5);
+		assert(IsAlive() && m_sex == FEMALE);
+		assert(m_totalBroods <= m_Pmax * 1.5);
 
 		m_totalBroods += m_broods;
 
 		//Oviposition module after Régniere 1983
 		if (m_bFertil && m_broods > 0)
 		{
-			ASSERT(m_age >= ADULT);
-			CTranosemaStand* pStand = GetStand(); ASSERT(pStand);
+			assert(m_age >= ADULT);
+			CTranosemaStand* pStand = GetStand(); assert(pStand);
 
 			double attRate = GetStand()->m_bApplyAttrition ? pStand->m_generationAttrition : 1;//10% of survival by default
-			double scaleFactor = m_broods*m_scaleFactor*attRate;
+			double scaleFactor = m_broods * m_scaleFactor * attRate;
 			CIndividualPtr object = make_shared<CTranosema>(m_pHost, weather.GetTRef(), EGG, FEMALE, true, m_generation + 1, scaleFactor);
 			m_pHost->push_front(object);
 		}
@@ -211,12 +212,12 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = ATTRITION;
 		}
-		else if (m_generation>0 && weather[H_TMIN][MEAN] < GetStand()->m_lethalTemp && !m_diapauseTRef.IsInit())
+		else if (m_generation > 0 && weather[H_TMIN][MEAN] < GetStand()->m_lethalTemp && !m_diapauseTRef.is_init())
 		{
 			m_status = DEAD;
 			m_death = FROZEN;
 		}
-		else if (!m_diapauseTRef.IsInit() && weather.GetTRef().GetMonth() == DECEMBER && weather.GetTRef().GetDay() == DAY_31)
+		else if (!m_diapauseTRef.is_init() && weather.GetTRef().GetMonth() == DECEMBER && weather.GetTRef().GetDay() == DAY_31)
 		{
 			//all individual not in diapause are kill at the end of the season
 			m_status = DEAD;
@@ -235,10 +236,10 @@ namespace WBSF
 		if (IsCreated(d))
 		{
 			size_t s = GetStage();
-			stat[S_BROOD] += m_broods*m_scaleFactor;
-			stat[E_BROOD] += m_broods*m_scaleFactor; //E_BROOD is the same as S_BROOD
-			
-			
+			stat[S_BROOD] += m_broods * m_scaleFactor;
+			stat[E_BROOD] += m_broods * m_scaleFactor; //E_BROOD is the same as S_BROOD
+
+
 
 
 			if (s >= ADULT)//individuals that reach adult stage (alive or dead)
@@ -247,7 +248,7 @@ namespace WBSF
 			if (IsAlive())
 			{
 				if (s >= EGG && s < DEAD_ADULT)
-					stat[S_EGG+s] += m_scaleFactor;
+					stat[S_EGG + s] += m_scaleFactor;
 
 
 				if (s == ADULT)
@@ -257,8 +258,8 @@ namespace WBSF
 						stat[S_OVIPOSITING_ADULT] += m_scaleFactor;
 					}
 				}
-				
-				if (m_diapauseTRef.IsInit())
+
+				if (m_diapauseTRef.is_init())
 					stat[S_DIAPAUSE] += m_scaleFactor;
 
 				//because attrition is affected when the object change stage,
@@ -297,8 +298,8 @@ namespace WBSF
 			if (d == m_diapauseTRef)
 			{
 				stat[E_DIAPAUSE] += m_scaleFactor;
-				stat[E_DIAPAUSE_AGE] += m_scaleFactor*m_age;
-				
+				stat[E_DIAPAUSE_AGE] += m_scaleFactor * m_age;
+
 			}
 		}
 	}
@@ -323,7 +324,7 @@ namespace WBSF
 	bool CTranosema::CanPack(const CIndividualPtr& in)const
 	{
 		CTranosema* pIn = static_cast<CTranosema*>(in.get());
-		return CIndividual::CanPack(in) && (GetStage() != ADULT || GetSex() != FEMALE) && pIn->m_diapauseTRef.IsInit() == m_diapauseTRef.IsInit();
+		return CIndividual::CanPack(in) && (GetStage() != ADULT || GetSex() != FEMALE) && pIn->m_diapauseTRef.is_init() == m_diapauseTRef.is_init();
 	}
 
 	void CTranosema::Pack(const CIndividualPtr& pBug)

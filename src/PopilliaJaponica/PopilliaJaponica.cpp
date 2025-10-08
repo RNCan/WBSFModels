@@ -8,12 +8,14 @@
 // 20/09/2023   Rémi Saint-Amant    Creation
 //*****************************************************************************
 
-#include "PopilliaJaponicaEquations.h"
-#include "PopilliaJaponica.h"
+#include <valarray>
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/logistic.hpp>
-#include <valarray>
-#include "Basic/DegreeDays.h"
+
+#include "WeatherBased/DegreeDays.h"
+#include "PopilliaJaponicaEquations.h"
+#include "PopilliaJaponica.h"
+
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -47,7 +49,7 @@ namespace WBSF
 
 
 		m_diapause_date = creationDate;
-		if (m_diapause_date.GetJDay() == 0)
+		if (m_diapause_date.GetDOY() == 0)
 			m_diapause_date -= 180; //last summer
 
 		double a1 = Equations().m_other[SNDH_MU];
@@ -193,9 +195,9 @@ namespace WBSF
 			//correction factor
 			//double rrr = Equations().m_psy[s];
 			//r *= rrr;
-			ASSERT(floor(m_age + 1) - m_age >= 0 && floor(m_age + 1) - m_age <= 1);
+			assert(floor(m_age + 1) - m_age >= 0 && floor(m_age + 1) - m_age <= 1);
 			r = min(r, floor(m_age + 1) - m_age);
-			ASSERT(r >= 0 && r <= 1);
+			assert(r >= 0 && r <= 1);
 
 			//Adjust age
 			m_age += r;
@@ -248,7 +250,7 @@ namespace WBSF
 		//double r_snow = 1/exp(-pow(sndh,a2)/a1);
 		//double r_snow = 1;
 
-		size_t DOY = weather.GetTRef().GetJDay();
+		size_t DOY = weather.GetTRef().GetDOY();
 		size_t nbSteps = GetTimeStep().NbSteps();
 		for (size_t step = 0; step < nbSteps && IsAlive(); step++)
 		{
@@ -288,7 +290,7 @@ namespace WBSF
 			int nbDays = weather.GetTRef().as(CTM::DAILY) - m_reachDate[ADULT].as(CTM::DAILY);
 			if (m_Fi > 0)
 			{
-				double broods = Round(12.0 / (nbDays + 1));
+				double broods = round(12.0 / (nbDays + 1));
 				broods = max(0.0, m_Fi - broods);
 				m_Fi -= broods;
 				m_broods += broods;
@@ -296,8 +298,8 @@ namespace WBSF
 
 				if (m_bFertil && m_broods > 0)
 				{
-					ASSERT(m_age >= ADULT);
-					CPJNStand* pStand = GetStand(); ASSERT(pStand);
+					assert(m_age >= ADULT);
+					CPJNStand* pStand = GetStand(); assert(pStand);
 
 					double gSurvival = 0.1;// pStand->m_generationSurvival;
 					double scaleFactor = m_broods * m_scaleFactor * gSurvival;
@@ -408,7 +410,7 @@ namespace WBSF
 		if (IsCreated(d))
 		{
 			size_t s = GetStage();
-			ASSERT(s <= DEAD_ADULT);
+			assert(s <= DEAD_ADULT);
 
 			if (IsAlive() || (s == DEAD_ADULT))
 				stat[S_EGG + s] += m_scaleFactor;
@@ -483,7 +485,7 @@ namespace WBSF
 		CHost::GetStat(d, stat, generation);
 
 		//stat[S_AVEARGE_INSTAR] = stat.GetAverageInstar(S_EGG, 0, S_DEAD_ADULT);
-		//ASSERT(stat[S_AVEARGE_INSTAR] <= DEAD_ADULT);
+		//assert(stat[S_AVEARGE_INSTAR] <= DEAD_ADULT);
 
 	}
 
@@ -510,7 +512,7 @@ namespace WBSF
 
 		CStatistic Tsoil;
 		for (size_t h = 0; h < 24; h++)
-			Tsoil += m_soil_temperature[d.as(CTM::HOURLY) + h][0];
+			Tsoil += m_soil_temperature[d.as(CTM::HOURLY) + int32_t(h)][0];
 		//Tsoil += m_soil_temperature[d.GetJDay() * 24 + h][0];
 
 
@@ -669,10 +671,10 @@ namespace WBSF
 
 
 		CTPeriod p = weather.GetEntireTPeriod();
-		p.Begin().m_month = APRIL;
-		p.Begin().m_day = DAY_30;
-		p.End().m_month = JUNE;
-		p.End().m_day = DAY_30;
+		p.begin().m_month = APRIL;
+		p.begin().m_day = DAY_30;
+		p.end().m_month = JUNE;
+		p.end().m_day = DAY_30;
 		
 		//p.Begin().m_month = MAY;
 		//p.Begin().m_day = DAY_31;
@@ -691,8 +693,8 @@ namespace WBSF
 
 
 		CStatistic stat;
-		p = p.as(m_soil_temperature.GetTM());
-		for(CTRef TRef=p.Begin(); TRef <=p.End(); TRef++)
+		p = p.as(m_soil_temperature.TM());
+		for(CTRef TRef=p.begin(); TRef <=p.end(); TRef++)
 			stat += m_soil_temperature[TRef][0];
 
 		m_TsoilAMJ = stat[MEAN];

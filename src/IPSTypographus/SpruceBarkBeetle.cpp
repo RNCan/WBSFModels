@@ -12,10 +12,10 @@
 //*****************************************************************************
 
 
-#include <math.h>
+#include <cmath>
 #include "basic/UtilMath.h"
-#include "basic/Evapotranspiration.h"
-#include "basic/WeatherStation.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "WeatherBased/WeatherStation.h"
 #include "SpruceBarkBeetle.h"
 
 
@@ -69,12 +69,12 @@ public:
 
 	virtual void TransformWeather(CWeatherDay& weaDay)const
 	{
-		//ASSERT(weaDay[H_TMIN].IsInit() && weaDay[H_TMAX].IsInit());
+		//assert(weaDay[H_TMIN].is_init() && weaDay[H_TMAX].is_init());
 		//
 		//double Tmin = weaDay[H_TMIN][MEAN];
 		//double Tmax   = weaDay[H_TMAX][MEAN]*(1+weaDay[H_SRAD][SUM]/38)+2;
 		//double Trange = Tmax-Tmin;
-		//double Sin    = sin(2*3.14159*(weaDay.GetJDay()/365. -0.25));
+		//double Sin    = sin(2*3.14159*(weaDay.GetDOY()/365. -0.25));
 
 		////convert air temperature to bark temperature
 		//weaDay(H_TMIN)=-0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*weaDay.GetTRange() + 0.00000*Tmin*Sin + 0.005741*Tmin*weaDay.GetTRange() + 0.02370*Sin*weaDay.GetTRange();
@@ -96,12 +96,12 @@ public:
 
 	virtual void TransformWeather(CWeatherDay& weaDay)const
 	{
-		//ASSERT( weaDay[H_TMIN] > -999 && weaDay[H_TMAX] > -999); 
+		//assert( weaDay[H_TMIN] > -999 && weaDay[H_TMAX] > -999); 
 
 		//double Tmin   = weaDay.GetTMin();
 		//double Tmax   = weaDay.GetTMax()*(1+weaDay[SRAD]/139)+1;
 		//double Trange = Tmax-Tmin;
-		//double Sin    = sin(2*3.14159*(weaDay.GetJDay()/365. -0.25));
+		//double Sin    = sin(2*3.14159*(weaDay.GetDOY()/365. -0.25));
 
 		////convert air temperature to bark temperature
 		//weaDay(H_TMIN)=-0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*weaDay.GetTRange() + 0.00000*Tmin*Sin + 0.005741*Tmin*weaDay.GetTRange() + 0.02370*Sin*weaDay.GetTRange();
@@ -124,13 +124,13 @@ public:
 
 	virtual void TransformWeather(CWeatherDay& weaDay)const
 	{
-		//ASSERT( weaDay[H_TMIN] > -999 && weaDay[H_TMAX] > -999);
+		//assert( weaDay[H_TMIN] > -999 && weaDay[H_TMAX] > -999);
 
 		//double Tmin   = weaDay.GetTMin()-1;
 		//double Tmax   = (3*weaDay.GetTMin()+weaDay.GetTMax())/4;
 
 		//double Trange = Tmax-Tmin;
-		//double Sin    = sin(2*3.14159*(weaDay.GetJDay()/365. -0.25));
+		//double Sin    = sin(2*3.14159*(weaDay.GetDOY()/365. -0.25));
 
 		////convert air temperature to bark temperature
 		//weaDay(H_TMIN)=-0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*Trange + 0.00000*Tmin*Sin + 0.005741*Tmin*Trange + 0.02370*Sin*Trange;
@@ -153,12 +153,12 @@ public:
 
 	virtual void TransformWeather(CWeatherDay& weaDay)const
 	{
-		//ASSERT( weaDay[H_TMIN] > -999 && weaDay[H_TMAX] > -999);
+		//assert( weaDay[H_TMIN] > -999 && weaDay[H_TMAX] > -999);
 
 		//double Tmin   = weaDay.GetTMin()-1.1;
 		//double Tmax   = max(Tmin, weaDay.GetTMean()+1.0);
 		//double Trange = Tmax-Tmin;
-		//double Sin    = sin(2*3.14159*(weaDay.GetJDay()/365. -0.25));
+		//double Sin    = sin(2*3.14159*(weaDay.GetDOY()/365. -0.25));
 
 		////convert air temperature to bark temperature
 		//weaDay(H_TMIN)=-0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*Trange + 0.00000*Tmin*Sin + 0.005741*Tmin*Trange + 0.02370*Sin*Trange;
@@ -169,7 +169,7 @@ public:
 	}
 };
 	
-typedef auto_ptr<COverheat> COverheatPtr;
+typedef unique_ptr<COverheat> COverheatPtr;
 
 //******************************************************************
 //CSpruceBarkBeetleTree class
@@ -194,7 +194,7 @@ void CSpruceBarkBeetleTree::HappyNewYear()
 void CSpruceBarkBeetleTree::Live(const CWeatherDay& weaDay)
 {
 	//For optimisation, nothing happens when temperature is under -10
-	if (weaDay.GetTRef().GetJDay() != 0 && weaDay.GetTMax() < -10)
+	if (weaDay.GetTRef().GetDOY() != 0 && weaDay[H_TMAX][HIGHEST] < -10)
 		return;
 
 	m_last4Days.push_back(weaDay);
@@ -304,7 +304,7 @@ CSpruceBarkBeetle::CSpruceBarkBeetle(CHost* pHost, CTRef creationDate, double ag
 
 	//m_nbDayTeneral=-1;
 
-	if( age==ADULT && creationDate.GetJDay()==0)
+	if( age==ADULT && creationDate.GetDOY()==0)
 	{
 		m_ecdysisDate=CTRef( creationDate.GetYear()-1, SEPTEMBER, 14);
 		m_stageDate = m_ecdysisDate; 
@@ -563,13 +563,13 @@ void CSpruceBarkBeetle::Brood(const CWeatherDay& wDay)
 		
 		//When the bugs are killed by tree at the end of the day, they must not create eggs
 		CSpruceBarkBeetleTree* pTree = GetTree();
-		CSpruceBarkBeetleStand* pStand = GetStand(); ASSERT( pStand );
+		CSpruceBarkBeetleStand* pStand = GetStand(); assert( pStand );
 		
 		//attrition turned off,
 		double scaleFactor = m_brood*pStand->m_survivalRate*m_scaleFactor;
 		double scaleFactorAttrition = m_brood*(1-pStand->m_survivalRate)*m_scaleFactor;
-		ASSERT(scaleFactor>0);
-		ASSERT( m_curEmergence>=1 && m_curEmergence<=3 );
+		assert(scaleFactor>0);
+		assert( m_curEmergence>=1 && m_curEmergence<=3 );
 
 		CSpruceBarkBeetle* pBug = new CSpruceBarkBeetle(pTree, T.GetFirstTRef(), EGG, pStand->m_bFertilEgg, m_generation+1, scaleFactor);
 		pBug->m_parentEmergence = m_curEmergence;
@@ -585,7 +585,7 @@ void CSpruceBarkBeetle::Brood(const CWeatherDay& wDay)
 		}
 
 
-		ASSERT(pBug->m_broodIndex>=0 && pBug->m_broodIndex<=1);
+		assert(pBug->m_broodIndex>=0 && pBug->m_broodIndex<=1);
 		
 	}
 }
@@ -644,7 +644,7 @@ void CSpruceBarkBeetle::ComputetDiapause(int s, double T, double DL)
 
 	const double Kd = 0.80866;
 	double d = Kd*d_T + (1-Kd)*d_DL;
-	ASSERT( Signe(d_T) == Signe(d_DL) );
+	assert( Signe(d_T) == Signe(d_DL) );
 
 //6-stage weight
 	static const double S[NB_STAGES] = {0.06167,0.00816,0.08534,0.07214,0.53467,0.65856,0};
@@ -731,7 +731,7 @@ void CSpruceBarkBeetle::ComputeSwarming(int s, double T, double DL)
 	double p = 0.5 + (T-meanT)/rangeT;
 	double logit = p<=0?rangeDL:p>=1?-rangeDL:-log(p/(1-p))/PHI_DL;
 	double d_DL = DL - (MU_DL+logit+ΔDL_OH); 
-	ASSERT( Signe(d_T) == Signe(d_DL) );
+	assert( Signe(d_T) == Signe(d_DL) );
 
 	double P3 = 0.73520;
 	double w =  (P3*d_T + (1-P3)*d_DL);
@@ -780,7 +780,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 	//	dayLength = GetStand()->m_longDayLength;
 	//	//if( s>=GetStand()->m_firstStageShortDay )//&& s<=GetStand()->m_lastStageShortDay)
 	//	 
-	//	if( GetStand()->m_nbShortDayBegin.IsInit() && date-GetStand()->m_nbShortDayBegin<=GetStand()->m_nbShortDay)
+	//	if( GetStand()->m_nbShortDayBegin.is_init() && date-GetStand()->m_nbShortDayBegin<=GetStand()->m_nbShortDay)
 	//	{
 	//		dayLength = GetStand()->m_shortDayLength;
 	//	}
@@ -827,11 +827,11 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 	double p = 0.5 + (T-meanT)/rangeT;
 	double logit = p<=0?rangeDL:p>=1?-rangeDL:-log(p/(1-p))/PHI_DL;
 	double d_DL = dayLength - (MU_DL+logit+ΔDL_OH); 
-	ASSERT( Signe(d_T) == Signe(d_DL) );
+	assert( Signe(d_T) == Signe(d_DL) );
 
 
 		
-	if( s<=TENERAL_ADULT && !m_diapauseDate.IsInit() && !m_swarmingDate.IsInit() )
+	if( s<=TENERAL_ADULT && !m_diapauseDate.is_init() && !m_swarmingDate.is_init() )
 	{
 		double sumS= 0;
 		for(int i =0;i<=TENERAL_ADULT;i++)
@@ -895,14 +895,14 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 
 	/*if( s<=TENERAL_ADULT && 
 		m_ecdysisDate.GetYear() == date.GetYear() &&
-		!m_diapauseDate.IsInit() )
+		!m_diapauseDate.is_init() )
 		ComputeSwarming(s, T, dayLength);
 
 	
 	
 	if( s>=TENERAL_ADULT && 
 		m_ecdysisDate.GetYear() == date.GetYear() &&
-		!m_diapauseDate.IsInit() )
+		!m_diapauseDate.is_init() )
 	{
 		//swarming computation
 		double rate = m_RStat[MEAN];
@@ -952,11 +952,11 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 
 
 	//compute if beetle diapause
-	if( !m_diapauseDate.IsInit() )
+	if( !m_diapauseDate.is_init() )
 	{
 		int TADays = (date-m_stageDate);
 		if( TADays>=14 &&
-			date.GetJDay()>172)//never diapause before the summer)
+			date.GetDOY()>172)//never diapause before the summer)
 		{
 			//if the expected length after two week to finish his stage if longer than 85 days, we diapause
 			if(s<ADULT)
@@ -985,7 +985,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 	}
 
 
-	if( m_diapauseDate.IsInit() )
+	if( m_diapauseDate.is_init() )
 	{
 		//emergence
 
@@ -994,7 +994,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 		CTRef lastSnow = GetStand()->m_lastSnow[date.GetYear()];
 		if(	m_diapauseDate.GetYear() != date.GetYear() &&	 //it's not the year of diapause
 			dayLength>=K[0] && 
-			(!lastSnow.IsInit() || date>(lastSnow+int(K[1]))) )
+			(!lastSnow.is_init() || date>(lastSnow+int(K[1]))) )
 		{
 			//compute DD summation threshold in function of day length
 			double ΔDL1 = dayLength - K[2];
@@ -1002,7 +1002,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 				
 			m_hibernationDD += Max(0, T - ( 5+ΔT) )/nbSteps; 
 
-			if( !m_emergenceDate.IsInit() && 
+			if( !m_emergenceDate.is_init() && 
 				m_hibernationDD >= m_hibernationDDrequired)
 			{
 				m_emergenceDate=date;
@@ -1012,7 +1012,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 	}//if diapause
 	else
 	{
-		ASSERT( !m_swarmingDate.IsInit() || date!=m_swarmingDate );
+		assert( !m_swarmingDate.is_init() || date!=m_swarmingDate );
 		
 		//compute if beetle swarm
 		if( s==ADULT && 
@@ -1023,14 +1023,14 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 			if( m_ecdysisDate.GetYear() == date.GetYear() ) // newly beetle
 			{
 				//insect is not in diapause: look for swarming
-				if(m_swarmingDate.IsInit())
+				if(m_swarmingDate.is_init())
 				{
 					//Re-emergence and swarming of newly filial beetle (F*_ii, F*_iii) of beetle
 					
 					
 					if( m_curEmergence<m_nbEmergence &&
 						m_ovipositionAge==1 && 
-						( !firstSnow.IsInit() || date<firstSnow-14) )
+						( !firstSnow.is_init() || date<firstSnow-14) )
 					{
 						double ΔΔDL = ((dayLength-m_lastDayLength)*3600 - 56.6)/10;
 						double ΔT = (1/(1+exp(-0.52*ΔΔDL)));
@@ -1050,7 +1050,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 							else
 							{
 								//autumn swarming 
-								if(	date.GetJDay() > CTRef(-999, JUNE, 21).GetJDay() && 
+								if(	date.GetDOY() > CTRef(-999, JUNE, 21).GetDOY() && 
 									wDay.GetTMax() >= 5 &&
 									dayLength < m_automnF)
 									m_swarmingDate=date;
@@ -1062,14 +1062,14 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 				{
 					///emergence and swarming of filial beetle (F*_i)
 					if( wDay.GetTMax() >= m_emergenceTmax && 
-						( !firstSnow.IsInit() || date<firstSnow-14) )
+						( !firstSnow.is_init() || date<firstSnow-14) )
 					{
 						m_swarmingDate=date;
 					}
 					else
 					{
 						//add autumn swarming
-						if(	date.GetJDay() > CTRef(-999, JUNE, 21).GetJDay() && 
+						if(	date.GetDOY() > CTRef(-999, JUNE, 21).GetDOY() && 
 							wDay.GetTMax() >= 5 &&
 							dayLength < m_automnF)
 							m_swarmingDate=date;
@@ -1080,15 +1080,15 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 			else
 			{
 				//old parental beetle
-				ASSERT( m_emergenceDate.IsInit() );
+				assert( m_emergenceDate.is_init() );
 
-				if(m_swarmingDate.IsInit())
+				if(m_swarmingDate.is_init())
 				{
 					//re-emergence and swarming of parent beetle (p2, p3)
 
 					if( m_curEmergence<m_nbEmergence &&
 						m_ovipositionAge==1 && 
-						( !firstSnow.IsInit() || date<firstSnow-14) )
+						( !firstSnow.is_init() || date<firstSnow-14) )
 					{
 						//double ΔΔDL = ((dayLength-m_lastDayLength)*3600 - GetStand()->m_k[0])/10;
 						//double ΔΔDLIndex = (1/(1+exp(-GetStand()->m_k[1]*ΔΔDL)));
@@ -1111,7 +1111,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 							else
 							{
 								//automn swarming 
-								if(	date.GetJDay() > CTRef(-999, JUNE, 21).GetJDay() && 
+								if(	date.GetDOY() > CTRef(-999, JUNE, 21).GetDOY() && 
 									wDay.GetTMax() >= 5 &&
 									dayLength < m_automnP)
 									m_swarmingDate=date;
@@ -1143,9 +1143,9 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 	//Females begin oviposition after 1 day out of 15 at 20 C, 1 days out of 30 at 12 C: 6.7% of lifespan
 	if( RR>0 && s==ADULT  )
 	{
-		ASSERT( IsAlive() );
-		ASSERT( m_curEmergence>=0 && m_curEmergence<=3 );
-		ASSERT( m_ovipositionAge>=0 && m_ovipositionAge<=1 );
+		assert( IsAlive() );
+		assert( m_curEmergence>=0 && m_curEmergence<=3 );
+		assert( m_ovipositionAge>=0 && m_ovipositionAge<=1 );
 		//compute oviposition age
 
 		
@@ -1169,7 +1169,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 			
 				//Relative Oviposition Rate (days) in function of is relative oviposition development 
 				double relOage = (m_ovipositionAge-BEGIN_BROOD)/(1-BEGIN_BROOD);
-				double relOr = (0.244*pow(relOage,-3.30))/Square(0.096*pow(relOage,-2.3)+1);
+				double relOr = (0.244*pow(relOage,-3.30))/square(0.096*pow(relOage,-2.3)+1);
 			
 				//Relative Oviposition Broods in function of the number of reemergence
 				static const double RELATIVE_REEMERGENCE_BROOD[4] = {0, 1, 0.75, 0.5};
@@ -1183,7 +1183,7 @@ void CSpruceBarkBeetle::Develop(CTRef date, double T, const CWeatherDay& wDay, s
 					m_totalBrood += brood;
 				}
 
-				ASSERT( relOage>=0 && relOage<=1 );
+				assert( relOage>=0 && relOage<=1 );
 				
 				
 			}
@@ -1347,9 +1347,9 @@ void CSpruceBarkBeetle::GetStat(CTRef d, CModelStat& stat)
 		
 		if( m_swarmingDate==d )
 		{
-			ASSERT( m_curEmergence>=1 && m_curEmergence<=3);//m_curEmergence is not updated yet
+			assert( m_curEmergence>=1 && m_curEmergence<=3);//m_curEmergence is not updated yet
 			stat[S_SWARMING_0_P1+m_curEmergence-1]+=m_scaleFactor;
-			ASSERT( stage>=ADULT);
+			assert( stage>=ADULT);
 
 			if( m_sex == FEMALE )
 				stat[S_TOTAL_FEMALE_0]+=m_scaleFactor;
@@ -1392,10 +1392,10 @@ void CSpruceBarkBeetle::GetStat(CTRef d, CModelStat& stat)
 		
 		if( m_swarmingDate==d )
 		{
-			ASSERT( m_curEmergence>=1 && m_curEmergence<=3);//m_curEmergence is not updated yet	
-			ASSERT( m_parentEmergence>=1 && m_parentEmergence<=3);//m_curEmergence is not updated yet	
+			assert( m_curEmergence>=1 && m_curEmergence<=3);//m_curEmergence is not updated yet	
+			assert( m_parentEmergence>=1 && m_parentEmergence<=3);//m_curEmergence is not updated yet	
 			stat[S_SWARMING_1_F1_i+(m_parentEmergence-1)*3+m_curEmergence-1]+=m_scaleFactor;
-			ASSERT( stage>=ADULT);
+			assert( stage>=ADULT);
 
 			if( m_sex == FEMALE )
 				stat[S_TOTAL_FEMALE_1]+=m_scaleFactor;
@@ -1415,7 +1415,7 @@ void CSpruceBarkBeetle::GetStat(CTRef d, CModelStat& stat)
 			stat[S_TI50] = m_TI50Stat[SUM]/m_absDiapauseStatI[SUM] + stat[S_DT_STAT];
 
 			
-			ASSERT( stat[S_DAY_LENGTH]>=0 && stat[S_DAY_LENGTH]<=24);
+			assert( stat[S_DAY_LENGTH]>=0 && stat[S_DAY_LENGTH]<=24);
 		}
 
 
@@ -1452,7 +1452,7 @@ void CSpruceBarkBeetle::GetStat(CTRef d, CModelStat& stat)
 		if( m_swarmingDate==d )
 		{
 			stat[S_SWARMING_2]+=m_scaleFactor;
-			ASSERT( stage>=ADULT);
+			assert( stage>=ADULT);
 
 			if( m_sex == FEMALE )
 				stat[S_TOTAL_FEMALE_2]+=m_scaleFactor;
@@ -1517,7 +1517,7 @@ bool CSpruceBarkBeetle::CanPack(const CIndividual* In)const
 void CSpruceBarkBeetle::Pack(const CIndividual* In)
 {
 	const CSpruceBarkBeetle* in = static_cast<const CSpruceBarkBeetle*>(In);
-	ASSERT( m_parentEmergence == in->m_parentEmergence );
+	assert( m_parentEmergence == in->m_parentEmergence );
 
 	m_broodIndex = (m_broodIndex*m_scaleFactor + in->m_broodIndex*in->m_scaleFactor)/(m_scaleFactor + in->m_scaleFactor);
 
@@ -1530,8 +1530,8 @@ void CSpruceBarkBeetle::Pack(const CIndividual* In)
 //WARNING: cast must be defined here to avoid bug
 CSpruceBarkBeetleTree* CSpruceBarkBeetle::GetTree(){ return static_cast<CSpruceBarkBeetleTree*>(m_pHost);}
 const CSpruceBarkBeetleTree* CSpruceBarkBeetle::GetTree()const{ return static_cast<const CSpruceBarkBeetleTree*>(m_pHost);}
-CSpruceBarkBeetleStand* CSpruceBarkBeetle::GetStand(){  ASSERT(m_pHost); return (CSpruceBarkBeetleStand* )m_pHost->GetStand(); }
-const CSpruceBarkBeetleStand* CSpruceBarkBeetle::GetStand()const{  ASSERT(m_pHost); return (const CSpruceBarkBeetleStand* )m_pHost->GetStand(); }
+CSpruceBarkBeetleStand* CSpruceBarkBeetle::GetStand(){  assert(m_pHost); return (CSpruceBarkBeetleStand* )m_pHost->GetStand(); }
+const CSpruceBarkBeetleStand* CSpruceBarkBeetle::GetStand()const{  assert(m_pHost); return (const CSpruceBarkBeetleStand* )m_pHost->GetStand(); }
 
 
 CSpruceBarkBeetleStand::CSpruceBarkBeetleStand(CBioSIMModelBase* pModel):CStand(pModel)
@@ -1581,7 +1581,7 @@ void CSpruceBarkBeetleStand::GetStat(CTRef d, CModelStat& stat, int generation)
 	GetTree()->GetStat(d, stat, generation);
 
 	//double meanAge = stat[S_NB_BUGS]>0?stat[S_AGE]/stat[S_NB_BUGS]:-9999;
-	//if( !m_nbShortDayBegin.IsInit() && meanAge>=m_firstStageShortDay && m_nbShortDay>0)
+	//if( !m_nbShortDayBegin.is_init() && meanAge>=m_firstStageShortDay && m_nbShortDay>0)
 	//{
 	//	m_nbShortDayBegin = d;
 	//}

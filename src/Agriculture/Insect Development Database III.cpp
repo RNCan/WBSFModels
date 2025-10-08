@@ -2,14 +2,14 @@
 // 31/01/2020	1.1.3	Rémi Saint-Amant	Bug correction to manage multiple years
 // 06/08/2013			Rémi Saint-Amant	Create from excel file 
 //**********************************************************************
-#include <math.h>
-#include <crtdbg.h>
+#include <cmath>
+#include <cassert>
 
 
 #include "Basic/UtilStd.h"
 #include "Basic/CSV.h"
-#include "Basic/DegreeDays.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
 #include "Insect Development Database III.h"
 
 
@@ -25,7 +25,7 @@ namespace WBSF
 
 
 
-	CCriticalSection CInsectDevelopmentDatabaseIII::CS;
+	std::mutex CInsectDevelopmentDatabaseIII::CS;
 	std::map<string, CInsectDevelopmentIII> CInsectDevelopmentDatabaseIII::INSECTS_DEVELOPMENT_DATABASE;
 
 
@@ -33,7 +33,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		CS.Enter();
+		std::unique_lock<std::mutex> lock(CS);
 		if (INSECTS_DEVELOPMENT_DATABASE.empty())
 		{
 			std::stringstream stream(data);
@@ -49,7 +49,7 @@ namespace WBSF
 						string name = (*loop)[I_NAME];
 						INSECTS_DEVELOPMENT_DATABASE[name].m_name = (*loop)[I_NAME];
 
-						ASSERT(!(*loop)[I_BASE_DEVEL].empty());
+						assert(!(*loop)[I_BASE_DEVEL].empty());
 						INSECTS_DEVELOPMENT_DATABASE[name].m_upperThreshold = ToDouble((*loop)[I_BASE_DEVEL]);
 						if (!(*loop)[I_UPPER_DEVEL].empty())
 							INSECTS_DEVELOPMENT_DATABASE[name].m_upperThreshold = ToDouble((*loop)[I_UPPER_DEVEL]);
@@ -68,7 +68,7 @@ namespace WBSF
 			}
 		}
 
-		CS.Leave();
+		//CS.Leave();
 
 		return msg;
 
@@ -118,7 +118,7 @@ namespace WBSF
 		}
 */
 
-		ASSERT(m_insectInfo.m_haveStage[EGG] || m_insectInfo.m_haveStage[L1]);
+		assert(m_insectInfo.m_haveStage[EGG] || m_insectInfo.m_haveStage[L1]);
 
 
 		return msg;
@@ -146,7 +146,7 @@ namespace WBSF
 			size_t stage = firstStage;
 
 			CTPeriod p = m_weather[y].GetEntireTPeriod();
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				if (m_insectInfo.m_haveStage[stage])
 				{

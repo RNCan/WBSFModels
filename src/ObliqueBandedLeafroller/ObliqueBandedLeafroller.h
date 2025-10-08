@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "ObliqueBandedLeafrollerEquations.h"
 
 
@@ -98,7 +98,7 @@ namespace WBSF
 	typedef std::shared_ptr<CObliqueBandedLeafrollerStand> CObliqueBandedLeafrollerStandPtr;
 
 	//WARNING: cast must be defined here to avoid bug
-	inline CObliqueBandedLeafrollerStand* CObliqueBandedLeafroller::GetStand(){ ASSERT(m_pHost); return static_cast<CObliqueBandedLeafrollerStand*>(m_pHost->GetStand()); }
-	inline const CObliqueBandedLeafrollerStand* CObliqueBandedLeafroller::GetStand()const{ ASSERT(m_pHost); return static_cast<const CObliqueBandedLeafrollerStand*>(m_pHost->GetStand()); }
+	inline CObliqueBandedLeafrollerStand* CObliqueBandedLeafroller::GetStand(){ assert(m_pHost); return static_cast<CObliqueBandedLeafrollerStand*>(m_pHost->GetStand()); }
+	inline const CObliqueBandedLeafrollerStand* CObliqueBandedLeafroller::GetStand()const{ assert(m_pHost); return static_cast<const CObliqueBandedLeafrollerStand*>(m_pHost->GetStand()); }
 	inline CObliqueBandedLeafrollerEquations& CObliqueBandedLeafroller::Equations(){ return GetStand()->m_equations; }
 }

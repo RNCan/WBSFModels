@@ -20,10 +20,10 @@
 //*********************************************************************
 
 #include <string>
-#include "Basic/WeatherDefine.h"
-#include "Basic/GrowingSeason.h"
-#include "Basic/SnowAnalysis.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "Modelbased/EntryPoint.h"
 #include "FWI.h"
 #include "FWI-Model.h"
 #include "FWI(new from wang2015).h"
@@ -183,12 +183,12 @@ namespace WBSF
 		//size_t i = 0;
 		//for (CTRef TRef = m_firstDay.GetTRef(m_weather.GetFirstYear()); TRef <= m_lastDay.GetTRef(m_weather.GetFirstYear()); TRef++, i++)
 		//{
-		//	ASSERT( fabs( output[TRef][CFWIStat::FFMC] - out[i].ffmc ) < 0.1 );
-		//	ASSERT(fabs(output[TRef][CFWIStat::DMC] - out[i].dmc) < 0.1);
-		//	ASSERT(fabs(output[TRef][CFWIStat::DC] - out[i].dc) < 0.1);
-		//	ASSERT(fabs(output[TRef][CFWIStat::ISI] - out[i].isi) < 0.1);
-		//	ASSERT(fabs(output[TRef][CFWIStat::BUI] - out[i].bui) < 0.1);
-		//	ASSERT(fabs(output[TRef][CFWIStat::FWI] - out[i].fwi) < 0.1);
+		//	assert( fabs( output[TRef][CFWIStat::FFMC] - out[i].ffmc ) < 0.1 );
+		//	assert(fabs(output[TRef][CFWIStat::DMC] - out[i].dmc) < 0.1);
+		//	assert(fabs(output[TRef][CFWIStat::DC] - out[i].dc) < 0.1);
+		//	assert(fabs(output[TRef][CFWIStat::ISI] - out[i].isi) < 0.1);
+		//	assert(fabs(output[TRef][CFWIStat::BUI] - out[i].bui) < 0.1);
+		//	assert(fabs(output[TRef][CFWIStat::FWI] - out[i].fwi) < 0.1);
 		//}
 
 		return msg;
@@ -252,9 +252,9 @@ namespace WBSF
 
 		for (size_t y = 0; y < m_output.size(); y++)
 		{
-			m_output[y][CFWIStat::SNOW_MELT] = snow.GetLastSnowTRef(m_weather[y]).GetJDay() + 1;
+			m_output[y][CFWIStat::SNOW_MELT] = snow.GetLastSnowTRef(m_weather[y]).GetDOY() + 1;
 			CTRef Tref = snow.GetFirstSnowTRef(m_weather[y]);
-			m_output[y][CFWIStat::SNOW_FALL] = Tref.IsInit() ? Tref.GetJDay() + 1 : 367;
+			m_output[y][CFWIStat::SNOW_FALL] = Tref.is_init() ? Tref.GetDOY() + 1 : 367;
 		}
 
 
@@ -272,7 +272,7 @@ namespace WBSF
 			Tm = -2.8;
 
 
-		int N = (int)GetNbDayPerMonth(year, m);
+		int N = (int)GetNbDaysPerMonth(year, m);
 		double Vm = max(0.0, N*(0.36*Tm + Lf[m])) / 2.0;
 
 		double DChalf = DCMo + 0.5*Vm; // add in only half of drying before the rain influence

@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 
 namespace WBSF
@@ -21,7 +21,7 @@ namespace WBSF
 		virtual ERMsg OnExecuteDaily();
 		virtual ERMsg OnExecuteHourly();
 		
-		//virtual void AddSAResult(const StringVector& header, const StringVector& data);
+		//virtual void AddSAResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
 		//virtual void GetFValueHourly(CStatisticXY& stat);
 		//virtual void GetFValueDaily(CStatisticXY& stat);
 		//virtual void GetFValueMonthly(CStatisticXY& stat);

@@ -24,7 +24,7 @@
 //**********************************************************************/
 #include "GypsyMothStab.h"
 #include "GypsyMoth.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 
 namespace WBSF
 {
@@ -64,7 +64,7 @@ namespace WBSF
 
 		int c = 0;
 		m_hatchModelType = parameters[c++].GetInt();
-		m_eggParam.m_ovipDate = period.Begin() + parameters[c++].GetInt();
+		m_eggParam.m_ovipDate = period.begin() + parameters[c++].GetInt();
 		m_eggParam.m_sawyerModel = parameters[c++].GetInt();
 		m_nbGenerations = parameters[c++].GetInt();
 
@@ -104,7 +104,7 @@ namespace WBSF
 
 			for (int g = 0; g < m_nbGenerations&& bViability[y] && !bStabilized; g++)
 			{
-				CTPeriod p(m_weather[y].GetEntireTPeriod(CTM::DAILY).Begin(), m_weather[y + 1].GetEntireTPeriod(CTM::DAILY).End());
+				CTPeriod p(m_weather[y].GetEntireTPeriod(CTM::DAILY).begin(), m_weather[y + 1].GetEntireTPeriod(CTM::DAILY).end());
 				//simulate developement
 				CGypsyMoth gypsyMoth(m_hatchModelType, eggParamTmp);
 				gypsyMoth.SimulateDeveloppement(m_weather, p);
@@ -114,8 +114,8 @@ namespace WBSF
 				{
 					//Get stability and new oviposition date
 					CTRef newOvipDate = gypsyMoth.GetNewOvipDate();
-					bStabilized = newOvipDate.GetJDay() == eggParamTmp.m_ovipDate.GetJDay();
-					eggParamTmp.m_ovipDate.SetJDay(newOvipDate.GetJDay());
+					bStabilized = newOvipDate.GetDOY() == eggParamTmp.m_ovipDate.GetDOY();
+					eggParamTmp.m_ovipDate.SetDOY(newOvipDate.GetDOY());
 				}
 				else
 				{
@@ -131,7 +131,7 @@ namespace WBSF
 			if (bViability[i])
 				nbValid++;
 
-		COutputVector stat(1, CTRef(0, 0, 0, 0, CTM(CTRef::ANNUAL, CTRef::OVERALL_YEARS) ));
+		COutputVector stat(1, CTRef(0, 0, 0, 0, CTM::ANNUAL));
 		stat[0][0] = (double)nbValid / bViability.size();
 		SetOutput(stat);
 
@@ -150,7 +150,7 @@ namespace WBSF
 		for (size_t y = 0; y < m_weather.GetNbYears() - 1 && bViability; y++)
 		{
 			//CTPeriod p(m_weather[y].GetFirstTRef(), m_weather[y + 1].GetLastTRef());
-			CTPeriod p(m_weather[y].GetEntireTPeriod(CTM::DAILY).Begin(), m_weather[y + 1].GetEntireTPeriod(CTM::DAILY).End());
+			CTPeriod p(m_weather[y].GetEntireTPeriod(CTM::DAILY).begin(), m_weather[y + 1].GetEntireTPeriod(CTM::DAILY).end());
 
 			//simulate developement
 			CGypsyMoth gypsyMoth(m_hatchModelType, eggParamTmp);
@@ -161,7 +161,7 @@ namespace WBSF
 		}
 
 		//Output data
-		COutputVector stat(1, CTRef(0, 0, 0, 0, CTM(CTRef::ANNUAL, CTRef::OVERALL_YEARS)));
+		COutputVector stat(1, CTRef(0, 0, 0, 0, CTM::ANNUAL));
 		stat[0][0] = bViability ? 1 : 0;
 		SetOutput(stat);
 

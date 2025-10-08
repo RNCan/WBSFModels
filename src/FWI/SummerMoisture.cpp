@@ -79,9 +79,9 @@ namespace WBSF
 	//Tm	: Monthly mean of daily maximum temperature (°C)
 	double CSummerMoisture::ComputeIndice(int year, size_t m, double& MDCo, double Rm, double Tm, bool bSouthHemis)
 	{
-		ASSERT(Rm >= 0);
-		ASSERT(Tm >= -50 && Tm <= 50);
-		ASSERT(MDCo >= 0);
+		assert(Rm >= 0);
+		assert(Tm >= -50 && Tm <= 50);
+		assert(MDCo >= 0);
 
 		static const double Lf_n[12] = { -1.6, -1.6, -1.6, 0.9, 3.8, 5.8, 6.4, 5.0, 2.4, 0.4, -1.6, -1.6 };
 		static const double Lf_s[12] = { 6.4, 5.0, 2.4, 0.4, -1.6, -1.6, -1.6, -1.6, -1.6, 0.9, 3.8, 5.8 };
@@ -90,35 +90,35 @@ namespace WBSF
 		Tm = max(0.0, Tm);
 
 		//N is the number of days in the month
-		size_t N = GetNbDayPerMonth(year, m);
+		size_t N = GetNbDaysPerMonth(year, m);
 
 		//Em is the potential evaporation for the month [equation 2]
 		double Em = max(0.0, N*(0.36*Tm + Lf[m]));
-		ASSERT(Em >= 0);
+		assert(Em >= 0);
 
 		// add half of drying before the rain influence [equation 3]
 		double DChalf = MDCo + 0.25*Em;
-		ASSERT(DChalf >= 0);
+		assert(DChalf >= 0);
 
 		double RMeff = 0.83*Rm;
-		ASSERT(RMeff >= 0);
+		assert(RMeff >= 0);
 
 		//rain effect on the drought code [equation 4]
 		double Qmr = (3.937*RMeff) / (800 * exp(-MDCo / 400));
-		ASSERT(Qmr >= 0);
+		assert(Qmr >= 0);
 
 		//Drying taking place over the middle of the month (DCmr) [equation 5]
 		double DCmr = (Rm <= 2.8) ? DChalf : max(0.0, DChalf - 400 * log(1 + Qmr));
-		ASSERT(DCmr >= 0);
+		assert(DCmr >= 0);
 
 		//Estimated of drought code (MDC) at the end of the month [equation 6]
 		double MDCm = DCmr + 0.25*Em;
-		ASSERT(MDCm >= 0);
+		assert(MDCm >= 0);
 
 
 		//Finally, MDC0 and MDCm are averaged to find a mean drought value for the month [equation 7]
 		double MDC = (MDCo + MDCm) / 2;
-		ASSERT(MDC >= 0);
+		assert(MDC >= 0);
 
 		//replace the the MDC of the beginnig of the month by the MDC at the end of the month
 		MDCo = MDCm;

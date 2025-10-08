@@ -1,7 +1,7 @@
 #pragma once
 
-
-#include "ModelBase/BioSIMModelBase.h"
+#include <mutex>
+#include "ModelBased/BioSIMModelBase.h"
 
 
 namespace WBSF
@@ -51,7 +51,7 @@ namespace WBSF
 			if (s==NOT_INIT)
 				s=ss+1;
 
-			ASSERT(s < NB_STAGES);
+			assert(s < NB_STAGES);
 			return s;
 		}
 
@@ -67,7 +67,7 @@ namespace WBSF
 
 	protected:
 
-		static CCriticalSection CS;
+		static std::mutex CS;
 		static std::map<std::string, CInsectDevelopmentIII> INSECTS_DEVELOPMENT_DATABASE;
 	};
 

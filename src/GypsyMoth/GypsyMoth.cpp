@@ -34,7 +34,7 @@ namespace WBSF
 
 	void CGypsyMoth::Reset()
 	{
-		ASSERT(m_pHatch);
+		assert(m_pHatch);
 		m_pHatch->Reset();
 		m_stageFreq.clear();
 	}
@@ -59,7 +59,7 @@ namespace WBSF
 	{
 		Reset();
 
-		m_stageFreq.Init(p.GetLength(), p.Begin());
+		m_stageFreq.Init(p);
 		//if( param.m_hatchModelType != m_hatchModel)
 		//CreateHatchObject( param.m_hatchModelType );
 
@@ -70,7 +70,7 @@ namespace WBSF
 			m_stageFreq[d][EGG] = 100 - m_pHatch->GetEggsPourcent(d, HATCH);
 
 
-		if (m_pHatch->GetFirstHatch().IsInit())
+		if (m_pHatch->GetFirstHatch().is_init())
 			ComputeNonDiapause(weather, p);
 
 	}
@@ -102,7 +102,7 @@ namespace WBSF
 		//	int nbDay = weather.GetNbDay();
 		//int firstHatch = m_pHatch->GetFirstHatch();
 		CTRef firstHatch = m_pHatch->GetFirstHatch();
-		for (CTRef day = firstHatch; day <= p.End(); day++)
+		for (CTRef day = firstHatch; day <= p.end(); day++)
 		{
 			//compute day's hourly temperatures
 			//CDailyWaveVector hourly;// hourly temperature array 
@@ -236,7 +236,7 @@ namespace WBSF
 						m_stageFreq[day][DEAD_ADULT] = 100;
 
 					day++;
-					for (; day <= p.End(); day++)
+					for (; day <= p.end(); day++)
 						m_stageFreq[day][DEAD_ADULT] = m_stageFreq[day - 1][DEAD_ADULT];
 					return;
 				}
@@ -299,11 +299,11 @@ namespace WBSF
 		//Flags is used to identify criterious
 
 		//a NON-NEGATIVE newOvipDate means some oviposition has occurred. Evaluate stability
-		if (newOvipDate.IsInit())
+		if (newOvipDate.is_init())
 		{
-
+			assert(m_stageFreq.TM().Type() == CTM::DAILY);
 			//mid winter is half in the period
-			CTRef midWindter = m_stageFreq.GetFirstTRef() + m_stageFreq.GetTPeriod().GetLength() / 2;
+			CTRef midWindter = m_stageFreq.GetFirstTRef() + int32_t(m_stageFreq.GetTPeriod().length(CTM::DAILY) / 2);
 			//mid summer is 182 day after mid winter
 			CTRef midSummer = midWindter + 182;
 			//CTRef firstDay = GetFirstDay(); 
@@ -341,7 +341,7 @@ namespace WBSF
 	//for the second winter, all states must be 0 except adult
 	bool CGypsyMoth::TestSecondWinter()const
 	{
-		//_ASSERTE(m_stageFreq.IsInside(midWinterDate));
+		//_ASSERTE(m_stageFreq.is_inside(midWinterDate));
 
 		CTRef lastDate = m_stageFreq.GetLastTRef();
 
@@ -367,14 +367,16 @@ namespace WBSF
 	void CGypsyMoth::GetOutputStat(CGMOutputVector& stat)const
 	{
 		//usually stat will be larger thant m_stageFreq. They will countain all years
-		ASSERT(stat.size() > 0);
-		ASSERT(m_stageFreq.size() == 730 || m_stageFreq.size() == 731);
+		assert(stat.size() > 0);
+		assert(m_stageFreq.size() == 730 || m_stageFreq.size() == 731);
 
 		CTPeriod p = m_stageFreq.GetTPeriod();
 
 		bool bViable = true;
-		CTPeriod p2 = p.GetAnnualPeriodByIndex(1);
-		for (CTRef i = p2.Begin(); i <= p2.End(); i++)
+		int year = p.GetFirstYear();
+		//CTPeriod p2 = p.GetAnnualPeriodByIndex(1);
+		CTPeriod p2( CTRef(year+1, JANUARY, DAY_01), CTRef( year+1, DECEMBER, DAY_31));
+		for (CTRef i = p2.begin(); i <= p2.end(); i++)
 			stat[i] = bViable ? m_stageFreq[i] : m_stageFreq[0];
 
 

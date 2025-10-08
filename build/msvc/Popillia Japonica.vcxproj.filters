@@ -7,24 +7,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PopilliaJaponica.cpp">
+    <ClCompile Include="..\..\src\PopilliaJaponica\PopilliaJaponica.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PopilliaJaponicaEquations.cpp">
+    <ClCompile Include="..\..\src\PopilliaJaponica\PopilliaJaponicaEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PopilliaJaponicaModel.cpp">
+    <ClCompile Include="..\..\src\PopilliaJaponica\PopilliaJaponicaModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PopilliaJaponica.h">
+    <ClInclude Include="..\..\src\PopilliaJaponica\PopilliaJaponica.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="PopilliaJaponicaEquations.h">
+    <ClInclude Include="..\..\src\PopilliaJaponica\PopilliaJaponicaEquations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="PopilliaJaponicaModel.h">
+    <ClInclude Include="..\..\src\PopilliaJaponica\PopilliaJaponicaModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

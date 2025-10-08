@@ -22,7 +22,7 @@
 //*****************************************************************************
 
 #include <array>
-#include "ModelBase/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WinterThawModel.h"
 
 
@@ -56,7 +56,7 @@ namespace WBSF
 	//this method is called by the framework to load parameters
 	ERMsg CWinterThawModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.size() > 0);
+		assert(m_weather.size() > 0);
 
 		ERMsg msg;
 
@@ -97,25 +97,25 @@ namespace WBSF
 			//size_t nbThaws = 0;
 			//size_t nbDaysThaw = 0;
 			vector<size_t> thaws;
-			for (CTRef TRef = p.Begin(); TRef<=p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef<=p.end(); TRef++)
 			{
 				const CWeatherDay& wDay = m_weather.GetDay(TRef);
 
-				if (!lastThaw.IsInit() && wDay[H_TMIN][HIGHEST] > 0.0)
+				if (!lastThaw.is_init() && wDay[H_TMIN][HIGHEST] > 0.0)
 				{
 					lastThaw = TRef;
 				}
 
-				if (wDay[H_TMIN][HIGHEST] <= 0.0 && lastThaw.IsInit())
+				if (wDay[H_TMIN][HIGHEST] <= 0.0 && lastThaw.is_init())
 				{
 					thaws.push_back(TRef - lastThaw);
 					lastThaw.clear();
 				}
 			}
 
-			if (lastThaw.IsInit())
+			if (lastThaw.is_init())
 			{
-				thaws.push_back(p.End() - lastThaw);
+				thaws.push_back(p.end() - lastThaw);
 				lastThaw.clear();
 			}
 

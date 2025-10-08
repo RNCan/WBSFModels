@@ -4,8 +4,8 @@
 #pragma once
 
 
-#include "ModelBase/BioSIMModelBase.h"
-#include "ModelBase/ContinuingRatio.h"
+#include "ModelBased/BioSIMModelBase.h"
+#include "ModelBased/ContinuingRatio.h"
 namespace WBSF
 {
 	class CWeatherYear;

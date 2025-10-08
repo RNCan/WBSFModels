@@ -10,11 +10,11 @@
 
 #pragma once
 
-#include <crtdbg.h>
+#include <cassert>
 #include <vector>
 #include "Basic/UtilTime.h"
 #include "Basic/ModelStat.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "WSBEquations.h"
 
 namespace WBSF
@@ -159,8 +159,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug in cast
 	inline CWSBTree* CWSpruceBudworm::GetTree() { return static_cast<CWSBTree*>(m_pHost); }
 	inline const CWSBTree* CWSpruceBudworm::GetTree()const { return static_cast<const CWSBTree*>(m_pHost); }
-	inline CWSBStand* CWSpruceBudworm::GetStand() { ASSERT(m_pHost); return static_cast<CWSBStand*>(GetTree()->GetStand()); }
-	inline const CWSBStand* CWSpruceBudworm::GetStand()const { ASSERT(m_pHost); return static_cast<const CWSBStand*>(GetTree()->GetStand()); }
+	inline CWSBStand* CWSpruceBudworm::GetStand() { assert(m_pHost); return static_cast<CWSBStand*>(GetTree()->GetStand()); }
+	inline const CWSBStand* CWSpruceBudworm::GetStand()const { assert(m_pHost); return static_cast<const CWSBStand*>(GetTree()->GetStand()); }
 	inline CWSBTableLookup& CWSpruceBudworm::Equations() { return GetStand()->m_equations; }
 
 }

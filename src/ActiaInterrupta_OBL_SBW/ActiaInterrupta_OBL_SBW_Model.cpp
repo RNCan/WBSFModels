@@ -7,8 +7,8 @@
 //*****************************************************************************
 
 #include "Basic/UtilStd.h"
-#include "Basic/SnowAnalysis.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "ModelBased/EntryPoint.h"
 #include "ActiaInterrupta_OBL_SBW_Model.h"
 
 
@@ -77,7 +77,7 @@ namespace WBSF
 		m_preOvip = parameters[c++].GetReal();
 		m_bOBLAttition = parameters[c++].GetBool();;
 		m_bSBWAttition = parameters[c++].GetBool();;
-		//ASSERT(m_diapauseAge >= 0. && m_diapauseAge <= 1.);
+		//assert(m_diapauseAge >= 0. && m_diapauseAge <= 1.);
 
 		return msg;
 	}
@@ -105,9 +105,9 @@ namespace WBSF
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		size_t maxG = min(NB_GENERATIONS, ActiaInterruptaStat.size()); 
-		m_output.Init(p.size(), p.Begin(), NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
+		m_output.Init(p, NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			CStatistic diapauseAge;
 			for (size_t g = 0; g < maxG; g++)
@@ -146,13 +146,13 @@ namespace WBSF
 
 			//OBL init
 			std::shared_ptr<CHost> pHostOBL = make_shared<CHost>(&stand.m_OBLStand);
-			pHostOBL->Initialize<CObliqueBandedLeafroller>(CInitialPopulation(p.Begin(), 0, 250, 100, OBL::L3D, RANDOM_SEX, true, 0));
+			pHostOBL->Initialize<CObliqueBandedLeafroller>(CInitialPopulation(p.begin(), 0, 250, 100, OBL::L3D, RANDOM_SEX, true, 0));
 			stand.m_OBLStand.m_bApplyAttrition = m_bOBLAttition;
 			stand.m_OBLStand.m_host.push_front(pHostOBL);
 
 			//SBW init
 			std::shared_ptr<CSBWTree> pHostSBW = make_shared<CSBWTree>(&stand.m_SBWStand);
-			pHostSBW->Initialize<CSpruceBudworm>(CInitialPopulation(p.Begin(), 0, 250, 100, SBW::L2o, RANDOM_SEX, false, 0));
+			pHostSBW->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 250, 100, SBW::L2o, RANDOM_SEX, false, 0));
 			stand.m_SBWStand.m_bApplyAttrition = m_bSBWAttition;
 			stand.m_SBWStand.m_host.push_front(pHostSBW);
 
@@ -162,7 +162,7 @@ namespace WBSF
 			//Init host
 			pHostActiaInterrupta->m_nbMinObjects = 100;
 			pHostActiaInterrupta->m_nbMaxObjects = 1250;
-			pHostActiaInterrupta->Initialize(CInitialPopulation(p.Begin(), 0, 500, 100, MAGGOT, FEMALE, true, 0));
+			pHostActiaInterrupta->Initialize(CInitialPopulation(p.begin(), 0, 500, 100, MAGGOT, FEMALE, true, 0));
 			//stand.m_host.push_front(pHostActiaInterrupta);
 
 			//Init stand
@@ -176,13 +176,13 @@ namespace WBSF
 
 			
 			//run the model for all days of all years
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
 
 				size_t nbGenerations = stand.GetFirstHost()->GetNbGeneration();
 				if (nbGenerations > stat.size())
-					stat.push_back(CModelStatVector(entirePeriod.GetNbRef(), entirePeriod.Begin(), NB_STATS_EX, 0));
+					stat.push_back(CModelStatVector(entirePeriod, NB_STATS_EX, 0));
 
 				for (size_t g = 0; g < nbGenerations; g++)
 					stand.GetStat(d, stat[g][d], g);
@@ -215,9 +215,9 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, ActiaInterruptaStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
-				CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 				m_output[TRef][O_A_NB_GENERATION] = maxG;
 				
 				for (size_t g = 0; g < maxG; g++)
@@ -227,7 +227,7 @@ namespace WBSF
 					for (size_t i = 0; i < 7; i++)
 					{
 						CStatistic stat = ActiaInterruptaStat[g].GetStat(VAR_IN[i], season);
-						ASSERT(stat.IsInit());
+						assert(stat.is_init());
 						m_output[TRef][VAR_OUT[i]] += stat[SUM];
 					}
 				}
@@ -268,10 +268,10 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, ActiaInterruptaStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
-				size_t y = TRef - p.Begin();
-				CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+				size_t y = TRef - p.begin();
+				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 
 				//double eggsBegin = 100;
@@ -287,7 +287,7 @@ namespace WBSF
 					for (size_t i = 0; i < 7; i++)
 					{
 						CStatistic stat = ActiaInterruptaStat[g].GetStat(VAR_IN[i], season);
-						ASSERT(stat.IsInit());
+						assert(stat.is_init());
 						m_output[gg][VAR_OUT[i]] = stat[SUM];
 					}
 

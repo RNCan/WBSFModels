@@ -12,16 +12,16 @@
 // 20/11/2008			Rémi Saint-Amant	New variable: TMean growing season and July Tmean
 //**********************************************************************
 #include <stdio.h>
-#include <math.h>
-#include <crtdbg.h>
+#include <cmath>
+#include <cassert>
 #include <float.h>
 #include <limits>
 
-#include "basic/WeatherDefine.h"
-#include "basic/Evapotranspiration.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "Modelbased/EntryPoint.h"
 #include "ClimaticQc.h"
 
 
@@ -103,7 +103,7 @@ namespace WBSF
 		int c = 0;
 		m_threshold = parameters[c++].GetReal();
 		m_growing_season_type = (TGrowingSeason)parameters[c++].GetInt();
-		ASSERT(m_growing_season_type < NB_GS_TYPE);
+		assert(m_growing_season_type < NB_GS_TYPE);
 
 
 
@@ -154,7 +154,7 @@ namespace WBSF
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
 			int year = m_weather[y].GetTRef().GetYear();
-			CTPeriod utilPeriod(CTRef(year, JUNE, FIRST_DAY), CTRef(year, AUGUST, LAST_DAY));
+			CTPeriod utilPeriod(CTRef(year, JUNE, DAY_01), CTRef(year, AUGUST, DAY_31));
 
 			double dd = DD[y][0];
 			double ppt = m_weather[y].GetStat(H_PRCP)[SUM];
@@ -165,7 +165,7 @@ namespace WBSF
 
 			CTPeriod FFPeriod = FF.GetPeriod(m_weather[y]);
 			size_t dayWithoutFrost = m_weather[y].GetNbDays() - GetNbFrostDay(m_weather[y]);
-			ASSERT(dayWithoutFrost >= 0 && dayWithoutFrost <= m_weather[y].GetNbDays());
+			assert(dayWithoutFrost >= 0 && dayWithoutFrost <= m_weather[y].GetNbDays());
 
 			CTPeriod growingSeason = GS.GetPeriod(m_weather[y]);
 			double pptGS = m_weather[y](H_PRCP, growingSeason)[SUM];
@@ -198,7 +198,7 @@ namespace WBSF
 
 			double annualSnow = 0;
 			CTPeriod p = m_weather[y].GetEntireTPeriod();
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				double T = m_weather[TRef][H_TAIR][MEAN];
 				double ppt = m_weather[TRef][H_PRCP][SUM];
@@ -221,10 +221,10 @@ namespace WBSF
 			m_output[y][O_GS_TMEAN] = TmeanGS;//°C
 			m_output[y][O_JULY_TMEAN] = meanJuly;//°C
 			m_output[y][O_DAY_WITHOUT_FROST] = dayWithoutFrost;
-			m_output[y][O_FF_PERIOD_LENGTH] = FFPeriod.as(CTM::DAILY).GetLength();
-			m_output[y][O_GROWING_SEASON_LENGTH] = growingSeason.as(CTM::DAILY).GetLength();
-			m_output[y][O_FF_PERIOD_BEGIN] = FFPeriod.Begin().GetJDay();
-			m_output[y][O_FFPERIOD_END] = FFPeriod.End().GetJDay();
+			m_output[y][O_FF_PERIOD_LENGTH] = FFPeriod.length(CTM::DAILY);
+			m_output[y][O_GROWING_SEASON_LENGTH] = growingSeason.length(CTM::DAILY);
+			m_output[y][O_FF_PERIOD_BEGIN] = FFPeriod.begin().GetDOY();
+			m_output[y][O_FFPERIOD_END] = FFPeriod.end().GetDOY();
 			//m_output[y][O_MEAN_DAYLIGHT_VPD] = VPD; //[hPa] (mBar)
 			m_output[y][O_MEAN_TOTAL_VPD] = VPD; //[hPa] (mBar)
 			m_output[y][O_MEAN_UVPD] = UVPD; //[hPa] (mBar)
@@ -271,8 +271,8 @@ namespace WBSF
 		CStatistic udpv;
 
 		int year = weather.GetTRef().GetYear();
-		CTPeriod p(CTRef(year, JUNE, FIRST_DAY), CTRef(year, AUGUST, LAST_DAY));
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		CTPeriod p(CTRef(year, JUNE, DAY_01), CTRef(year, AUGUST, DAY_31));
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			const CWeatherDay& day = weather.GetDay(TRef);
 			double Tmin = day[H_TMIN][LOWEST];
@@ -296,8 +296,8 @@ namespace WBSF
 		CStatistic tdpv;
 
 		CTPeriod p = weather.GetEntireTPeriod(CTM::DAILY);
-		//CTPeriod p(CTRef(year, JUNE, FIRST_DAY), CTRef(year, AUGUST, LAST_DAY));
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		//CTPeriod p(CTRef(year, JUNE, DAY_01), CTRef(year, AUGUST, LAST_DAY));
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			const CWeatherDay& day = weather.GetDay(TRef);
 			double Tmin = day[H_TMIN][LOWEST];
@@ -337,7 +337,7 @@ namespace WBSF
 	//	//double TK = day.GetTMean() + 273.15;
 
 	//	////svp is the saturation vapor pressure in kPa
-	//	//double i = A/TK + B + C*TK + D*Square(TK) + E*Cube(TK) + F*log(TK);
+	//	//double i = A/TK + B + C*TK + D*square(TK) + E*Cube(TK) + F*log(TK);
 	//	//double svp = exp(i);
 
 	//	//udpv2 += svp*(1-day[DAILY_DATA::RELH]/100);
@@ -353,7 +353,7 @@ namespace WBSF
 	////double TK = day.GetTMean() + 273.15;
 
 	////svp is the saturation vapor pressure in kPa
-	//double i = A/TK + B + C*TK + D*Square(TK) + E*Cube(TK) + F*log(TK);
+	//double i = A/TK + B + C*TK + D*square(TK) + E*Cube(TK) + F*log(TK);
 	//double svp = exp(i);
 
 	//udpv2 += svp*(1-day[DAILY_DATA::RELH]/100);
@@ -382,10 +382,10 @@ namespace WBSF
 	//Saturation vapor pressure at daylight temperature[kPa]
 	double GetDaylightVaporPressureDeficit(const CWeatherDay& weather)
 	{
-		ASSERT(weather[H_EA].IsInit());
+		assert(weather[H_EA].is_init());
 
 		double daylightT = weather.GetTdaylight();
-		double daylightEs = eᵒ(daylightT);//kPa
+		double daylightEs = e0(daylightT);//kPa
 
 		return max(0.0, daylightEs - weather[H_EA][MEAN]);//[kPa]
 	}

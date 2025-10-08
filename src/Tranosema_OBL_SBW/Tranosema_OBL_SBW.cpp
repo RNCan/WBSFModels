@@ -20,7 +20,7 @@ namespace WBSF
 
 	//*********************************************************************************
 	//CTranosema_OBL_SBW class
-	CTranosema_OBL_SBW::CTranosema_OBL_SBW(CHost* pHost, CTRef creationDate, double age, WBSF::TSex sex, bool bFertil, size_t generation, double scaleFactor, CIndividualPtr& pAssociateHost) :
+	CTranosema_OBL_SBW::CTranosema_OBL_SBW(CHost* pHost, CTRef creationDate, double age, WBSF::TSex sex, bool bFertil, size_t generation, double scaleFactor, const CIndividualPtr& pAssociateHost) :
 		CTranosema(pHost, creationDate, age, sex, bFertil, generation, scaleFactor) 
 	{
 		m_pAssociateHost = pAssociateHost;
@@ -53,11 +53,11 @@ namespace WBSF
 		//adjust the number of host available
 		
 		CTranosema_OBL_SBW_Stand* pStand = GetStand();
-		ASSERT(pStand->m_OBLStand.m_host.size() == 1);
-		ASSERT(pStand->m_SBWStand.m_host.size() == 1);
+		assert(pStand->m_OBLStand.m_host.size() == 1);
+		assert(pStand->m_SBWStand.m_host.size() == 1);
 		
 		
-		if (m_sex == FEMALE && m_age >= ADULT)
+		if (m_sex == FEMALE && GetStage() >= ADULT)
 		{
 			//m_Nh is only update for female
 			
@@ -91,10 +91,10 @@ namespace WBSF
 
 		CTranosema::Live(weather);
 
-		if (!m_pAssociateHost.expired() && !m_diapauseTRef.IsInit())
+		if (!m_pAssociateHost.expired() && !m_diapauseTRef.is_init())
 		{
 			double dayLength = weather.GetDayLength() / 3600.; //in hours
-			if (weather.GetTRef().GetJDay() > 173 && dayLength < GetStand()->m_criticalDaylength)
+			if (weather.GetTRef().GetDOY() > 173 && dayLength < GetStand()->m_criticalDaylength)
 			{
 				//Switch
 				//Tests indicate that the best hypothesis is 2 (parasitoid enters diapause as soon as its host is induced): 
@@ -136,16 +136,16 @@ namespace WBSF
 
 	void CTranosema_OBL_SBW::Brood(const CWeatherDay& weather)
 	{
-		ASSERT(IsAlive() && m_sex == FEMALE);
-		ASSERT(m_totalBroods <= m_Pmax+1);
+		assert(IsAlive() && m_sex == FEMALE);
+		assert(m_totalBroods <= m_Pmax+1);
 
 		m_totalBroods += m_broods;
 
 		//Oviposition module after Régniere 1983
 		if (m_bFertil && m_broods > 0)
 		{
-			ASSERT(m_age >= ADULT);
-			CTranosema_OBL_SBW_Stand* pStand = GetStand(); ASSERT(pStand);
+			assert(m_age >= ADULT);
+			CTranosema_OBL_SBW_Stand* pStand = GetStand(); assert(pStand);
 			CIndividualPtr pAssociateHost  = pStand->SelectRandomHost(true);
 
 			double attRate = GetStand()->m_bApplyAttrition ? pStand->m_generationAttrition : 1;//10% of survival by default
@@ -251,8 +251,8 @@ namespace WBSF
 		CTranosemaStand::GetStat(d, stat, generation);
 
 		
-		ASSERT(m_OBLStand.m_host.size() == 1);
-		ASSERT(m_SBWStand.m_host.size() == 1);
+		assert(m_OBLStand.m_host.size() == 1);
+		assert(m_SBWStand.m_host.size() == 1);
 
 		const std::shared_ptr<WBSF::CHost>& pOBLObjects = m_OBLStand.m_host.front();
 		for (auto it = pOBLObjects->begin(); it != pOBLObjects->end(); it++)
@@ -297,9 +297,9 @@ namespace WBSF
 			for (CIndividualPtrContainer::iterator it = pObjects->begin(); it != pObjects->end(); it++)
 			{
 				CIndividual* pInd = it->get();
-				ASSERT(pInd != NULL);
+				assert(pInd != NULL);
 				CTranosema_OBL_SBW* pTranosema = static_cast<CTranosema_OBL_SBW*>(pInd);
-				ASSERT(pTranosema);
+				assert(pTranosema);
 
 				if (pTranosema->m_pAssociateHost.expired())
 				{
@@ -344,9 +344,9 @@ namespace WBSF
 		//std::weak_ptr<CIndividual> pHost;
 
 		const std::shared_ptr<WBSF::CHost>& pOBLObjects = m_OBLStand.m_host.front();
-		ASSERT(!pOBLObjects->empty());
+		assert(!pOBLObjects->empty());
 		const std::shared_ptr<WBSF::CHost>& pSBWObjects = m_SBWStand.m_host.front();
-		ASSERT(!pSBWObjects->empty());
+		assert(!pSBWObjects->empty());
 
 
 		double nbAttackable = 0;
@@ -406,7 +406,7 @@ namespace WBSF
 			}
 		}
 
-		ASSERT(pHost);
+		assert(pHost);
 		return pHost;
 	}
 }

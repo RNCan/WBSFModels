@@ -2,7 +2,7 @@
 // 07/07/2021	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
 #include "SpottedLanternflyModel.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 
 
 using namespace WBSF::HOURLY_DATA;
@@ -112,7 +112,7 @@ namespace WBSF
 		//Create host
 		CLDWHostPtr pHost(new CLDWHost(&stand));
 
-		pHost->Initialize<CSpottedLanternfly>(CInitialPopulation(p.Begin(), 0, 400, 100, EGG));
+		pHost->Initialize<CSpottedLanternfly>(CInitialPopulation(p.begin(), 0, 400, 100, EGG));
 
 		//add host to stand			
 		stand.m_host.push_front(pHost);
@@ -120,10 +120,10 @@ namespace WBSF
 
 
 
-		for (CTRef d = p.Begin(); d <= p.End(); d++)
+		for (CTRef d = p.begin(); d <= p.end(); d++)
 		{
 			stand.Live(weather.GetDay(d));
-			//if (output.IsInside(d))
+			//if (output.is_inside(d))
 			stand.GetStat(d, output[d]);
 			//output[d][O_CDD_EOD] = stand.m_EOD_CDD[d][0];
 
@@ -139,11 +139,11 @@ namespace WBSF
 			{
 				size_t ss = (s == 0) ? S_EGG_HATCH : S_EGG + s;
 				CStatistic stat = output.GetStat(ss, p);
-				if (stat.IsInit() && stat[SUM] > 0)
+				if (stat.is_init() && stat[SUM] > 0)
 				{
 					double S = stat[(s != DEAD_ADULT) ? SUM : HIGHEST];
-					output[p.Begin()][s] = 100*output[p.Begin()][ss] / S;
-					for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+					output[p.begin()][s] = 100*output[p.begin()][ss] / S;
+					for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 						output[TRef][s] = ((s != DEAD_ADULT) ? output[TRef - 1][s]:0) + 100 * output[TRef][ss] / S;
 				}
 			}
@@ -153,18 +153,18 @@ namespace WBSF
 		}
 		
 		//stat = output.GetStat(S_ADULT, p);
-		//if (stat.IsInit() && stat[SUM] > 0)
+		//if (stat.is_init() && stat[SUM] > 0)
 		//{
-		//	output[p.Begin()][O_CUMUL_ADULT] = 0;
-		//	for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+		//	output[p.begin()][O_CUMUL_ADULT] = 0;
+		//	for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 		//		output[TRef][O_CUMUL_ADULT] = output[TRef - 1][O_CUMUL_ADULT] + 100 * output[TRef][S_ADULT] / stat[SUM];
 		//}
 	}
 
 	enum TInput { I_EGG_HATCH, I_CUMUL_EGG_HATCH = DEAD_ADULT, NB_INPUTS = DEAD_ADULT * 2 };
-	void CSpottedLanternflyModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CSpottedLanternflyModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == 14);
+		assert(data.size() == 14);
 
 		CSAResult obs;
 
@@ -175,7 +175,7 @@ namespace WBSF
 			obs.m_obs[s] = (data[s + 2] != "NA") ? stod(data[s + 2]) : -999.0;//EggHatch
 
 			if (s < I_CUMUL_EGG_HATCH && obs.m_obs[s] >= 0)
-				m_DOY[s] += obs.m_ref.GetJDay();
+				m_DOY[s] += obs.m_ref.GetDOY();
 		}
 
 
@@ -274,7 +274,7 @@ namespace WBSF
 
 
 		//double CHDD = 0;
-		//for (CTRef TRef = pp.Begin(); TRef <= pp.End(); TRef++)
+		//for (CTRef TRef = pp.begin(); TRef <= pp.end(); TRef++)
 		//{
 		//	//if(TRef.GetMonth()<APRIL|| TRef.GetMonth()>SEPTEMBER)
 		//	double Tair = weather.GetDay(TRef)[H_TNTX][MEAN];
@@ -303,7 +303,7 @@ namespace WBSF
 			SS[i].second += SS[i - 1].second;
 		}
 
-		ASSERT(SS.back().second == 1);
+		assert(SS.back().second == 1);
 
 		double LL = 0;
 		for (size_t i = 0; i < SS.size(); i++)
@@ -352,10 +352,10 @@ namespace WBSF
 			{
 				size_t ss = (s == 0) ? S_EGG_HATCH : S_EGG + s;
 				CStatistic stat = output.GetStat(ss, p);
-				if (stat.IsInit() && stat[SUM] > 0)
+				if (stat.is_init() && stat[SUM] > 0)
 				{
-					cumcul_output[p.Begin()][s] = 0;
-					for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+					cumcul_output[p.begin()][s] = 0;
+					for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 						cumcul_output[TRef][s] = cumcul_output[TRef - 1][s] + 100 * output[TRef][ss] / stat[SUM];
 				}
 			}*/
@@ -381,7 +381,7 @@ namespace WBSF
 								double sim_DOY = GetSimDOY(s, m_SAResult[i].m_ref, obs, cumcul_output);
 								if (sim_DOY > -999)
 								{
-									double obs_DOYp = GetDOYPercent(s, m_SAResult[i].m_ref.GetJDay());
+									double obs_DOYp = GetDOYPercent(s, m_SAResult[i].m_ref.GetDOY());
 									double sim_DOYp = GetDOYPercent(s, sim_DOY);
 
 									//for (size_t ii = 0; ii < log(3 * Ne); ii++)
@@ -402,7 +402,7 @@ namespace WBSF
 
 	double CSpottedLanternflyModel::GetSimDOY(size_t s, CTRef TRefO, double obs, const CModelStatVector& output)
 	{
-		ASSERT(obs > -999);
+		assert(obs > -999);
 
 		double DOY = -999;
 
@@ -412,11 +412,11 @@ namespace WBSF
 		//if (obs >= 100)
 			//obs = 99.99;//to avoid some problem of truncation
 
-		long index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(TRefO.GetYear(), JANUARY, DAY_01, TRefO.GetYear(), DECEMBER, DAY_31));
-		if (index >= 1)
+		size_t index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(CTRef(TRefO.GetYear(), JANUARY, DAY_01), CTRef(TRefO.GetYear(), DECEMBER, DAY_31)));
+		if (index != NOT_INIT && index >= 1)
 		{
-			double obsX1 = output.GetFirstTRef().GetJDay() + index;
-			double obsX2 = output.GetFirstTRef().GetJDay() + index + 1;
+			double obsX1 = output.GetFirstTRef().GetDOY() + index;
+			double obsX2 = output.GetFirstTRef().GetDOY() + index + 1;
 
 			double obsY1 = output[index][s];
 			double obsY2 = output[index + 1][s];
@@ -424,7 +424,7 @@ namespace WBSF
 			{
 				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 				double obsX = obsX1 + (obs - obsY1) * slope;
-				ASSERT(!_isnan(obsX) && _finite(obsX));
+				assert(!_isnan(obsX) && _finite(obsX));
 
 				DOY = obsX;
 			}

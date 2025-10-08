@@ -3,10 +3,10 @@
 //**********************************************************************
 #include "FallCankerwormsModel.h"
 #include "Basic/Statistic.h"
-#include <math.h>
-#include <crtdbg.h>
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include <cmath>
+#include <cassert>
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
 
 using namespace std;
 
@@ -109,19 +109,19 @@ namespace WBSF
 	}
 
 
-	void CFallCankerwormsModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CFallCankerwormsModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(header[0] == "KeyID");
-		ASSERT(header[1] == "Year");
-		ASSERT(header[2] == "Month");
-		ASSERT(header[3] == "Day");
+		assert(header[0] == "KeyID");
+		assert(header[1] == "Year");
+		assert(header[2] == "Month");
+		assert(header[3] == "Day");
 
 		CTRef ref(ToShort(data[1]), ToShort(data[2]) - 1, ToShort(data[3]) - 1);
 
-		ASSERT(header.size() == 10);
-		ASSERT(header[4] == "L1");
-		ASSERT(header[5] == "L2");
-		ASSERT(header[6] == "L3");
+		assert(header.size() == 10);
+		assert(header[4] == "L1");
+		assert(header[5] == "L2");
+		assert(header[6] == "L3");
 
 		std::vector<double> obs(NB_FALL_INPUT);
 		for (size_t i = 0; i < NB_FALL_INPUT; i++)
@@ -177,12 +177,12 @@ namespace WBSF
 					m_fallCR.Execute(m_weather, statSim);
 					for (size_t i = 0; i < m_SAResult.size(); i++)
 					{
-						ASSERT(m_SAResult[i].m_obs.size() == NB_FALL_INPUT);
+						assert(m_SAResult[i].m_obs.size() == NB_FALL_INPUT);
 						for (size_t p = F_EGG_L1; p <= F_SOIL_PUPA; p++)
 						{
 							if (m_SAResult[i].m_obs[I_F_L1 + p] > 0.0 &&
 								m_SAResult[i].m_obs[I_F_L1 + p] < 99.9 &&
-								statSim.IsInside(m_SAResult[i].m_ref))
+								statSim.is_inside(m_SAResult[i].m_ref))
 							{
 								double obs = m_SAResult[i].m_obs[I_F_L1 + p];
 								double sim = statSim[m_SAResult[i].m_ref][CFallCankerwormsCR::O_FIRST_STAGE + p + 1];
@@ -202,18 +202,18 @@ namespace WBSF
 
 					//for (size_t i = 0; i < m_SAResult.size(); i++)
 					//{
-					//	ASSERT(m_SAResult[i].m_obs.size() == NB_INPUT);
+					//	assert(m_SAResult[i].m_obs.size() == NB_INPUT);
 					//	for (size_t p = F_EGG_L1; p <= F_SOIL_PUPA; p++)
 					//	{
 					//		double obsS = m_SAResult[i].m_obs[I_L1 + p];
 					//		if (obsS > 0 &&
 					//			obsS < 100 &&
-					//			statSim.IsInside(m_SAResult[i].m_ref))
+					//			statSim.is_inside(m_SAResult[i].m_ref))
 					//		{
 					//			size_t pp = CFallCankerwormsCR::O_FIRST_STAGE + p + 1;
 
 					//			int year = m_SAResult[i].m_ref.GetYear();
-					//			size_t index = statSim.GetFirstIndex(pp, obsS, 1, CTPeriod(year, FIRST_MONTH, FIRST_DAY, year, LAST_MONTH, LAST_DAY));
+					//			size_t index = statSim.GetFirstIndex(pp, obsS, 1, CTPeriod(year, JANUARY, DAY_01, year, DECEMBER, DAY_31));
 					//			if (index >= 1)
 					//			{
 					//				//double obsDD1 = statSim[index][pp];
@@ -224,10 +224,10 @@ namespace WBSF
 					//				//double slope = (obsDD2 - obsDD1) / (obsS2 - obsS1);
 					//				//double obsH = obsDD1 + (obsS - obsS1)*slope;
 					//				//double simH = statSim[m_SAResult[i].m_ref][pp];
-					//				//ASSERT(!_isnan(obsH) && !_isnan(simH));
+					//				//assert(!_isnan(obsH) && !_isnan(simH));
 
 					//				CTRef TrefSim = statSim.GetFirstTRef() + index;
-					//				stat.Add(TrefSim.GetJDay(), m_SAResult[i].m_ref.GetJDay());
+					//				stat.Add(TrefSim.GetDOY(), m_SAResult[i].m_ref.GetDOY());
 					//			}
 					//		}
 					//	}
@@ -243,11 +243,11 @@ namespace WBSF
 
 					for (size_t i = 0; i < m_SAResult.size(); i++)
 					{
-						ASSERT(m_SAResult[i].m_obs.size() == NB_INPUT);
+						assert(m_SAResult[i].m_obs.size() == NB_INPUT);
 						for (int p = P_L2_L3; p < NB_PARAMS; p++)
 						{
 							int s = p + 1;
-							if (m_SAResult[i].m_obs[I_L2 + s] > -999 && statSim.IsInside(m_SAResult[i].m_ref))
+							if (m_SAResult[i].m_obs[I_L2 + s] > -999 && statSim.is_inside(m_SAResult[i].m_ref))
 							{
 								double obsS = m_SAResult[i].m_obs[I_L2 + s];
 								double simS = statSim[m_SAResult[i].m_ref][CSBWContinuingRatio::O_FIRST_STAGE + s];
@@ -256,7 +256,7 @@ namespace WBSF
 									int pp = CSBWContinuingRatio::O_FIRST_STAGE + s;
 
 									short year = m_SAResult[i].m_ref.GetYear();
-									long index = statSim.GetFirstIndex(pp, obsS, 1, CTPeriod(year, FIRST_MONTH, FIRST_DAY, year, LAST_MONTH, LAST_DAY));
+									long index = statSim.GetFirstIndex(pp, obsS, 1, CTPeriod(year, JANUARY, DAY_01, year, DECEMBER, DAY_31));
 									if (index >= 1)
 									{
 										double obsDD1 = statSim[index][CSBWContinuingRatio::O_DD];
@@ -273,8 +273,8 @@ namespace WBSF
 										simDD = (simDD - m_DDStat[MEAN]) / m_DDStat[STD_DEV_OVER_POP];
 										obsS = (obsS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
 										simS = (simS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
-										ASSERT(!_isnan(obsDD) && !_isnan(simDD));
-										ASSERT(!_isnan(obsS) && !_isnan(simS));
+										assert(!_isnan(obsDD) && !_isnan(simDD));
+										assert(!_isnan(obsS) && !_isnan(simS));
 
 										stat.Add(simDD, obsDD);
 										stat.Add(simS, obsS);
@@ -291,7 +291,7 @@ namespace WBSF
 
 				//for(int k=0; k<(int)m_SAResult.size(); k++)
 				//{
-				//	if( m_SAResult[k].m_obs[I_AI]>-999 && statSim.IsInside(m_SAResult[k].m_ref) )
+				//	if( m_SAResult[k].m_obs[I_AI]>-999 && statSim.is_inside(m_SAResult[k].m_ref) )
 				//	{
 				//	
 				//		double obs= m_SAResult[k].m_obs[I_AI];

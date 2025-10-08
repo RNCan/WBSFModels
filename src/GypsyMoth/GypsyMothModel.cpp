@@ -28,7 +28,7 @@
 
 #include "GypsyMothModel.h"
 #include "GypsyMoth.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 
 using namespace std;
 
@@ -68,7 +68,7 @@ namespace WBSF
 		//transfer your parameters here
 		int c = 0;
 		m_hatchModelType = parameters[c++].GetInt();
-		m_eggParam.m_ovipDate = period.Begin() + parameters[c++].GetInt();
+		m_eggParam.m_ovipDate = period.begin() + parameters[c++].GetInt();
 		m_eggParam.m_sawyerModel = parameters[c++].GetInt();
 		m_bHaveAttrition = parameters[c++].GetBool();
 		m_outputStyle = parameters[c++].GetInt();
@@ -111,7 +111,7 @@ namespace WBSF
 		CGypsyMoth::SetApplyMortality(m_bHaveAttrition);
 
 		CTPeriod period = m_weather.GetEntireTPeriod(CTM::DAILY);
-		period.Begin().m_year++;
+		period.begin().m_year++;
 
 		stat.Init(period);
 
@@ -128,9 +128,11 @@ namespace WBSF
 		//{
 		for (size_t y = 0; y < m_weather.GetNbYears() - 1; y++)
 		{
+			int year = m_weather.GetFirstYear() + int(y);
+
 			CGypsyMoth gypsyMoth(m_hatchModelType, eggParamTmp);
 
-			CTPeriod p(period.GetFirstAnnualTRef(y), period.GetLastAnnualTRef(y+1));
+			CTPeriod p(CTRef(year, JANUARY, DAY_01), CTRef(year+1,DECEMBER, DAY_31));
 
 			//simulate development
 			gypsyMoth.SimulateDeveloppement(m_weather, p);
@@ -200,15 +202,17 @@ namespace WBSF
 		CTPeriod p = stat.GetTPeriod();
 		for (size_t y = 0; y < p.GetNbYears(); y++)
 		{
-			CTPeriod p2 = p.GetAnnualPeriodByIndex(y);
+			//CTPeriod p2 = p.GetAnnualPeriodByIndex(y);
+			int year = p.GetFirstYear() + int(y);
+			CTPeriod p2(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31));
 			double sumMale = stat.GetStat(MALE_ADULT, p2)[SUM];
 			double sumFemale = stat.GetStat(FEMALE_ADULT, p2)[SUM];
 			//double sumMale2 = stat.GetStat(MALE_EMERGED, p2)[SUM];
 			//double sumFemale2 = stat.GetStat(FEMALE_EMERGED, p2)[SUM];
 
-			for (CTRef d = p2.Begin(); d <= p2.End(); d++)
+			for (CTRef d = p2.begin(); d <= p2.end(); d++)
 			{
-				bool firstDay = d == p2.Begin();
+				bool firstDay = d == p2.begin();
 
 				//double totPop=stat[d][EGG]+stat[d][TOT_POP]; 
 

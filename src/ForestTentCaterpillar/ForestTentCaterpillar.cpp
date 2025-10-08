@@ -22,7 +22,7 @@ namespace WBSF
 	//CForestTentCaterpillar class
 
 	const double CForestTentCaterpillar::TREE_FACTOR[FTC::NB_TREES] =
-	{ 1.0, 1.0, 1.0, 1.0, 1.0};
+	{ 1.0, 1.0, 1.0, 1.0, 1.0 };
 
 	//const double CForestTentCaterpillar::SURVIVAL_RATE[NB_STAGES] =
 	//{
@@ -54,7 +54,7 @@ namespace WBSF
 		if (&in != this)
 		{
 			CIndividual::operator=(in);
-			
+
 			//regenerate relative development rate
 			for (size_t s = 0; s < NB_STAGES; s++)
 				m_RDR[s] = Equations().GetRelativeDevRate(s);
@@ -66,7 +66,8 @@ namespace WBSF
 	}
 	// Object destructor
 	CForestTentCaterpillar::~CForestTentCaterpillar(void)
-	{}
+	{
+	}
 
 
 	//*****************************************************************************
@@ -82,7 +83,7 @@ namespace WBSF
 		CFTCTree* pTree = GetTree();
 		CFTCStand* pStand = GetStand();
 
-		
+
 		size_t h = weather.GetTRef().GetHour();
 		size_t s = GetStage();
 		double T = weather[H_TAIR];
@@ -92,13 +93,13 @@ namespace WBSF
 			COverheat overheat(OVERHEAT_FACTOR);
 			T += overheat.GetOverheat(((const CWeatherDay&)*weather.GetParent()), h, 16);
 		}*/
-		
+
 
 		//Time step development rate
 		double r = Equations().GetRate(s, T) / (24.0 / timeStep);
 		//Relative development rate (development rate is accelerated relative to TREMBLING_ASPEN)
-		
-		double rr = TREE_FACTOR[GetTree()->m_kind]*m_RDR[s];
+
+		double rr = TREE_FACTOR[GetTree()->m_kind] * m_RDR[s];
 
 		//Time step development rate for this individual
 		r *= rr;
@@ -125,12 +126,12 @@ namespace WBSF
 			return;
 
 		size_t nbSteps = GetTimeStep().NbSteps();
-		for (size_t step = 0; step < nbSteps&&m_age < DEAD_ADULT; step++)
+		for (size_t step = 0; step < nbSteps && GetStage() < DEAD_ADULT; step++)
 		{
 			size_t h = step * GetTimeStep();
 			Live(weather[h], GetTimeStep());
 		}
-		
+
 	}
 
 
@@ -139,8 +140,8 @@ namespace WBSF
 		assert(IsAlive() && m_sex == FEMALE);
 
 
-		if (GetStage() == ADULT && 
-			m_F > 0 )
+		if (GetStage() == ADULT &&
+			m_F > 0)
 		{
 			assert(m_F > 0);
 
@@ -168,7 +169,7 @@ namespace WBSF
 		//	//m_status = DEAD;
 		//	//m_death = FROZEN;
 		//}
-		
+
 
 	}
 
@@ -213,7 +214,7 @@ namespace WBSF
 	//	return RR;
 	//}
 
-	
+
 
 	//*****************************************************************************
 	// IsDeadByAttrition is for one time step development
@@ -260,7 +261,7 @@ namespace WBSF
 	//*********************************************************************************
 	//CFTCTree
 
-	CFTCTree::CFTCTree(CStand* pStand) : 
+	CFTCTree::CFTCTree(CStand* pStand) :
 		CHost(pStand),
 		m_DD(CDegreeDays::SINGLE_TRIANGLE, 6.8),
 		m_sumDD(0)
@@ -280,10 +281,10 @@ namespace WBSF
 
 		stat[S_AVERAGE_INSTAR] = GetAI(true);
 		stat[S_DD68] = m_sumDD;
-		
+
 	}
 
 
-	
+
 
 }

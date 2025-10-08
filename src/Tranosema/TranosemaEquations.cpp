@@ -29,7 +29,7 @@ namespace WBSF
 
 	double CTranosemaEquations::Equation1(size_t s, double T)
 	{
-		ASSERT(s >= EGG && s <= PUPA);
+		assert(s >= EGG && s <= PUPA);
 
 		//development rate parameters (2 variables (Egg, Pupa), 6 parameters)
 		enum TParameters{ RHO25, HA, HL, TL, HH, TH, NB_PARAMETERS };
@@ -51,7 +51,7 @@ namespace WBSF
 
 	double CTranosemaEquations::Equation2(size_t s, double T)
 	{
-		ASSERT(s == ADULT);
+		assert(s == ADULT);
 
 		//Adult development rate parameters (2 parameters)
 		enum TRelDevParameters{ P1, P2, NB_PARAMETERS };
@@ -66,7 +66,7 @@ namespace WBSF
 	//Compute daily development rate for table lookup
 	double CTranosemaEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 		//relative development
 		double Rt = 0;
@@ -76,12 +76,12 @@ namespace WBSF
 		case EGG:
 		case PUPA: Rt = Equation1(s, T); break;
 		case ADULT:	Rt = Equation2(s, T); break;
-		default: ASSERT(false);
+		default: assert(false);
 		}
 
 
 		_ASSERTE(!_isnan(Rt) && _finite(Rt));
-		ASSERT(Rt >= 0);
+		assert(Rt >= 0);
 		return Rt;
 	}
 
@@ -91,7 +91,7 @@ namespace WBSF
 
 	double CTranosemaEquations::Equation3(size_t s)const
 	{
-		ASSERT(s >= EGG && s <= ADULT);
+		assert(s >= EGG && s <= ADULT);
 		static const double P[NB_STAGES][2] =
 		{
 			//  x      s
@@ -132,7 +132,7 @@ namespace WBSF
 		while (Pmax < 43 || Pmax>243)
 			Pmax = m_randomGenerator.RandNormal(P[0], P[1]);
 
-		ASSERT(Pmax > 0);
+		assert(Pmax > 0);
 
 		return Pmax;
 	}

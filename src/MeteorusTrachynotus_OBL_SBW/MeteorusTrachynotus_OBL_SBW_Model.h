@@ -1,4 +1,7 @@
-#include "ModelBase/BioSIMModelBase.h"
+#pragma once
+
+
+#include "ModelBased/BioSIMModelBase.h"
 #include "MeteorusTrachynotus_OBL_SBW.h"
 
 namespace WBSF

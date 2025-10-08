@@ -11,8 +11,8 @@
 // Calinger (2023). A century of climate warming results in growing season extension Delayed autumn leaf phenology in north central North America
 //*********************************************************************
 #include "BudBurstUlmus.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/DegreeDays.h"
 
 
 
@@ -69,7 +69,7 @@ namespace WBSF
 		//transfer your parameter here
 		size_t c = 0;
 		m_species = parameters[c++].GetInt();
-		ASSERT(m_species < NB_SPECIES);
+		assert(m_species < NB_SPECIES);
 
 		
 		m_P = P[m_species];
@@ -124,7 +124,7 @@ namespace WBSF
 		if (output.empty())
 		{
 			int year = weather[yy].GetTRef().GetYear();
-			CTPeriod pp(year - 1, JANUARY, DAY_01, year, DECEMBER, DAY_31);
+			CTPeriod pp(CTRef(year - 1, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31));
 			output.Init(pp, NB_OUTPUTS, -999);
 		}
 
@@ -170,7 +170,7 @@ namespace WBSF
 
 
 	enum { I_SITE, I_YEAR, I_BB, NB_INPUTS1 };
-	void CBudBurstUlmusModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CBudBurstUlmusModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		CSAResult obs;
 
@@ -208,8 +208,8 @@ namespace WBSF
 				//DDmodel.Execute(m_weather, m_DD);
 
 
-				CTPeriod pp(*m_years.begin() - 1, JANUARY, DAY_01, *m_years.rbegin(), DECEMBER, DAY_31);
-				pp = pp.Intersect(m_weather.GetEntireTPeriod(CTM::DAILY));
+				CTPeriod pp(CTRef(*m_years.begin() - 1, JANUARY, DAY_01), CTRef(*m_years.rbegin(), DECEMBER, DAY_31));
+				pp = pp.intersect(m_weather.GetEntireTPeriod(CTM::DAILY));
 
 				((CLocation&)m_data_weather) = m_weather;
 				//data_weather.SetHourly(false);
@@ -236,11 +236,11 @@ namespace WBSF
 				ExecuteOneYear(yy, m_weather, tmp);
 
 				CTRef TRef = tmp.GetFirstTRef(O_BUDBURST, ">=", 1, -1);
-				if (TRef.IsInit())
+				if (TRef.is_init())
 				{
-					ASSERT(tmp[TRef][O_BUDBURST] <= 1);
-					ASSERT(tmp[TRef+1][O_BUDBURST] >= 1);
-					output[year] = TRef.GetJDay() + 1 + (1 - tmp[TRef][O_BUDBURST]) / (tmp[TRef+1][O_BUDBURST] - tmp[TRef][O_BUDBURST]);
+					assert(tmp[TRef][O_BUDBURST] <= 1);
+					assert(tmp[TRef+1][O_BUDBURST] >= 1);
+					output[year] = TRef.GetDOY() + 1 + (1 - tmp[TRef][O_BUDBURST]) / (tmp[TRef+1][O_BUDBURST] - tmp[TRef][O_BUDBURST]);
 				}
 
 				//output[year] = tmp.GetFirstTRef(O_BUDBURST, ">=", 1, 0);
@@ -248,11 +248,11 @@ namespace WBSF
 
 			for (size_t i = 0; i < m_SAResult.size(); i++)
 			{
-				//ASSERT(output.IsInside(m_SAResult[i].m_ref));
+				//assert(output.is_inside(m_SAResult[i].m_ref));
 				//if (output[m_SAResult[i].m_ref.GetYear()].IsInit()) 
 				{
 					double BB_obs = m_SAResult[i].m_obs[0];
-					//double BB_sim = output[m_SAResult[i].m_ref.GetYear()].GetJDay() + 1;
+					//double BB_sim = output[m_SAResult[i].m_ref.GetYear()].GetDOY() + 1;
 					double BB_sim = output[m_SAResult[i].m_ref.GetYear()];
 					stat.Add(BB_obs, BB_sim);
 				}

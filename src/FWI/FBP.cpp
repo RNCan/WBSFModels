@@ -16,7 +16,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 13/10/2020   Rémi Saint-Amant	Code from R source: https://rdrr.io/cran/cffdrs
 //**********************************************************************
-#include <math.h>
+#include <cmath>
 #include <assert.h>
 #include "FBP.h"
 #include "FWI.h"
@@ -216,7 +216,7 @@ namespace WBSF
 
 		//Calculate or keep Initial Spread Index(ISI)
 		if (in.ISI <= 0)
-			in.ISI = CFWI::GetISI(in.FFMC, out.WSV, TRUE);
+			in.ISI = CFWI::GetISI(in.FFMC, out.WSV, true);
 
 		//Calculate the Rate of Spread(ROS), C6 has different calculations
 		out.ROS = (in.fuel_type == FUEL_C6) ? C6calc(in.fuel_type, in.ISI, in.BUI, in.FMC, out.SFC, in.CBH, /*-999, -999, -999, */"ROS") :
@@ -941,10 +941,10 @@ namespace WBSF
 
 			//Calculate Date of minimum foliar moisture content
 			//Eqs. 2 & 4 (FCFDG 1992)
-			//Round D0 to the nearest integer because it is a date
+			//round D0 to the nearest integer because it is a date
 			D0 = (ELV <= 0) ?
-				Round(151 * (LAT / LATN), 0) :
-				Round(142.1 * (LAT / LATN) + 0.0172 * ELV, 0);
+				round(151 * (LAT / LATN), 0) :
+				round(142.1 * (LAT / LATN) + 0.0172 * ELV, 0);
 		}
 
 

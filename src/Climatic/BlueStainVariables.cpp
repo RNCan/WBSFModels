@@ -27,8 +27,8 @@
 #include <functional>   // std::greater
 #include <algorithm>    // std::sort
 #include "Basic/UtilMath.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/Evapotranspiration.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/Evapotranspiration.h"
 #include "BlueStainVariables.h"
 
  
@@ -53,7 +53,7 @@ namespace WBSF
 
 		inline bool operator() (const pair<CStatistic, CTPeriod>& struct1, const pair<CStatistic, CTPeriod>& struct2)
 		{
-			ASSERT(struct1.first.IsInit() && struct2.first.IsInit());
+			assert(struct1.first.is_init() && struct2.first.is_init());
 
 			bool bRep=false;
 			
@@ -107,7 +107,7 @@ namespace WBSF
 		for (size_t m = 0; m < max_m; m++)
 		{
 			size_t mm = (m + 2);
-			CTPeriod p(CTRef(year, m, 0, 0, TM), CTRef(year+int(mm/12), mm % 12, 0, 0, TM), CTPeriod::YEAR_BY_YEAR);
+			CTPeriod p(CTRef(year, m, 0, 0, TM), CTRef(year+int(mm/12), mm % 12, 0, 0, TM));
 			quarter[m] = make_pair(CStatistic(), p);
 		}
 
@@ -118,7 +118,7 @@ namespace WBSF
 				size_t mm = m + i;
 				CTRef TRef(weather.GetTRef().GetYear()+int(mm/12), mm % 12);
 
-				if (weather.GetEntireTPeriod(CTM(CTM::MONTHLY)).IsInside(TRef))
+				if (weather.GetEntireTPeriod(CTM(CTM::MONTHLY)).is_inside(TRef))
 					quarter[m].first += e<WARMEST ? weather[TRef][H_PRCP][MEAN] : weather[TRef][H_TNTX][MEAN];
 			}
 		}
@@ -172,7 +172,7 @@ namespace WBSF
 		{
 			int year = weather.GetFirstYear() + int(y);
 
-			CTPeriod p(CTRef(year, APRIL, 0, 0, TM), CTRef(year, AUGUST, LAST_DAY, LAST_HOUR, TM), CTPeriod::YEAR_BY_YEAR);
+			CTPeriod p(CTRef(year, APRIL, 0, 0, TM), CTRef(year, AUGUST, DAY_31, 23, TM));
 			ouptut[y][0] = tmp.GetStat(CDegreeDays::S_DD, p)[SUM];
 		}
 	}
@@ -208,10 +208,10 @@ namespace WBSF
 
 	double CBlueStainVariables::GetAridity(const CModelStatVector& AR, CTPeriod p, bool bLimitToZero)
 	{
-		if (!p.IsInit())
+		if (!p.is_init())
 			p = AR.GetTPeriod();
 
-		p.Transform(CTM(CTM::MONTHLY));
+		p = p.as(CTM(CTM::MONTHLY));
 
 		CStatistic statA;
 		for (size_t y = 0; y<p.GetNbYears(); y++)
@@ -222,7 +222,7 @@ namespace WBSF
 			for (size_t m = 0; m < 12; m++)
 			{
 				CTRef TRef(year, m);
-				if (p.IsInside(TRef))
+				if (p.is_inside(TRef))
 				{
 					double aridity = AR[TRef][0];
 					
@@ -282,7 +282,7 @@ namespace WBSF
 				case V_COLDQ_PRCP:	output[y][v] = weather[y](H_PRCP, Q[COLDEST])[SUM]; break;
 				case V_WETQ_PRCP:	output[y][v] = weather[y](H_PRCP, Q[WETTEST])[SUM]; break;
 				case V_DRYQ_PRCP:	output[y][v] = weather[y](H_PRCP, Q[DRIEST])[SUM]; break;
-				case V_AI:			output[y][v] = GetAridity(WD, CTPeriod(CTRef(year, FIRST_MONTH), CTRef(year, LAST_MONTH)), false); break;
+				case V_AI:			output[y][v] = GetAridity(WD, CTPeriod(CTRef(year, JANUARY), CTRef(year, DECEMBER)), false); break;
 				case V_WARMQ_AI:	output[y][v] = GetAridity(WD, Q[WARMEST], false); break;
 				case V_COLDQ_AI:	output[y][v] = GetAridity(WD, Q[COLDEST], false); break;
 				case V_WETQ_AI:		output[y][v] = GetAridity(WD, Q[WETTEST], false); break;
@@ -292,7 +292,7 @@ namespace WBSF
 				case V_WETM_PRCP:	output[y][v] = weather[CTRef(year, M[WETTEST])][H_PRCP][SUM]; break;
 				case V_DRYM_PRCP:	output[y][v] = weather[CTRef(year, M[DRIEST])][H_PRCP][SUM]; break;
 				case V_SUMMER_DD5:	output[y][v] = DD5[y][0]; break;
-				default: ASSERT(false);
+				default: assert(false);
 				}
 			}
 		}

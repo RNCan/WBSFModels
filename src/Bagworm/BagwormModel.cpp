@@ -4,7 +4,7 @@
 //************************************************************************************
 
 #include "BagwormModel.h"
-#include "ModelBase\EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 using namespace WBSF::HOURLY_DATA;
 
@@ -108,7 +108,7 @@ namespace WBSF
 		CHostPtr pHost( new CHost(&stand) );
 
 		//host.Initialise(m_nbBugs, m_weather.GetTRef(), 0, EGG, false);
-		pHost->Initialize<CBagworm>(CInitialPopulation(p.Begin(), 0, m_nbBugs, 100, EGG, RANDOM_SEX, false, 0));
+		pHost->Initialize<CBagworm>(CInitialPopulation(p.begin(), 0, m_nbBugs, 100, EGG, RANDOM_SEX, false, 0));
 
 		//add tree to stand			
 		stand.m_host.push_front(pHost);
@@ -117,7 +117,7 @@ namespace WBSF
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
 			CTPeriod period = m_weather[y].GetEntireTPeriod();
-			for (CTRef d = period.Begin(); d <= period.End(); d++)
+			for (CTRef d = period.begin(); d <= period.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
 				stand.GetStat(d, stat[d]);
@@ -151,13 +151,15 @@ namespace WBSF
 	void CBagwormModel::ComputeAnnualOutput(CBagwormOutputVector& stat, CAnnualOutputVector& output)
 	{
 		CTPeriod p = stat.GetTPeriod();
-		ASSERT(p.GetNbYears() >= 2);
-		output.Init(p.GetNbYears() - 1, CTRef(p.GetFirstAnnualTRef(1).GetYear()));
+		assert(p.GetNbYears() >= 2);
+		//output.Init(p.GetNbYears() - 1, CTRef(p.GetFirstAnnualTRef(1).GetYear()));
+		output.Init(p.GetNbYears() - 1, CTRef(p.GetFirstYear() + 1));
 
 		for (size_t y = 1; y < p.GetNbYears(); y++)
 		{
-			double nbEggs = stat[p.GetFirstAnnualTRef(y)][STAT_EGG];
-			double nbDeadAdults = stat[p.GetLastAnnualTRef(y)][STAT_DEAD_ADULT];
+			int year = p.GetFirstYear() + int(y);
+			double nbEggs = stat[CTRef(year, JANUARY,DAY_01)][STAT_EGG];
+			double nbDeadAdults = stat[CTRef(year, DECEMBER, DAY_31)][STAT_DEAD_ADULT];
 
 			if (nbEggs > 0 && nbDeadAdults >= 0)
 				output[y - 1][O_SURVIVAL] = nbDeadAdults / nbEggs * 100;
@@ -165,7 +167,7 @@ namespace WBSF
 				output[y - 1][O_SURVIVAL] = 0;
 
 
-			double nbDeadFrozen = stat[p.GetLastAnnualTRef(y)][STAT_DEAD_FROZEN];
+			double nbDeadFrozen = stat[CTRef(year, DECEMBER, DAY_31)][STAT_DEAD_FROZEN];
 
 			if (nbEggs > 0 && nbDeadFrozen >= 0)
 				output[y - 1][O_EGG_SURVIVAL] = (nbEggs - nbDeadFrozen) / nbEggs * 100;

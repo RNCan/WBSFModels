@@ -2,12 +2,12 @@
 // 28/05/2025	1.0		Rémi Saint-Amant	Creation
 //**********************************************************************
 
-#include "VHR_to_Landsat.h"
-#include "Basic/Evapotranspiration.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
 
+#include "WeatherBased/Evapotranspiration.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "ModelBased/EntryPoint.h"
+#include "VHR_to_Landsat.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -68,7 +68,7 @@ namespace WBSF
 
 	ERMsg CVHR2LandsatModel::OnExecuteAnnual()
 	{
-		//ASSERT(m_nb_years <= m_weather.size());
+		//assert(m_nb_years <= m_weather.size());
 
 		ERMsg msg;
 
@@ -136,7 +136,7 @@ namespace WBSF
 	double CVHR2LandsatModel::MST(const CWeatherYear& weather)
 	{
 		int year = weather.GetTRef().GetYear();
-		return weather.GetStat(H_TNTX, CTPeriod(year,MAY,DAY_01, year,SEPTEMBER,DAY_30))[MEAN];
+		return weather.GetStat(H_TNTX, CTPeriod(CTRef(year,MAY,DAY_01), CTRef(year,SEPTEMBER,DAY_30)))[MEAN];
 	}
 
 	//MWT:Mean winter temperature
@@ -150,10 +150,10 @@ namespace WBSF
 		//
 		//double R1 = stats[MEAN];
 		//double R2 = weather.GetStat(H_TNTX, CTPeriod(year, OCTOBER, DAY_01, year, FEBRUARY, LAST_DAY))[MEAN];
-		//assert(Round(R1, 2) == Round(R2, 2));
+		//assert(round(R1, 2) == round(R2, 2));
 
 
-		return weather.GetStat(H_TNTX, CTPeriod(year - 1, DECEMBER, DAY_01, year, FEBRUARY, LAST_DAY))[MEAN];
+		return weather.GetStat(H_TNTX, CTPeriod(CTRef( year - 1, DECEMBER, DAY_01 ), CTRef( year, FEBRUARY, GetLastDayOfMonth(year, FEBRUARY))))[MEAN];
 	}
 
 	//MSP:Mean summer precipitation
@@ -173,7 +173,7 @@ namespace WBSF
 	//MWP:Mean winter precipitation.
 	double CVHR2LandsatModel::MWP(const CWeatherYears& weather, int year)
 	{
-		ASSERT(weather.IsYearInit(year));
+		assert(weather.IsYearInit(year));
 		//int year = weather.GetTRef().GetYear();
 		CStatistic stats;
 
@@ -183,7 +183,7 @@ namespace WBSF
 
 		//double R1 = stats[MEAN];
 		//double R2 = weather.GetStat(H_PRCP, CTPeriod(year, OCTOBER, DAY_01, year, FEBRUARY, LAST_DAY))[MEAN];
-		//assert(Round(R1, 2) == Round(R2, 2));
+		//assert(round(R1, 2) == round(R2, 2));
 
 		return stats[MEAN];
 		//return weather.GetStat(H_PRCP, CTPeriod(year-1, OCTOBER, DAY_01, year, FEBRUARY, LAST_DAY))[MEAN];

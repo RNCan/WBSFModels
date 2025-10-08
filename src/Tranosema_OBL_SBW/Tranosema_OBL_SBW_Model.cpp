@@ -11,8 +11,8 @@
 //*****************************************************************************
 
 #include "Basic/UtilStd.h"
-#include "Basic/SnowAnalysis.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "ModelBased/EntryPoint.h"
 #include "Tranosema_OBL_SBW_Model.h"
 
 
@@ -52,7 +52,7 @@ namespace WBSF
 		// initialize your variables here (optimal values obtained by sensitivity analysis)
 		m_bHaveAttrition = true;
 		m_generationAttrition = 0.025;//Attrition survival (cull in the egg stage, before creation)
-		m_diapauseAge = EGG + 0.1;
+		m_diapauseAge = double(EGG) + 0.1;
 		m_lethalTemp = -5.0;
 		m_criticalDaylength = 13.5; 
 		m_bOnGround = false;
@@ -80,7 +80,7 @@ namespace WBSF
 		m_bOnGround = parameters[c++].GetBool();
 		m_bOBLAttrition = parameters[c++].GetBool();
 		m_bSBWAttrition = parameters[c++].GetBool();
-		ASSERT(m_diapauseAge >= 0. && m_diapauseAge <= 1.);
+		assert(m_diapauseAge >= 0. && m_diapauseAge <= 1.);
 
 		return msg;
 	}
@@ -107,9 +107,9 @@ namespace WBSF
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		size_t maxG = min(NB_GENERATIONS, TranosemaStat.size()); 
-		m_output.Init(p.size(), p.Begin(), NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
+		m_output.Init(p.size(), p.begin(), NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			CStatistic diapauseAge;
 			for (size_t g = 0; g < maxG; g++)
@@ -143,8 +143,8 @@ namespace WBSF
 			//get the annual period 
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
 			CTRef TRef = snowA.GetLastSnowTRef(m_weather[y]).as(CTM::DAILY);
-			if (!TRef.IsInit() || !m_bOnGround)
-				TRef = p.Begin(); //no snow 
+			if (!TRef.is_init() || !m_bOnGround)
+				TRef = p.begin(); //no snow 
 
 
 			//Create stand
@@ -152,14 +152,14 @@ namespace WBSF
 
 			//OBL init
 			std::shared_ptr<CHost> pHostOBL = make_shared<CHost>(&stand.m_OBLStand);
-			pHostOBL->Initialize<CObliqueBandedLeafroller>(CInitialPopulation(p.Begin(), 0, 250, 100, OBL::L3D, RANDOM_SEX, true, 0));
+			pHostOBL->Initialize<CObliqueBandedLeafroller>(CInitialPopulation(p.begin(), 0, 250, 100, OBL::L3D, RANDOM_SEX, true, 0));
 			stand.m_SBWStand.m_bApplyAttrition = m_bOBLAttrition;
 			stand.m_OBLStand.m_host.push_front(pHostOBL);
 
 			//SBW init
 
 			std::shared_ptr<CSBWTree> pHostSBW = make_shared<CSBWTree>(&stand.m_SBWStand);
-			pHostSBW->Initialize<CSpruceBudworm>(CInitialPopulation(p.Begin(), 0, 250, 100, SBW::L2o, RANDOM_SEX, false, 0));
+			pHostSBW->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 250, 100, SBW::L2o, RANDOM_SEX, false, 0));
 			stand.m_SBWStand.m_bFertilEgg = false;
 			stand.m_SBWStand.m_bApplyAttrition = m_bSBWAttrition;
 			stand.m_SBWStand.m_defoliation = 0;
@@ -175,7 +175,7 @@ namespace WBSF
 			pHostTranosema->m_nbMinObjects = 100;
 			pHostTranosema->m_nbMaxObjects = 1250;
 			pHostTranosema->Initialize(CInitialPopulation(TRef, 0, 500, 100, m_diapauseAge, FEMALE, true, 0));
-			//pHostTranosema->Initialize(CInitialPopulation(p.Begin(), 0, 1000, 100, m_diapauseAge, FEMALE, true, 0));
+			//pHostTranosema->Initialize(CInitialPopulation(p.begin(), 0, 1000, 100, m_diapauseAge, FEMALE, true, 0));
 			
 
 			//Init stand
@@ -190,13 +190,13 @@ namespace WBSF
 
 			
 			//run the model for all days of all years
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
 
 				size_t nbGenerations = stand.GetFirstHost()->GetNbGeneration();
 				if (nbGenerations > stat.size())
-					stat.push_back(CModelStatVector(entirePeriod.GetNbRef(), entirePeriod.Begin(), NB_STATS_EX, 0));
+					stat.push_back(CModelStatVector(entirePeriod, NB_STATS_EX, 0));
 
 				for (size_t g = 0; g < nbGenerations; g++)
 					stand.GetStat(d, stat[g][d], g);
@@ -229,9 +229,9 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, TranosemaStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
-				CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 				m_output[TRef][O_A_NB_GENERATION] = maxG;
 
@@ -244,7 +244,7 @@ namespace WBSF
 					for (size_t i = 0; i < 7; i++)
 					{
 						CStatistic stat = TranosemaStat[g].GetStat(VAR_IN[i], season);
-						ASSERT(stat.IsInit());
+						assert(stat.is_init());
 						m_output[TRef][VAR_OUT[i]] += stat[SUM];
 					}
 
@@ -292,10 +292,10 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, TranosemaStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
-				size_t y = TRef - p.Begin();
-				CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+				size_t y = TRef - p.begin();
+				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 
 				double eggsBegin = 100;
@@ -319,24 +319,24 @@ namespace WBSF
 					}
 
 					CStatistic broodStat = TranosemaStat[g].GetStat(E_BROOD, season);
-					ASSERT(broodStat.IsInit());
+					assert(broodStat.is_init());
 					m_output[gg][O_G_BROOD] = broodStat[SUM];
 					
 						
 					CStatistic diapauseStat = TranosemaStat[g].GetStat(E_DIAPAUSE, season);
-					ASSERT(diapauseStat.IsInit());
+					assert(diapauseStat.is_init());
 					m_output[gg][O_G_DIAPAUSE] = diapauseStat[SUM];
 
 					CStatistic attritionStat = TranosemaStat[g].GetStat(E_ATTRITION, season);
-					ASSERT(attritionStat.IsInit());
+					assert(attritionStat.is_init());
 					m_output[gg][O_G_ATTRITION] = attritionStat[SUM];
 
 					CStatistic frozenStat = TranosemaStat[g].GetStat(E_FROZEN, season);
-					ASSERT(frozenStat.IsInit());
+					assert(frozenStat.is_init());
 					m_output[gg][O_G_FROZEN] = frozenStat[SUM];
 
 					CStatistic hostDieStat = TranosemaStat[g].GetStat(E_HOST_DIE, season);
-					ASSERT(hostDieStat.IsInit());
+					assert(hostDieStat.is_init());
 					m_output[gg][O_G_HOST_DIE] = hostDieStat[SUM];
 
 					if (m_output[gg][O_G_ADULT]>0)

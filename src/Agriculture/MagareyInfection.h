@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 namespace WBSF
 {
@@ -70,7 +70,7 @@ namespace WBSF
 
 		virtual ERMsg OnExecuteDaily();
 		virtual ERMsg ProcessParameters(const CParameterVector& parameters);
-		//virtual void AddDailyResult(const StringVector& header, const StringVector& data);
+		//virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
 		//virtual void GetFValueDaily(CStatisticXY& stat);
 		static CBioSIMModelBase* CreateObject(){ return new CMagareyInfectionModel; }
 

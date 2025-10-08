@@ -3,10 +3,10 @@
 //**********************************************************************
 
 #include "CaroleCoursolle.h"
-#include "Basic/Evapotranspiration.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/Evapotranspiration.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "Modelbased/EntryPoint.h"
 
 
 using namespace std;
@@ -71,7 +71,7 @@ namespace WBSF
 
 	ERMsg CCCModel::OnExecuteAnnual()
 	{
-		ASSERT(m_nb_years <= m_weather.size());
+		assert(m_nb_years <= m_weather.size());
 
 		ERMsg msg;
 
@@ -91,9 +91,9 @@ namespace WBSF
 			output[y][O_MCMT] = MCMT(m_weather[y]);
 			output[y][O_EMT] = EMT(m_weather[y]);
 			output[y][O_MWMT] = MWMT(m_weather[y]);
-			output[y][O_BFFP] = FFp.Begin().GetJDay() + 1;//Base 1
-			output[y][O_EFFP] = FFp.End().GetJDay() + 1;//Base 1
-			output[y][O_FFPL] = FFp.GetNbDay();
+			output[y][O_BFFP] = FFp.begin().GetDOY() + 1;//Base 1
+			output[y][O_EFFP] = FFp.end().GetDOY() + 1;//Base 1
+			output[y][O_FFPL] = FFp.length(CTM::DAILY);// .Get.GetNbDays();
 			output[y][O_NFFD] = NFFD(m_weather[y]);
 			output[y][O_CHDD0] = CHDD(m_weather[y], 0);
 			output[y][O_CHDD5] = CHDD(m_weather[y], 5);
@@ -105,7 +105,7 @@ namespace WBSF
 
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM::ANNUAL);
-		p.Begin() += int(m_nb_years) - 1;
+		p.begin() += int(m_nb_years) - 1;
 
 		m_output.Init(p, NB_ANNUAL_STATS, 0);
 
@@ -191,7 +191,7 @@ namespace WBSF
 		CTPeriod pp(CTRef(year, AUGUST, DAY_01 ), CTRef(year, DECEMBER, DAY_31));
 
 		double FDD = 0;
-		for (CTRef TRef = pp.Begin(); TRef <= pp.End(); TRef++)
+		for (CTRef TRef = pp.begin(); TRef <= pp.end(); TRef++)
 		{
 			double Tair = weather.GetDay(TRef)[H_TNTX][MEAN];
 			if (Tair < threshold)
@@ -217,7 +217,7 @@ namespace WBSF
 		CTPeriod pp= output.GetTPeriod();
 
 		double CDD = 0;
-		for (CTRef TRef = pp.Begin(); TRef <= pp.End(); TRef++)
+		for (CTRef TRef = pp.begin(); TRef <= pp.end(); TRef++)
 			CDD += output[TRef][CDegreeDays::S_DD];
 
 

@@ -6,10 +6,10 @@
 //
 //*********************************************************************
 
-#include "Basic/WeatherDefine.h"
-#include "Basic/GrowingSeason.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/GrowingSeason.h"
 //#include "Evapotranspiration.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "GrowingSeasonModel.h"
 
 
@@ -78,7 +78,7 @@ namespace WBSF
 		//m_end.m_shift = shiftType2 == INCLUDE_NB_DAYS ? (m_end.m_d == CGSInfo::GET_FIRST ? -int(m_end.m_nbDays) : int(m_end.m_nbDays)) : 0;
 
 
-		ASSERT(c == NB_INPUT_PARAMETER);
+		assert(c == NB_INPUT_PARAMETER);
 
 		return msg;
 	}
@@ -120,8 +120,8 @@ namespace WBSF
 		//	CTPeriod p = GS.GetGrowingSeason(m_weather[y]); 
 		//	p.Transform(CTM(CTM::DAILY));
 		//
-		//	m_output[y][O_FIRST_DAY] = p.Begin().GetRef();//p.Begin().Get__int32();
-		//	m_output[y][O_LAST_DAY] = p.End().GetRef();//p.End().Get__int32(); 
+		//	m_output[y][O_FIRST_DAY] = p.begin().GetRef();//p.begin().Get__int32();
+		//	m_output[y][O_LAST_DAY] = p.end().GetRef();//p.end().Get__int32(); 
 		//	m_output[y][O_GS_LENGTH] = p.GetLength();
 		//}
 
@@ -132,7 +132,7 @@ namespace WBSF
 	/*
 	double CGrowingSeasonModel::GetT(const CWeatherDay& Wday, int t)
 	{
-	ASSERT( t>=0 && t<NB_TEMP);
+	assert( t>=0 && t<NB_TEMP);
 
 	double T=0;
 	switch(t)
@@ -140,7 +140,7 @@ namespace WBSF
 	case IN_TMIN:	T=Wday.GetTMin(); break;
 	case IN_TMEAN:	T=Wday.GetTMean(); break;
 	case IN_TMAX:	T=Wday.GetTMax(); break;
-	default: ASSERT(false);
+	default: assert(false);
 	}
 
 	return T;
@@ -163,7 +163,7 @@ namespace WBSF
 
 	for(int dd=0; dd<m_nbDays[BEGIN]&&bGetIt; dd++)
 	{
-	ASSERT( d-dd>=0 );
+	assert( d-dd>=0 );
 
 	const CWeatherDay& Wday = weather.GetDay(d-dd);
 	bGetIt = bGetIt && GetT(Wday, m_Ttype[BEGIN]) < m_threashold[BEGIN];
@@ -174,7 +174,7 @@ namespace WBSF
 
 	if(bGetIt)
 	{
-	p.Begin().SetJDay(weather.GetYear(), d+1);
+	p.begin().SetJDay(weather.GetYear(), d+1);
 	}
 
 
@@ -187,7 +187,7 @@ namespace WBSF
 	bGetIt = true;
 	for(int dd=0; dd<m_nbDays[END]&&bGetIt; dd++)
 	{
-	ASSERT( d+dd<weather.GetNbDay() );
+	assert( d+dd<weather.GetNbDay() );
 
 	const CWeatherDay& Wday = weather.GetDay(d+dd);
 	bGetIt = bGetIt && GetT(Wday, m_Ttype[END]) < m_threashold[END];
@@ -196,13 +196,13 @@ namespace WBSF
 
 	if(bGetIt)
 	{
-	p.End().SetJDay( weather.GetYear(), d-1);
+	p.end().SetJDay( weather.GetYear(), d-1);
 	}
 
-	if( p.End() <= p.Begin() )
+	if( p.end() <= p.begin() )
 	{
 	if( bAlwaysFillPeriod )
-	p.End() = p.Begin() = CTRef(weather.GetYear(), JULY, 14);
+	p.end() = p.begin() = CTRef(weather.GetYear(), JULY, 14);
 	else
 	p.Reset();
 	}

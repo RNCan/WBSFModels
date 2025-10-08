@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
-#include "Basic/DegreeDays.h"
+#include "ModelBased/BioSIMModelBase.h"
+#include "WeatherBased/DegreeDays.h"
 #include "Basic/ModelStat.h"
 
 namespace WBSF

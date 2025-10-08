@@ -8,7 +8,7 @@
 //01/01/2005		JR, RSA				Creation
 //**********************************************************************
 #include "MPBColdTolerance.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "Basic/UtilMath.h"
 
 using namespace std;
@@ -97,7 +97,7 @@ namespace WBSF
 				{
 
 					double Trange = Tmax - Tmin;//T[H_TRNG][MEAN];
-					double Sin = sin(2 * 3.14159*(T.GetTRef().GetJDay() / 365. - 0.25));
+					double Sin = sin(2 * 3.14159*(T.GetTRef().GetDOY() / 365. - 0.25));
 
 					//convert air temperature to bark temperature
 					Tmin = -0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*Trange + 0.00000*Tmin*Sin + 0.005741*Tmin*Trange + 0.02370*Sin*Trange;
@@ -117,13 +117,13 @@ namespace WBSF
 
 				double TG = m_MuG + m_KappaG*Ct; //Equation [5]
 				double xG = exp(-(Tmean - TG) / m_SigmaG); //fragment of equation [3]
-				G = deltaT*m_RhoG*xG / (m_SigmaG*Square(1 + xG)); //Equation [3]
+				G = deltaT*m_RhoG*xG / (m_SigmaG*square(1 + xG)); //Equation [3]
 
 				if (Ct > 0.5 || reverse)
 				{
 					double TL = m_MuL + m_KappaL*Ct; //Equation [6]
 					double xL = exp(-(Tmean - TL) / m_SigmaL); //fragment of equation [4]
-					L = deltaT*m_RhoL*xL / (m_SigmaL*Square(1 + xL)); //Equation [4]
+					L = deltaT*m_RhoL*xL / (m_SigmaL*square(1 + xL)); //Equation [4]
 				}
 
 				Ct = Ct + (1 - Ct)*G - Ct*L; //Equation [7]
@@ -158,7 +158,7 @@ namespace WBSF
 	{
 		_ASSERTE(weather.GetNbYears() > 1);
 
-		m_firstDate = weather.GetEntireTPeriod(CTM::DAILY).Begin();
+		m_firstDate = weather.GetEntireTPeriod(CTM::DAILY).begin();
 		m_result.clear();
 		m_result.resize(weather.GetNbDays());
 		//Init value before T_0 with no data
@@ -205,7 +205,7 @@ namespace WBSF
 				{
 
 					double Trange = Tmax - Tmin;//T[H_TRNG][MEAN];
-					double Sin = sin(2 * 3.14159*(T.GetTRef().GetJDay() / 365. - 0.25));
+					double Sin = sin(2 * 3.14159*(T.GetTRef().GetDOY() / 365. - 0.25));
 
 					//convert air temperature to bark temperature
 					Tmin = -0.1493 + 0.8359*Tmin + 0.5417*Sin + 0.16980*Trange + 0.00000*Tmin*Sin + 0.005741*Tmin*Trange + 0.02370*Sin*Trange;
@@ -222,13 +222,13 @@ namespace WBSF
 
 				double TG = m_MuG + m_KappaG*Ct; //Equation [5]
 				double xG = exp(-(Tmean - TG) / m_SigmaG); //fragment of equation [3]
-				G = deltaT*m_RhoG*xG / (m_SigmaG*Square(1 + xG)); //Equation [3]
+				G = deltaT*m_RhoG*xG / (m_SigmaG*square(1 + xG)); //Equation [3]
 
 				if (Ct > 0.5 || reverse)
 				{
 					double TL = m_MuL + m_KappaL*Ct; //Equation [6]
 					double xL = exp(-(Tmean - TL) / m_SigmaL); //fragment of equation [4]
-					L = deltaT*m_RhoL*xL / (m_SigmaL*Square(1 + xL)); //Equation [4]
+					L = deltaT*m_RhoL*xL / (m_SigmaL*square(1 + xL)); //Equation [4]
 				}
 
 				Ct = Ct + (1 - Ct)*G - Ct*L; //Equation [7]

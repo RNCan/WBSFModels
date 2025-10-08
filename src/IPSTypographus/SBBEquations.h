@@ -11,8 +11,8 @@
 #pragma once
 
 #include <array>
-#include <crtdbg.h>
-#include "ModelBase/EquationTableLookup.h"
+#include <cassert>
+#include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
 {

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "WSBEquations.h"
 
 namespace WBSF
@@ -28,7 +28,7 @@ namespace WBSF
 		void ComputeRegularStat(CModelStatVector& stat, CModelStatVector& output);
 		//void ComputeCumulativeStat(CModelStatVector& stat, CModelStatVector& output)
 
-		virtual void AddDailyResult(const StringVector& header, const StringVector& data) override;
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data) override;
 		virtual bool GetFValueDaily(CStatisticXY& stat) override;
 		void GetFValueDailyEmergence(CStatisticXY& stat) ;
 		void GetFValueDailyStage(CStatisticXY& stat);

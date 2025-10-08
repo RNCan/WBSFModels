@@ -9,9 +9,9 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 #include "LeucotaraxisPiniperdaEquations.h"
-#include "Basic\DegreeDays.h"
+#include "WeatherBased/DegreeDays.h"
 
 namespace WBSF
 {
@@ -130,8 +130,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CLPMHost* CLeucotaraxisPiniperda::GetHost(){ return static_cast<CLPMHost*>(m_pHost); }
 	inline const CLPMHost* CLeucotaraxisPiniperda::GetHost()const{ return static_cast<const CLPMHost*>(m_pHost); }
-	inline CLPMStand* CLeucotaraxisPiniperda::GetStand(){ ASSERT(m_pHost); return static_cast<CLPMStand*>(GetHost()->GetStand()); }
-	inline const CLPMStand* CLeucotaraxisPiniperda::GetStand()const{ ASSERT(m_pHost); return static_cast<const CLPMStand*>(GetHost()->GetStand()); }
+	inline CLPMStand* CLeucotaraxisPiniperda::GetStand(){ assert(m_pHost); return static_cast<CLPMStand*>(GetHost()->GetStand()); }
+	inline const CLPMStand* CLeucotaraxisPiniperda::GetStand()const{ assert(m_pHost); return static_cast<const CLPMStand*>(GetHost()->GetStand()); }
 	inline const CLeucotaraxisPiniperdaEquations& CLeucotaraxisPiniperda::Equations()const{ return GetStand()->m_equations; }
 
 

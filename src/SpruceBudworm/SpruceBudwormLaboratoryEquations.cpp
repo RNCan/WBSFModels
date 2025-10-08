@@ -74,7 +74,7 @@ namespace WBSF
 		const double* p = P[e];//current P for equation
 		size_t s = e2s(e);//compute stage for b1Factor
 
-		double p1 = exp(-0.5*Square((T - p[PB2]) / p[PB3]));
+		double p1 = exp(-0.5*square((T - p[PB2]) / p[PB3]));
 		double Rt = p[PB1] * b1Factor[s] * p1;
 
 		return max(0.0, Rt);
@@ -84,7 +84,7 @@ namespace WBSF
 	{
 		const double* p = P[e];//current P for equation
 		size_t s = e2s(e);//compute stage for b1Factor
-		ASSERT(s == ADULT);
+		assert(s == ADULT);
 		
 		T = max(8.0, min(35.0, T) );
 		double Rt = 1 / (p[PB1] * b1Factor[s] + p[PB2] * T + p[PB3] * T*T);
@@ -94,7 +94,7 @@ namespace WBSF
 	//Daily development rate
 	double CSpruceBudwormEquations::ComputeRate(size_t e, double T)const
 	{
-		ASSERT(e >= 0 && e < NB_EQUATION);
+		assert(e >= 0 && e < NB_EQUATION);
 
 
 		double Rt = 0;
@@ -120,15 +120,15 @@ namespace WBSF
 		}
 
 		_ASSERTE(!_isnan(Rt) && _finite(Rt)); 
-		ASSERT(Rt >= 0);
+		assert(Rt >= 0);
 		return Rt;
 	}
 
 	//Get equation index from stage and sex because some stages have sex dependent equations
 	size_t CSpruceBudwormEquations::GetEquationIndex(size_t stage, size_t sex)
 	{
-		ASSERT(stage >= 0 && stage < NB_STAGES);
-		ASSERT(sex >= 0 && sex < NB_SEX);
+		assert(stage >= 0 && stage < NB_STAGES);
+		assert(sex >= 0 && sex < NB_SEX);
 
 		size_t e = stage;
 		if (stage == L6)
@@ -213,7 +213,7 @@ namespace WBSF
 	//A : forewing surface area [cm²]
 	double CSpruceBudwormEquations::get_A(size_t sex)const
 	{
-		ASSERT(sex < 2);
+		assert(sex < 2);
 
 		static const double A_MEAN[2] = { 0.361, 0.421 };
 		static const double A_SD[2] = { 0.047, 0.063 };
@@ -284,14 +284,14 @@ namespace WBSF
 		do
 		{
 			double ξ = m_randomGenerator.RandUnbiasedLogNormal(log(1), 0.222);
-			ASSERT(ξ >= 0.33 && ξ < 3.33);
+			assert(ξ >= 0.33 && ξ < 3.33);
 
 			double F = α*pow(A, β);
 			Fº = F*ξ;
 
 		} while (Fº<25 || Fº > 500);
 
-		ASSERT(Fº >= 25 && Fº <= 500);
+		assert(Fº >= 25 && Fº <= 500);
 
 		return Fº;
 	}
@@ -321,12 +321,12 @@ namespace WBSF
 
 	double CSpruceBudwormEquations::get_defoliation(double defoliation)const
 	{
-		ASSERT(defoliation >= 0 && defoliation <= 100);
+		assert(defoliation >= 0 && defoliation <= 100);
 		if (defoliation > 0 && defoliation < 100)
 		{
 			//From Regniere 20018 part III Equation [15]
 			double μ = defoliation / 100.0;
-			double σ² = 0.008101 + 0.5289*μ - 0.5228*Square(μ);
+			double σ² = 0.008101 + 0.5289*μ - 0.5228*square(μ);
 
 			double α = μ*((μ*(1 - μ) / σ²) - 1);
 			double β = (1 - μ)*((μ*(1 - μ) / σ²) - 1);
@@ -336,7 +336,7 @@ namespace WBSF
 				defoliation = m_randomGenerator.RandBeta(α, β) * 100;
 
 		}
-		ASSERT(defoliation >= 0 && defoliation <= 100);
+		assert(defoliation >= 0 && defoliation <= 100);
 		return defoliation;
 	}
 

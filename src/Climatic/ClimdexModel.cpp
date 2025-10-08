@@ -1,8 +1,8 @@
 //*********************************************************************
 //22/05/2017	Rémi Saint-Amant	Creation
 //*********************************************************************
-#include "Basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "Modelbased/EntryPoint.h"
 #include "ClimdexVariables.h"
 #include "ClimdexModel.h"
 
@@ -35,14 +35,14 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		StringVector str(parameters[0].GetString(), "-");
+		std::vector<std::string> str = Tokenize(parameters[0].GetString(), "-");
 		m_nn = parameters[1].GetReal();
 		m_bUseBootstrap = parameters[2].GetBool();
 
-		ASSERT(str.size() == 2);
-		m_basePeriod = CTPeriod(CTRef(as<int>(str[0]), JANUARY, DAY_01), CTRef(as<int>(str[1]), DECEMBER, DAY_31));
+		assert(str.size() == 2);
+		m_basePeriod = CTPeriod(CTRef(stoi(str[0]), JANUARY, DAY_01), CTRef(stoi(str[1]), DECEMBER, DAY_31));
 		CTPeriod simulationP = m_weather.GetEntireTPeriod(CTM::DAILY);
-		if (!simulationP.IsInside(m_basePeriod))
+		if (!simulationP.is_inside(m_basePeriod))
 			msg.ajoute("The base period " + m_basePeriod.GetFormatedString() + " is not inside the simulation period " + simulationP.GetFormatedString());
 			
 

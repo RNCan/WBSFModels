@@ -7,24 +7,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PHENO_eqs.cpp">
+    <ClCompile Include="..\..\src\BudBurst\BudBurstSBWHost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BudBurstSBWHost.cpp">
+    <ClCompile Include="..\..\src\BudBurst\BudBurstSBWHostModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BudBurstSBWHostModel.cpp">
+    <ClCompile Include="..\..\src\BudBurst\PHENO_eqs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PHENO_eqs.h">
+    <ClInclude Include="..\..\src\BudBurst\BudBurstSBWHost.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="BudBurstSBWHost.h">
+    <ClInclude Include="..\..\src\BudBurst\BudBurstSBWHostModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="BudBurstSBWHostModel.h">
+    <ClInclude Include="..\..\src\BudBurst\PHENO_eqs.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,25 +7,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HemlockLooper.cpp">
+    <ClCompile Include="..\..\src\HemlockLooper\HemlockLooper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HemlockLooperModel.cpp">
+    <ClCompile Include="..\..\src\HemlockLooper\HemlockLooperEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HemlockLooperEquations.cpp">
+    <ClCompile Include="..\..\src\HemlockLooper\HemlockLooperModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HemlockLooper.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HemlockLooperModel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HemlockLooperEquations.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooper.h" />
+    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooperEquations.h" />
+    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooperModel.h" />
   </ItemGroup>
 </Project>

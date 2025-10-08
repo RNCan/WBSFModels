@@ -7,18 +7,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BlueStainVariables.cpp">
+    <ClCompile Include="..\..\src\Climatic\BlueStainIndexModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BlueStainIndexModel.cpp">
+    <ClCompile Include="..\..\src\Climatic\BlueStainVariables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BlueStainVariables.h">
+    <ClInclude Include="..\..\src\Climatic\BlueStainIndexModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="BlueStainIndexModel.h">
+    <ClInclude Include="..\..\src\Climatic\BlueStainVariables.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

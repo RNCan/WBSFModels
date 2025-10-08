@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include <math.h>
+#include <cmath>
 #include <array>
 #include <cmath>
 
@@ -100,7 +100,7 @@ namespace WBSF
 
 
 			void InitBeta();
-			size_t value_to_bin(double v)const { return std::max(size_t(0), std::min(size_t(NB_BINS), size_t(std::round(v * NB_BINS)))); }
+			size_t value_to_bin(double v)const { return std::max(size_t(0), std::min(size_t(NB_BINS), size_t(std::round(v * double(NB_BINS))))); }
 			double GetBeta(size_t t, double v)const { return m_beta_function[t][value_to_bin(v)]; }
 			double GetRatio(size_t t, double v, double v_min, double v_max)const;
 

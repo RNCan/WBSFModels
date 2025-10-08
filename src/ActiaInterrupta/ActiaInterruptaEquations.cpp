@@ -53,7 +53,7 @@ namespace WBSF
 	//Compute daily development rate for table lookup
 	double CActiaInterruptaEquations::ComputeRate(size_t e, double T)const
 	{
-		ASSERT(e >= 0 && e < NB_EQUATIONS);
+		assert(e >= 0 && e < NB_EQUATIONS);
 
 		vector<double> p(begin(EQ_P[e]), end(EQ_P[e]));
 		double Rt = 0;
@@ -68,7 +68,7 @@ namespace WBSF
 
 
 		_ASSERTE(!_isnan(Rt) && _finite(Rt));
-		ASSERT(Rt >= 0);
+		assert(Rt >= 0);
 
 		return Rt;
 	}
@@ -79,7 +79,7 @@ namespace WBSF
 
 	double CActiaInterruptaEquations::Getδ(size_t e)const
 	{
-		ASSERT(e <= NB_EQUATIONS);
+		assert(e <= NB_EQUATIONS);
 
 		static const double P[NB_EQUATIONS][4] =
 		{

@@ -7,30 +7,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FWI-Model.cpp">
+    <ClCompile Include="..\..\src\FWI\FBP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FWI.cpp">
+    <ClCompile Include="..\..\src\FWI\FWI(new from wang2015).cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FWI(new from wang2015).cpp">
+    <ClCompile Include="..\..\src\FWI\FWI-Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FBP.cpp">
+    <ClCompile Include="..\..\src\FWI\FWI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FWI-Model.h">
+    <ClInclude Include="..\..\src\FWI\FBP.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="FWI.h">
+    <ClInclude Include="..\..\src\FWI\FWI(new from wang2015).h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="FWI(new from wang2015).h">
+    <ClInclude Include="..\..\src\FWI\FWI-Model.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="FBP.h">
+    <ClInclude Include="..\..\src\FWI\FWI.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

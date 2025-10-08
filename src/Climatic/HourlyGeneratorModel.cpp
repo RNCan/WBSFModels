@@ -2,8 +2,9 @@
 // 25-04-2017	1.0.0	Rémi Saint-Amant	Creation
 //*********************************************************************
 
-#include "Basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
+#include "Basic/Sun.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "Modelbased/EntryPoint.h"
 #include "HourlyGeneratorModel.h"
 
 
@@ -100,7 +101,7 @@ namespace WBSF
 			Tair = To2 + b2*sqrt(t - Ho);
 		//}
 
-		ASSERT(Tair > WEATHER::MISSING);
+		assert(Tair > WEATHER::MISSING);
 
 		return Tair;
 
@@ -114,8 +115,8 @@ namespace WBSF
 		//const CWeatherDay& me = *this;
 		const CWeatherDay& dn = me.GetNext();
 
-		if (me[H_TMIN].IsInit() && dn[H_TMIN].IsInit()
-			&& dp[H_TMAX].IsInit() && me[H_TMAX].IsInit())
+		if (me[H_TMIN].is_init() && dn[H_TMIN].is_init()
+			&& dp[H_TMAX].is_init() && me[H_TMAX].is_init())
 		{
 			const CLocation& loc = me.GetLocation();
 			CSun sun(loc.m_lat, loc.m_lon);
@@ -154,7 +155,7 @@ namespace WBSF
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		size_t i = 0;
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)//for all years
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)//for all years
 		{
 			const CWeatherDay& wDay = m_weather.GetDay(TRef);
 			for (size_t h = 0; h < 24; h++, i++)
@@ -168,7 +169,7 @@ namespace WBSF
 				case HG_ERBS:				m_output[i][0] = float(wDay.GetErbs(h)); break;
 				case HG_ALLEN_WAVE:			m_output[i][0] = float(wDay.GetAllenT(h)); break;
 				case HG_POLAR:				m_output[i][0] = float(WBSF::GetCesaraccio(wDay,h)); break;
-				default: ASSERT(false);
+				default: assert(false);
 				}
 			}
 		}

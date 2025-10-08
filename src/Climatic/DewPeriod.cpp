@@ -9,8 +9,8 @@
 //**********************************************************************
 
 
-#include "ModelBase/EntryPoint.h"
-#include "Basic/Evapotranspiration.h"
+#include "Modelbased/EntryPoint.h"
+#include "WeatherBased/Evapotranspiration.h"
 //#include "StdFile.h"
 #include "DewPeriod.h"
 
@@ -93,8 +93,8 @@ namespace WBSF
 			int year = hourlyData[y].GetTRef().GetYear();
 			for (size_t d = 0; d < hourlyData[y][m].size(); d++)
 			{
-				CTRef h(year, m, d, h);
-				const CHourlyData& hData = (const CHourlyData&)hourlyData.Get(h);
+				CTRef TRef(year, m, d, h);
+				const CHourlyData& hData = (const CHourlyData&)hourlyData.Get(TRef);
 				stat += hData[v];
 			}
 		}
@@ -107,7 +107,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		/*CMonthlyStatVector stat(m_weather.GetNbYear()*12, CTRef(m_weather[0].GetYear(), CFL::FIRST_MONTH));
+		/*CMonthlyStatVector stat(m_weather.GetNbYear()*12, CTRef(m_weather[0].GetYear(), CFL::JANUARY));
 
 
 
@@ -135,7 +135,7 @@ namespace WBSF
 		}
 		}*/
 
-		CMonthlyStatVector stat(12, CTRef(CTRef::MONTHLY, 0, 0, 0, CTRef::OVERALL_YEARS));
+		CMonthlyStatVector stat(12, CTRef(CTM::MONTHLY, 0, 0, 0, CTM::OVERALL_YEARS));
 
 
 		//	3.9	11.1	97	89	76
@@ -165,7 +165,8 @@ namespace WBSF
 
 		for (size_t m = 0; m < 12; m++)
 		{
-			CTPeriod p(CTRef(YEAR_NOT_INIT, m, FIRST_DAY, FIRST_HOUR), CTRef(YEAR_NOT_INIT, m, LAST_DAY, LAST_HOUR), CTPeriod::YEAR_BY_YEAR);
+			CTPeriod p(CTRef(YEAR_NOT_INIT, m, DAY_01, 0), CTRef(YEAR_NOT_INIT, m, GetLastDayOfMonth(YEAR_NOT_INIT, m), 23));
+			p.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
 			double Tmin = m_weather.GetStat(H_TMIN, p)[MEAN];
 			double Tmax = m_weather.GetStat(H_TMAX, p)[MEAN];
 

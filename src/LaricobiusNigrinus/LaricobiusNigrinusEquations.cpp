@@ -14,8 +14,8 @@
 #include "LaricobiusNigrinusEquations.h"
 #include <boost/math/distributions.hpp>
 #include <boost/math/distributions/logistic.hpp>
-#include "ModelBase/DevRateEquation.h"
-#include "ModelBase/SurvivalEquation.h"
+#include "ModelBased/DevRateEquation.h"
+#include "ModelBased/SurvivalEquation.h"
 
 using namespace WBSF;
 using namespace LNF;
@@ -119,7 +119,7 @@ namespace WBSF
 	//Daily development rate
 	double CLaricobiusNigrinusEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 		//double r = 0;
 
@@ -209,7 +209,7 @@ namespace WBSF
 
 		//if (s == EGG || s == LARVAE )
 		//{
-		//	ASSERT(m_RDR[s][μ] < 0.5);
+		//	assert(m_RDR[s][μ] < 0.5);
 		//	boost::math::logistic_distribution<double> rldist(0, m_RDR[s][ѕ]);
 		//	double rr = exp(boost::math::quantile(rldist, m_randomGenerator.Rand(m_RDR[s][μ],1- m_RDR[s][μ])) );
 		//	rr = max(0.5, min(2.0, rr));
@@ -229,7 +229,7 @@ namespace WBSF
 			{0.401}//adult
 		};
 
-		boost::math::lognormal_distribution<double> RDR_dist(-WBSF::Square(SIGMA[s]) / 2.0, SIGMA[s]);
+		boost::math::lognormal_distribution<double> RDR_dist(-WBSF::square(SIGMA[s]) / 2.0, SIGMA[s]);
 		double RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu(true, true));
 		while (RDR < 0.2 || RDR>2.6)//base on individual observation
 			RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu(true, true));
@@ -338,10 +338,10 @@ namespace WBSF
 		static const double sigma = 0.355;//from Foley 2022
 		//static const double Fcorrection = 72.0/102.1;//correction between Fo and Fn (from McAvoy 2024)
 		
-		boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::Square(sigma) / 2.0, sigma);
+		boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::square(sigma) / 2.0, sigma);
 		double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.01, 0.99));
 
-		ASSERT(!_isnan(Fi) && _finite(Fi));
+		assert(!_isnan(Fi) && _finite(Fi));
 
 
 		return Fi;
@@ -395,7 +395,7 @@ namespace WBSF
 
 
 	//	double w = m_randomGenerator.RandNormal(P[sex][0], P[sex][1]);
-	//	ASSERT(w > 3);
+	//	assert(w > 3);
 
 	//	//adjustment for attrition
 	//	return w * 7 * 0.65;//active life [day]

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
-#include "Basic/DegreeDays.h"
+#include "ModelBased/BioSIMModelBase.h"
+#include "WeatherBased/DegreeDays.h"
 #include "Basic/ModelStat.h"
 
 namespace WBSF
@@ -36,8 +36,8 @@ namespace WBSF
 		bool is_throw(const CDataInterface& data)const
 		{
 			bool bEvent = false;
-			float value = WBSF::Round((float)data[m_var][WBSF::MEAN], m_prec);
-			float threshold = WBSF::Round((float)m_threshold, m_prec);
+			float value = WBSF::round((float)data[m_var][WBSF::MEAN], m_prec);
+			float threshold = WBSF::round((float)m_threshold, m_prec);
 
 			switch (m_op)
 			{
@@ -46,7 +46,7 @@ namespace WBSF
 			case GREATHER_EQUAL:bEvent = value >= threshold; break;
 			case GREATHER:bEvent = value > threshold; break;
 
-			default: ASSERT(false);
+			default: assert(false);
 			}
 
 			return bEvent;

@@ -12,7 +12,7 @@
 // 22/04/2019   Rémi Saint-Amant    Creation 
 //*****************************************************************************
 #include "WhitemarkedTussockMothEquations.h"
-#include "ModelBase/DevRateEquation.h"
+#include "ModelBased/DevRateEquation.h"
 #include <boost/math/distributions.hpp>
 #include <boost/math/distributions/logistic.hpp>
 
@@ -159,7 +159,7 @@ namespace WBSF
 	//Daily development rate
 	double CWhitemarkedTussockMothEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 		if (s == PUPAE)
 			return 1;

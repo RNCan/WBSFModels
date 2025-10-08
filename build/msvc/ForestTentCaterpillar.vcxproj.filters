@@ -7,25 +7,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ForestTentCaterpillarModel.cpp">
+    <ClCompile Include="..\..\src\ForestTentCaterpillar\ForestTentCaterpillar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ForestTentCaterpillar.cpp">
+    <ClCompile Include="..\..\src\ForestTentCaterpillar\ForestTentCaterpillarEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ForestTentCaterpillarEquations.cpp">
+    <ClCompile Include="..\..\src\ForestTentCaterpillar\ForestTentCaterpillarModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ForestTentCaterpillarModel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ForestTentCaterpillar.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ForestTentCaterpillarEquations.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\ForestTentCaterpillar\ForestTentCaterpillar.h" />
+    <ClInclude Include="..\..\src\ForestTentCaterpillar\ForestTentCaterpillarEquations.h" />
+    <ClInclude Include="..\..\src\ForestTentCaterpillar\ForestTentCaterpillarModel.h" />
   </ItemGroup>
 </Project>

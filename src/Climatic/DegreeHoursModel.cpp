@@ -32,7 +32,7 @@
 //*****************************************************************************
 
 #include <array>
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "DegreeHoursModel.h"
 
 
@@ -59,8 +59,8 @@ namespace WBSF
 		VERSION = "3.1.0 (2016)"; //set the version of this model
 
 		//This model has 8 input parameters 
-		CMonthDay m_firstDate = CMonthDay(FIRST_MONTH, FIRST_DAY);
-		CMonthDay m_lastDate = CMonthDay(LAST_MONTH, LAST_DAY);
+		CMonthDay m_firstDate = CMonthDay(JANUARY, DAY_01);
+		CMonthDay m_lastDate = CMonthDay(DECEMBER, DAY_31);
 	}
 
 	//The destructor of the class
@@ -73,7 +73,7 @@ namespace WBSF
 	//this method is called by the framework to load parameters
 	ERMsg CDegreeHoursModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.size() > 0);
+		assert(m_weather.size() > 0);
 
 		ERMsg msg;
 
@@ -100,7 +100,7 @@ namespace WBSF
 
 
 
-		ASSERT(m_DH.m_cutoffType >= 0 && m_DH.m_cutoffType < CDegreeDays::NB_CUTOFF);
+		assert(m_DH.m_cutoffType >= 0 && m_DH.m_cutoffType < CDegreeDays::NB_CUTOFF);
 		
 
 		return msg;
@@ -117,18 +117,18 @@ namespace WBSF
 		CModelStatVector stats;
 
 		CTPeriod p = m_weather.GetEntireTPeriod();
-		CTRef begin = m_firstDate.GetTRef(p.Begin().GetYear());
-		CTRef end = m_lastDate.GetTRef(p.End().GetYear());
+		CTRef begin = m_firstDate.GetTRef(p.begin().GetYear());
+		CTRef end = m_lastDate.GetTRef(p.end().GetYear());
 
 		p = CTPeriod(begin, end);
 
 		m_output.Init(p, CDegreeHours::NB_OUTPUT, 0, CDegreeHours::HEADER);
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			double dh = m_DH.GetDH(m_weather.GetHour(TRef));
 			m_output[TRef][CDegreeHours::S_DH] = dh;
-			if (m_DH.m_bCumulative && TRef != p.Begin())
+			if (m_DH.m_bCumulative && TRef != p.begin())
 				m_output[TRef][CDegreeHours::S_DH] += m_output[TRef - 1][CDegreeHours::S_DH];
 		}
 

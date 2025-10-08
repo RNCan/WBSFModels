@@ -7,8 +7,8 @@
 // 27/01/2015	1.0.0	Rémi Saint-Amant	Creation
 //*********************************************************************
 
-#include "Basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "Modelbased/EntryPoint.h"
 #include "BlueStainIndexModel.h"
 
 
@@ -103,7 +103,7 @@ namespace WBSF
 		}
 
 
-		ASSERT(F >= 0 && F <= 100);
+		assert(F >= 0 && F <= 100);
 
 		return CLimits(F / mask.count(), pow(F, 1.0 / mask.count()));
 	}
@@ -113,7 +113,7 @@ namespace WBSF
 		CLimits BSI(0, 0);
 
 		CTPeriod p = values.GetTPeriod();
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			CLimits y;
 

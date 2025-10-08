@@ -24,7 +24,7 @@
 //*****************************************************************************
 
 #include <array>
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "ChillingDegreeDayModel.h"
 
 
@@ -62,7 +62,7 @@ namespace WBSF
 	//this method is called by the framework to load parameters
 	ERMsg CChillingDegreeDaysModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.size() > 0);
+		assert(m_weather.size() > 0);
 
 		ERMsg msg;
 

@@ -10,7 +10,7 @@
 #pragma once
 
 //#include "crtdbg.h"
-#include "ModelBase/EquationTableLookup.h"
+#include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
 {

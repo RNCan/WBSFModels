@@ -8,10 +8,12 @@
 
 #pragma once
 
+
 #include "Basic/UtilTime.h"
-#include "ModelBase/IndividualBase.h"
+#include "WeatherBased/DegreeDays.h"
+#include "ModelBased/IndividualBase.h"
 #include "ForestTentCaterpillarEquations.h"
-#include "Basic\DegreeDays.h"
+
 
 namespace WBSF
 {
@@ -118,8 +120,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CFTCTree* CForestTentCaterpillar::GetTree(){ return static_cast<CFTCTree*>(m_pHost); }
 	inline const CFTCTree* CForestTentCaterpillar::GetTree()const{ return static_cast<const CFTCTree*>(m_pHost); }
-	inline CFTCStand* CForestTentCaterpillar::GetStand(){ ASSERT(m_pHost); return static_cast<CFTCStand*>(GetTree()->GetStand()); }
-	inline const CFTCStand* CForestTentCaterpillar::GetStand()const{ ASSERT(m_pHost); return static_cast<const CFTCStand*>(GetTree()->GetStand()); }
+	inline CFTCStand* CForestTentCaterpillar::GetStand(){ assert(m_pHost); return static_cast<CFTCStand*>(GetTree()->GetStand()); }
+	inline const CFTCStand* CForestTentCaterpillar::GetStand()const{ assert(m_pHost); return static_cast<const CFTCStand*>(GetTree()->GetStand()); }
 	inline CForestTentCaterpillarEquations& CForestTentCaterpillar::Equations(){ return GetStand()->m_equations; }
 
 

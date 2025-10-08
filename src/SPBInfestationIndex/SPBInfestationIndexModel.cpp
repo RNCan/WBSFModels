@@ -1,10 +1,13 @@
 ﻿//***********************************************************
 // 01/03/2023	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
-#include "SPBInfestationIndexModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic/WeatherDefine.h"
 #include <boost/math/distributions/normal.hpp>
+
+#include "WeatherBased/WeatherDefine.h"
+#include "ModelBased/EntryPoint.h"
+
+
+#include "SPBInfestationIndexModel.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -142,7 +145,7 @@ namespace WBSF
 
 			for (size_t h = 0; h < p_h.size(); h++)
 			{
-				const CHourlyData& data = m_weather.GetHour(p_h.Begin() + h);
+				const CHourlyData& data = m_weather.GetHour(p_h.begin() + int32_t(h));
 				for (size_t v = 0; v < 3; v++)
 				{
 					if (h == 0)
@@ -169,7 +172,7 @@ namespace WBSF
 				CTPeriod pyh = m_weather[y].GetEntireTPeriod(CTM(CTM::HOURLY));
 
 				array<CStatistic, 3> stat;
-				for (CTRef TRef = pyh.Begin(); TRef <= pyh.End(); TRef++)
+				for (CTRef TRef = pyh.begin(); TRef <= pyh.end(); TRef++)
 				{
 					for (size_t v = 0; v < 3; v++)
 						stat[v] += T[TRef][v];
@@ -219,7 +222,7 @@ namespace WBSF
 
 		for (size_t h = 0; h < p_h.size(); h++)
 		{
-			const CHourlyData& data = m_weather.GetHour(p_h.Begin()+h);
+			const CHourlyData& data = m_weather.GetHour(p_h.begin()+ int32_t(h));
 			for (size_t v = 0; v < 3; v++)
 			{
 				if (h == 0)
@@ -235,7 +238,7 @@ namespace WBSF
 		}
 
 		size_t h = 0;
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			array<CStatistic,3> stat;
 			for (size_t hh = 0; hh < 24; h++,hh++)
@@ -271,42 +274,48 @@ namespace WBSF
 				{
 				case V_WINTER_TMIN:
 				{
-					CTPeriod p(CTRef(year - 1, DECEMBER, FIRST_DAY), CTRef(year, FEBRUARY, LAST_DAY), CTPeriod::YEAR_BY_YEAR);
+					CTPeriod p(CTRef(year - 1, DECEMBER, DAY_01), CTRef(year, FEBRUARY, GetLastDayOfMonth(year, FEBRUARY) ));
+					p.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
 					CStatistic stat = weather.GetStat(H_TMIN, p);
 					output[y][V_WINTER_TMIN] = stat[LOWEST];
 					break;
 				}
 				case V_SPRING_T:
 				{
-					CTPeriod p(CTRef(year, MARCH, FIRST_DAY), CTRef(year, MAY, LAST_DAY), CTPeriod::YEAR_BY_YEAR);
+					CTPeriod p(CTRef(year, MARCH, DAY_01), CTRef(year, MAY, DAY_31));
+					p.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
 					output[y][V_SPRING_T] = weather.GetStat(H_TNTX, p)[MEAN];
 					break;
 				}
 				case V_SUMMER_T:
 				{
-					CTPeriod p(CTRef(year - 1, JUNE, FIRST_DAY), CTRef(year, AUGUST, LAST_DAY), CTPeriod::YEAR_BY_YEAR);
+					CTPeriod p(CTRef(year - 1, JUNE, DAY_01), CTRef(year, AUGUST, DAY_31));
+					p.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
 					output[y][V_SUMMER_T] = weather.GetStat(H_TNTX, p)[MEAN];
 					break;
 				}
 				case V_FALL_T:
 				{
-					CTPeriod p(CTRef(year - 1, SEPTEMBER, FIRST_DAY), CTRef(year, NOVEMBER, LAST_DAY), CTPeriod::YEAR_BY_YEAR);
+					CTPeriod p(CTRef(year - 1, SEPTEMBER, DAY_01), CTRef(year, NOVEMBER, DAY_30));
+					p.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
 					output[y][V_FALL_T] = weather.GetStat(H_TNTX, p)[MEAN];
 					break;
 				}
 				case V_SPRING_P:
 				{
-					CTPeriod p(CTRef(year, MARCH, FIRST_DAY), CTRef(year, MAY, LAST_DAY), CTPeriod::YEAR_BY_YEAR);
+					CTPeriod p(CTRef(year, MARCH, DAY_01), CTRef(year, MAY, DAY_31));
+					p.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
 					output[y][V_SPRING_P] = weather.GetStat(H_PRCP, p)[SUM];
 					break;
 				}
 				case V_WINTER_P:
 				{
-					CTPeriod p(CTRef(year - 1, DECEMBER, FIRST_DAY), CTRef(year, FEBRUARY, LAST_DAY), CTPeriod::YEAR_BY_YEAR);
+					CTPeriod p(CTRef(year - 1, DECEMBER, DAY_01), CTRef(year, FEBRUARY, GetLastDayOfMonth(year, FEBRUARY)));
+					p.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
 					output[y][V_WINTER_P] = weather.GetStat(H_PRCP, p)[SUM];
 					break;
 				}
-				default: ASSERT(false);
+				default: assert(false);
 				}
 			}
 

@@ -8,10 +8,10 @@
 //		http://www.kimberly.uidaho.edu/water/asceewri/ascestzdetmain2005.pdf
 //*********************************************************************
 #include <algorithm>
-#include "Basic/WeatherDefine.h"
-#include "Basic/DegreeDays.h"
-#include "Basic/ASCE_ETc.h"
-#include "Modelbase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/DegreeDays.h"
+#include "WeatherBased/ASCE_ETc.h"
+#include "Modelbased/EntryPoint.h"
 #include "ETcModel.h"
 
 
@@ -99,7 +99,7 @@ namespace WBSF
 
 	//	CStatistic statDD5;
 	//	//Compute corrected evapotranpiration 
-	//	for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+	//	for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 	//	{
 	//		if (TRef >= March15)
 	//			statDD5 += DD5[TRef][0] / 24.0;//convert DH to DD

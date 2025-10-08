@@ -7,19 +7,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SummerMoisture.cpp">
+    <ClCompile Include="..\..\src\FWI\SummerMoisture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SummerMoistureModel.cpp">
+    <ClCompile Include="..\..\src\FWI\SummerMoistureModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SummerMoisture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SummerMoistureModel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\FWI\SummerMoisture.h" />
+    <ClInclude Include="..\..\src\FWI\SummerMoistureModel.h" />
   </ItemGroup>
 </Project>

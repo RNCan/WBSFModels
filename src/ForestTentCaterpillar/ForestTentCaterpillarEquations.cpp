@@ -45,7 +45,7 @@ namespace WBSF
 	//	const double* p = P[e];//current P for equation
 	//	size_t s = e2s(e);//compute stage for b1Factor
 
-	//	double p1 = exp(-0.5*Square((T - p[PB2]) / p[PB3]));
+	//	double p1 = exp(-0.5*square((T - p[PB2]) / p[PB3]));
 	//	double Rt = p[PB1] * b1Factor[s] * p1;
 
 	//	return max(0.0, Rt);
@@ -55,7 +55,7 @@ namespace WBSF
 	//{
 	//	const double* p = P[e];//current P for equation
 	//	size_t s = e2s(e);//compute stage for b1Factor
-	//	ASSERT(s == ADULT);
+	//	assert(s == ADULT);
 	//	
 	//	T = max(8.0, min(35.0, T) );
 	//	double Rt = 1 / (p[PB1] * b1Factor[s] + p[PB2] * T + p[PB3] * T*T);
@@ -70,7 +70,7 @@ namespace WBSF
 	//TT: air temperature [°C]
 	double CForestTentCaterpillarEquations::GetGrayEggDevRate(size_t t, double T)
 	{
-		ASSERT(t < NB_TREES);
+		assert(t < NB_TREES);
 		enum TParam { α, қ, ᴩ, Δᵀ, Tм };
 		static const double R[NB_GRAY_TREES][5] =
 		{
@@ -99,7 +99,7 @@ namespace WBSF
 
 	double CForestTentCaterpillarEquations::GetGrayEggRelDevRate(size_t t)const
 	{
-		ASSERT(t < NB_GRAY_TREES);
+		assert(t < NB_GRAY_TREES);
 		enum TParam { α, β, ɤ };
 
 		static const double F[NB_GRAY_TREES][3] =
@@ -143,7 +143,7 @@ namespace WBSF
 	//Daily development rate
 	double CForestTentCaterpillarEquations::ComputeRate(size_t s, double T)const
 	{
-		ASSERT(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 		double r = 0;
 

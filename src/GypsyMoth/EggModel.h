@@ -1,6 +1,6 @@
 #pragma once
 
-#include <crtdbg.h>
+#include <cassert>
 #include <vector>
 #include "Basic/ERMsg.h"
 #include "Basic/UtilTime.h"
@@ -22,7 +22,7 @@ namespace WBSF
 		void Reset()
 		{
 			m_sawyerModel = 1;
-			m_ovipDate.Reset();
+			m_ovipDate.clear();
 		}
 
 		int m_sawyerModel;
@@ -56,7 +56,7 @@ namespace WBSF
 
 		double GetEggsPourcent(CTRef day, int phase)const
 		{
-			_ASSERTE(m_eggState.IsInside(day));
+			_ASSERTE(m_eggState.is_inside(day));
 			return m_eggState[day][phase] / MAXEGGS*100.0;
 		}
 

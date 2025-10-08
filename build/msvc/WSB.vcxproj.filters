@@ -7,24 +7,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WSBModel.cpp">
+    <ClCompile Include="..\..\src\WesternSpruceBudworm\WSpruceBudworm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WSpruceBudworm.cpp">
+    <ClCompile Include="..\..\src\WesternSpruceBudworm\WSBEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WSBEquations.cpp">
+    <ClCompile Include="..\..\src\WesternSpruceBudworm\WSBModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WSBModel.h">
+    <ClInclude Include="..\..\src\WesternSpruceBudworm\WSBEquations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="WSpruceBudworm.h">
+    <ClInclude Include="..\..\src\WesternSpruceBudworm\WSBModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="WSBEquations.h">
+    <ClInclude Include="..\..\src\WesternSpruceBudworm\WSpruceBudworm.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 
 
 namespace WBSF
@@ -21,7 +21,7 @@ namespace WBSF
 		virtual ERMsg OnExecuteDaily()override;
 		virtual ERMsg OnExecuteHourly()override;
 
-		virtual void AddDailyResult(const StringVector& header, const StringVector& data)override;
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
 		virtual bool GetFValueDaily(CStatisticXY& stat)override;
 
 		static CBioSIMModelBase* CreateObject(){ return new CSoilTemperatureModel; }

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Basic/ERMsg.h"
-#include "Basic/WeatherStation.h"
+#include "WeatherBased/WeatherStation.h"
 #include "Basic/ModelStat.h"
-#include "Basic/WeatherDefine.h"
+#include "WeatherBased/WeatherDefine.h"
 
 namespace WBSF
 {
@@ -23,7 +23,7 @@ namespace WBSF
 		static const char* VAR_NAME[NB_VARIABLES];
 
 
-		CTPeriod CBlueStainVariables::GetExtremQuarter(const CWeatherYear& weather, TExtrem e, bool bLoop = false);
+		CTPeriod GetExtremQuarter(const CWeatherYear& weather, TExtrem e, bool bLoop = false);
 		static size_t GetExtremMonth(const CWeatherStation& weather, TExtrem e);
 		static size_t GetExtremMonth(const CWeatherYear& weather, TExtrem e);
 

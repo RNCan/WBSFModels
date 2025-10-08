@@ -5,13 +5,15 @@
 // 30/05/2013			Rémi Saint-Amant	Revision of parameter. Add Cumulative mode and Provicial location (NE, SE)
 // 08/04/2011			Rémi Saint-Amant	Create specific  SBW to Manitoba
 //**********************************************************************
-#include "SBWManitobaModel.h"
-#include "Basic/Statistic.h"
 #include <math.h>
-#include <crtdbg.h>
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
+#include <cassert>
 
+
+#include "Basic/Statistic.h"
+#include "ModelBased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
+
+#include "SBWManitobaModel.h"
 using namespace std;
 
 
@@ -196,19 +198,19 @@ namespace WBSF
 	}
 
 
-	void CSBWManitobaModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CSBWManitobaModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		//		PLOT_ID	PLOT_NAME	PLOT_LAT	PLOT_LON	PLOT_ELEV	DATE	Year	Month	Day	jDay	SPECIES	SURVEY_ID	Spayed	LI2	LI3	LI4	LI5	LI6	PUPA	nbInd	AI
 		//transform value to date/stage
-		ASSERT(header[0] == "Name");
-		ASSERT(header[1] == "ID");
-		ASSERT(header[2] == "Group");
-		ASSERT(header[3] == "Year");
-		ASSERT(header[4] == "Month");
-		ASSERT(header[5] == "Day");
-		ASSERT(header[7] == "LI2");
-		ASSERT(header[13] == "NbInds");
-		ASSERT(header[14] == "AvIns");
+		assert(header[0] == "Name");
+		assert(header[1] == "ID");
+		assert(header[2] == "Group");
+		assert(header[3] == "Year");
+		assert(header[4] == "Month");
+		assert(header[5] == "Day");
+		assert(header[7] == "LI2");
+		assert(header[13] == "NbInds");
+		assert(header[14] == "AvIns");
 
 
 		if (ToInt(data[2]) == m_subModel)
@@ -245,11 +247,11 @@ namespace WBSF
 
 					for (size_t i = 0; i < SAResult.size(); i++)
 					{
-						ASSERT(SAResult[i].m_obs.size() == NB_INPUT);
+						assert(SAResult[i].m_obs.size() == NB_INPUT);
 						for (int p = P_L2_L3; p<NB_PARAMS; p++)
 						{
 							int s = p + 1;
-							if (SAResult[i].m_obs[I_L2 + s]>-999 && statSim.IsInside(SAResult[i].m_ref))
+							if (SAResult[i].m_obs[I_L2 + s]>-999 && statSim.is_inside(SAResult[i].m_ref))
 							{
 								double obsS = SAResult[i].m_obs[I_L2 + s];
 								if (obsS > 1 && obsS < 99)
@@ -257,9 +259,9 @@ namespace WBSF
 									int pp = CSBWContinuingRatio::O_FIRST_STAGE + s;
 
 									short year = SAResult[i].m_ref.GetYear();
-									//long index = statSim.GetFirstIndex(pp, obsS, 1, CTPeriod(year, FIRST_MONTH, FIRST_DAY, year, LAST_MONTH, LAST_DAY));
-									long index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(year, FIRST_MONTH, FIRST_DAY, year, LAST_MONTH, LAST_DAY));
-									if (index >= 1)
+									//long index = statSim.GetFirstIndex(pp, obsS, 1, CTPeriod(year, JANUARY, DAY_01, year, DECEMBER, LAST_DAY));
+									size_t index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31)));
+									if (index != NOT_INIT && index >= 1)
 									{
 										double obsDD1 = statSim[index][CSBWContinuingRatio::O_DD];
 										double obsDD2 = statSim[index + 1][CSBWContinuingRatio::O_DD];
@@ -268,8 +270,8 @@ namespace WBSF
 										double obsS2 = statSim[index + 1][pp];
 										double slope = (obsDD2 - obsDD1) / (obsS2 - obsS1);
 										double obsDD = obsDD1 + (obsS - obsS1)*slope;
-										ASSERT(!_isnan(obsDD) && _finite(obsDD));
-										ASSERT(!_isnan(obsS) && _finite(obsS));
+										assert(!_isnan(obsDD) && _finite(obsDD));
+										assert(!_isnan(obsS) && _finite(obsS));
 
 										m_DDStat += obsDD;
 										m_stageStat[p] += obsS;
@@ -280,7 +282,7 @@ namespace WBSF
 					}
 				}
 
-				ASSERT(m_DDStat[NB_VALUE] > 0);
+				assert(m_DDStat[NB_VALUE] > 0);
 			}
 
 
@@ -344,11 +346,11 @@ namespace WBSF
 
 					for (size_t i = 0; i<m_SAResult.size(); i++)
 					{
-						ASSERT(m_SAResult[i].m_obs.size() == NB_INPUT);
+						assert(m_SAResult[i].m_obs.size() == NB_INPUT);
 						for (int p = P_L2_L3; p <= P_L6_PUPA; p++)
 						{
 							int s = p + 1;
-							if (m_SAResult[i].m_obs[I_L2 + s]>-999 && statSim.IsInside(m_SAResult[i].m_ref))
+							if (m_SAResult[i].m_obs[I_L2 + s]>-999 && statSim.is_inside(m_SAResult[i].m_ref))
 							{
 
 								double obs = m_SAResult[i].m_obs[I_L2 + s];
@@ -369,11 +371,11 @@ namespace WBSF
 
 					for (size_t i = 0; i<m_SAResult.size(); i++)
 					{
-						ASSERT(m_SAResult[i].m_obs.size() == NB_INPUT);
+						assert(m_SAResult[i].m_obs.size() == NB_INPUT);
 						for (int p = P_L2_L3; p <= P_L6_PUPA; p++)
 						{
 							int s = p + 1;
-							if (m_SAResult[i].m_obs[I_L2 + s]>-999 && statSim.IsInside(m_SAResult[i].m_ref))
+							if (m_SAResult[i].m_obs[I_L2 + s]>-999 && statSim.is_inside(m_SAResult[i].m_ref))
 							{
 								double obsS = m_SAResult[i].m_obs[I_L2 + s];
 								if (obsS > 1 && obsS < 99)
@@ -381,8 +383,9 @@ namespace WBSF
 									int pp = CSBWContinuingRatio::O_FIRST_STAGE + s;
 
 									short year = m_SAResult[i].m_ref.GetYear();
-									long index = statSim.GetFirstIndex(pp,">=", obsS, 1, CTPeriod(year, FIRST_MONTH, FIRST_DAY, year, LAST_MONTH, LAST_DAY));
-									if (index >= 1)
+									//long index = statSim.GetFirstIndex(pp,">=", obsS, 1, CTPeriod(year, JANUARY, DAY_01, year, DECEMBER, LAST_DAY));
+									size_t index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31)));
+									if (index != NOT_INIT && index >= 1)
 									{
 										double obsDD1 = statSim[index][CSBWContinuingRatio::O_DD];
 										double obsDD2 = statSim[index + 1][CSBWContinuingRatio::O_DD];
@@ -392,7 +395,7 @@ namespace WBSF
 										double slope = (obsDD2 - obsDD1) / (obsS2 - obsS1);
 										double obsH = obsDD1 + (obsS - obsS1)*slope;
 										double simH = statSim[m_SAResult[i].m_ref][CSBWContinuingRatio::O_DD];
-										ASSERT(!_isnan(obsH) && !_isnan(simH));
+										assert(!_isnan(obsH) && !_isnan(simH));
 
 										stat.Add(simH, obsH);
 									}
@@ -411,11 +414,11 @@ namespace WBSF
 
 					for (size_t i = 0; i < m_SAResult.size(); i++)
 					{
-						ASSERT(m_SAResult[i].m_obs.size() == NB_INPUT);
+						assert(m_SAResult[i].m_obs.size() == NB_INPUT);
 						for (int p = P_L2_L3; p<NB_PARAMS; p++)
 						{
 							int s = p + 1;
-							if (m_SAResult[i].m_obs[I_L2 + s]>-999 && statSim.IsInside(m_SAResult[i].m_ref))
+							if (m_SAResult[i].m_obs[I_L2 + s]>-999 && statSim.is_inside(m_SAResult[i].m_ref))
 							{
 								double obsS = m_SAResult[i].m_obs[I_L2 + s];
 								double simS = statSim[m_SAResult[i].m_ref][CSBWContinuingRatio::O_FIRST_STAGE + s];
@@ -424,8 +427,9 @@ namespace WBSF
 									int pp = CSBWContinuingRatio::O_FIRST_STAGE + s;
 
 									short year = m_SAResult[i].m_ref.GetYear();
-									long index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(year, FIRST_MONTH, FIRST_DAY, year, LAST_MONTH, LAST_DAY));
-									if (index >= 1)
+									//long index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(year, JANUARY, DAY_01, year, DECEMBER, LAST_DAY));
+									size_t index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31))); 
+									if (index != NOT_INIT && index >= 1)
 									{
 										double obsDD1 = statSim[index][CSBWContinuingRatio::O_DD];
 										double obsDD2 = statSim[index + 1][CSBWContinuingRatio::O_DD];
@@ -441,8 +445,8 @@ namespace WBSF
 										simDD = (simDD - m_DDStat[MEAN]) / m_DDStat[STD_DEV_OVER_POP];
 										obsS = (obsS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
 										simS = (simS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
-										ASSERT(!_isnan(obsDD) && !_isnan(simDD));
-										ASSERT(!_isnan(obsS) && !_isnan(simS));
+										assert(!_isnan(obsDD) && !_isnan(simDD));
+										assert(!_isnan(obsS) && !_isnan(simS));
 
 										stat.Add(simDD, obsDD);
 										stat.Add(simS, obsS);
@@ -459,7 +463,7 @@ namespace WBSF
 
 				//for(int k=0; k<(int)m_SAResult.size(); k++)
 				//{
-				//	if( m_SAResult[k].m_obs[I_AI]>-999 && statSim.IsInside(m_SAResult[k].m_ref) )
+				//	if( m_SAResult[k].m_obs[I_AI]>-999 && statSim.is_inside(m_SAResult[k].m_ref) )
 				//	{
 				//	
 				//		double obs= m_SAResult[k].m_obs[I_AI];

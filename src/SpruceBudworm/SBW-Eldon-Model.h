@@ -3,7 +3,7 @@
 //#pragma warning( disable : 4201)
 //#pragma warning( disable : 4514)
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 //#include "ContinuingRatio.h"
 
 namespace WBSF

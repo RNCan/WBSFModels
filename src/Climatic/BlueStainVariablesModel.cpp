@@ -1,8 +1,8 @@
 //*********************************************************************
 //27/01/2015	Rémi Saint-Amant	Creation
 //*********************************************************************
-#include "Basic/WeatherDefine.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "Modelbased/EntryPoint.h"
 #include "BlueStainVariablesModel.h"
 #include "BlueStainVariables.h"
 

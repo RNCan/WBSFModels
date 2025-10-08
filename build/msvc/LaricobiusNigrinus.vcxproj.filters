@@ -7,24 +7,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LaricobiusNigrinusModel.cpp">
+    <ClCompile Include="..\..\src\LaricobiusNigrinus\LaricobiusNigrinus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LaricobiusNigrinusEquations.cpp">
+    <ClCompile Include="..\..\src\LaricobiusNigrinus\LaricobiusNigrinusEquations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LaricobiusNigrinus.cpp">
+    <ClCompile Include="..\..\src\LaricobiusNigrinus\LaricobiusNigrinusModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LaricobiusNigrinusModel.h">
+    <ClInclude Include="..\..\src\LaricobiusNigrinus\LaricobiusNigrinus.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="LaricobiusNigrinusEquations.h">
+    <ClInclude Include="..\..\src\LaricobiusNigrinus\LaricobiusNigrinusEquations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="LaricobiusNigrinus.h">
+    <ClInclude Include="..\..\src\LaricobiusNigrinus\LaricobiusNigrinusModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

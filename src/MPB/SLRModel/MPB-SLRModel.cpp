@@ -17,7 +17,7 @@
 
 #include "MPB-SLRModel.h"
 #include "SLR.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 
 
 namespace WBSF

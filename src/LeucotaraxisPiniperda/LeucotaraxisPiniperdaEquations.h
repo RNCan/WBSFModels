@@ -4,8 +4,8 @@
 #pragma once
 
 #include "crtdbg.h"
-#include "ModelBase/EquationTableLookup.h"
-#include "Basic/DegreeDays.h"
+#include "ModelBased/EquationTableLookup.h"
+#include "WeatherBased/DegreeDays.h"
 
 
 

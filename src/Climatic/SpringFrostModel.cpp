@@ -28,7 +28,7 @@
 //*****************************************************************************
 
 #include <array>
-#include "ModelBase/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "SpringFrostModel.h"
 
 
@@ -62,7 +62,7 @@ namespace WBSF
 	//this method is called by the framework to load parameters
 	ERMsg CStringFrostModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ASSERT(m_weather.size() > 0);
+		assert(m_weather.size() > 0);
 
 		ERMsg msg;
 
@@ -93,11 +93,11 @@ namespace WBSF
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
 			CTPeriod p = m_weather[y].GetEntireTPeriod();
-			p.End() = CTRef(p.End().GetYear(), JUNE, DAY_30);
+			p.end() = CTRef(p.end().GetYear(), JUNE, DAY_30);
 
 			double CDD = 0;
 			std::vector<CFrostEventOutput> events;
-			for (CTRef TRef = p.Begin(); TRef<=p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef<=p.end(); TRef++)
 			{
 				const CDataInterface& data = m_weather.Get(TRef);
 				

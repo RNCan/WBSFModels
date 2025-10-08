@@ -17,12 +17,15 @@
 // 22/01/2016	1.1.0	Rémi Saint-Amant	Using Weather-Based Simulation Framework (WBSF)
 // 30/09/2013	1.0.0	Rémi Saint-Amant    Creation
 //*****************************************************************************
+#include <mutex>
 
-#include "basic/timeStep.h"
-#include "basic/UtilMath.h"
-#include "ModelBase/EntryPoint.h"
-#include "ModelBase/SimulatedAnnealingVector.h"
-#include "ModelBase/SnowMelt.h"
+
+#include "Basic/timeStep.h"
+#include "Basic/UtilMath.h"
+#include "WeatherBased/SnowMelt.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
+
 #include "SBBEquations.h"
 #include "SBBModel.h"
 
@@ -37,7 +40,7 @@ namespace WBSF
 //uncomment this line to activate version for simulated annealing
 static const bool ACTIVATE_PARAMETRIZATION = false;
 static const bool P1_ONLY = false;
-static CCriticalSection CS;
+static std::mutex CS;
 
 
 
@@ -147,7 +150,7 @@ void CSBBModel::ExecuteDailyTest(CModelStatVector& output)
 	//	wDay(DAILY_DATA::TMAX) = OBSERVATION[T_DAY];
 	//
 	//	WEATHER_ARRAY[locNo].AddYear(0);
-	//	for(CTRef d=CTRef(0, FIRST_MONTH, FIRST_DAY); d<=CTRef(0, LAST_MONTH, LAST_DAY); d++)
+	//	for(CTRef d=CTRef(0, JANUARY, DAY_01); d<=CTRef(0, DECEMBER, DAY_31); d++)
 	//	{
 	//		WEATHER_ARRAY[locNo].SetData(d, wDay);
 	//	}
@@ -225,7 +228,7 @@ ERMsg CSBBModel::OnExecuteDaily()
 	//snow.Compute(m_weather);
 	
 	//CTPeriod p = m_weather.GetEntireTPeriod()
-	//for(CTRef d=p.Begin(); d<=p.End(); d++)
+	//for(CTRef d=p.begin(); d<=p.end(); d++)
 	//{
 	//	CWeatherDay day = m_weather[d];
 	//	day(SNOW) = snow.GetResult()[d].m_hs;//mm
@@ -265,7 +268,7 @@ ERMsg CSBBModel::OnExecuteAnnual()
 
 
 	//CTRef May30(0,MAY,LAST_DAY);
-	//CTPeriod p(CTRef(0,FIRST_MONTH,FIRST_DAY), May30);
+	//CTPeriod p(CTRef(0,JANUARY,DAY_01), May30);
 
 	//
 	//double sumDiapause = stat.GetStat(S_DIAPAUSE_1)[SUM];
@@ -283,11 +286,11 @@ ERMsg CSBBModel::OnExecuteAnnual()
 	//	if( sumSwarming>50 )
 	//	{
 	//		CStatistic swarmingStat;
-	//		for(CTRef d=p.Begin(); d<=p.End(); d++)
-	//			swarmingStat += d.GetJDay()*stat[d][S_SWARMING_1];
+	//		for(CTRef d=p.begin(); d<=p.end(); d++)
+	//			swarmingStat += d.GetDOY()*stat[d][S_SWARMING_1];
 
 	//		swarmingJday = swarmingStat[SUM]/sumSwarming;
-	//		ASSERT( swarmingJday>=0 && swarmingJday<=360);
+	//		assert( swarmingJday>=0 && swarmingJday<=360);
 	//	}
 
 	//	output[0][O_A_SWARMING_OBS] = OBSERVATION_SWARMING_W[locNo][SWARMING_DATE];
@@ -319,7 +322,7 @@ ERMsg CSBBModel::OnExecuteAnnual()
 	{
 		CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
 		//int year = m_weather[y].GetTRef().GetYear();
-		//CTPeriod p(CTRef(year, FIRST_MONTH, FIRST_DAY), CTRef(year, LAST_MONTH, LAST_DAY));
+		//CTPeriod p(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31));
 
 		double sumDiapause = stat.GetStat(S_DIAPAUSE_1, p)[SUM];
 		double sumSwarming = stat.GetStat(S_SWARMING_1_F1_i+m_swarmingNo, p)[SUM];
@@ -328,11 +331,11 @@ ERMsg CSBBModel::OnExecuteAnnual()
 		if( sumSwarming>0 )
 		{
 			CStatistic swarmingStat;
-			for(CTRef d=p.Begin(); d<=p.End(); d++)
-				swarmingStat += d.GetJDay()*stat[d][S_SWARMING_1_F1_i+m_swarmingNo];
+			for(CTRef d=p.begin(); d<=p.end(); d++)
+				swarmingStat += d.GetDOY()*stat[d][S_SWARMING_1_F1_i+m_swarmingNo];
 
 			swarmingJday = swarmingStat[SUM]/sumSwarming;
-			ASSERT( swarmingJday>=0 && swarmingJday<=360);
+			assert( swarmingJday>=0 && swarmingJday<=360);
 		}
 
 		output[y][O_A_SWARMING_OBS] = swarmingJday;
@@ -340,13 +343,13 @@ ERMsg CSBBModel::OnExecuteAnnual()
 		
 		output[0][O_A_SWARMING] = sumSwarming;
 		output[0][O_A_DIAPAUSE] = sumDiapause;
-		output[0][O_A_W_STAT] = stat[p.End()][O_W_STAT];
-		output[0][O_A_DT_STAT] = stat[p.End()][O_DT_STAT];
-		output[0][O_A_DDL_STAT] = stat[p.End()][O_DDL_STAT];
-		output[0][O_A_DAY_LENGTH] = stat[p.End()][O_DAY_LENGTH];
-		output[0][O_A_DI50] = stat[p.End()][O_DI50];
-		output[0][O_A_T_MEAN] = stat[p.End()][O_T_MEAN];
-		output[0][O_A_TI50] = stat[p.End()][O_TI50];
+		output[0][O_A_W_STAT] = stat[p.end()][O_W_STAT];
+		output[0][O_A_DT_STAT] = stat[p.end()][O_DT_STAT];
+		output[0][O_A_DDL_STAT] = stat[p.end()][O_DDL_STAT];
+		output[0][O_A_DAY_LENGTH] = stat[p.end()][O_DAY_LENGTH];
+		output[0][O_A_DI50] = stat[p.end()][O_DI50];
+		output[0][O_A_T_MEAN] = stat[p.end()][O_T_MEAN];
+		output[0][O_A_TI50] = stat[p.end()][O_TI50];
 	}
 	
 
@@ -405,7 +408,7 @@ void CSBBModel::GetDailyStat(CModelStatVector& stat)
 		CHostPtr pTree = make_shared<CSpruceBarkBeetleTree>(&stand);
 		pTree->m_nbMinObjects = m_nbMinObjects;
 		pTree->m_nbMaxObjects = m_nbMaxObjects;
-		pTree->Initialize<CSpruceBarkBeetle>(CInitialPopulation(p.Begin(), m_nbObjects, m_initialPopulation, ADULT, NOT_INIT, true));
+		pTree->Initialize<CSpruceBarkBeetle>(CInitialPopulation(p.begin(), 0, m_nbObjects, m_initialPopulation, ADULT, TSex::RANDOM_SEX, true));
 	
 		stand.m_host.push_back(pTree);
 
@@ -415,14 +418,14 @@ void CSBBModel::GetDailyStat(CModelStatVector& stat)
 			size_t yy=y1+y; 
 
 			CTPeriod pp = m_weather[yy].GetEntireTPeriod(CTM(CTM::DAILY));
-			for(CTRef d=pp.Begin(); d<=pp.End(); d++)
+			for(CTRef d=pp.begin(); d<=pp.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
 				stand.GetStat(d, stat[d]);
 
 				
 				if(P1_ONLY && stat[d][S_DEAD_ADULT_0]==100)//temporaire
-					d=pp.End();
+					d=pp.end();
 
 				//if( m_bAutoBalanceObject )
 				stand.AdjustPopulation();
@@ -436,7 +439,7 @@ void CSBBModel::GetDailyStat(CModelStatVector& stat)
 
 void CSBBModel::ComputeRegularStat(CModelStatVector& stat, CModelStatVector& output)
 {
-	ASSERT( O_DEAD == S_DEAD );
+	assert( O_DEAD == S_DEAD );
 	if( output.empty() )
 	{
 		output.resize(stat.size());
@@ -480,7 +483,7 @@ void CSBBModel::ComputeRegularStat(CModelStatVector& stat, CModelStatVector& out
 //this method is called to load parameters in variables
 ERMsg CSBBModel::ProcessParameter(const CParameterVector& parameters)
 {
-	ASSERT( m_weather.GetNbYears() > 0);
+	assert( m_weather.GetNbYears() > 0);
 
     ERMsg msg;
 
@@ -514,7 +517,7 @@ ERMsg CSBBModel::ProcessParameter(const CParameterVector& parameters)
 
 
 //simulated annaling 
-void CSBBModel::AddDailyResult(const StringVector& header, const StringVector& data)
+void CSBBModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 {
 	if( data.size() == 8||data.size() == 9)
 	{
@@ -729,7 +732,8 @@ double GetLoganLactin( double T, double alpha,double beta,double gamma,double Tm
 
 	return Rt;
 }
-void CSBBModel::GetFValueDaily(CStatisticXY& stat)
+
+bool CSBBModel::GetFValueDaily(CStatisticXY& stat)
 {
 	ERMsg msg;
 
@@ -876,11 +880,11 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 			CStatistic swarmingStat;
 			for(CTRef d=simStat.GetFirstTRef(); d<simStat.GetLastTRef(); d++)
 			{
-				swarmingStat += d.GetJDay()*simStat[d][O_SWARMING_1];
+				swarmingStat += d.GetDOY()*simStat[d][O_SWARMING_1];
 			}
 
 			swarmingJday = swarmingStat[SUM]/sumSwarming;
-			ASSERT( swarmingJday>=0 && swarmingJday<=360);
+			assert( swarmingJday>=0 && swarmingJday<=360);
 		}
 
 		//if(sumSwarming<50)
@@ -917,7 +921,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 				snow.Compute(m_weather);*/
 	
 
-				//for (CTRef d = p.Begin(); d <= p.End(); d++)
+				//for (CTRef d = p.begin(); d <= p.end(); d++)
 				//{
 				//	CWeatherDay day = m_weather[d];
 				//	day(SNOW) = snow.GetResult()[d].m_hs;//mm
@@ -925,16 +929,16 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 				//	m_weather.SetData(d,day);
 				//}
 
-				//m_firstJday = m_SAResult.front().m_ref.GetJDay(); 
-				//m_lastJday = m_SAResult.back().m_ref.GetJDay();
+				//m_firstJday = m_SAResult.front().m_ref.GetDOY(); 
+				//m_lastJday = m_SAResult.back().m_ref.GetDOY();
 				for(size_t i=0; i<m_SAResult.size(); i++)
 				{
 					for(size_t j=0; j<3; j++)
 					{
 						if( m_SAResult[i].m_obs[j] > 0)
 						{
-							m_firstJday[j] = min(m_firstJday[j], m_SAResult[i].m_ref.GetJDay()); 
-							m_lastJday[j] = max(m_lastJday[j], m_SAResult[i].m_ref.GetJDay());
+							m_firstJday[j] = min(m_firstJday[j], m_SAResult[i].m_ref.GetDOY()); 
+							m_lastJday[j] = max(m_lastJday[j], m_SAResult[i].m_ref.GetDOY());
 						}
 					}
 				}
@@ -974,7 +978,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 				{
 					if( simStat[d][i] >-999 )
 					{
-						size_t jd = min(364ull, d.GetJDay());
+						size_t jd = min(364ull, d.GetDOY());
 						stat[jd]+=simStat[d][i];
 					}
 				}
@@ -1002,7 +1006,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 				{				  -1,				  -1,					-1}
 			};
 
-			//static const CTRef beginTRef[3] =  {CTRef(-999,JANUARY, FIRST_DAY), CTRef(-999,JUNE,FIRST_DAY), CTRef(-999,JULY,FIRST_DAY)};
+			//static const CTRef beginTRef[3] =  {CTRef(-999,JANUARY, DAY_01), CTRef(-999,JUNE,DAY_01), CTRef(-999,JULY,DAY_01)};
 			//static const CTRef endTRef[3] = {CTRef(-999,MAY, LAST_DAY), CTRef(-999,JUNE,LAST_DAY), CTRef(-999,DECEMBER,LAST_DAY)};
 
 			//double broods = merge.GetStat(O_BROOD_0_P1)[SUM] + merge.GetStat(O_BROOD_0_P2)[SUM] + merge.GetStat(O_BROOD_0_P3)[SUM];
@@ -1014,7 +1018,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 
 			//to avoid the elimination of all swarm
 			if( totalSwarms < 5)
-				return;
+				return false;
 
 			for(int i=0; i<9; i++)//F1, F2, F3
 				merge[0][O_SWARMING_1_F1_i+i] = 0;
@@ -1030,13 +1034,13 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 				{
 
 					double threshold = m_SAResult[i].m_obs[y];
-					ASSERT(threshold>=0 && threshold<=100);
+					assert(threshold>=0 && threshold<=100);
 
 					
 					double swarmingJday = -999;
 					if( totalSwarms>0 && m_SAResult[i].m_obs[y]>0 )
 					{
-						ASSERT( m_SAResult[i].m_obs[0] >= 0 && m_SAResult[i].m_obs[0] <= 100);
+						assert( m_SAResult[i].m_obs[0] >= 0 && m_SAResult[i].m_obs[0] <= 100);
 				
 						//CStatistic swarmingStatI;
 				
@@ -1050,12 +1054,12 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 
 							if( value>threshold)
 							{ 
-								//double next = swarmingStatI.IsInit()?swarmingStatI[SUM]+value/totalSwarms:value/totalSwarms;
+								//double next = swarmingStatI.is_init()?swarmingStatI[SUM]+value/totalSwarms:value/totalSwarms;
 								//if( next>=threshold ) 
 								//{
 								double y1 = merge[d-1][VARIABLES[0][y]];//swarmingStatI[SUM];
 								double x = (threshold-y1)/(value-y1);
-								ASSERT(x>=0 && x<=1);
+								assert(x>=0 && x<=1);
 							
 								//to avoid integer value (more difficult for SA)
 								swarmingJday = d - 1 + x;
@@ -1071,7 +1075,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 						size_t jDay1 = m_firstJday[y];
 						size_t jDay2 = m_lastJday[y];
 								
-						double obsJday = ((double)m_SAResult[i].m_ref.GetJDay()-jDay1)/(jDay2-jDay1)*100;
+						double obsJday = ((double)m_SAResult[i].m_ref.GetDOY()-jDay1)/(jDay2-jDay1)*100;
 						double simJday = (swarmingJday-jDay1)/(jDay2-jDay1)*100;
 						stat.Add(simJday, obsJday);
 					}
@@ -1080,10 +1084,10 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 					//double sim = 0;
 					//if(totalSwarms>0)
 					//{
-					//int jd = min(365, m_SAResult[i].m_ref.GetJDay());
+					//int jd = min(365, m_SAResult[i].m_ref.GetDOY());
 						//CStatistic swarmingStatI;
 				
-						//for(int d=0; d<=m_SAResult[i].m_ref.GetJDay(); d++)
+						//for(int d=0; d<=m_SAResult[i].m_ref.GetDOY(); d++)
 						//{
 						//			
 							//swarmingStatI += merge[jd][VARIABLES[0][y]];
@@ -1096,7 +1100,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 					
 					//}
 							
-					size_t jd = min(365ull, m_SAResult[i].m_ref.GetJDay());
+					size_t jd = min(365ull, m_SAResult[i].m_ref.GetDOY());
 					double sim = merge[jd][VARIABLES[0][y]];///totalSwarms;		
 					double obs = m_SAResult[i].m_obs[y];
 					stat.Add(sim, obs);
@@ -1129,8 +1133,8 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 					const CSAResultVector& resul = SA[i]->GetSAResult();
 					for(size_t j=0; j<resul.size(); j++)
 					{
-						m_firstJday[0] = min( m_firstJday[0], resul[j].m_ref.GetJDay() );
-						m_lastJday[0] = max( m_lastJday[0], resul[j].m_ref.GetJDay() );
+						m_firstJday[0] = min( m_firstJday[0], resul[j].m_ref.GetDOY() );
+						m_lastJday[0] = max( m_lastJday[0], resul[j].m_ref.GetDOY() );
 					}
 				}
 
@@ -1146,9 +1150,9 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 				//while( m_weather.GetNbYear() > 1 && m_weather.GetLastYear() > lastYear )
 					//m_weather.RemoveYear(m_weather.GetNbYear()-1);
 
-				ASSERT( m_weather.GetFirstYear() == firstYear );
-				ASSERT( m_weather.GetLastYear() == lastYear );
-				ASSERT( m_firstJday<m_lastJday );
+				assert( m_weather.GetFirstYear() == firstYear );
+				assert( m_weather.GetLastYear() == lastYear );
+				assert( m_firstJday<m_lastJday );
 			}
 
 
@@ -1159,9 +1163,9 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 		
 			for(size_t i=0; i<m_SAResult.size(); i++)
 			{
-				if( simStat.IsInside( m_SAResult[i].m_ref) )
+				if( simStat.is_inside( m_SAResult[i].m_ref) )
 				{
-					CTPeriod p( CTRef(m_SAResult[i].m_ref.GetYear(),FIRST_MONTH, FIRST_DAY), CTRef(m_SAResult[i].m_ref.GetYear(), LAST_MONTH, LAST_DAY) );
+					CTPeriod p( CTRef(m_SAResult[i].m_ref.GetYear(),JANUARY, DAY_01), CTRef(m_SAResult[i].m_ref.GetYear(), DECEMBER, DAY_31) );
 
 			
 					//CTRef firstTRef = simStat.GetFirstTRef(O_SWARMING_0_P1+m_swarmingNo,1.0,1, p);
@@ -1173,44 +1177,44 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 					{
 						double sumSwarming = simStat.GetStat(TYPE[k], p)[SUM];
 						double threshold = m_SAResult[i].m_obs[k]/100;
-						ASSERT(threshold>=0 && threshold<=1);
+						assert(threshold>=0 && threshold<=1);
 
 						double swarmingJday = -999;
 				
 						if(sumSwarming>0)
 						{
-							ASSERT( m_SAResult[i].m_obs[k] >= 0 && m_SAResult[i].m_obs[k] <= 100);
+							assert( m_SAResult[i].m_obs[k] >= 0 && m_SAResult[i].m_obs[k] <= 100);
 				
 							CStatistic swarmingStatI;
 				
-							for(CTRef d=p.Begin(); d<=p.End()&&swarmingJday==-999; d++)
+							for(CTRef d=p.begin(); d<=p.end()&&swarmingJday==-999; d++)
 							{
 								if( simStat[d][TYPE[k]] > 0)
 								{
-									//swarmingStatI += d.GetJDay();
+									//swarmingStatI += d.GetDOY();
 						
-									double next = swarmingStatI.IsInit()?swarmingStatI[SUM]+simStat[d][TYPE[k]]/sumSwarming:simStat[d][TYPE[k]]/sumSwarming;
+									double next = swarmingStatI.is_init()?swarmingStatI[SUM]+simStat[d][TYPE[k]]/sumSwarming:simStat[d][TYPE[k]]/sumSwarming;
 									if( next>threshold || (fabs(next-1)<0.0001 && fabs(threshold-1)<0.0001) ) 
 									{
 										double y1 = swarmingStatI[SUM];
 										double x = (threshold-y1)/(next-y1);
-										ASSERT(threshold>=0 && threshold<=1);
+										assert(threshold>=0 && threshold<=1);
 							
 										//to avoid integer value (more difficult for SA)
-										swarmingJday = d.GetJDay() - 1 + x;
+										swarmingJday = d.GetDOY() - 1 + x;
 									}
 
 									swarmingStatI += simStat[d][TYPE[k]]/sumSwarming;
 								}
 							}
 
-							ASSERT( swarmingJday>-999);
+							assert( swarmingJday>-999);
 						
 				
 			
 							size_t jDay1 = m_firstJday[0];
 							size_t jDay2 = m_lastJday[0];
-							double obsJday = ((double)m_SAResult[i].m_ref.GetJDay()-jDay1)/(jDay2-jDay1)*100;
+							double obsJday = ((double)m_SAResult[i].m_ref.GetDOY()-jDay1)/(jDay2-jDay1)*100;
 							double simJday = (swarmingJday-jDay1)/(jDay2-jDay1)*100;
 							stat.Add(simJday, obsJday);
 
@@ -1223,7 +1227,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 						{
 							CStatistic swarmingStatI;
 				
-							for(CTRef d=p.Begin(); d<=m_SAResult[i].m_ref; d++)
+							for(CTRef d=p.begin(); d<=m_SAResult[i].m_ref; d++)
 							{
 								swarmingStatI += simStat[d][TYPE[k]];
 							}
@@ -1262,8 +1266,8 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 					const CSAResultVector& resul = SA[i]->GetSAResult();
 					for(size_t j=0; j<resul.size(); j++)
 					{
-						m_firstJday[0] = min( m_firstJday[0], resul[j].m_ref.GetJDay() );
-						m_lastJday[0] = max( m_lastJday[0], resul[j].m_ref.GetJDay() );
+						m_firstJday[0] = min( m_firstJday[0], resul[j].m_ref.GetDOY() );
+						m_lastJday[0] = max( m_lastJday[0], resul[j].m_ref.GetDOY() );
 					}
 				}
 
@@ -1279,9 +1283,9 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 				//while( m_weather.GetNbYear() > 1 && m_weather.GetLastYear() > lastYear )
 					//m_weather.RemoveYear(m_weather.GetNbYear()-1);
 
-				ASSERT( m_weather.GetFirstYear() == firstYear );
-				ASSERT( m_weather.GetLastYear() == lastYear );
-				ASSERT( m_firstJday<m_lastJday );
+				assert( m_weather.GetFirstYear() == firstYear );
+				assert( m_weather.GetLastYear() == lastYear );
+				assert( m_firstJday<m_lastJday );
 			}
 
 
@@ -1292,9 +1296,9 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 		
 			for(size_t i=0; i<m_SAResult.size(); i++)
 			{
-				if( simStat.IsInside( m_SAResult[i].m_ref) )
+				if( simStat.is_inside( m_SAResult[i].m_ref) )
 				{
-					CTPeriod p( CTRef(m_SAResult[i].m_ref.GetYear(),FIRST_MONTH, FIRST_DAY), CTRef(m_SAResult[i].m_ref.GetYear(), LAST_MONTH, LAST_DAY) );
+					CTPeriod p( CTRef(m_SAResult[i].m_ref.GetYear(),JANUARY, DAY_01), CTRef(m_SAResult[i].m_ref.GetYear(), DECEMBER, DAY_31) );
 
 			
 					//CTRef firstTRef = simStat.GetFirstTRef(O_SWARMING_0_P1+m_swarmingNo,1.0,1, p);
@@ -1302,43 +1306,43 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 
 					double sumSwarming = simStat.GetStat(O_SWARMING_0_P1+m_swarmingNo, p)[SUM];
 					double threshold = m_SAResult[i].m_obs[0]/100;
-					ASSERT(threshold>=0 && threshold<=1);
+					assert(threshold>=0 && threshold<=1);
 
 					double swarmingJday = -999;
 					if( sumSwarming>0  )
 					{
-						ASSERT( m_SAResult[i].m_obs[0] >= 0 && m_SAResult[i].m_obs[0] <= 100);
+						assert( m_SAResult[i].m_obs[0] >= 0 && m_SAResult[i].m_obs[0] <= 100);
 
 				
 				
 						CStatistic swarmingStatI;
 				
-						for(CTRef d=p.Begin(); d<=p.End()&&swarmingJday==-999; d++)
+						for(CTRef d=p.begin(); d<=p.end()&&swarmingJday==-999; d++)
 						{
 							if( simStat[d][O_SWARMING_0_P1+m_swarmingNo] > 0)
 							{
-								//swarmingStatI += d.GetJDay();
+								//swarmingStatI += d.GetDOY();
 						
-								double next = swarmingStatI.IsInit()?swarmingStatI[SUM]+simStat[d][O_SWARMING_0_P1+m_swarmingNo]/sumSwarming:simStat[d][O_SWARMING_0_P1+m_swarmingNo]/sumSwarming;
+								double next = swarmingStatI.is_init()?swarmingStatI[SUM]+simStat[d][O_SWARMING_0_P1+m_swarmingNo]/sumSwarming:simStat[d][O_SWARMING_0_P1+m_swarmingNo]/sumSwarming;
 								if( next>threshold || (fabs(next-1)<0.0001 && fabs(threshold-1)<0.0001) ) 
 								{
 									double y1 = swarmingStatI[SUM];
 									double x = (threshold-y1)/(next-y1);
-									ASSERT(threshold>=0 && threshold<=1);
+									assert(threshold>=0 && threshold<=1);
 									//to avoid integer value (more difficult for SA)
-									swarmingJday = d.GetJDay() - 1 + x;
+									swarmingJday = d.GetDOY() - 1 + x;
 								}
 
 								swarmingStatI += simStat[d][O_SWARMING_0_P1+m_swarmingNo]/sumSwarming;
 							}
 						}
 
-						ASSERT( swarmingJday>-999);
+						assert( swarmingJday>-999);
 					}
 			
 					size_t jDay1 = m_firstJday[0];
 					size_t jDay2 = m_lastJday[0];
-					double obsJday = ((double)m_SAResult[i].m_ref.GetJDay()-jDay1)/(jDay2-jDay1)*100;
+					double obsJday = ((double)m_SAResult[i].m_ref.GetDOY()-jDay1)/(jDay2-jDay1)*100;
 					double simJday = (swarmingJday-jDay1)/(jDay2-jDay1)*100;
 					stat.Add(simJday, obsJday);
 					//stat.Add(simJday, obsJday);
@@ -1349,7 +1353,7 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 					{
 						CStatistic swarmingStatI;
 				
-						for(CTRef d=p.Begin(); d<=m_SAResult[i].m_ref; d++)
+						for(CTRef d=p.begin(); d<=m_SAResult[i].m_ref; d++)
 						{
 							swarmingStatI += simStat[d][O_SWARMING_0_P1+m_swarmingNo];
 						}
@@ -1363,6 +1367,8 @@ void CSBBModel::GetFValueDaily(CStatisticXY& stat)
 			}//for all result
 		}//result have 1 value
 	}//empty result	
+
+	return true;
 }
 
 void CSBBModel::GetFValueDailyEmergence(CStatisticXY& stat)

@@ -3,10 +3,10 @@
 //*********************************************************************
 
 #include <string>
-#include "Basic/WeatherDefine.h"
-#include "Basic/GrowingSeason.h"
-#include "Basic/SnowAnalysis.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/WeatherDefine.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "Modelbased/EntryPoint.h"
 #include "FWI.h"
 #include "FBP.h"
 #include "FBP-Model.h"
@@ -243,7 +243,7 @@ namespace WBSF
 				case I_CBH:		in.CBH = INPUT[no][i]; break;
 				case I_CFL:		in.CFL = INPUT[no][i]; break;
 				case I_ISI:		in.ISI = INPUT[no][i]; break;
-				default: ASSERT(false);
+				default: assert(false);
 				}
 			}
 
@@ -296,7 +296,7 @@ namespace WBSF
 				case O_TFI:	assert(fabs(out.TFI - OUTPUT[no][i]) < 0.01); break;
 				case O_TTFC:assert(fabs(out.TTFC - OUTPUT[no][i]) < 0.01); break;
 				case O_TTI:	assert(fabs(out.TTI - OUTPUT[no][i]) < 0.01); break;
-				default: ASSERT(false);
+				default: assert(false);
 				}
 			}
 
@@ -361,7 +361,7 @@ namespace WBSF
 			input.BUI = FWI[h][CFWIStat::BUI];//Buildup index [FWI System component]
 
 			const CHourlyData& weather = m_weather.GetHour(h);
-			input.DJ = h.GetJDay() + 1;//Julian day
+			input.DJ = h.GetDOY() + 1;//Julian day
 			input.hr = h- m_ignition;//Hours since ignition
 			input.WS = weather[H_WNDS];//Wind speed [km/h]
 			input.WD = weather[H_WNDD];//Wind direction [decimal degrees]
@@ -426,7 +426,7 @@ namespace WBSF
 			case O_TFI:	out[TRef][i] = in.TFI; break;
 			case O_TTFC:out[TRef][i] = in.TTFC; break;
 			case O_TTI:	out[TRef][i] = in.TTI; break;
-			default: ASSERT(false);
+			default: assert(false);
 			}
 		}
 

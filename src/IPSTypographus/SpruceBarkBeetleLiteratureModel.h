@@ -1,9 +1,9 @@
 #pragma once
 
 #include <array>
-#include "ModelBase/BioSIMModelBase.h"
-#include "ModelBase/ContinuingRatio.h"
-#include "SBBEquation.h"
+#include "ModelBased/BioSIMModelBase.h"
+#include "ModelBased/ContinuingRatio.h"
+#include "SBBEquations.h"
 #include "SpruceBarkBeetle.h"
 
 namespace WBSF
@@ -43,8 +43,8 @@ namespace WBSF
 		void GetDailyStatOhrn(CModelStatVector& stat);
 		void ComputeRegularStat(CModelStatVector& stat, CModelStatVector& output);
 
-		void AddDailyResult(const StringVector& header, const StringVector& data);
-		void GetFValueDaily(CStatisticXY& stat);
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
+		virtual bool GetFValueDaily(CStatisticXY& stat)override;
 
 
 

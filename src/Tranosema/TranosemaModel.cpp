@@ -16,8 +16,8 @@
 //*****************************************************************************
 
 #include "Basic/UtilStd.h"
-#include "Basic/SnowAnalysis.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/SnowAnalysis.h"
+#include "Modelbased/EntryPoint.h"
 //#include "..\SpruceBudworm\SpruceBudworm.h"
 #include "TranosemaModel.h"
 #include "Tranosema.h"
@@ -60,10 +60,10 @@ namespace WBSF
 		// initialize your variables here (optimal values obtained by sensitivity analysis)
 		m_bHaveAttrition = true;
 		m_generationAttrition = 0.025;//Attrition survival (cull in the egg stage, before creation)
-		m_diapauseAge = EGG + 0.0;
+		m_diapauseAge = double(EGG) + 0.0;
 		m_lethalTemp = -5.;
 		m_criticalDaylength = 13.5;
-		m_bOnGround = FALSE;
+		m_bOnGround = false;
 	}
 
 	CTranosemaModel::~CTranosemaModel()
@@ -84,7 +84,7 @@ namespace WBSF
 		m_lethalTemp = parameters[c++].GetReal();
 		m_criticalDaylength = parameters[c++].GetReal();
 		m_bOnGround = parameters[c++].GetBool();
-		ASSERT(m_diapauseAge >= 0. && m_diapauseAge <= 1.);
+		assert(m_diapauseAge >= 0. && m_diapauseAge <= 1.);
 
 		return msg;
 	}
@@ -95,7 +95,7 @@ namespace WBSF
 	//{
 	//	//This is where the model is actually executed
 	//	CTPeriod p = weather.GetEntireTPeriod(CTM(CTM::DAILY));
-	//	stat.Init(p.GetNbRef(), p.Begin(), SBW::TSpruceBudwormStats::NB_STATS, 0, DAILY_HEADER);
+	//	stat.Init(p.GetNbRef(), p.begin(), SBW::TSpruceBudwormStats::NB_STATS, 0, DAILY_HEADER);
 
 	//	//we simulate 2 years at a time. 
 	//	//we also manager the possibility to have only one year
@@ -113,7 +113,7 @@ namespace WBSF
 	//		pHost->m_kind = CSBWTree::BALSAM_FIR;
 	//		pHost->m_nbMinObjects = 100;
 	//		pHost->m_nbMaxObjects = 1000;
-	//		pHost->Initialize<CSpruceBudworm>(CInitialPopulation(p.Begin(), 0, 400, 100, SBW::L2o, NOT_INIT, false));
+	//		pHost->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 400, 100, SBW::L2o, NOT_INIT, false));
 
 
 	//		//Init stand
@@ -122,7 +122,7 @@ namespace WBSF
 	//		stand.m_bStopL22 = true;
 	//		stand.m_host.push_back(pHost);
 
-	//		for (CTRef d = p.Begin(); d <= p.End(); d++)
+	//		for (CTRef d = p.begin(); d <= p.end(); d++)
 	//		{
 	//			stand.Live(weather.GetDay(d));
 	//			stand.GetStat(d, stat[d]);
@@ -157,9 +157,9 @@ namespace WBSF
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		size_t maxG = min(NB_GENERATIONS, TranosemaStat.size()); 
-		m_output.Init(p.size(), p.Begin(), NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
+		m_output.Init(p.size(), p.begin(), NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
 
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			for (size_t g = 0; g < maxG; g++)
 			{
@@ -176,19 +176,19 @@ namespace WBSF
 	void CTranosemaModel::ExecuteDailyAllGenerations(CModelStatVector& /*SBWStat*/, vector<CModelStatVector>& stat)
 	{
 		//This is where the model is actually executed
-		CTPeriod entirePeriod = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
+		CTPeriod entirePeriod = m_weather.GetEntireTPeriod(CTM::DAILY);
 		CSnowAnalysis snowA;
 
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
 			//get the annual period 
-			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
+			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::DAILY);
 			CTRef TRef = snowA.GetLastSnowTRef(m_weather[y]);
-			if (!TRef.IsInit() || !m_bOnGround)
-				TRef = p.Begin(); //no snow 
+			if (!TRef.is_init() || !m_bOnGround)
+				TRef = p.begin(); //no snow 
 
 			//get initial population 
-			CInitialPopulation initialPopulation(TRef.Transform(CTM(CTM::DAILY)), 0, 1000, 100, m_diapauseAge, FEMALE, true, 0);
+			CInitialPopulation initialPopulation(TRef.as(CTM::DAILY), 0, 1000, 100, m_diapauseAge, FEMALE, true, 0);
 
 			//Create stand
 			CTranosemaStand stand(this);
@@ -213,13 +213,13 @@ namespace WBSF
 			
 			
 			//run the model for all days of all years
-			for (CTRef d = p.Begin(); d <= p.End(); d++)
+			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
 
 				size_t nbGenerations = stand.GetFirstHost()->GetNbGeneration();
 				if (nbGenerations > stat.size())
-					stat.push_back(CModelStatVector(entirePeriod.GetNbRef(), entirePeriod.Begin(), NB_STATS, 0));
+					stat.push_back(CModelStatVector(entirePeriod, NB_STATS, 0));
 
 				for (size_t g = 0; g < nbGenerations; g++)
 					stand.GetStat(d, stat[g][d], g);
@@ -254,9 +254,9 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, TranosemaStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
-				CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 				m_output[TRef][O_A_NB_GENERATION] = maxG;
 
@@ -275,8 +275,8 @@ namespace WBSF
 
 					if (g == maxG - 1)
 					{
-						ASSERT(diapause.IsInit());
-						double diapauseEnd = TranosemaStat[g][season.End()][size_t(m_diapauseAge)];
+						assert(diapause.is_init());
+						double diapauseEnd = TranosemaStat[g][season.end()][size_t(m_diapauseAge)];
 						m_output[TRef][O_A_GROWTH_RATE] = diapauseEnd / diapauseBegin;
 						m_output[TRef][O_A_MEAN_GENERATION] = meanG[SUM] / diapause[SUM];
 					}
@@ -313,17 +313,17 @@ namespace WBSF
 		size_t maxG = min(NB_GENERATIONS, TranosemaStat.size());
 		if (maxG > 0)
 		{
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				double diapauseBegin = 100;
 				for (size_t g = 1; g < maxG; g++)
 				{
-					CTPeriod season(CTRef(TRef.GetYear(), FIRST_MONTH, FIRST_DAY), CTRef(TRef.GetYear(), LAST_MONTH, LAST_DAY));
+					CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 
 					CStatistic diapauseStat = TranosemaStat[g].GetStat(E_DIAPAUSE, season);
-					if (diapauseStat.IsInit() && diapauseBegin>0)
+					if (diapauseStat.is_init() && diapauseBegin>0)
 					{
-						size_t y = TRef - p.Begin();
+						size_t y = TRef - p.begin();
 						size_t gg = y*(NB_GENERATIONS-1) + (g - 1);
 						m_output[gg][O_G_YEAR] = TRef.GetYear();
 						m_output[gg][O_G_GENERATION] = g;

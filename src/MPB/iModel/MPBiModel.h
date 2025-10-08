@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "MountainPineBeetle.h"
 namespace WBSF
 {
@@ -36,7 +36,7 @@ namespace WBSF
 		virtual ERMsg OnExecuteAtemporal();
 		virtual ERMsg ProcessParameters(const CParameterVector& parameters);
 
-		virtual void AddSAResult(const StringVector& header, const StringVector& data);
+		virtual void AddSAResult(const std::vector<std::string>& header, const std::vector<std::string>& data);
 		virtual bool GetFValueAnnual(CStatisticXY& stat);
 		virtual bool FinalizeStat(CStatisticXY& stat);
 

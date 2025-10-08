@@ -17,11 +17,11 @@
 //**********************************************************************
 
 #include <iostream>
-#include "Basic/Evapotranspiration.h"
+#include "WeatherBased/Evapotranspiration.h"
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "Basic/GrowingSeason.h"
-#include "ModelBase/EntryPoint.h"
+#include "WeatherBased/GrowingSeason.h"
+#include "Modelbased/EntryPoint.h"
 #include "Climatic.h"
 
 
@@ -103,15 +103,15 @@ namespace WBSF
 			size_t nbWetDay = GetNbDayWithPrcp(m_weather[y], m_prcp_thres);
 			size_t nbDryDay = m_weather[y].GetNbDays() - nbWetDay;
 
-			m_output[y][ANNUAL_LOWEST_TMIN] = Round(annualMinimum, 1);
-			m_output[y][ANNUAL_MEAN_TMIN] = Round(annualMinMean, 1);
-			m_output[y][ANNUAL_MEAN_TMEAN] = Round(annualMean, 1);
-			m_output[y][ANNUAL_MEAN_TMAX] = Round(annualMaxMean, 1);
-			m_output[y][ANNUAL_HIGHEST_TMAX] = Round(annualMaximum, 1);
-			m_output[y][ANNUAL_PPT] = Round(annualPpt, 1);
-			m_output[y][ANNUAL_MEAN_TDEW] = Round(Tdew, 1);
-			m_output[y][ANNUAL_MEAN_REL_HUM] = Round(relHum, 1);
-			m_output[y][ANNUAL_SUN] = Round(annualSun, 1);
+			m_output[y][ANNUAL_LOWEST_TMIN] = round(annualMinimum, 1);
+			m_output[y][ANNUAL_MEAN_TMIN] = round(annualMinMean, 1);
+			m_output[y][ANNUAL_MEAN_TMEAN] = round(annualMean, 1);
+			m_output[y][ANNUAL_MEAN_TMAX] = round(annualMaxMean, 1);
+			m_output[y][ANNUAL_HIGHEST_TMAX] = round(annualMaximum, 1);
+			m_output[y][ANNUAL_PPT] = round(annualPpt, 1);
+			m_output[y][ANNUAL_MEAN_TDEW] = round(Tdew, 1);
+			m_output[y][ANNUAL_MEAN_REL_HUM] = round(relHum, 1);
+			m_output[y][ANNUAL_SUN] = round(annualSun, 1);
 			
 			m_output[y][ANNUAL_FROST_DAY] = frostDay;
 			m_output[y][ANNUAL_FROSTFREE_DAY] = frostFreeDay;
@@ -153,15 +153,15 @@ namespace WBSF
 				size_t nbDryDay = m_weather[y][m].GetNbDays() - nbWetDay;
 
 
-				m_output[y * 12 + m][MONTHLY_LOWEST_TMIN] = Round(monthlyMinimum,1);
-				m_output[y * 12 + m][MONTHLY_MEAN_TMIN] = Round(monthlyMinMean, 1);
-				m_output[y * 12 + m][MONTHLY_MEAN_TMEAN] = Round(monthlyMean, 1);
-				m_output[y * 12 + m][MONTHLY_MEAN_TMAX] = Round(monthlyMaxMean, 1);
-				m_output[y * 12 + m][MONTHLY_HIGHEST_TMAX] = Round(monthlyMaximum, 1);
-				m_output[y * 12 + m][MONTHLY_PPT] = Round(monthlyPpt, 1);
-				m_output[y * 12 + m][MONTHLY_MEAN_TDEW] = Round(Tdew, 1);
-				m_output[y * 12 + m][MONTHLY_MEAN_REL_HUM] = Round(relHum, 1);
-				m_output[y * 12 + m][MONTHLY_SUN] = Round(monthlySun, 1);
+				m_output[y * 12 + m][MONTHLY_LOWEST_TMIN] = round(monthlyMinimum,1);
+				m_output[y * 12 + m][MONTHLY_MEAN_TMIN] = round(monthlyMinMean, 1);
+				m_output[y * 12 + m][MONTHLY_MEAN_TMEAN] = round(monthlyMean, 1);
+				m_output[y * 12 + m][MONTHLY_MEAN_TMAX] = round(monthlyMaxMean, 1);
+				m_output[y * 12 + m][MONTHLY_HIGHEST_TMAX] = round(monthlyMaximum, 1);
+				m_output[y * 12 + m][MONTHLY_PPT] = round(monthlyPpt, 1);
+				m_output[y * 12 + m][MONTHLY_MEAN_TDEW] = round(Tdew, 1);
+				m_output[y * 12 + m][MONTHLY_MEAN_REL_HUM] = round(relHum, 1);
+				m_output[y * 12 + m][MONTHLY_SUN] = round(monthlySun, 1);
 
 
 				m_output[y * 12 + m][MONTHLY_FROST_DAY] = frostDay;
@@ -197,25 +197,25 @@ namespace WBSF
 
 					if (m_bEx)
 					{
-						m_output[ref][DAILY_TMIN_EX] = Round(wDay[H_TMIN][LOWEST], 1);
-						m_output[ref][DAILY_TAIR_EX] = Round(wDay[H_TAIR][MEAN], 1);
-						m_output[ref][DAILY_TMAX_EX] = Round(wDay[H_TMAX][HIGHEST], 1);
-						m_output[ref][DAILY_PRCP_EX] = Round(wDay[H_PRCP][SUM], 1);
-						m_output[ref][DAILY_TDEW_EX] = Round(wDay[H_TDEW][MEAN], 1);
-						m_output[ref][DAILY_RELH_EX] = Round(wDay[H_RELH][MEAN], 1);
-						m_output[ref][DAILY_WNDS_EX] = Round(wDay[H_WNDS][MEAN], 1);
-						m_output[ref][DAILY_WNDD_EX] = Round(wDay[H_WNDD][MEAN], 1);
-						m_output[ref][DAILY_SRAD_EX] = Round(wDay[H_SRAD][SUM], 3);
+						m_output[ref][DAILY_TMIN_EX] = round(wDay[H_TMIN][LOWEST], 1);
+						m_output[ref][DAILY_TAIR_EX] = round(wDay[H_TAIR][MEAN], 1);
+						m_output[ref][DAILY_TMAX_EX] = round(wDay[H_TMAX][HIGHEST], 1);
+						m_output[ref][DAILY_PRCP_EX] = round(wDay[H_PRCP][SUM], 1);
+						m_output[ref][DAILY_TDEW_EX] = round(wDay[H_TDEW][MEAN], 1);
+						m_output[ref][DAILY_RELH_EX] = round(wDay[H_RELH][MEAN], 1);
+						m_output[ref][DAILY_WNDS_EX] = round(wDay[H_WNDS][MEAN], 1);
+						m_output[ref][DAILY_WNDD_EX] = round(wDay[H_WNDD][MEAN], 1);
+						m_output[ref][DAILY_SRAD_EX] = round(wDay[H_SRAD][SUM], 3);
 					}
 					else
 					{
-						m_output[ref][DAILY_TMIN] = Round(wDay[H_TMIN][LOWEST], 1);
-						m_output[ref][DAILY_TAIR] = Round(wDay[H_TAIR][MEAN], 1);
-						m_output[ref][DAILY_TMAX] = Round(wDay[H_TMAX][HIGHEST], 1);
-						m_output[ref][DAILY_PRCP] = Round(wDay[H_PRCP][SUM], 1);
-						m_output[ref][DAILY_TDEW] = Round(wDay[H_TDEW][MEAN], 1);
-						m_output[ref][DAILY_RELH] = Round(wDay[H_RELH][MEAN], 1);
-						m_output[ref][DAILY_SRAD] = Round(wDay[H_SRAD][MEAN], 3);
+						m_output[ref][DAILY_TMIN] = round(wDay[H_TMIN][LOWEST], 1);
+						m_output[ref][DAILY_TAIR] = round(wDay[H_TAIR][MEAN], 1);
+						m_output[ref][DAILY_TMAX] = round(wDay[H_TMAX][HIGHEST], 1);
+						m_output[ref][DAILY_PRCP] = round(wDay[H_PRCP][SUM], 1);
+						m_output[ref][DAILY_TDEW] = round(wDay[H_TDEW][MEAN], 1);
+						m_output[ref][DAILY_RELH] = round(wDay[H_RELH][MEAN], 1);
+						m_output[ref][DAILY_SRAD] = round(wDay[H_SRAD][MEAN], 3);
 
 					}
 				}
@@ -258,13 +258,13 @@ namespace WBSF
 						}
 						else
 						{
-							m_output[TRef][HOURLY_TMIN] = Round(wh[H_TMIN], 1);
-							m_output[TRef][HOURLY_TAIR] = Round(wh[H_TAIR], 1);
-							m_output[TRef][HOURLY_TMAX] = Round(wh[H_TMAX], 1);
-							m_output[TRef][HOURLY_PRCP] = Round(wh[H_PRCP], 1);
-							m_output[TRef][HOURLY_TDEW] = Round(wh[H_TDEW], 1);
-							m_output[TRef][HOURLY_RELH] = Round(wh[H_RELH], 1);
-							m_output[TRef][HOURLY_SRAD] = Round(wh[H_SRAD], 3);
+							m_output[TRef][HOURLY_TMIN] = round(wh[H_TMIN], 1);
+							m_output[TRef][HOURLY_TAIR] = round(wh[H_TAIR], 1);
+							m_output[TRef][HOURLY_TMAX] = round(wh[H_TMAX], 1);
+							m_output[TRef][HOURLY_PRCP] = round(wh[H_PRCP], 1);
+							m_output[TRef][HOURLY_TDEW] = round(wh[H_TDEW], 1);
+							m_output[TRef][HOURLY_RELH] = round(wh[H_RELH], 1);
+							m_output[TRef][HOURLY_SRAD] = round(wh[H_SRAD], 3);
 						}
 					}
 				}

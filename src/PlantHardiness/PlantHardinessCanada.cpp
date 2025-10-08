@@ -3,9 +3,9 @@
 // 27/01/2010 	Rémi Saint-Amant	Incorporate in BioSIMModelBase
 //**********************************************************************
 #include "PlantHardinessCanada.h"
-#include "Basic/WeatherDefine.h"
+#include "WeatherBased/WeatherDefine.h"
 #include "Basic/UtilMath.h"
-#include "Basic/GrowingSeason.h"
+#include "WeatherBased/GrowingSeason.h"
 
 
 namespace WBSF
@@ -71,7 +71,7 @@ namespace WBSF
 		for (size_t y = 0; y < weather.size(); y++)
 		{
 			CTPeriod p = FF.GetPeriod(weather[y]);
-			stat += p.GetNbRef();
+			stat += p.size();// p.GetNbRef();
 		}
 
 		return stat[MEAN];
@@ -88,7 +88,9 @@ namespace WBSF
 
 	double CPlantHardinessCanada::GetJuneNovemberRain(const CWeatherStation& weather)
 	{
-		CTPeriod JuneNovember(weather.GetFirstYear(), JUNE, FIRST_DAY, weather.GetLastYear(), NOVEMBER, LAST_DAY, CTPeriod::YEAR_BY_YEAR);
+		CTPeriod JuneNovember(CTRef(weather.GetFirstYear(), JUNE, DAY_01), CTRef(weather.GetLastYear(), NOVEMBER, DAY_30));
+		JuneNovember.SetSegemntType(CTPeriod::YEAR_BY_YEAR);
+
 		double prcp = weather.GetStat(H_PRCP, JuneNovember)[SUM];
 		double snow = weather.GetStat(H_SNOW, JuneNovember)[SUM];
 
@@ -145,15 +147,15 @@ namespace WBSF
 
 	void CPlantHardinessCanada::Compute(const CWeatherStation& weather, CModelStatVector& result)
 	{
-		ASSERT(weather.size() > 20);
+		assert(weather.size() > 20);
 
 
-		result.Init(CTPeriod(CTRef(CTRef::ANNUAL, 0, 0, 0, 0), CTRef(CTRef::ANNUAL, 0, 0, 0, 0)), 2);
+		result.Init(CTPeriod(CTRef(CTM::ANNUAL, 0, 0, 0, 0), CTRef(CTM::ANNUAL, 0, 0, 0, 0)), 2);
 		double SI = GetSuitabilityIndex(weather);
 		int CZ = int(SI / 10.0);
-		int type = Round( (SI - CZ * 10)/10.0, 0); //zone a (0) or zone b (1)
+		int type = round( (SI - CZ * 10)/10.0, 0); //zone a (0) or zone b (1)
 
-		result[0][0] = Round(SI, 1);
+		result[0][0] = round(SI, 1);
 		result[0][1] = CZ + type*0.5;
 
 	}

@@ -1,4 +1,6 @@
-#include "ModelBase/BioSIMModelBase.h"
+#pragma once
+
+#include "ModelBased/BioSIMModelBase.h"
 #include "Tranosema_OBL_SBW.h"
 
 namespace WBSF

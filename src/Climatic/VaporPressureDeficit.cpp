@@ -5,9 +5,10 @@
 //**********************************************************************
 
 #include <iostream>
+#include "Basic/Sun.h"
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "ModelBase/EntryPoint.h"
+#include "Modelbased/EntryPoint.h"
 #include "VaporPressureDeficit.h"
 
 
@@ -155,8 +156,8 @@ namespace WBSF
 						double VPD = max(0.0f, wHour[H_ES] - wHour[H_EA] )*10;//kPa --> hPa
 
 						CTRef ref = m_weather[y][m][d][h].GetTRef();
-						size_t sunrise = Round(sun.GetSunrise(ref));
-						size_t sunset = min(23ll, Round(sun.GetSunset(ref)));
+						size_t sunrise = round(sun.GetSunrise(ref));
+						size_t sunset = (size_t)min(23.0, round(sun.GetSunset(ref)));
 
 						double daylightVPD = (h >= sunrise && h <= sunset) ? VPD : -9999;
 
@@ -198,8 +199,8 @@ namespace WBSF
 		if (weather.IsHourly())
 		{
 			CSun sun(weather.GetLocation().m_lat, weather.GetLocation().m_lon);
-			size_t sunrise = Round(sun.GetSunrise(weather.GetTRef()));
-			size_t sunset = min(23ll, Round(sun.GetSunset(weather.GetTRef())));
+			size_t sunrise = round(sun.GetSunrise(weather.GetTRef()));
+			size_t sunset = (size_t)min(23.0, round(sun.GetSunset(weather.GetTRef())));
 
 			for (size_t h = sunrise; h <= sunset; h++)
 				VPD += max(0.0f, weather[h][H_ES] - weather[h][H_EA]);
@@ -208,10 +209,10 @@ namespace WBSF
 		else
 		{
 			double daylightT = weather.GetTdaylight();
-			double daylightEs = eᵒ(daylightT);//kPa // *1000; //by RSA 11-09-2018 kPa instead of Pa
+			double daylightEs = e0(daylightT);//kPa // *1000; //by RSA 11-09-2018 kPa instead of Pa
 			VPD += max(0.0, daylightEs - weather[H_EA][MEAN]);
 
-			//double Dmax = eᵒ(weather[H_TMAX]) - eᵒ(weather[H_TMIN]);
+			//double Dmax = e0(weather[H_TMAX]) - e0(weather[H_TMIN]);
 			//VPD += 2.0 / 3.0*Dmax;
 
 			//VPD += max(0.0, weather[H_ES][MEAN] - weather[H_EA][MEAN]);
@@ -241,14 +242,14 @@ namespace WBSF
 
 	/*double ʃ(double Tᴰ, double Tᴸ, double Tᴴ )
 	{
-		ASSERT(Tᴰ <= Tᴸ);
-		ASSERT(Tᴸ <= Tᴴ);
+		assert(Tᴰ <= Tᴸ);
+		assert(Tᴸ <= Tᴴ);
 
 		double sum=0;
 		for (size_t i = 0; i <= 100; i++)
 		{
 			double T = Tᴸ + i*(Tᴴ - Tᴸ) / 100.0;
-			sum += eᵒ(T) - eᵒ(Tᴰ);
+			sum += e0(T) - e0(Tᴰ);
 		}
 		
 		return sum;
@@ -256,8 +257,8 @@ namespace WBSF
 
 	double ʃ(double Tᴰ, double T)
 	{
-		ASSERT(Tᴰ <= T);
-		return eᵒ(T) - eᵒ(Tᴰ);
+		assert(Tᴰ <= T);
+		return e0(T) - e0(Tᴰ);
 	}
 
 
@@ -295,27 +296,27 @@ namespace WBSF
 
 			//test from Castellvi(1996)
 		/*	
-			double Tᴰ = eᵒ(weather[H_TDEW][MEAN]);
-			double Tn = eᵒ(weather[H_TMIN][MEAN]);
-			double Tx = eᵒ(weather[H_TMAX][MEAN]);
+			double Tᴰ = e0(weather[H_TDEW][MEAN]);
+			double Tn = e0(weather[H_TMIN][MEAN]);
+			double Tx = e0(weather[H_TMAX][MEAN]);
 			double Ta = (Tn+Tx)/2;
 			if (Tᴰ < Tn && Tn < Tx)
 			{
 				double a = trapezoidal(Tᴰ, Tn, Ta);
 				double b = trapezoidal(Tᴰ, Tn, Tx);
-				ASSERT(a/b > 0 && a/b<=1);
+				assert(a/b > 0 && a/b<=1);
 
 				while (abs(0.5 - a/b)> 0.001)
 				{
 					Ta += (0.5-a/b)*(Tx-Tn);
-					ASSERT(Ta >= Tn && Ta <= Tx);
+					assert(Ta >= Tn && Ta <= Tx);
 					a = trapezoidal(Tᴰ, Tn, Ta);
-					ASSERT(a / b >= 0 && a / b <= 1);
+					assert(a / b >= 0 && a / b <= 1);
 				}
 			}
 
 			double h = std::max(1.0, std::min(100.0, weather[H_RELH][MEAN]));
-			stat += eᵒ(Ta)*(1- h /100.0);
+			stat += e0(Ta)*(1- h /100.0);
 */
 			
 		}

@@ -2,13 +2,14 @@
 // 26/01/2023	1.0.3	Rémi Saint-Amant   Calibrate adult emergence with many stages data
 // 26/01/2021	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
-#include "ALeucopodaModel.h"
-#include "ModelBase/EntryPoint.h"
-#include "Basic\DegreeDays.h"
-#include "Basic\Utilstd.h"
 #include <boost/math/distributions/logistic.hpp>
-#include "ModelBase/SimulatedAnnealingVector.h"
 
+
+#include "Basic/UtilStd.h"
+#include "WeatherBased/DegreeDays.h"
+#include "Modelbased/EntryPoint.h"
+#include "ModelBased/SimulatedAnnealingVector.h"
+#include "ALeucopodaModel.h"
 
 using namespace WBSF::HOURLY_DATA;
 using namespace std;
@@ -50,11 +51,11 @@ namespace WBSF
 		//m_EWD.fill(0);
 		//m_EAS.fill(0);
 		//Set parameters to equation
-		//ASSERT(stand.m_equations.m_EWD.size() == m_EWD.size());
+		//assert(stand.m_equations.m_EWD.size() == m_EWD.size());
 		for (size_t p = 0; p < m_EWD.size(); p++)
 			m_EWD[p] = CAprocerosLeucopodaEquations::EWD[p];
 
-		//ASSERT(stand.m_equations.m_EAS.size() == m_EAS.size());
+		//assert(stand.m_equations.m_EAS.size() == m_EAS.size());
 		for (size_t p = 0; p < m_EAS.size(); p++)
 			m_EAS[p] = CAprocerosLeucopodaEquations::EAS[p];
 
@@ -144,7 +145,7 @@ namespace WBSF
 			size_t maxG = min(NB_GENERATIONS_MAX, outputs.size());
 
 			CTPeriod p = weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
-			for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				CStatistic diapause;
 				for (size_t g = 0, ss = 0; g < maxG; g++)
@@ -172,10 +173,10 @@ namespace WBSF
 						if (ss>0 && (s != O_DEAD_ADULT || s != O_BROOD || s != O_DEAD_ATTRITION))
 						{
 							CStatistic stat_g1 = m_output.GetStat(ss, p);
-							if (stat_g1.IsInit() && stat_g1[SUM] > 0)
+							if (stat_g1.is_init() && stat_g1[SUM] > 0)
 							{
 								double cumul_output = m_output[0][ss] * 100 / stat_g1[SUM];//when first day is not 0
-								for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+								for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 								{
 									m_output[d][ss] = m_output[d - 1][ss] + m_output[d][ss] * 100 / stat_g1[SUM];
 									_ASSERTE(!_isnan(m_output[d][ss]));
@@ -200,11 +201,11 @@ namespace WBSF
 		
 		//Set parameters to equation
 
-		ASSERT(stand.m_equations.m_EWD.size() == m_EWD.size());
+		assert(stand.m_equations.m_EWD.size() == m_EWD.size());
 		for (size_t p = 0; p < m_EWD.size(); p++)
 			stand.m_equations.m_EWD[p] = m_EWD[p];
 
-		ASSERT(stand.m_equations.m_EAS.size() == m_EAS.size());
+		assert(stand.m_equations.m_EAS.size() == m_EAS.size());
 		for (size_t p = 0; p < m_EAS.size(); p++)
 			stand.m_equations.m_EAS[p] = m_EAS[p];
 
@@ -231,11 +232,11 @@ namespace WBSF
 		
 
 
-		for (CTRef d = p.Begin(); d <= p.End(); d++)
+		for (CTRef d = p.begin(); d <= p.end(); d++)
 		{
 
 			stand.Live(weather.GetDay(d));
-			//if (output.IsInside(d))
+			//if (output.is_inside(d))
 				//stand.GetStat(d, output[d]);
 
 			size_t nbGenerations = stand.GetFirstHost()->GetNbGeneration();
@@ -267,7 +268,7 @@ namespace WBSF
 		//			if (stat.IsInit() && stat[SUM] > 0)
 		//			{
 		//				output[g][0][s] = output[g][0][s] * 100 / stat[SUM];//when first day is not 0
-		//				for (CTRef d = p.Begin() + 1; d <= p.End(); d++)
+		//				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 		//				{
 		//					output[g][d][s] = output[g][d - 1][s] + output[g][d][s] * 100 / stat[SUM];
 		//					_ASSERTE(!_isnan(output[g][d][s]));
@@ -309,10 +310,10 @@ namespace WBSF
 		for (size_t y = 0; y < weather.GetNbYears(); y++)
 		{
 			CTPeriod p = weather[y].GetEntireTPeriod();
-			//p.Begin() = p.Begin() + int(m_P[delta]);
-			CDD[p.Begin()][0] = DD[p.Begin()][CDegreeDays::S_DD];
+			//p.begin() = p.begin() + int(m_P[delta]);
+			CDD[p.begin()][0] = DD[p.begin()][CDegreeDays::S_DD];
 
-			for (CTRef TRef = p.Begin() + 1; TRef <= p.End(); TRef++)
+			for (CTRef TRef = p.begin() + 1; TRef <= p.end(); TRef++)
 				CDD[TRef][0] = CDD[TRef - 1][0] + DD[TRef][CDegreeDays::S_DD];
 		}
 
@@ -320,7 +321,7 @@ namespace WBSF
 
 	size_t GetStage(std::string name)
 	{
-		static const array<char*, NB_STAGES> STAGE_NAME = { {"EGG", "LARVA", "PREPUPA", "PUPA", "ADULT"} };
+		static const array<const char*, NB_STAGES> STAGE_NAME = { {"EGG", "LARVA", "PREPUPA", "PUPA", "ADULT"} };
 		
 		auto it = find(STAGE_NAME.begin(), STAGE_NAME.end(), MakeUpper(name));
 		return distance(STAGE_NAME.begin(), it);
@@ -329,9 +330,9 @@ namespace WBSF
 
 
 	enum TInput { I_KEYID, I_DATE, I_STAGE, I_GENERATION, I_N, I_CUMUL, NB_INPUTS };
-	void CAprocerosLeucopodaModel::AddDailyResult(const StringVector& header, const StringVector& data)
+	void CAprocerosLeucopodaModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
-		ASSERT(data.size() == NB_INPUTS);
+		assert(data.size() == NB_INPUTS);
 
 		CSAResult obs;
 		obs.m_ref.FromFormatedString(data[I_DATE]);
@@ -348,7 +349,7 @@ namespace WBSF
 		m_SAResult.push_back(obs);
 	}
 
-	//ASSERT(data.size() == NB_INPUTS);
+	//assert(data.size() == NB_INPUTS);
 	////SYC	site	Year	collection	col_date	emerge_date	daily_count	species	n_days P Time
 	//if (stoi(data[I_VARIABLE]) == m_stage && stoi(data[I_T]) == m_T)
 	//{
@@ -394,11 +395,11 @@ namespace WBSF
 	//		if (obs >= 100)
 	//			obs = 99.99;//to avoid some problem of truncation
 
-	//		long index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(TRefO.GetYear(), FIRST_MONTH, FIRST_DAY, TRefO.GetYear(), LAST_MONTH, LAST_DAY));
+	//		long index = output.GetFirstIndex(s, ">=", obs, 1, CTPeriod(TRefO.GetYear(), JANUARY, DAY_01, TRefO.GetYear(), DECEMBER, DAY_31));
 	//		if (index >= 1)
 	//		{
-	//			double obsX1 = output.GetFirstTRef().GetJDay() + index;
-	//			double obsX2 = output.GetFirstTRef().GetJDay() + index + 1;
+	//			double obsX1 = output.GetFirstTRef().GetDOY() + index;
+	//			double obsX2 = output.GetFirstTRef().GetDOY() + index + 1;
 
 	//			double obsY1 = output[index][s];
 	//			double obsY2 = output[index + 1][s];
@@ -406,7 +407,7 @@ namespace WBSF
 	//			{
 	//				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 	//				double obsX = obsX1 + (obs - obsY1)*slope;
-	//				ASSERT(!_isnan(obsX) && _finite(obsX));
+	//				assert(!_isnan(obsX) && _finite(obsX));
 
 	//				x = obsX;
 	//			}
@@ -432,14 +433,14 @@ namespace WBSF
 
 	size_t GetStageIndex(const std::vector<double>& obs)
 	{
-		return obs[I_GENERATION] * NB_OUTPUT_ONE_G + obs[I_STAGE] - PUPA;
+		return int(obs[I_GENERATION]) * NB_OUTPUT_ONE_G + int(obs[I_STAGE]) - PUPA;
 	}
 
 
 	bool CAprocerosLeucopodaModel::GetFValueDaily(CStatisticXY& stat)
 	{
 		
-		ASSERT(!m_SAResult.empty() );
+		assert(!m_SAResult.empty() );
 		
 		//CTZZStand* pStand = GetStand();
 		//for (size_t p = 0; p < m_EAS.size(); p++)
@@ -451,8 +452,8 @@ namespace WBSF
 		if (m_data_weather.GetNbYears() == 0)
 		{
 			CTPeriod pp(CTRef(*m_years.begin(), JANUARY, DAY_01), CTRef(*m_years.rbegin(), DECEMBER, DAY_31));
-			pp = pp.Intersect(m_weather.GetEntireTPeriod(CTM::DAILY));
-			if (pp.IsInit())
+			pp = pp.intersect(m_weather.GetEntireTPeriod(CTM::DAILY));
+			if (pp.is_init())
 			{
 				((CLocation&)m_data_weather) = m_weather;
 				m_data_weather.SetHourly(m_weather.IsHourly());
@@ -466,7 +467,7 @@ namespace WBSF
 			else
 			{
 				//remove these obs, no input weather
-				ASSERT(false);
+				assert(false);
 				m_SAResult.clear();
 				return true;
 			}
@@ -522,8 +523,8 @@ namespace WBSF
 		//CStatistic x;
 		//for (size_t i = 0; i < m_SAResult.size(); i++)
 		//{
-		//	//ASSERT(m_SAResult[i].m_obs[I_VARIABLE] == m_stage);
-		//	//ASSERT(m_SAResult[i].m_obs[I_T] == m_T);
+		//	//assert(m_SAResult[i].m_obs[I_VARIABLE] == m_stage);
+		//	//assert(m_SAResult[i].m_obs[I_T] == m_T);
 
 		//	size_t n = size_t(ceil(m_P[i]));
 		//	bZero |= n == 0;

@@ -5,9 +5,9 @@
 // 12-04-1999			Jacques Régnière	Creation from existing code  
 //**********************************************************************
 
-//#include <math.h>
+//#include <cmath>
 #include "Biophysical site indices (Ecoloap).h"
-#include "ModelBase/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 namespace WBSF
 {
@@ -71,7 +71,7 @@ namespace WBSF
 	{
 		double sum = 0;
 		CTPeriod p = weather.GetEntireTPeriod(CTM::DAILY);
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			double Tmin = weather[TRef][H_TMIN][MEAN];
 			double Tmax = weather[TRef][H_TMAX][MEAN];
@@ -90,7 +90,7 @@ namespace WBSF
 		std::array<CStatistic, 12>  P;
 
 		CTPeriod p = weather.GetEntireTPeriod(CTM::DAILY);
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			double Tmin = weather[TRef][H_TMIN][MEAN];
 			double Tmax = weather[TRef][H_TMAX][MEAN];
@@ -137,8 +137,8 @@ namespace WBSF
 		CStatistic udpv;
 
 		int year = weather.GetTRef().GetYear();
-		CTPeriod p(CTRef(year, JUNE, FIRST_DAY), CTRef(year, AUGUST, LAST_DAY));
-		for (CTRef TRef = p.Begin(); TRef <= p.End(); TRef++)
+		CTPeriod p(CTRef(year, JUNE, DAY_01), CTRef(year, AUGUST, DAY_31));
+		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 		{
 			double Tmin = weather[TRef][H_TMIN][MEAN];
 			double Tmax = weather[TRef][H_TMAX][MEAN];

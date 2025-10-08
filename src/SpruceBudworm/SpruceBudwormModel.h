@@ -1,5 +1,9 @@
+#pragma once
+
+
+
 #include "Basic/ModelStat.h"
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "SpruceBudworm.h"
 
 
@@ -20,7 +24,7 @@ namespace WBSF
 		static WBSF::CBioSIMModelBase* CreateObject(){ return new CSpruceBudwormModel; }
 
 		//function for simulated annealing
-		virtual void AddDailyResult(const StringVector& header, const StringVector& data)override;
+		virtual void AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)override;
 		virtual bool GetFValueDaily(CStatisticXY& stat)override;
 
 	protected:

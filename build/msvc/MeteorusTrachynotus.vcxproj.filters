@@ -7,25 +7,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ActiaInterrupta.cpp">
+    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotus.cpp">
       <Filter>SourceTranosema</Filter>
     </ClCompile>
-    <ClCompile Include="ActiaInterruptaEquations.cpp">
+    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusEquations.cpp">
       <Filter>SourceTranosema</Filter>
     </ClCompile>
-    <ClCompile Include="ActiaInterruptaModel.cpp">
+    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotus.h">
       <Filter>SourceTranosema</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ActiaInterrupta.h">
+    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusEquations.h">
       <Filter>SourceTranosema</Filter>
-    </ClInclude>
-    <ClInclude Include="ActiaInterruptaEquations.h">
+    </ClCompile>
+    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusModel.cpp">
       <Filter>SourceTranosema</Filter>
-    </ClInclude>
-    <ClInclude Include="ActiaInterruptaModel.h">
+    </ClCompile>
+    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusModel.h">
       <Filter>SourceTranosema</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>

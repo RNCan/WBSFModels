@@ -5,7 +5,7 @@
 
 #include <array>
 #include <cassert>
-#include "ModelBase/EquationTableLookup.h"
+#include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
 {
@@ -53,7 +53,7 @@ namespace WBSF
 		//double GetTimeInSoil(double T, double day_length)const;
 		//double GetAdultAestivalDiapauseRate(double T, double day_length, double creation_day, double pupation_time)const;
 		double GetAdultAbundance(double T, size_t j_day_since_jan)const;
-		double CLaricobiusNigrinusEquations::GetColdTolerence()const;
+		double GetColdTolerence()const;
 	};
 
 }

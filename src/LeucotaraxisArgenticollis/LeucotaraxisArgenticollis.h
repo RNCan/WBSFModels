@@ -9,9 +9,9 @@
 #pragma once
 
 #include "Basic/UtilTime.h"
-#include "Basic/DegreeDays.h"
+#include "WeatherBased/DegreeDays.h"
 
-#include "ModelBase/IndividualBase.h"
+#include "ModelBased/IndividualBase.h"
 
 #include "LeucotaraxisArgenticollisEquations.h"
 
@@ -141,8 +141,8 @@ namespace WBSF
 	//WARNING: cast must be defined here to avoid bug
 	inline CLAZHost* CLeucotaraxisArgenticollis::GetHost(){ return static_cast<CLAZHost*>(m_pHost); }
 	inline const CLAZHost* CLeucotaraxisArgenticollis::GetHost()const{ return static_cast<const CLAZHost*>(m_pHost); }
-	inline CLAZStand* CLeucotaraxisArgenticollis::GetStand(){ ASSERT(m_pHost); return static_cast<CLAZStand*>(GetHost()->GetStand()); }
-	inline const CLAZStand* CLeucotaraxisArgenticollis::GetStand()const{ ASSERT(m_pHost); return static_cast<const CLAZStand*>(GetHost()->GetStand()); }
+	inline CLAZStand* CLeucotaraxisArgenticollis::GetStand(){ assert(m_pHost); return static_cast<CLAZStand*>(GetHost()->GetStand()); }
+	inline const CLAZStand* CLeucotaraxisArgenticollis::GetStand()const{ assert(m_pHost); return static_cast<const CLAZStand*>(GetHost()->GetStand()); }
 	inline const CLeucotaraxisArgenticollisEquations& CLeucotaraxisArgenticollis::Equations()const{ return GetStand()->m_equations; }
 
 
