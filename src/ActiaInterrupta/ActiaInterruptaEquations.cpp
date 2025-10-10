@@ -36,7 +36,7 @@ namespace WBSF
 	const double  CActiaInterruptaEquations::EQ_P[NB_EQUATIONS][6]
 	{
 		{8.240e-06,  0.8868,   5.6, 40.0}, //OBL post diapause
-		{0.01717, 0.07214, 0.0, 12.0146, 35.8674, 11.0909}, //Post-Diapause Maggot in OBL 
+		{0.01717, 0.07214, 0.0, 12.0146, 35.8674, 11.0909}, //Post-Diapause Maggot in OBL
 		{0.05609, 0.05131,5.78, 15.0039, 33.3739, 4.5405}, //Summer Maggot SBW and OBL
 		{0.01172, 0.14960,1.78,  5.0540, 33.6005, 5.8689}, //Pupa
 		{0,0,0,0},                         //Adult
@@ -57,17 +57,17 @@ namespace WBSF
 
 		vector<double> p(begin(EQ_P[e]), end(EQ_P[e]));
 		double Rt = 0;
-		
+
 
 		if (e < EQ_ADULT)
 			Rt = max(0.0, min(1.0, CDevRateEquation::GetRate(EQ_TYPE[e], p, T)));
 		else
 			Rt = 1.0 / 22.4; //Rt = 1.0/exp(log(44) - log(max(10.0, min(30.0, T)) / 10));
-			
 
 
 
-		_ASSERTE(!_isnan(Rt) && _finite(Rt));
+
+		assert(!_isnan(Rt) && _finite(Rt));
 		assert(Rt >= 0);
 
 		return Rt;
@@ -75,7 +75,7 @@ namespace WBSF
 
 
 	//*****************************************************************************
-	// individual relative development rate 
+	// individual relative development rate
 
 	double CActiaInterruptaEquations::Getδ(size_t e)const
 	{
@@ -98,7 +98,7 @@ namespace WBSF
 
 
 
-		_ASSERTE(!_isnan(r) && _finite(r));
+		assert(!_isnan(r) && _finite(r));
 		if (_isnan(r) || !_finite(r))//just in case
 			r = 1;
 
@@ -118,20 +118,20 @@ namespace WBSF
 	{
 		//maggots / female
 		double fec = m_randomGenerator.RandNormal(129.43, 47.2);
-		
+
 		//limit between 1% and 99%
 		while (fec < 39 || fec>225)
 			fec=m_randomGenerator.RandNormal(129.43, 47.2);
 
 		return fec;
 	}
-	
-	
+
+
 
 
 
 	//*****************************************************************************
-	//survival rate 
+	//survival rate
 
 
 
@@ -151,10 +151,10 @@ namespace WBSF
 		case MAGGOT:
 		case PUPA:	r = 1 / (1 + exp(-(P[s][0] + P[s][1] * T))); break;
 		case ADULT:	r = 1; break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
-		_ASSERTE(!_isnan(r) && _finite(r));
+		assert(!_isnan(r) && _finite(r));
 		if (_isnan(r) || !_finite(r))//just in case
 			r = 1;
 
@@ -169,6 +169,6 @@ namespace WBSF
 
 		return m_randomGenerator.Rand(0.0, 1.0);
 	}
-	
+
 
 }

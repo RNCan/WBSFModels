@@ -2,9 +2,9 @@
 // File: SpruceBudwormEquations.h
 //
 // Class: CSpruceBudwormEquations
-//          
 //
-// Description: Basic of Spruce Budworm calculation. 
+//
+// Description: Basic of Spruce Budworm calculation.
 //				stage development rates, relative development rates, oviposition
 //				stage development rates use optimization table lookup
 //
@@ -28,7 +28,7 @@ namespace WBSF
 {
 
 	//*****************************************************************************
-	//CWSBDevelopment class 
+	//CWSBDevelopment class
 
 
 	//development rate parameters (12 equations, 6 parameters)
@@ -99,7 +99,7 @@ namespace WBSF
 		const double* p = P[e];//current P for equation
 		size_t s = e2s(e);//compute stage for b1Factor
 		assert(s == ADULT);
-		
+
 		T = max(8.0, min(35.0, T) );
 		double Rt = 1 / (p[PB1] * b1Factor[s] + p[PB2] * T + p[PB3] * T*T);
 		return max(0.0, Rt);
@@ -129,11 +129,11 @@ namespace WBSF
 			case E_PUPAE_MALE:	Rt = Equation1(e, T); break;
 			case E_PUPAE_FEMALE:Rt = Equation1(e, T); break;
 			case E_ADULT:		Rt = Equation3(e, T); break;
-			default: _ASSERTE(false);
+			default: assert(false);
 			}
 		}
 
-		_ASSERTE(!_isnan(Rt) && _finite(Rt)); 
+		assert(!_isnan(Rt) && _finite(Rt));
 		assert(Rt >= 0);
 		return Rt;
 	}
@@ -156,7 +156,7 @@ namespace WBSF
 	}
 
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 	double CSpruceBudwormEquations::Equation4(const double p[NB_REL_DEV_PARAMETERS])const
 	{
 		double X = m_randomGenerator.Randu(true, true);
@@ -200,17 +200,17 @@ namespace WBSF
 		case L6:	r = Equation5(P[s]); break;
 		case PUPAE:	r = 1; break;
 		case ADULT:	r = 1; break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
-		_ASSERTE(!_isnan(r) && _finite(r));
+		assert(!_isnan(r) && _finite(r));
 		if (_isnan(r) || !_finite(r))//just in case
 			r = 1;
 
 		return r;
 
 	}
-	
+
 	//sex : MALE (0) or FEMALE (1)
 	double CSpruceBudwormEquations::RelativeDevRate(size_t s)const
 	{
@@ -221,8 +221,8 @@ namespace WBSF
 		return r;
 	}
 
-	
-	
+
+
 	//sex : MALE (0) or FEMALE (1)
 	//A : forewing surface area [cm²]
 	double CSpruceBudwormEquations::get_A(size_t sex)const
@@ -236,8 +236,8 @@ namespace WBSF
 		double A = m_randomGenerator.RandNormal(A_MEAN[sex], A_SD[sex]);
 		while (A < 0.20 || A>0.6)
 			A=m_randomGenerator.RandNormal(A_MEAN[sex], A_SD[sex]);
-		 
-		
+
+
 		return A;
 	}
 
@@ -257,11 +257,11 @@ namespace WBSF
 		static const double M_B[2] = {  0.0000,  1.3260 };
 		static const double M_C[2] = {  3.7900,  2.1400 };
 		static const double M_D[2] = {  0.0000,  1.3050 };
-		
+
 		return exp(M_A[sex] + M_B[sex] * G + M_C[sex] * A + M_D[sex] * G*A);
 	}
 
-	
+
 	//sex : MALE (0) or FEMALE (1)
 	//A : forewing surface area [cm²]
 	//out : Dry weight error term
@@ -270,10 +270,10 @@ namespace WBSF
 		static const double M_ξ[2] = { 0.2060,  0.1600 };
 		static const double M_L[2] = { 0.0015,  0.0090 };//0.009 = low full female
 		static const double M_H[2] = { 0.0150,  0.0600 };//0.06 = hi full female
-		
+
 		double Mfull = get_M(sex, A, 1);
 
-		//find error term that will be good for male or for full or empty female 
+		//find error term that will be good for male or for full or empty female
 		double ξ = m_randomGenerator.RandUnbiasedLogNormal(log(1), M_ξ[sex]);
 		while (Mfull*ξ<M_L[sex] || Mfull*ξ >M_H[sex])
 			ξ = m_randomGenerator.RandUnbiasedLogNormal(log(1), M_ξ[sex]);
@@ -312,9 +312,9 @@ namespace WBSF
 
 
 
-	
+
 	//T: daily mean temperature
-	//P: egg laid proportion 
+	//P: egg laid proportion
 	double CSpruceBudwormEquations::get_P(double T)const
 	{
 		const double α = 0.489;
@@ -344,7 +344,7 @@ namespace WBSF
 
 			double α = μ*((μ*(1 - μ) / σ²) - 1);
 			double β = (1 - μ)*((μ*(1 - μ) / σ²) - 1);
-			
+
 			defoliation = m_randomGenerator.RandBeta(α, β) * 100;
 			while (defoliation < 0 || defoliation>100)
 				defoliation = m_randomGenerator.RandBeta(α, β) * 100;

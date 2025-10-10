@@ -2,12 +2,12 @@
 // File: PopilliaJaponicaEquations.h
 //
 // Class: CPopilliaJaponicaEquations
-//          
 //
-// Description: 
+//
+// Description:
 //				stage development rates, relative development rates
 //				stage daily survival
-//				Adult longevity and fecundity 
+//				Adult longevity and fecundity
 //
 //*****************************************************************************
 // 20/09/2023   Rémi Saint-Amant    Creation
@@ -54,12 +54,12 @@ namespace WBSF
 	const std::array<double, NB_OTHER_PARAMS> CPopilliaJaponicaEquations::OTHER_NA = { 30.1, 0.3365, 0.93, 0.1815, 0, 18.2651, 1.68499, 0.605301 };
 	//const std::array<double, NB_OTHER_PARAMS> CPopilliaJaponicaEquations::OTHER_EU = { 30.1, 0.3365, 0.83, 0.3138, 0, 19.9462, 4.91279, 1.74064 };
 	const std::array<double, NB_OTHER_PARAMS> CPopilliaJaponicaEquations::OTHER_EU = { 30.1, 0.3365, 0.83, 0.3138, 0, 19.9462, 3.7613, 1.7405 };
-	
- 
 
 
-		
-		
+
+
+
+
 		//Daily development rate
 	double CPopilliaJaponicaEquations::ComputeRate(size_t s, double T)const
 	{
@@ -75,8 +75,8 @@ namespace WBSF
 			CDevRateEquation::WangLanDing_1982,//L2
 			CDevRateEquation::WangLanDing_1982,//L3
 			CDevRateEquation::WangLanDing_1982,//Pupa
-			//CDevRateEquation::Briere1_1999,//Gilioli 
-			//CDevRateEquation::Briere1_1999,//Gilioli 
+			//CDevRateEquation::Briere1_1999,//Gilioli
+			//CDevRateEquation::Briere1_1999,//Gilioli
 			CDevRateEquation::Poly1,//Adult
 			CDevRateEquation::Poly1//dead adult
 		};
@@ -89,8 +89,8 @@ namespace WBSF
 				{0.07475381, 0.07247321, 12.11973, 31.1684, 37.11498, 4.618004},//L3
 				{0.8383731, 0.1105868, 9.75523, 39.50243, 39.50243, 7.732953},	//Pupa
 
-				//{4.04E-5,12.8,29.8},//Gilioli 
-				//{8.36E-5,11.4,39.1},//Gilioli 
+				//{4.04E-5,12.8,29.8},//Gilioli
+				//{8.36E-5,11.4,39.1},//Gilioli
 				{ 1.0 / 30.1, 0},
 				{ 0, 0}//dead adult
 		} };
@@ -112,7 +112,7 @@ namespace WBSF
 		}
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P, T));
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0 && r <= 1);
+		assert(!_isnan(r) && _finite(r) && r >= 0 && r <= 1);
 
 		return r;
 	}
@@ -138,13 +138,13 @@ namespace WBSF
 	double CPopilliaJaponicaEquations::GetRateDiapause(double t)const
 	{
 		double r = max(0.0, CDevRateEquation::GetRate(CDevRateEquation::WangLanDing_1982, m_EOD, t));
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;// *m_psy[DEAD_ADULT];
 	}
 
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 
 
 	double CPopilliaJaponicaEquations::GetRelativeDevRate(size_t s)const
@@ -167,7 +167,7 @@ namespace WBSF
 
 		if (s == L3)
 			S = m_other[L3_SD];
-		
+
 
 		return GetRelativeDevRate(S);
 	}
@@ -196,7 +196,7 @@ namespace WBSF
 
 		//double test1 = boost::math::quantile(dist, 0.001);
 		//double test2 = boost::math::quantile(dist, 0.999);
-		_ASSERTE(!_isnan(RDR) && _finite(RDR));
+		assert(!_isnan(RDR) && _finite(RDR));
 
 
 		//Don't inverse
@@ -243,7 +243,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], P_SUR[s], T)));
 
-		_ASSERTE(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
 		return sr;
 	}
 
@@ -294,7 +294,7 @@ namespace WBSF
 	//	static const vector<double> P_FEC = { 0.01518, 10.9, 6.535 };
 	//	double r = max(0.0, CDevRateEquation::GetRate(P_EQ, P_FEC, T));
 
-	//	_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+	//	assert(!_isnan(r) && _finite(r) && r >= 0);
 
 	//	return r;
 	//}

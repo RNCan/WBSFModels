@@ -3,7 +3,7 @@
 // 01/01/1994  precision fix etc........bmw
 // 01/10/2002
 //     to eliminate negative evaporation from DC skit in November
-//     thru March.  Change of code to match equations in FTR-33 (1985) 
+//     thru March.  Change of code to match equations in FTR-33 (1985)
 //     report (change from F32.FOR)
 // 01/06/2005  to add STDLIB.h to solve recent problems in conversion of startups
 //    from char to float
@@ -14,7 +14,7 @@
 // 11/03/2010	Rémi Saint-Amant	Include start threshold
 // 18/05/2011   Rémi Saint-Amant	Change result format( January 1 to December 31), correction of a bug in computing new DC
 //									Add of m_carryOverFraction and EFFECTIVENESS_OF_WINTER as static parameters
-// 06/02/2012	Rémi Saint-Amant	Correction of a bug in the first date. The first date must start 3 days after the snow melt 
+// 06/02/2012	Rémi Saint-Amant	Correction of a bug in the first date. The first date must start 3 days after the snow melt
 // 05/09/2016	Rémi Saint-Amant	Many modifications to support hourly inputs
 // 16/03/2020   Rémi Saint-Amant	Add initial values from file
 // 22/02/2024   Rémi Saint-Amant	Bug correction when no snow
@@ -207,7 +207,7 @@ namespace WBSF
 
 
 		double m = 0;
-		//[2a] 
+		//[2a]
 		double Ed = 0.942 * pow(Hr, 0.679) + 11.0 * exp((Hr - 100.0) / 10.0) + 0.18 * (21.1 - T) * (1 - exp(-0.115 * Hr));
 		if (mo > Ed)
 		{
@@ -260,7 +260,7 @@ namespace WBSF
 
 		double rk = 1.894 * (t + 1.1) * (100.0 - Hr) * el[m] * 0.0001;
 
-		_ASSERTE(oldDMC >= 0);
+		assert(oldDMC >= 0);
 		double pr = oldDMC;
 		if (prcp > 1.5)
 		{
@@ -343,7 +343,7 @@ namespace WBSF
 	//Hourly Initial Spread Index
 	//Fo: Fine Fuel Moisture Code
 	//Ws : Wind Speed [km/h]
-	//VanWagnerType: Van Wagner constant 1977/1987 
+	//VanWagnerType: Van Wagner constant 1977/1987
 	//fbpMod : TRUE / FALSE if using the fbp modification at the extreme end
 	double CFWI::GetHISI(double Fo, double Ws, TVanWagner VanWagnerType, bool fbpMod)
 	{
@@ -383,7 +383,7 @@ namespace WBSF
 		return bui;
 	}
 
-	//Fire Weather Index 
+	//Fire Weather Index
 	double CFWI::GetFWI(double bui, double isi)
 	{
 		double bb = 0;
@@ -414,7 +414,7 @@ namespace WBSF
 	//
 	//   All variables names are laid out in the same manner as Forestry Canada
 	//   Fire Danger Group(FCFDG) (1992).Development and Structure of the
-	//   Canadian Forest Fire Behavior Prediction System." Technical Report 
+	//   Canadian Forest Fire Behavior Prediction System." Technical Report
 	//   ST - X - 3, Forestry Canada, Ottawa, Ontario.
 	//
 	// Args:
@@ -423,7 +423,7 @@ namespace WBSF
 	//   alt : Elevation(meters)
 	//   DJ : Day of year(also referred to as Julian date)
 	//   D0 : Date of minimum foliar moisture content
-	//   
+	//
 	// Returns :
 	//   FMC : Foliar Moisture Content
 	//
@@ -474,12 +474,12 @@ namespace WBSF
 	//              matted grass layer and also an equivalent Grass Fuel Moisture
 	//              Code.All equations come from Wotton(2009) as cited below
 	//              unless otherwise specified.
-	// 
+	//
 	//              Wotton, B.M. 2009. A grass moisture model for the Canadian
 	//              Forest Fire Danger Rating System.In: Proceedings 8th Fire and
 	//              Forest Meteorology Symposium, Kalispell, MT Oct 13 - 15, 2009.
 	//              Paper 3 - 2. https://ams.confex.com/ams/pdfpapers/155930.pdf
-	//           
+	//
 	// Args : input(data.frame) :
 	//         temp(required)	    Temperature(centigrade)
 	//         rh(required)	    Relative humidity(%)
@@ -494,7 +494,7 @@ namespace WBSF
 	//       roFL : Nominal fuel load of the fine fuel layer
 	//                   (kg/m^2 double, default=0.3)
 	//       out : Output format(GFMCandMC / MC / GFMC / ALL, default = GFMCandMC)
-	//       
+	//
 	// Returns : Returns a data.frame of either MC, GMFC, All, or GFMCandMC
 	//
 
@@ -881,7 +881,7 @@ namespace WBSF
 
 						double DMC = GetDMC(oldDMC, m, Tnoon, RHnoon, prcp);
 
-						// compute DC 
+						// compute DC
 						double DC = GetDC(oldDC, lat, m, Tnoon, prcp);
 
 						// compute BUI from DMC and DC
@@ -951,7 +951,7 @@ namespace WBSF
 						// compute DMC
 						double DMC = GetDMC(oldDMC, m, Tnoon, RHnoon, prcp);
 
-						// compute DC 
+						// compute DC
 						double DC = GetDC(oldDC, lat, m, Tnoon, prcp);
 
 						// compute BUI from DMC and DC
@@ -990,7 +990,7 @@ namespace WBSF
 					}
 				}
 			}//for all day
-		}//for all year 
+		}//for all year
 
 
 		return msg;
@@ -1000,7 +1000,7 @@ namespace WBSF
 	//**************************************************************
 	void CFWIStat::Covert2D(const CModelStatVector& result, CModelStatVector& resultD)
 	{
-		_ASSERTE(result.GetNbStat() == CFWIStat::NB_D_STAT);
+		assert(result.GetNbStat() == CFWIStat::NB_D_STAT);
 		CStatistic::SetVMiss(CFWI::MISSING);
 
 		CTPeriod p = result.GetTPeriod();
@@ -1024,7 +1024,7 @@ namespace WBSF
 
 	void CFWIStat::Covert2M(const CModelStatVector& resultD, CModelStatVector& resultM)
 	{
-		_ASSERTE(resultD.GetNbStat() == CFWIStat::NB_D_STAT);
+		assert(resultD.GetNbStat() == CFWIStat::NB_D_STAT);
 		CStatistic::SetVMiss(CFWI::MISSING);
 
 		CTRef firstDate = resultD.GetFirstTRef();
@@ -1081,7 +1081,7 @@ namespace WBSF
 
 	void CFWIStat::Covert2A(const CModelStatVector& resultD, CModelStatVector& resultA)
 	{
-		_ASSERTE(resultD.GetNbStat() == CFWIStat::NB_D_STAT);
+		assert(resultD.GetNbStat() == CFWIStat::NB_D_STAT);
 
 		CTRef firstDate = resultD.GetFirstTRef();
 		CTRef lastDate = resultD.GetLastTRef();
@@ -1101,7 +1101,7 @@ namespace WBSF
 			while (d <= lastDate &&
 				d.GetYear() == year)
 			{
-				//_ASSERTE( resultD[d][FWI] > -9999 );
+				//assert( resultD[d][FWI] > -9999 );
 				if (resultD[d][FWI] > CFWI::MISSING)
 				{
 					if (!firstDay.is_init())

@@ -1,8 +1,8 @@
 //*****************************************************************************
 // Class: CBagworm
-//          
 //
-// Descrition: the CBagworm represents one SBW insect. 
+//
+// Descrition: the CBagworm represents one SBW insect.
 //*****************************************************************************
 //*****************************************************************************
 
@@ -27,9 +27,9 @@ namespace WBSF
 	//
 	// Input: CTRef creationDate: the day of the creation
 	//		  double age: age of the insect when the object is created
-	//        
 	//
-	// Output: 
+	//
+	// Output:
 	//
 	// Note: m_relativeDevRate member is modified.
 	//*****************************************************************************
@@ -69,8 +69,8 @@ namespace WBSF
 	//*****************************************************************************
 	void CBagworm::Live(const CWeatherDay& weather)
 	{
-		//_ASSERTE(T.size() <= 24);//only one day at a time
-		//_ASSERTE(T.GetFirstTRef() >= m_creationDate);
+		//assert(T.size() <= 24);//only one day at a time
+		//assert(T.GetFirstTRef() >= m_creationDate);
 
 		//if (!IsAlive())
 			//return;
@@ -137,7 +137,7 @@ namespace WBSF
 				m_broods = clusterWeight * 2.45; //2.45 eggs/mg
 				m_totalBroods = m_broods;
 
-				//add 2 bugs 
+				//add 2 bugs
 				CBagworm* pBug = new CBagworm(m_pHost, weather.GetTRef(), EGG_DIAPAUSE, RANDOM_SEX, true, m_generation + 1, m_scaleFactor * 2);
 				pBug->SetClusterWeight(clusterWeight);
 				m_pHost->push_front(CIndividualPtr(pBug));
@@ -156,7 +156,7 @@ namespace WBSF
 	void CBagworm::Die(const CWeatherDay& weather)
 	{
 		CTRef TRef = weather.GetTRef();
-		//attrition mortality. Killed at the end of time step 
+		//attrition mortality. Killed at the end of time step
 		if (GetStage() == DEAD_ADULT)
 		{
 			//Old age
@@ -165,7 +165,7 @@ namespace WBSF
 		}
 		else if (m_clusterWeight > 0 && GetStage() == EGG && HasChangedStage())
 		{
-			//compute winter survival 
+			//compute winter survival
 			double w = m_clusterWeight / 1000;  //weight in g
 			double T = m_Tday[HIGHEST];
 			double s = 1 / (1 + exp(-(0.14*T + 65.8*w + 3.29*T*w)));
@@ -216,7 +216,7 @@ namespace WBSF
 	//*****************************************************************************
 	void CBagworm::Develop(CTRef date, double T, size_t nbStep)
 	{
-		_ASSERTE(m_status == HEALTHY);
+		assert(m_status == HEALTHY);
 
 		size_t s = GetStage();
 
@@ -231,7 +231,7 @@ namespace WBSF
 
 
 
-		_ASSERTE(RR >= 0);
+		assert(RR >= 0);
 	}
 
 	//*****************************************************************************

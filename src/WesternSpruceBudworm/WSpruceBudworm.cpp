@@ -2,9 +2,9 @@
 // File: WSBRates.h
 //
 // Class: CWSpruceBudworm
-//          
 //
-// Descrition: the CWSpruceBudworm represent one western spruce budworm insect. 
+//
+// Descrition: the CWSpruceBudworm represent one western spruce budworm insect.
 //*****************************************************************************
 // 08/07/2022   Rémi Saint-Amant	Compile with VC 2019
 // 11/04/2018   Rémi Saint-Amant	Many bugs correction
@@ -41,9 +41,9 @@ namespace WBSF
 	//
 	// Input: int creationDay: the day of the creation
 	//		  int stage: the stage of the insect when the object will be created
-	//        
 	//
-	// Output: 
+	//
+	// Output:
 	//
 	// Note: m_relativeDevRate member is modified.
 	//*****************************************************************************
@@ -55,7 +55,7 @@ namespace WBSF
 		//These are independent in successive life stages
 		for (size_t s = 0; s < NB_STAGES; s++)
 			m_relativeDevRate[s] = CWSBRelativeDevRate::GetRate(s, m_sex);
-		
+
 		m_potentialFecundity = 0; //fecundity is determined at moult from L5 to L6, based on L6 survival probability (in CWSpruceBudworm::IsDeadByWindow(double T, double dt) )
 		m_eggAge = 0;
 		m_bKillByAttrition = false;
@@ -71,7 +71,7 @@ namespace WBSF
 		m_onBole = RandomGenerator().Randu(true, true); //random overwintering location on the tree (branches or bole)
 	}
 
-	
+
 	// Object destructor
 	CWSpruceBudworm::~CWSpruceBudworm(void)
 	{}
@@ -120,14 +120,14 @@ namespace WBSF
 			if (s == EGG)
 				m_eggAge += 1.0 / nbSteps;
 
-			//If we became OVER_WINTER this year, then we stop the 
+			//If we became OVER_WINTER this year, then we stop the
 			//development until the next year
 			if (!((s == L2o && m_OWDate.GetYear() == weather.GetTRef().GetYear()) || (s == L3 && m_generation == 1)))
 				m_age += RR;
 
 			if (IsDeadByAttrition(T, RR))
 				m_bKillByAttrition = true;
-			
+
 			if (IsDeadByOverwintering(onBranch?T:Tmean, 1.0 / nbSteps))
 				m_bKillByOverwintering = true;
 		}
@@ -136,13 +136,13 @@ namespace WBSF
 	void CWSpruceBudworm::Brood(const CWeatherDay& weather)
 	{
 		assert(IsAlive() && m_sex == FEMALE);
-		
+
 		CIndividual::Brood(weather);
 		//Each day t, at temperature T
 		//Females begin oviposition after 1 day out of 15 at 20 C, 1 days out of 30 at 12 C: 6.7% of lifespan
 		if (m_age >= double(ADULT) + 0.067)
 		{
-			_ASSERTE(IsAlive());
+			assert(IsAlive());
 
 			double T = weather[H_TNTX][MEAN];
 
@@ -172,7 +172,7 @@ namespace WBSF
 	// Daily death management
 	// Input: CWeatherDay weather: weather of the day
 	//*****************************************************************************
-	
+
 	void CWSpruceBudworm::Die(const CWeatherDay& weather)
 	{
 		assert(IsAlive());
@@ -180,8 +180,8 @@ namespace WBSF
 		bool bLookAsynchrony = m_generation== 0 && (s == L2) && HasChangedStage();
 		bool bLookWindow = (s == L6) && HasChangedStage();
 		CTRef TRef = weather.GetTRef();
-		
-		
+
+
 		//Mortality
 		if (GetStage() == DEAD_ADULT)
 		{
@@ -262,15 +262,15 @@ namespace WBSF
 				if (stage == ADULT && m_sex == FEMALE)
 					stat[S_OVIPOSITING_ADULT] += m_scaleFactor;
 			}
-			
+
 			if (stage != oldStage)
 			{
 				stat[E_EGG + stage] += m_scaleFactor;
 				if (stage == ADULT && m_sex == FEMALE)
 					stat[E_TOTAL_FEMALE] += m_scaleFactor;
 			}
-			
-			/*if (!IsAlive() && 
+
+			/*if (!IsAlive() &&
 				m_status != m_lastStatus &&
 				stage == ADULT && m_sex == FEMALE)
 			{
@@ -314,22 +314,22 @@ namespace WBSF
 	}
 
 	double CWSpruceBudworm::GetInstar(bool includeLast)const
-	{ 
+	{
 		double AI = CBioSIMModelBase::VMISS;
 		if (IsAlive() || m_death == OLD_AGE)
 		{
 			assert(L2o == 1);
 			AI = std::min(m_age < double(L2o) ? m_age : max(2.0, m_age), double(NB_STAGES) - (includeLast ? 0.0 : 1.0));
 		}
-		return AI; 
+		return AI;
 	}
 
-	
+
 	//*****************************************************************************
 	// IsDeadByAttrition is for one time step development
 	//
 	// Input: double T: is the temperature for one time step
-	//        double r: developement rate 
+	//        double r: developement rate
 	//
 	// Output: The new status of the insect after attrition
 	//*****************************************************************************
@@ -392,7 +392,7 @@ namespace WBSF
 		return bDead;
 	}
 
-	
+
 	//L6 survival probablity, part of the daily "Live" function of a L6 larva
 	//Each L6 receives at creation a uniformly-distributed random number between 0 and 1, representing its "window luck"
 	bool CWSpruceBudworm::IsDeadByWindow()
@@ -504,8 +504,8 @@ namespace WBSF
 
 	void CWSBTree::GetStat(CTRef d, CModelStat& stat, size_t generation)
 	{
-		CHost::GetStat(d, stat); 
-		
+		CHost::GetStat(d, stat);
+
 		stat[S_AVERAGE_INSTAR] = GetAI(true); //SBStat.GetAverageInstar();
 
 		//  This line should be restored to work on the L2 synchrony test runs
@@ -517,11 +517,11 @@ namespace WBSF
 
 	void CWSBTree::ComputeMineable(const CWeatherDay& weather)
 	{
-		//Bud development 
+		//Bud development
 		//This is calculated for the first summer, then reset on December 31.
 		//This is part of the tree's daily "Live" loop, starting on m_startDate
 
-		//Constants and parameters 
+		//Constants and parameters
 		static const int    START_DATE = 92 - 1; //First day (0- based) for degree day summation for bud develpment
 		static const double BASE_TEMP = 8.2; //dd summation of bud development
 		static const double MAX_TEMP = 14.4; //dd summation of bud development
@@ -549,11 +549,11 @@ namespace WBSF
 
 	void CWSBTree::ComputeShootDevel(const CWeatherDay& weather)
 	{
-		//Shoot development 
+		//Shoot development
 		//This is calculated for the first summer, then reset on December 31.
 		//This is part of the tree's daily "Live" loop, starting on START_DATE
 
-		//Constants and parameters 
+		//Constants and parameters
 		static const int    START_DATE = 92 - 1;    //First day (0- based) for degree day summation for bud develpment
 		static const double BASE_TEMP = 11.5;    //dd summation of bud development
 		static const double MAX_TEMP = 35.;     //dd summation of bud development

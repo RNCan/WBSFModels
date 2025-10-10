@@ -3,7 +3,7 @@
 //
 // Class: CSLR
 //
-// Description: CSLR it's a BioSIM model that compute 
+// Description: CSLR it's a BioSIM model that compute
 //              seasonality stability of mountain pine beetle
 //
 //*********************************************************************
@@ -43,7 +43,7 @@ namespace WBSF
 
 		double GetF(size_t  output, size_t  y)
 		{
-			_ASSERTE(output < NB_OUTPUT && y < m_F[output].size());
+			assert(output < NB_OUTPUT && y < m_F[output].size());
 			return m_F[output][y];
 		}
 
@@ -60,7 +60,7 @@ namespace WBSF
 		double m_overheat;      // overheating factor
 		size_t m_nbGeneration;     // the number of generation
 		size_t m_dayStart;         // initial oviposition date
-		size_t m_minOvipDate;      // biologically feasible min and max ovip date 
+		size_t m_minOvipDate;      // biologically feasible min and max ovip date
 		size_t m_maxOvipDate;
 		size_t m_runLength;		// Number of consecutive weather years to compute m_F
 		size_t m_n;

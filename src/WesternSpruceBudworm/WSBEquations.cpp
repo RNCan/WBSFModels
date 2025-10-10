@@ -2,7 +2,7 @@
 // File: WSBDevelopment.h
 //
 // Class: CWSBDevelopment
-//          
+//
 //
 // Description: the CWSBDevelopment can compute daily western spruce budworm development rate
 //             CWSBTableLookup is an optimization table lookup
@@ -10,7 +10,7 @@
 // 12/07/2022   Rémi Saint-Amant	Parameters correction HA L3 (9738 instead of 97380)
 // 21/01/2016   Rémi Saint-Amant	Update with BioSIM 11.0
 // 12/10/2012   Rémi Saint-Amant    Update with new template
-// 28/01/2011	Rémi Saint-Amant    Add Attrition 
+// 28/01/2011	Rémi Saint-Amant    Add Attrition
 // 23/01/2009   Rémi Saint-Amant    Creation from Jacques code
 //*****************************************************************************
 
@@ -25,12 +25,12 @@ using namespace std;
 namespace WBSF
 {
 	//*****************************************************************************
-	//CWSBDevelopment class 
+	//CWSBDevelopment class
 
 
 	//development rate parameters (9 stages, 6 parameters)
 	const double CWSBTableLookup::DEFAULT_P[NB_STAGES][6] =
-	{//Revised 2011-08-06from SAS output (JR)	
+	{//Revised 2011-08-06from SAS output (JR)
 		//rho25	HA		HL		TL		HH		TH
 		0.158, 11443, -59715., +283.900, 99958, 308.2,	//Egg
 		0.217, 18186, -58752., +276.700, 99941, 300.7,	//L2o
@@ -89,13 +89,13 @@ namespace WBSF
 
 	//***********************************************************************************
 	//
-	//Revised 2011-03-07 from SAS output (JR)	
+	//Revised 2011-03-07 from SAS output (JR)
 	const double CWSBRelativeDevRate::V[NB_STAGES] =
 	//Egg    OvL2   FeedL2   L3     L4     L5     L6    Pupa   Adult
 	{ 0.063, 0.242, 0.229, 0.428, 0.289, 0.254, 0.252, 0.101, 0.279 };
 
 	const double CWSBRelativeDevRate::S[2][NB_STAGES] =
-		//Revised 2011-03-07 from SAS output (JR)	
+		//Revised 2011-03-07 from SAS output (JR)
 	{//Egg,    OvL2, FeedL2,     L3,     L4,      L5,      L6,   Pupa, Adult
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, -0.017, -0.039, 0.013, 0 } //ASdjust development rate of females
@@ -103,7 +103,7 @@ namespace WBSF
 
 	double CWSBRelativeDevRate::GetRate(size_t s, size_t sex)
 	{
-		_ASSERTE(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 		assert(sex == 0 || sex == 1);
 
 		return (1 + S[sex][s])*RandLogNormal(0, V[s]);
@@ -113,7 +113,7 @@ namespace WBSF
 
 	const double CWSBAttrition::p[NB_STAGES][3] =
 	{
-		+0.0000, +0.00000, +0.00000,//Egg  
+		+0.0000, +0.00000, +0.00000,//Egg
 		+0.0000, +0.00000, +0.00000,//OW
 		-6.3464, +0.10440, -0.00091,//L2
 		-5.3884, +0.05502, +0.00000,//L3
@@ -121,12 +121,12 @@ namespace WBSF
 		-7.2000, +0.00618, +0.00288,//L5
 		-2.0299, -0.85730, +0.02766,//L6
 		+8.3397, -1.57860, +0.04145,//PUPAE
-		+0.0000, +0.00000, +0.00000 //Adults (not used, nonsensical)  
+		+0.0000, +0.00000, +0.00000 //Adults (not used, nonsensical)
 	};
 
 	double CWSBAttrition::GetRate(size_t s, double Tin)
 	{
-		_ASSERTE(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 		double T = max(0., Tin);
 		double att = 1 / (1 + exp(p[s][0] + p[s][1] * T + p[s][2] * T*T));

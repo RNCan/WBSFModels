@@ -1,6 +1,7 @@
 
 #include <vector>
-#include <assert.h>
+#include <cassert>
+#include <cmath>
 #include <gsl/gsl_randist.h>
 
 
@@ -61,9 +62,9 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 	int theta = 1;					//used to determine lag period before calculating accumulated rainfall
 
 
-	
+
 	ODESOlverParam SolverParam;
-	
+
 	//init solver
 	SolverParam.PARS = Params.PARS;
 	SolverParam.size_C = 1.0;
@@ -78,11 +79,11 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 	std::vector<double> y_ode(DIM + 1, 0);
 	y_ode[0] = Params.initS;
 
-	
-	
 
 
-	
+
+
+
 	//init random number
 	std::vector<double> rand_nuR(MAXT3 + 1, 0);
 	std::vector<double> rand_nuF(MAXT3 + 1, 0);
@@ -94,7 +95,7 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 		rand_nuR[i] = gsl_ran_gaussian(RandNumsPass, Params.PARS[11]); //2nd entry is stdev
 		rand_nuF[i] = gsl_ran_gaussian(RandNumsPass, Params.PARS[12]);
 	}
-	
+
 
 	// ------------------------------------- initialize model parameters --------------------------------------- //
 
@@ -103,10 +104,10 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 	assert(R_start < R_end);
 
 	// ---------------------------- Calculated Parameters  and Population Sizes ------------------------------- //
-	
+
 	for (int DOY = 0; DOY < hatch; DOY++)
 		result[DOY] = y_ode[0];
-	
+
 	double DD10 = 0;    //accumulated degree days about 10 degrees C
 	// -------------------- MAIN LOOP!! (calculate populations as time is increased) -------------------------- //
 	for (int t = 0; t <= MAXT3; t++)
@@ -114,7 +115,7 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 		int DOY = hatch - 1 + t;//RSA: it's strange to begin one day before hatch???
 
 		//init solver for this day
-		
+
 		// --------------------- resting spores bloom  -------------------- //
 		if (t == R_start)
 		{
@@ -127,7 +128,7 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 		}
 
 		// -------------------------- integrate until next day ---------------------------------- //
-		
+
 		DD10 += std::max(0.0, CCDATA[DOY][EM_TAIR] - 10.0);  //CK// begin calculation of accumulated Degree Days
 		if (DD10 >= C_end)
 		{
@@ -138,7 +139,7 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 		SolverParam.nuF = (DD10 / fourth_size) * specific_nuF * exp(RH_P * CCDATA[DOY][EM_RH_MIN]) * exp(rand_nuF[t]);
 		SolverParam.muF = specific_muF * exp(temp_P * CCDATA[DOY][EM_TMAX]);	//CK// Conidia Decay Response #2.2  BEST SO FAR!!
 
-		
+
 
 		if (SolverParam.initR > 0.0)
 		{
@@ -153,7 +154,7 @@ std::array<double, 365> DDEVF(int hatch, int MAXT3, const EMParameters& Params, 
 
 
 		ODE_Solver(t, t+1, &SolverParam, &(y_ode[0])); //Numerical integration from t to t+1, y_ode holds group densities
-		
+
 		// ---------------------------- end of the day---------------------------------- //
 		result[DOY] = y_ode[0];
 	}

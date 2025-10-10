@@ -52,8 +52,8 @@ namespace WBSF
 			11.9,	-0.33918,	0.028427,	//Adult pre-oviposition
 			4.2,	-0.02667,	0.004		//Adult //was .0064, this makes longer-lived adults.
 		};
-		
-		
+
+
 
 		double r = 0;
 		double Tʟ = P[s][P_TL];
@@ -70,7 +70,7 @@ namespace WBSF
 		if (T > Tʟ)
 			r = a + b * T;
 
-		
+
 		return max(0.0, r);
 	}
 
@@ -80,23 +80,23 @@ namespace WBSF
 		assert(e >= 0 && e < 2*NB_STAGES);
 
 		//relative development
-		double r = Equation1(e, T); 
+		double r = Equation1(e, T);
 
 
-		_ASSERTE(!_isnan(r) && _finite(r));
+		assert(!_isnan(r) && _finite(r));
 		assert(r >= 0);
 		return r;
 	}
 
 
 	//*****************************************************************************
-	// individual relative development rate 
+	// individual relative development rate
 
 	double CObliqueBandedLeafrollerEquations::Equation2()const
 	{
 		double 	r = m_randomGenerator.RandUnbiasedLogNormal(1.0, 0.4); //Was 0.25
 
-		_ASSERTE(!_isnan(r) && _finite(r));
+		assert(!_isnan(r) && _finite(r));
 		if (_isnan(r) || !_finite(r))//just in case
 			r = 1;
 
@@ -118,15 +118,15 @@ namespace WBSF
 	double CObliqueBandedLeafrollerEquations::GetEᵗ(double A0, double A1)
 	{
 		assert(A0 <= A1);
-		
+
 		double Eᵗ = 200 * (exp(-4 *A0) - exp(-4 *A1));
 		assert(Eᵗ >= 0);
 
 		return Eᵗ;
 	}
-	
+
 
 	//*****************************************************************************
-	//survival rate 
+	//survival rate
 
 }

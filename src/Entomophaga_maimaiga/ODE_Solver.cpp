@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cmath>
 #include <gsl/gsl_odeiv.h>	// ODE solver
 
 #include "ODE_Solver.h"
@@ -32,7 +32,7 @@ int fast_odes(double t, const double y[], double dydt[], void* Paramstuff)
 	double Rinf = y[0] * nuF * R;
 
 	// ------------------------------------------ ODEs -------------------------------------------- //
-	if (y[0] < .000001)	
+	if (y[0] < .000001)
 		dydt[0] = 0;
 	else
 		dydt[0] = -y[0] * (nuF * y[m + 1] + nuR * R);

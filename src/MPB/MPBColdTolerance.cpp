@@ -1,9 +1,9 @@
 //**********************************************************************
-//Regniere, J & B. Bentz. 2007. Modelling cold tolerance in the mountain pine beetle, Dendroctonus ponderosae. 
-//Modification: 
+//Regniere, J & B. Bentz. 2007. Modelling cold tolerance in the mountain pine beetle, Dendroctonus ponderosae.
+//Modification:
 //11/05/2016		Rémi Saint-Amant    New compilation with WBSF
 //27/03/2013		Rémi Saint-Amant    New compilation
-//20/03/2007		Jacques Regniere	Conformed to published document 
+//20/03/2007		Jacques Regniere	Conformed to published document
 //07/02/2007		Jacques Regniere	Journal of Insect Physiology doi: 10.1016/j.jinsphys.
 //01/01/2005		JR, RSA				Creation
 //**********************************************************************
@@ -17,7 +17,7 @@ using namespace WBSF::HOURLY_DATA;
 namespace WBSF
 {
 
-	//First day of cold-tolerance accumulation: Aug 1. (date, base 0) 
+	//First day of cold-tolerance accumulation: Aug 1. (date, base 0)
 	static const int T_0 = 212; //This is t sub 0 in Equation [7]
 	static const int T_1 = 364; //This is t sub 1 in Equation [7]
 
@@ -44,7 +44,7 @@ namespace WBSF
 
 	void CMPBColdTolerance::ComputeAnnual(const CWeatherStation& weather)
 	{
-		_ASSERTE(weather.GetNbYears() > 1);
+		assert(weather.GetNbYears() > 1);
 
 		m_firstDate = CTRef(weather.GetFirstYear());
 		m_result.clear();
@@ -143,7 +143,7 @@ namespace WBSF
 				//Part of equation [10] (in fact: 1 - survival)
 				Pmort = 1 - (p1 / (1 + exp(-(Tmin - alpha[0]) / beta[0])) + p2 / (1 + exp(-(Tmin - alpha[1]) / beta[1])) + p3 / (1 + exp(-(Tmin - alpha[2]) / beta[2])));
 
-				//Compute winter survival: Under the hypothesis that individual's ranks are NOT reshuffled 
+				//Compute winter survival: Under the hypothesis that individual's ranks are NOT reshuffled
 				//(this cold mortality is a selective process: less tolerant individuals are killed first)
 				Psurv = min(Psurv, 1. - Pmort); //Equation [10]
 
@@ -156,7 +156,7 @@ namespace WBSF
 	//Daily version of the model (outputs one line per day)
 	void CMPBColdTolerance::ComputeDaily(const CWeatherStation& weather)
 	{
-		_ASSERTE(weather.GetNbYears() > 1);
+		assert(weather.GetNbYears() > 1);
 
 		m_firstDate = weather.GetEntireTPeriod(CTM::DAILY).begin();
 		m_result.clear();
@@ -248,7 +248,7 @@ namespace WBSF
 				//Part of equation [10] (in fact: 1 - survival)
 				Pmort = 1 - (p1 / (1 + exp(-(Tmin - alpha[0]) / beta[0])) + p2 / (1 + exp(-(Tmin - alpha[1]) / beta[1])) + p3 / (1 + exp(-(Tmin - alpha[2]) / beta[2])));
 
-				//Compute winter survival: Under the hypothesis that individual's ranks are NOT reshuffled 
+				//Compute winter survival: Under the hypothesis that individual's ranks are NOT reshuffled
 				//(this cold mortality is a selective process: less tolerant individuals are killed first)
 				Psurv = min(Psurv, 1. - Pmort); //Equation [10]
 

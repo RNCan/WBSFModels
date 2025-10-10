@@ -1,9 +1,9 @@
 ﻿//*****************************************************************************
 // Class: CSpruceBudworm, CSBWTree, CSBWStand
 //
-// Description:	CSpruceBudworm represent a spruce budworm insect or a group of insect with same carractéristics. 
-//				CSBWTree represent the tree that contain CSpruceBudworm. 
-//				CSBWStand represent the tree that contain CSWBTree. 
+// Description:	CSpruceBudworm represent a spruce budworm insect or a group of insect with same carractéristics.
+//				CSBWTree represent the tree that contain CSpruceBudworm.
+//				CSBWStand represent the tree that contain CSWBTree.
 //*****************************************************************************
 
 #pragma once
@@ -53,7 +53,7 @@ namespace WBSF
 		virtual bool NeedOverheating()const{ return !(GetStage() == SBW::L2o || GetStage() == SBW::ADULT); }
 		virtual bool IsInDiapause(CTRef TRef)const{ return GetStage() == SBW::L2o && (TRef.GetYear() == m_overwinteringDate.GetYear()); }
 
-		double GetRelativeDevRate(size_t s)const { _ASSERTE(s >= 0 && s < SBW::NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage" 
+		double GetRelativeDevRate(size_t s)const { assert(s >= 0 && s < SBW::NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage"
 		void ResetRelativeDevRate();
 
 		inline CSBWTree* GetTree();
@@ -98,20 +98,20 @@ namespace WBSF
 		double m_ξ;				//weight variability
 
 		CTRef m_overwinteringDate;			//When individual pass from L2 to L2o, they must stop develop until next spring
-		CTRef m_emergingL2oDate;				//When individual pass from L2o to L2, they restart develop 
-		CTRef m_emergingPupaeDate;				//When individual pass from Pupae to Adult 
+		CTRef m_emergingL2oDate;				//When individual pass from L2o to L2, they restart develop
+		CTRef m_emergingPupaeDate;				//When individual pass from Pupae to Adult
 		double m_eatenFoliage;
 		double m_OWEnergy;					//survival of overwintering
 		bool m_bMissingEnergyAlreadyApplied;
 		bool m_bKillByAttrition;
-		
+
 		double m_A;							//forewing area [cm²]
 		double m_M;							//actual dry weight [g]
 		double m_p_exodus;
 		bool m_bExodus;
 		bool m_bAlreadyExodus;
 		double m_D;							//defoliation at shoot level
-		
+
 
 		static const double WHITE_SPRUCE_FACTOR[SBW::NB_STAGES];
 		static const double SURVIVAL_RATE[SBW::NB_STAGES];

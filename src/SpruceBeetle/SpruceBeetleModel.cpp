@@ -8,8 +8,8 @@
 //08/09/2011			Rémi Saint-Amant	update to new BioSIM 10 
 //15/02/2007			Rémi Saint-Amant	create from matlab(.m) file 
 //**********************************************************************
+#include "ModelBased/EntryPoint.h"
 #include "SpruceBeetleModel.h"
-#include "ModelBase/EntryPoint.h"
 
 namespace WBSF
 {
@@ -63,7 +63,7 @@ namespace WBSF
 	//This method is call to compute solution
 	ERMsg CSpruceBeetleModel::OnExecuteAnnual()
 	{
-		ASSERT(m_weather.GetNbYears() >= 2);
+		assert(m_weather.GetNbYears() >= 2);
 
 		ERMsg msg;
 

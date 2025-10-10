@@ -37,7 +37,7 @@ namespace WBSF
 		CTRef GetNewOvipDate()const;
 		//double GetTotal(short type)const;
 
-		const CEggModel& GetHatch()const{ _ASSERTE(m_pHatch); return *m_pHatch; }
+		const CEggModel& GetHatch()const{ assert(m_pHatch); return *m_pHatch; }
 
 		const CGMOutputVector& GetStage()const{ return m_stageFreq; }
 		bool IsSimulated()const { return m_stageFreq.size() > 0; }
@@ -52,9 +52,9 @@ namespace WBSF
 		//Sets Stage-specific survival rates
 		static void SetSurvivalRate(int sex, int s, double ssRate)
 		{
-			_ASSERTE(sex >= 0 && sex <= 1);
-			_ASSERTE(s >= 0 && s < 8);
-			_ASSERTE(ssRate >= 0 && ssRate <= 1);
+			assert(sex >= 0 && sex <= 1);
+			assert(s >= 0 && s < 8);
+			assert(ssRate >= 0 && ssRate <= 1);
 			m_SSSurvivalRate[sex][s] = ssRate;
 		}
 

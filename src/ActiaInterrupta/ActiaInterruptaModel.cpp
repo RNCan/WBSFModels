@@ -31,14 +31,14 @@ namespace WBSF
 	enum{ O_D_EGG, O_D_PUPA, O_D_ADULT, O_D_DEAD_ADULT, O_D_OVIPOSITING_ADULT, O_D_BROOD, O_D_ATTRITION, O_D_CUMUL_REATCH_ADULT, O_D_CUMUL_DIAPAUSE, NB_DAILY_OUTPUT, O_D_DAY_LENGTH = NB_DAILY_OUTPUT*NB_GENERATIONS, NB_DAILY_OUTPUT_EX };
 	extern char DAILY_HEADER[] = "Egg,Pupa,Adult,DeadAdult,OvipositingAdult,Brood,Attrition,CumulAdult";
 
-	//	
+	//
 	enum{ O_A_NB_GENERATION, O_A_MEAN_GENERATION, O_A_GROWTH_RATE, O_A_ALIVE1, NB_ANNUAL_OUTPUT = O_A_ALIVE1 + NB_GENERATIONS-1 };
 	extern char ANNUAL_HEADER[] = "Gmax,MeanGeneration, GrowthRate,Alive1,Alive2,Alive3,Alive4,Alive5,Alive6";
 
 	enum{ O_G_YEAR, O_G_DIAPAUSE, O_G_GROWTH_RATE, NB_GENERATION_OUTPUT};
 	extern char GENERATION_HEADER[] = "Year, Diapause, GrowthRate";
 
-	
+
 
 	CActiaInterruptaModel::CActiaInterruptaModel()
 	{
@@ -81,18 +81,18 @@ namespace WBSF
 
 	//************************************************************************************************
 	// Daily method
-	
+
 
 
 	//This method is called to compute the solution
 	ERMsg CActiaInterruptaModel::OnExecuteDaily()
 	{
 		ERMsg msg;
-		
+
 		//if daily data, compute sub-daily data
 		if (m_weather.IsDaily())
 			m_weather.ComputeHourlyVariables();
-		
+
 		//Init spruce budworm data
 		CModelStatVector SBWStat;
 
@@ -102,7 +102,7 @@ namespace WBSF
 
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
-		size_t maxG = min(NB_GENERATIONS, ActiaInterruptaStat.size()); 
+		size_t maxG = min(NB_GENERATIONS, ActiaInterruptaStat.size());
 		m_output.Init(p, NB_DAILY_OUTPUT_EX, 0, DAILY_HEADER);
 
 		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
@@ -127,13 +127,13 @@ namespace WBSF
 
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
-			//get the annual period 
+			//get the annual period
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
 			//CTRef TRef = snowA.GetLastSnowTRef(m_weather[y]);
 			//if (!TRef.IsInit() || !m_bOnGround)
-			//	TRef = p.Begin(); //no snow 
+			//	TRef = p.Begin(); //no snow
 
-			//get initial population 
+			//get initial population
 			CInitialPopulation initialPopulation(p.begin(), 0, 1000, 100, MAGGOT, FEMALE, true, 0);
 
 			//Create stand
@@ -156,8 +156,8 @@ namespace WBSF
 			stand.m_lethalTemp = m_lethalTemp;*/
 			stand.m_host.push_front(pHost);
 
-			
-			
+
+
 			//run the model for all days of all years
 			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
@@ -193,7 +193,7 @@ namespace WBSF
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::ANNUAL));
 		m_output.Init(p, NB_ANNUAL_OUTPUT, 0, ANNUAL_HEADER);
-		
+
 
 		//now compute annual growth rates
 		//Get last complete generation
@@ -211,13 +211,13 @@ namespace WBSF
 				double diapauseBegin = 100;
 				for (size_t g = 1; g < maxG; g++)
 				{
-					
+
 					CStatistic diapauseStat = ActiaInterruptaStat[g].GetStat(M_DIAPAUSE, season);
-					
+
 					diapause += diapauseStat[SUM];
 					meanG += g *diapauseStat[SUM];
 					m_output[TRef][O_A_ALIVE1 + (g - 1)] = diapauseStat[SUM];
-					
+
 
 					if (g == maxG - 1)
 					{
@@ -228,11 +228,11 @@ namespace WBSF
 					}
 				}*/
 
-				
+
 			}
 		}
 
-			
+
 
 		return msg;
 	}
@@ -285,7 +285,7 @@ namespace WBSF
 	}
 	//************************************************************************************************
 
-	//simulated annaling 
+	//simulated annaling
 	//void CActiaInterruptaModel::AddDailyResult(const StringVector& header, const StringVector& data)
 	//{
 	//	//transform value to date/stage
@@ -308,25 +308,25 @@ namespace WBSF
 	//	CModelStatVector statSim;
 	//
 	//	if( m_SAResult.size() > 0)
-	//	{ 
+	//	{
 	//		CStatistic years;
 	//		for(CSAResultVector::const_iterator p= m_SAResult.begin(); p<m_SAResult.end(); p++)
 	//			years += p->m_ref.GetYear();
-	// 
+	//
 	//		int m_firstYear = (int)years[LOWEST];
 	//		int m_lastYear = (int)years[HIGHEST];
 	//
 	//		ASSERT( m_weather.GetFirstYear() == m_firstYear );
 	//		ASSERT( m_weather.GetLastYear() == m_lastYear );
 	//		ExecuteDaily(statSim);
-	// 
+	//
 	//
 	//		for(int i=0; i<(int)m_SAResult.size(); i++)
 	//		{
 	//			if( statSim.is_inside(m_SAResult[i].m_ref) )
 	//			{
 	//				double AISim = statSim[ m_SAResult[i].m_ref ][S_AVERAGE_INSTAR];
-	//				//_ASSERTE( AISim >= 2&&AISim<=8);
+	//				//assert( AISim >= 2&&AISim<=8);
 	//				//when all bug die, a value of -9999 can be compute
 	//				if( AISim>=2 && AISim<=8)
 	//				{
@@ -341,7 +341,7 @@ namespace WBSF
 	//
 	//ERMsg CActiaInterruptaModel::OnExecuteAnnual()
 	//{
-	//	_ASSERTE(m_weather.size() > 1);
+	//	assert(m_weather.size() > 1);
 	//
 	//	ERMsg msg;
 	//
@@ -349,7 +349,7 @@ namespace WBSF
 	//	CModelStatVector stat;
 	//	ExecuteDaily(stat, true);
 	//
-	//	
+	//
 	//	CAnnualOutput stateA(m_weather.size() - 1, CTRef(m_weather.GetFirstYear()));
 	//
 	//	for(size_t y=0; y<m_weather.size()-1; y++)
@@ -358,7 +358,7 @@ namespace WBSF
 	//		CTPeriod p = m_weather[y + 1].GetEntireTPeriod();
 	//		for (CTRef d = p.Begin(); d <= p.End(); d++)
 	//			statL22 += stat[d][S_L22];
-	//		
+	//
 	//		double gr = statL22[CFL::HIGHEST];
 	//		stateA[y][O_GROWTH_RATE] = gr/100; //initial population is 100 insect
 	//	}

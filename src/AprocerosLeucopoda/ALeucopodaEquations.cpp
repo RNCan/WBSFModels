@@ -2,14 +2,14 @@
 // File: AprocerosLeucopodaEquations.h
 //
 // Class: CAprocerosLeucopodaEquations
-//          
 //
-// Description: 
+//
+// Description:
 //				stage development rates, relative development rates
 //				stage development rates use optimization table lookup
 //
 //*****************************************************************************
-// 2020-08-25   Rémi Saint-Amant    Creation 
+// 2020-08-25   Rémi Saint-Amant    Creation
 //*****************************************************************************
 #include "ALeucopodaEquations.h"
 #include <boost/math/distributions.hpp>
@@ -32,8 +32,8 @@ namespace WBSF
 	//const double CAprocerosLeucopodaEquations::EAS[NB_EAS_PARAMS] = { 885.8, 40.96, -2.9, 999 };//logistic distribution
 	//equation calibrate with larval g1 at Québec city 2022 (Lafrenière)
 	const double CAprocerosLeucopodaEquations::EAS[NB_EAS_PARAMS] = { 360.6, 1.81, -0.3, 999 };//logistic distribution
-	
-		
+
+
 
 	CAprocerosLeucopodaEquations::CAprocerosLeucopodaEquations(const CRandomGenerator& RG) :
 		CEquationTableLookup(RG, TZZ::NB_STAGES, -20, 40, 0.25)
@@ -58,12 +58,12 @@ namespace WBSF
 		static const CDevRateEquation::TDevRateEquation P_EQ[TZZ::NB_STAGES] =
 		{
 			//Non-linear
-			CDevRateEquation::Briere2_1999,//Egg		
-			CDevRateEquation::Briere2_1999,//Larva		
-			CDevRateEquation::Briere2_1999,//Prepupa	
-			CDevRateEquation::Briere2_1999,//Pupa		
+			CDevRateEquation::Briere2_1999,//Egg
+			CDevRateEquation::Briere2_1999,//Larva
+			CDevRateEquation::Briere2_1999,//Prepupa
+			CDevRateEquation::Briere2_1999,//Pupa
 			CDevRateEquation::Briere2_1999,//Adult longevity
-			//CDevRateEquation::Lactin2_1995,//Adult longevity	
+			//CDevRateEquation::Lactin2_1995,//Adult longevity
 		};
 
 		static const double P_DEV[TZZ::NB_STAGES][6] =
@@ -79,15 +79,15 @@ namespace WBSF
 			//{0.07509025,0.08925997, 9.112521, 29.98488,0.1000002,0.5001782 },
 			{0.0001758183,9.999999,-8.949422,39.75},
 			{6.732698e-05,9.999959,-9.375635,39.75},
-			{0.0003353867,9.999592,-16.85975,39.75},   
-			{0.0002921427,9.999999,-5.830057,39.75},  
+			{0.0003353867,9.999592,-16.85975,39.75},
+			{0.0002921427,9.999999,-5.830057,39.75},
 			{0.0001497986,9.998879,-27.15193,100.0},
 			//			{8.431380e-02, 1.484822e-01, 1.000000e+02, 6.731093e+00},//Adults
 		};
 
 
-		//model was adjusted to Quebec observation 2021-2022. 
-		//3 factors can explain this difference between European an North America 
+		//model was adjusted to Quebec observation 2021-2022.
+		//3 factors can explain this difference between European an North America
 		//1- Insects adaptation for North America climate
 		//2- Host effect
 		//3- Bias caused by laboratory rearing
@@ -97,13 +97,13 @@ namespace WBSF
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], p, T))* BOOST_FACTOR;
 
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
 
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 
 
 	double CAprocerosLeucopodaEquations::GetRelativeDevRate(size_t s)const
@@ -132,9 +132,9 @@ namespace WBSF
 		double RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
 		while (RDR < 0.2 || RDR>2.6)//base on individual observation
 			RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
-	
 
-		_ASSERTE(!_isnan(RDR) && _finite(RDR));
+
+		assert(!_isnan(RDR) && _finite(RDR));
 
 		return RDR;
 	}
@@ -207,7 +207,7 @@ namespace WBSF
 
 		double sr = (s < ADULT) ? max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], p, T))) : 1;
 
-		_ASSERTE(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
 
 		return sr;
 	}
@@ -256,7 +256,7 @@ namespace WBSF
 	double CAprocerosLeucopodaEquations::GetBrood(double Fi, double T, double t, double delta_t)const
 	{
 		static const double to = 0.0;
-		static const TDevRateEquation LAMBDA_EQ = CDevRateEquation::Room_1986;//lambda		
+		static const TDevRateEquation LAMBDA_EQ = CDevRateEquation::Room_1986;//lambda
 
 		//parameters
 		static const double P_LAMBDA[6] = { 6.865565e-01,2.307398e-01, 1.824046e-02, 1.462013e+01 };
@@ -264,7 +264,7 @@ namespace WBSF
 		vector<double> p(begin(P_LAMBDA), end(P_LAMBDA));
 
 		double lambda = max(0.0, CDevRateEquation::GetRate(LAMBDA_EQ, p, T));
-		_ASSERTE(!_isnan(lambda) && _finite(lambda));
+		assert(!_isnan(lambda) && _finite(lambda));
 
 		double brood = 0;
 		if (t >= to)

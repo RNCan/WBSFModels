@@ -5,9 +5,11 @@
 //19/03/2007	Rémi Saint-Amant	Return VMISS and not -999 when we don't find Flight peak 
 //15/02/2007	Rémi Saint-Amant	Creation from Matlab(.m) file 
 //*********************************************************************
-#include "SpruceBeetle.h"
-#include "Basic/WeatherStation.h"
+
 #include "Basic/UtilMath.h"
+#include "WeatherBased/WeatherStation.h"
+
+#include "SpruceBeetle.h"
 
 using namespace WBSF::HOURLY_DATA;
 

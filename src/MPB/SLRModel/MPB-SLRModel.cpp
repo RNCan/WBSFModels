@@ -5,7 +5,7 @@
 //
 //************** MODIFICATIONS  LOG ********************
 // 23/01/2018	2.3.2	Rémi Saint-Amant    Bug correction in computing logan stability
-// 04/05/2017	2.3.1   Rémi Saint-Amant    New compile 
+// 04/05/2017	2.3.1   Rémi Saint-Amant    New compile
 // 11/05/2016	        Rémi Saint-Amant    New compile with WBSF
 // 17/03/2012           Rémi Saint-Amant    Build with new BioSIMModelBase. varaible by memory.
 // 31/03/2010	        Rémi Saint-Amant    Add original Safranyik computation
@@ -55,7 +55,7 @@ namespace WBSF
 	//This method is called to compute the solution
 	ERMsg CMPBModel::OnExecuteAnnual()
 	{
-		_ASSERTE(m_weather.GetNbYears() >= 2);
+		assert(m_weather.GetNbYears() >= 2);
 
 		ERMsg msg;
 

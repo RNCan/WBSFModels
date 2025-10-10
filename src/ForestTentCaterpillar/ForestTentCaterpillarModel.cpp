@@ -18,7 +18,7 @@ using namespace std;
 namespace WBSF
 {
 
-	
+
 
 	//this line link this model with the EntryPoint of the DLL
 	static const bool bRegistred =
@@ -64,10 +64,10 @@ namespace WBSF
 		enum{ HATCH_PEAK, PUPATION_PEAK, EMERGENCE_PEAK, NB_VARIABLES };
 	};
 
-	
+
 	ERMsg CForestTentCaterpillarModel::OnExecuteAnnual()
 	{
-		_ASSERTE(m_weather.size() > 1);
+		assert(m_weather.size() > 1);
 
 		ERMsg msg;
 
@@ -75,7 +75,7 @@ namespace WBSF
 		CTPeriod outputPeriod = m_weather.GetEntireTPeriod(CTM::ANNUAL);
 		outputPeriod.begin()++;//begin output at the second year
 		CModelStatVector stat(outputPeriod, CFTCStat::NB_VARIABLES);
-		
+
 		for (size_t y = 0; y < m_weather.GetNbYears() - 1; y++)
 		{
 			int year = m_weather.GetFirstYear() + int(y);
@@ -95,13 +95,13 @@ namespace WBSF
 				threshold = 3.6;
 				sumDD = 99.14;
 				break;
-			default:_ASSERTE(false);
+			default:assert(false);
 			}
 
 			CTRef hatchDay;
 			double DD = 0;
 			CDegreeDays DDhatch(CDegreeDays::DAILY_AVERAGE, threshold);
-			
+
 			CTPeriod period = m_weather[y + 1].GetEntireTPeriod(CTM::DAILY);
 			for (CTRef d = begin; d <= period.end(); d++)
 			{
@@ -127,7 +127,7 @@ namespace WBSF
 			CTRef pupationDay;
 			double DDPupation = 0;
 			CDegreeDays DD0(CDegreeDays::DAILY_AVERAGE, 0);
-			
+
 			for (CTRef d = period.begin(); d <= period.end(); d++)
 			{
 				DDPupation += DD0.GetDD( m_weather.GetDay(d) );
@@ -181,12 +181,12 @@ namespace WBSF
 		return msg;
 
 	}
-	
-	
+
+
 
 	//ERMsg CForestTentCaterpillarModel::OnExecuteDaily()
 	//{
-	//	_ASSERTE(m_weather.size() > 1);
+	//	assert(m_weather.size() > 1);
 
 	//	ERMsg msg;
 
@@ -234,7 +234,7 @@ namespace WBSF
 	//			}*/
 	//		}
 	//	}
-	//	
+	//
 
 	//	return msg;
 
@@ -259,7 +259,7 @@ namespace WBSF
 	//	p.begin().m_year++;//skip the first year in result
 		stat.Init(p, FTC::NB_STATS, 0);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
@@ -283,10 +283,10 @@ namespace WBSF
 			//pTree->Initialize<CForestTentCaterpillar>(CInitialPopulation(p.begin(), 0, 4, 100, EGG));
 			pTree->Initialize<CForestTentCaterpillar>(CInitialPopulation(py.begin(), 0, 400, 100, EGG));
 
-			//add tree to stand			
+			//add tree to stand
 			stand.m_host.push_front(pTree);
 
-			//if Simulated Annealing, set 
+			//if Simulated Annealing, set
 			//if (ACTIVATE_PARAMETRIZATION)
 			//{
 				//stand.m_rates.SetRho25(m_rho25Factor);
@@ -298,7 +298,7 @@ namespace WBSF
 			//for (size_t y = 0; y < nbYear && y1 + y < m_weather.size(); y++)
 			//{
 				//size_t yy = y1 + y;
-				
+
 
 				//CTPeriod p = m_weather[yy].GetEntireTPeriod(CTM(CTM::DAILY));
 
@@ -322,7 +322,7 @@ namespace WBSF
 
 
 
-	//simulated annealing 
+	//simulated annealing
 	void CForestTentCaterpillarModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		//transform value to date/stage
@@ -378,7 +378,7 @@ namespace WBSF
 				if (statSim.is_inside(m_SAResult[i].m_ref))
 				{
 					double AISim = statSim[m_SAResult[i].m_ref][S_AVERAGE_INSTAR];
-					//_ASSERTE( AISim >= 2&&AISim<=8);
+					//assert( AISim >= 2&&AISim<=8);
 					//when all bug die, a value of -9999 can be compute
 					if (AISim >= 2 && AISim <= 8)
 					{

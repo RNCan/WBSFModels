@@ -7,18 +7,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SpruceBeetle.cpp">
+    <ClCompile Include="..\..\src\SpruceBeetle\SpruceBeetle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpruceBeetleModel.cpp">
+    <ClCompile Include="..\..\src\SpruceBeetle\SpruceBeetleModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SpruceBeetle.h">
+    <ClInclude Include="..\..\src\SpruceBeetle\SpruceBeetle.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpruceBeetleModel.h">
+    <ClInclude Include="..\..\src\SpruceBeetle\SpruceBeetleModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

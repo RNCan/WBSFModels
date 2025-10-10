@@ -89,7 +89,7 @@ namespace WBSF
 			enum TLocation{ NORTH_AMERICA, EUROPE, NB_LOCATIONS };
 			size_t location = parameters[c++].GetInt();
 			assert(location < NB_LOCATIONS);
-			
+
 			m_EOD = location == NORTH_AMERICA?CPopilliaJaponicaEquations::EOD_NA: CPopilliaJaponicaEquations::EOD_EU;
 			m_other = location == NORTH_AMERICA ? CPopilliaJaponicaEquations::OTHER_NA: CPopilliaJaponicaEquations::OTHER_EU;
 		}
@@ -136,7 +136,7 @@ namespace WBSF
 					//Input:
 					double Tmin = weather[y][m][d][H_TMIN][MEAN]; //Minimum daily temperature (°C)
 					double Tmax = weather[y][m][d][H_TMAX][MEAN]; //Maximum daily temperature (°C)
-					double ppt = weather[y][m][d][H_PRCP][SUM]; //Precipitation (mm) 
+					double ppt = weather[y][m][d][H_PRCP][SUM]; //Precipitation (mm)
 
 					//Calculate:
 					//Saturation vapor pressure for Tmax
@@ -163,7 +163,7 @@ namespace WBSF
 					//Daily actual evapotranspiration (mm d-1)
 					double AET = PET * GetAETFactor(SMI, SMIcrit);
 
-					//Daily water runoff (mm d-1) 
+					//Daily water runoff (mm d-1)
 					double Runoff = max(0.0, SMI + ppt - AET - SMImax);
 
 					//Soil moisture at end of day d (mm)
@@ -218,7 +218,7 @@ namespace WBSF
 
 	double GetTairAtSurface(const CWeatherDay& weather, size_t h, double Fo)
 	{
-		static const double Fs = 0.71;//[cm¯¹], 
+		static const double Fs = 0.71;//[cm¯¹],
 		double Tair = -999;
 		if (h == NOT_INIT)
 		{
@@ -301,7 +301,7 @@ namespace WBSF
 		CModelStatVector Tsoil = GetSoilTemperature(m_weather, 10, m_other[LITTER]);
 
 //copy soil temperature to weather
-		/*for (size_t y = 0; y < m_weather.size(); y++) 
+		/*for (size_t y = 0; y < m_weather.size(); y++)
 		{
 			for (size_t m = 0; m < m_weather[y].size(); m++)
 			{
@@ -321,7 +321,7 @@ namespace WBSF
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		m_output.Init(p, NB_OUTPUTS, 0);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
@@ -358,7 +358,7 @@ namespace WBSF
 
 		pHost->Initialize<CPopilliaJaponica>(CInitialPopulation(p.begin(), 0, 400, 100, L3, RANDOM_SEX, true));
 
-		//add host to stand			
+		//add host to stand
 		stand.m_host.push_front(pHost);
 
 
@@ -474,7 +474,7 @@ namespace WBSF
 		//	{
 		//		if (m_SAResult[i].m_ref.GetYear() == year)
 		//		{
-		//			//flies catch 
+		//			//flies catch
 
 		//			if (m_SAResult[i].m_obs[I_CUMUL_EGG_HATCH] > -999)
 		//			{
@@ -526,7 +526,7 @@ namespace WBSF
 			{
 				if (m_SAResult[i].m_ref.GetYear() == year)
 				{
-					//Beattle catch 
+					//Beattle catch
 					if (m_SAResult[i].m_obs[I_ADULT_CATCH_CUMUL] > -999)
 					{
 						double obs = m_SAResult[i].m_obs[I_ADULT_CATCH_CUMUL];
@@ -571,7 +571,7 @@ namespace WBSF
 			{
 				if (m_SAResult[i].m_ref.GetYear() == year)
 				{
-					//Beattle catch 
+					//Beattle catch
 					if (m_SAResult[i].m_obs[I_ADULT_EMERGENCE_CUMUL] > -999)
 					{
 						double obs = m_SAResult[i].m_obs[I_ADULT_EMERGENCE_CUMUL];
@@ -611,7 +611,7 @@ namespace WBSF
 
 		if (m_PSMI.empty())
 			m_PSMI = GetPSMI(m_weather, 200, 400);
-		
+
 		if (m_Tsoil.empty())
 			m_Tsoil = GetSoilTemperature(m_weather, 10, m_other[LITTER]);
 

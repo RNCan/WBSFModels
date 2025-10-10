@@ -2,9 +2,9 @@
 // File: ForestTentCaterpillarEquations.h
 //
 // Class: CForestTentCaterpillarEquations
-//          
 //
-// Description: 
+//
+// Description:
 //				stage development rates, relative development rates
 //				stage development rates use optimization table lookup
 //
@@ -56,13 +56,13 @@ namespace WBSF
 	//	const double* p = P[e];//current P for equation
 	//	size_t s = e2s(e);//compute stage for b1Factor
 	//	assert(s == ADULT);
-	//	
+	//
 	//	T = max(8.0, min(35.0, T) );
 	//	double Rt = 1 / (p[PB1] * b1Factor[s] + p[PB2] * T + p[PB3] * T*T);
 	//	return max(0.0, Rt);
 	//}
 
-	
+
 	//Egg hatch of forest tent caterpillar (Lepidoptera:Lasiocampidae) on two preferred host species
 	//David R.Gray, 1 Don P.Ostaff
 	//Can. Entomol. 144: 790–797 (2012)
@@ -121,7 +121,7 @@ namespace WBSF
 		return rr;
 	}
 
-	
+
 	double CForestTentCaterpillarEquations::GetDevRate(size_t s, double T)
 	{
 		double r = 0;
@@ -134,7 +134,7 @@ namespace WBSF
 		case L5:	r = 1.0/5.0; break;
 		case PUPAE:	r = 1.0/5.0; break;
 		case ADULT:	r = 1.0/5.0; break;//Live ~ 5 days after https://www.dec.ny.gov/docs/lands_forests_pdf/ftc02.pdf
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
 		return r;
@@ -157,16 +157,16 @@ namespace WBSF
 		case L5:
 		case PUPAE:
 		case ADULT:	r = GetDevRate(s, T); break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
-		
+		assert(!_isnan(r) && _finite(r) && r >= 0);
+
 		return r;
 	}
 
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 	double CForestTentCaterpillarEquations::GetRelDevRate(size_t s)const
 	{
 		return 1;
@@ -186,10 +186,10 @@ namespace WBSF
 		case L5:	rr = GetRelDevRate(s); break;
 		case PUPAE:	rr = GetRelDevRate(s); break;
 		case ADULT:	rr = 1; break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
-		_ASSERTE(!_isnan(rr) && _finite(rr));
+		assert(!_isnan(rr) && _finite(rr));
 
 		return rr;
 	}
@@ -198,7 +198,7 @@ namespace WBSF
 	//
 	double CForestTentCaterpillarEquations::GetFecondity()const
 	{
-		//after Parry 2001 
+		//after Parry 2001
 		//Fecundity is function of the latitude
 		//F = 0.16*lat² -19.5*lat + 782.4;
 		//for latitude from 22.5 to 57.5
@@ -213,6 +213,6 @@ namespace WBSF
 
 		return F;
 	}
-	
-	
+
+
 }

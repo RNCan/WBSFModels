@@ -1,9 +1,9 @@
 ﻿//*****************************************************************************
 // Class: CActiaInterrupta, CActiaInterruptaHost, CActiaInterruptaStand
 //
-// Description:	CActiaInterrupta represent a spruce budworm insect or a group of insect with same carractéristics. 
-//				CActiaInterruptaHost represent the tree that contain CActiaInterrupta. 
-//				CActiaInterruptaStand represent the tree that contain CSWBTree. 
+// Description:	CActiaInterrupta represent a spruce budworm insect or a group of insect with same carractéristics.
+//				CActiaInterruptaHost represent the tree that contain CActiaInterrupta.
+//				CActiaInterruptaStand represent the tree that contain CSWBTree.
 //*****************************************************************************
 
 #pragma once
@@ -18,7 +18,7 @@
 
 namespace WBSF
 {
-	
+
 	namespace ActiaInterrupta
 	{
 		enum TActiaInterrupta_OBL_SBW_Stats
@@ -36,7 +36,7 @@ namespace WBSF
 	{
 	public:
 
-		CActiaInterrupta_OBL_SBW(CHost* pHost, CTRef creationDate = CTRef(), double age = ActiaInterrupta::MAGGOT, WBSF::TSex sex = WBSF::RANDOM_SEX, bool bFertil = true, size_t generation = 0, double scaleFactor = 1, CIndividualPtr& pAssociateHost = CIndividualPtr());
+		CActiaInterrupta_OBL_SBW(CHost* pHost, CTRef creationDate = CTRef(), double age = ActiaInterrupta::MAGGOT, WBSF::TSex sex = WBSF::RANDOM_SEX, bool bFertil = true, size_t generation = 0, double scaleFactor = 1, const CIndividualPtr& pAssociateHost = CIndividualPtr());
 		CActiaInterrupta_OBL_SBW(const CActiaInterrupta_OBL_SBW& in) :CActiaInterrupta(in){ operator=(in); }
 		CActiaInterrupta_OBL_SBW& operator=(const CActiaInterrupta_OBL_SBW& in);
 
@@ -100,7 +100,7 @@ namespace WBSF
 		CActiaInterrupta_OBL_SBW_Host(WBSF::CStand* pStand):
 			CActiaInterruptaHost(pStand)
 		{}
-		
+
 		//virtual std::string get_property(const std::string& name)override;
 		void Initialize(const CInitialPopulation& initValue);
 
@@ -110,7 +110,7 @@ namespace WBSF
 		//virtual void Live(const CWeatherDay& weaDay);
 		//virtual void GetStat(CTRef d, CModelStat& stat, size_t generation = NOT_INIT);
 
-		
+
 	};
 
 	//*******************************************************************************************************
@@ -142,7 +142,7 @@ namespace WBSF
 		virtual double GetAI(bool bIncludeLast)const;
 
 		virtual CHostPtr GetNearestHost(CHost* pHost);
-		
+
 		CIndividualPtr SelectRandomHost(bool bUseSBW);
 	};
 

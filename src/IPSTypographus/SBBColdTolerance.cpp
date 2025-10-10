@@ -1,5 +1,5 @@
 //**********************************************************************
-//Modification: 
+//Modification:
 // 22/01/2016	Rémi Saint-Amant	Using Weather-Based Simulation Framework (WBSF)
 // 13/10/2013	Rémi Saint-Amant	Creation
 //**********************************************************************
@@ -38,7 +38,7 @@ namespace WBSF
 	/*
 	void CSBBColdTolerance::ComputeAnnual(const CWeather& weather)
 	{
-	_ASSERTE( weather.GetNbYear() > 1);
+	assert( weather.GetNbYear() > 1);
 
 	m_firstDate = CTRef(weather.GetFirstYear());
 	m_result.clear();
@@ -151,7 +151,7 @@ namespace WBSF
 	//Daily version of the model (outputs one line per day)
 	void CSBBColdTolerance::ExecuteDaily(const CWeatherStation& weather, CSBBSuperCoolingPointStat& stat)
 	{
-		_ASSERTE(weather.GetNbYears() > 1);
+		assert(weather.GetNbYears() > 1);
 
 		stat.Init(weather.GetEntireTPeriod());
 
@@ -240,7 +240,7 @@ namespace WBSF
 				//Part of equation [10] (in fact: 1 - survival)
 				Pmort = 1 - (p1 / (1 + exp(-(Tmin - alpha[0]) / beta[0])) + p2 / (1 + exp(-(Tmin - alpha[1]) / beta[1])) + p3 / (1 + exp(-(Tmin - alpha[2]) / beta[2])));
 
-				//Compute winter survival: Under the hypothesis that individual's ranks are NOT reshuffled 
+				//Compute winter survival: Under the hypothesis that individual's ranks are NOT reshuffled
 				//(this cold mortality is a selective process: less tolerant individuals are killed first)
 				Psurv = min(Psurv, 1. - Pmort); //Equation [10]
 

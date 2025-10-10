@@ -5,7 +5,7 @@
 //*****************************************************************************
 // 31/05/2023	3.2.3	Rémi Saint-Amant	Output Progeny and WinterSurvival. Bug correction in overwintering energy mortality.
 // 02/03/2021	3.2.1	Rémi Saint-Amant	Bug correction in overwintering energy mortality
-// 06/12/2019	3.2.0	Rémi Saint-Amant	Bug correction when adult reach max adult longevity 
+// 06/12/2019	3.2.0	Rémi Saint-Amant	Bug correction when adult reach max adult longevity
 // 12/07/2019	3.1.9	Rémi Saint-Amant	Add sex as enum and not size_t
 // 28/02/2019	3.1.8	Rémi Saint-Amant	Add adult longevity max parameters
 // 19/12/2018   3.1.7   Rémi Saint-Amant	Add option of adult attrition
@@ -22,7 +22,7 @@
 // 05/03/2015   3.0.0	Rémi Saint-Amant    Update for BioSIM11
 // 30/01/2014   2.6.0	Rémi Saint-Amant    New compilation with boost
 // 26/06/2013	2.4.0	Rémi Saint-Amant    Update with new framework and bug correction in fix AI
-// 25/09/2011			Rémi Saint-Amant    Remove extra parameters. 
+// 25/09/2011			Rémi Saint-Amant    Remove extra parameters.
 // 23/03/2010			Rémi Saint-Amant    Creation from old code
 // 09/01/1995			Jacques Regniere    Creation
 //*****************************************************************************
@@ -99,10 +99,10 @@ namespace WBSF
 			if (!fixeAI.empty() &&
 				!fixeDate.empty())
 			{
-				
+
 				CTRef TRef;
 				TRef.FromFormatedString(fixeDate, "", "-/\\ ");
-				
+
 				//try day first
 				if (TRef.GetYear() != m_weather.GetFirstYear())
 				{
@@ -123,7 +123,7 @@ namespace WBSF
 				{
 					msg.ajoute("Invalid date. Format is YYYY-MM-DD.");
 				}
-				
+
 			}
 			else
 			{
@@ -160,9 +160,9 @@ namespace WBSF
 
 	ERMsg CSpruceBudwormModel::OnExecuteAnnual()
 	{
-		_ASSERTE(m_weather.size() > 1);
+		assert(m_weather.size() > 1);
 
-		ERMsg msg; 
+		ERMsg msg;
 
 		//In annual model stop developing of the L22 to get cumulative L22
 		CModelStatVector stat;
@@ -176,7 +176,7 @@ namespace WBSF
 			//CStatistic statBrood;
 			//CTPeriod p1 = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
 			//for (CTRef d = p1.Begin(); d <= p1.End(); d++)
-			
+
 
 
 			CStatistic statL22;
@@ -184,7 +184,7 @@ namespace WBSF
 			for (CTRef d = p.begin(); d <= p.end(); d++)
 				statL22 += stat[d][S_L22];
 
-			
+
 			double gr = statL22[HIGHEST];
 			double L2o2 = stat[p.begin()][S_L2o2];
 			//if (statL22.is_init())
@@ -223,7 +223,7 @@ namespace WBSF
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		stat.Init(p, NB_STATS, 0, DAILY_HEADER);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y1 = 0; y1 < m_weather.size(); y1++)
 		{
@@ -241,17 +241,17 @@ namespace WBSF
 
 			//Create tree
 			CSBWTreePtr pTree(new CSBWTree(&stand));
-			
+
 			pTree->m_kind = m_treeKind;
 			pTree->m_nbMinObjects = 100;
 			pTree->m_nbMaxObjects = 1000;
 			pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 400, 100, L2o, RANDOM_SEX, m_bFertility, 0));
 			//pTree->Initialize<CSpruceBudworm>(CInitialPopulation(p.begin(), 0, 1, 1, L2o, FEMALE, m_bFertility, 0));
 
-			//add tree to stand			
+			//add tree to stand
 			stand.m_host.push_front(pTree);
 
-			//if Simulated Annealing, set 
+			//if Simulated Annealing, set
 			if (ACTIVATE_PARAMETRIZATION)
 			{
 				//stand.m_rates.SetRho25(m_rho25Factor);
@@ -293,7 +293,7 @@ namespace WBSF
 
 
 
-	//simulated annaling 
+	//simulated annaling
 	void CSpruceBudwormModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		//transform value to date/stage
@@ -349,7 +349,7 @@ namespace WBSF
 				if (statSim.is_inside(m_SAResult[i].m_ref))
 				{
 					double AISim = statSim[m_SAResult[i].m_ref][S_AVERAGE_INSTAR];
-					//_ASSERTE( AISim >= 2&&AISim<=8);
+					//assert( AISim >= 2&&AISim<=8);
 					//when all bug die, a value of -9999 can be compute
 					if (AISim >= 2 && AISim <= 8)
 					{

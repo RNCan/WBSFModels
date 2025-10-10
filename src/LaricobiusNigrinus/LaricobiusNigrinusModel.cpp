@@ -98,7 +98,7 @@ namespace WBSF
 
 	/*ERMsg CLaricobiusNigrinusModel::OnExecuteAnnual()
 	{
-		_ASSERTE(m_weather.size() > 1);
+		assert(m_weather.size() > 1);
 
 		ERMsg msg;
 		CTRef today = CTRef::GetCurrentTRef();
@@ -158,7 +158,7 @@ namespace WBSF
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		m_output.Init(p, NB_STATS, 0);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
@@ -196,7 +196,7 @@ namespace WBSF
 
 		pHost->Initialize<CLaricobiusNigrinus>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, -1));
 
-		//add host to stand			
+		//add host to stand
 		stand.m_host.push_front(pHost);
 
 		CTPeriod p = weather[year].GetEntireTPeriod(CTM(CTM::DAILY));
@@ -252,7 +252,7 @@ namespace WBSF
 					for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					{
 						output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
-						_ASSERTE(!_isnan(output[d][s]));
+						assert(!_isnan(output[d][s]));
 					}
 				}
 			}
@@ -272,7 +272,7 @@ namespace WBSF
 		CSAResult obs;
 
 		//CStatistic egg_creation_date;
-		
+
 
 		obs.m_ref.FromFormatedString(data[I_DATE]);
 		obs.m_obs.resize(NB_EVALUATED_STAGES);
@@ -281,11 +281,11 @@ namespace WBSF
 			if (data[I_EGGS + i] != "NA" && data[I_TYPE] == "C")
 			{
 				obs.m_obs[i] = stod(data[I_EGGS + i]);
-				
+
 				m_cumul_stats[i] += obs.m_obs[i];
 				m_nb_days[i] += obs.m_ref.GetDOY();
 				m_years[i].insert(obs.m_ref.GetYear());
-				
+
 			}
 			else
 			{
@@ -297,8 +297,8 @@ namespace WBSF
 
 		//}
 	}
-	
-	
+
+
 
 	double GetSimX(size_t s, CTRef TRefO, double obs, const CModelStatVector& output)
 	{
@@ -341,7 +341,7 @@ namespace WBSF
 			bValid = false;
 
 
-		
+
 		//for (size_t s = 0; s <= NB_STAGES && bValid; s++)
 		//{
 		//	if (s == EGG || s == LARVAE /*|| s == AESTIVAL_DIAPAUSE_ADULT*/)
@@ -679,7 +679,7 @@ namespace WBSF
 									{
 										stat.Add(obs_y, sim_y);
 
-										double obs_x = m_SAResult[i].m_ref.GetDOY(); 
+										double obs_x = m_SAResult[i].m_ref.GetDOY();
 										double sim_x = GetSimX(STAT_STAGE[j], m_SAResult[i].m_ref, obs_y, output);
 
 										if (obs_y > 5.0 && obs_y<95.0)
@@ -704,14 +704,14 @@ namespace WBSF
 	{
 		if (!IsParamValid())
 				return false;
-				
-		
+
+
 		//return CalibrateDiapauseEndTh(stat);
 		//return CalibrateDiapauseEnd(test, stat);
 
 		if (m_compute_cumul)
 		{
-			
+
 			//Compute cumulative values
 			//for (size_t i = 0; i < m_cumul_stats.size(); i++)
 			//{
@@ -738,7 +738,7 @@ namespace WBSF
 		test.set(E_EGGS);
 		test.set(E_LARVAE);
 		test.set(E_LARVAL_DROP);
-		
+
 		//test.set(E_EMERGING_ADULTS);
 
 

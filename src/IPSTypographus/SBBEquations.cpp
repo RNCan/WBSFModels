@@ -2,13 +2,13 @@
 // File: SBBDevelopment.h
 //
 // Class: CSBBDevelopment
-//          
 //
-// Descrition: CSBBTableLookup compute daily devlopement rate of IPS Typographus (spruce bark beetle) 
+//
+// Descrition: CSBBTableLookup compute daily devlopement rate of IPS Typographus (spruce bark beetle)
 // Reference:
 //*****************************************************************************
 // 22/01/2016	Rémi Saint-Amant	Using Weather-Based Simulation Framework (WBSF)
-// 25/09/2013   Rémi Saint-Amant    Creation 
+// 25/09/2013   Rémi Saint-Amant    Creation
 //*****************************************************************************
 
 #include <boost\math\distributions.hpp>
@@ -57,47 +57,47 @@ namespace WBSF
 
 
 	//*****************************************************************************
-	//CSBBDevelopment class 
+	//CSBBDevelopment class
 
 
 	//development rate parameters (4 stage, 6 parameters)
 	const double CSBBTableLookup::DEFAULT_P[NB_STAGES][NB_PARAMETER] =
 	{
-		// p0                  	=   0.07595  
-		//	p1                  	=  11.89790  
-		//	p2                  	=   0.45628  
-		//	p3                  	=   7.50983  
-		//	p4                  	=  39.13573  
-		//	k0                  	=   0.07755  
-		//	k1                  	=  12.14752  
-		//	k2                  	=   0.28739  
-		//	k3                  	=   6.52692  
-		//	k4                  	=  38.90885  
-		//	s0                  	=   0.07836  
-		//	s1                  	=  12.27255  
-		//	s2                  	=   0.19472  
-		//	s3                  	=   6.70386  
-		//	s4                  	=  38.91888  
-		// 
-		//p0                  	=   0.07595  
-		//p1                  	=  11.89790  
-		//p2                  	=   0.45628  
-		//p3                  	=   8.22885  
-		//p4                  	=  38.97032  
-		//k0                  	=   0.07755  
-		//k1                  	=  12.14752  
-		//k2                  	=   0.28739  
-		//k3                  	=   6.13075  
-		//k4                  	=  39.28919  
-		//s0                  	=   0.07836  
-		//s1                  	=  12.27244  
-		//s2                  	=   0.19471  
-		//s3                  	=   6.53564  
-		//s4                  	=  39.29154  
+		// p0                  	=   0.07595
+		//	p1                  	=  11.89790
+		//	p2                  	=   0.45628
+		//	p3                  	=   7.50983
+		//	p4                  	=  39.13573
+		//	k0                  	=   0.07755
+		//	k1                  	=  12.14752
+		//	k2                  	=   0.28739
+		//	k3                  	=   6.52692
+		//	k4                  	=  38.90885
+		//	s0                  	=   0.07836
+		//	s1                  	=  12.27255
+		//	s2                  	=   0.19472
+		//	s3                  	=   6.70386
+		//	s4                  	=  38.91888
+		//
+		//p0                  	=   0.07595
+		//p1                  	=  11.89790
+		//p2                  	=   0.45628
+		//p3                  	=   8.22885
+		//p4                  	=  38.97032
+		//k0                  	=   0.07755
+		//k1                  	=  12.14752
+		//k2                  	=   0.28739
+		//k3                  	=   6.13075
+		//k4                  	=  39.28919
+		//s0                  	=   0.07836
+		//s1                  	=  12.27244
+		//s2                  	=   0.19471
+		//s3                  	=   6.53564
+		//s4                  	=  39.29154
 
-		//0.07537, 12.76997, 0.01948,  
-		//0.07812, 12.87708, 0.25011,  
-		//0.08010, 12.15577, 0.01721,  
+		//0.07537, 12.76997, 0.01948,
+		//0.07812, 12.87708, 0.25011,
+		//0.08010, 12.15577, 0.01721,
 		//0.07595,11.89752, 0.45633, 8.63081,39.06797,
 		//0.07755,12.14743, 0.28748, 8.63125,39.06804,
 		//0.07836,12.27237, 0.19450, 8.63060,39.06900,
@@ -212,10 +212,10 @@ namespace WBSF
 
 		////N=      1187	T=  0.01960	F=919.07001
 
-		//x0                  	=   0.56164  
-		//x1                  	=   0.37089  
-		//k                   	= -37.53077  
-		//lamda               	=   0.56007  
+		//x0                  	=   0.56164
+		//x1                  	=   0.37089
+		//k                   	= -37.53077
+		//lamda               	=   0.56007
 
 		//return w;
 	}
@@ -226,20 +226,20 @@ namespace WBSF
 	//}
 
 	const double CSBBTableLookup::V[NB_STAGES] =
-		// Egg        L1		  L2		  L3		Pupae	maturation,		 Adult 
+		// Egg        L1		  L2		  L3		Pupae	maturation,		 Adult
 	{ 0.1711, 0.1590, 0.1590, 0.1590, 0.1777, 0.3162, 0.1 };
 
 
 	double CSBBTableLookup::GetRelativeRate(const CRandomGenerator& RG, int s, int sex)
 	{
-		_ASSERTE(s >= 0 && s < NB_STAGES);
+		assert(s >= 0 && s < NB_STAGES);
 
 		double r = RG.RandUnbiasedLogNormal(0, V[s]);
 		while (r<0.4 || r>2.5)
 			r = RG.RandUnbiasedLogNormal(0, V[s]);
 
 
-		//modulate relative rate by sex. Male 
+		//modulate relative rate by sex. Male
 		int sexFactor = (sex == MALE) ? 1 : -1;
 		double Rsex = 1 + sexFactor*(0.5 + RG.Randu()) / 51;
 
@@ -264,7 +264,7 @@ namespace WBSF
 
 	double CSBBAttrition::GetRate(int s, double Tin)
 	{
-	_ASSERTE( s>=0 && s<NB_STAGES);
+	assert( s>=0 && s<NB_STAGES);
 
 	double T = max(0.,Tin);
 	double att=1/(1+exp(p[s][0]+p[s][1]*T+p[s][2]*T*T));
@@ -364,7 +364,7 @@ namespace WBSF
 	};
 
 
-	//Exposure period			 L:D		T		mean T	Number of insects	Diapause  Swarming 
+	//Exposure period			 L:D		T		mean T	Number of insects	Diapause  Swarming
 	//														(% dead)*					time in days
 	//
 	//No exposure				12:12		20				 94 (28)			No		50.9 ± 0.2 a

@@ -6,7 +6,7 @@
 // Description:  Basic of MeteorusTrachynotus calculations (development rates, oviposition rates, attrition rates..)
 //				mean development rates use optimization table lookup
 //*****************************************************************************
-// 22/04/2020   Rémi Saint-Amant    Creation 
+// 22/04/2020   Rémi Saint-Amant    Creation
 //*****************************************************************************
 
 #include "Basic/UtilMath.h"
@@ -22,7 +22,7 @@ namespace WBSF
 	//*****************************************************************************
 	//MeteorusTrachynotus daily development rates
 
-	
+
 
 	const CDevRateEquation::TDevRateEquation COBLPostDiapauseEquations::EQ_TYPE[NB_OBL_STAGES]
 	{
@@ -48,15 +48,15 @@ namespace WBSF
 		vector<double> p(begin(EQ_P[s]), end(EQ_P[s]));
 
 		double Rt = max(0.0, CDevRateEquation::GetRate(EQ_TYPE[s], p, T));
-	
-		_ASSERTE(!_isnan(Rt) && _finite(Rt));
+
+		assert(!_isnan(Rt) && _finite(Rt));
 		assert(Rt >= 0);
 
 		return Rt;
 	}
 
 	//*****************************************************************************
-	// individual relative development rate 
+	// individual relative development rate
 
 	double COBLPostDiapauseEquations::Getδ(size_t s)const
 	{
@@ -110,10 +110,10 @@ namespace WBSF
 		assert(e < NB_EQUATIONS);
 
 		vector<double> p(begin(EQ_P[e]), end(EQ_P[e]));
-		
+
 		double Rt = max(0.0, CDevRateEquation::GetRate(EQ_TYPE[e], p, T));
 
-		_ASSERTE(!_isnan(Rt) && _finite(Rt));
+		assert(!_isnan(Rt) && _finite(Rt));
 		assert(Rt >= 0);
 
 		return Rt;
@@ -121,7 +121,7 @@ namespace WBSF
 
 
 	//*****************************************************************************
-	// individual relative development rate 
+	// individual relative development rate
 
 	double CMeteorusTrachynotusEquations::Getδ(size_t e)const
 	{
@@ -165,6 +165,6 @@ namespace WBSF
 
 
 
-	
+
 
 }

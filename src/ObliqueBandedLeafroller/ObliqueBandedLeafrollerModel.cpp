@@ -31,14 +31,14 @@ namespace WBSF
 	enum{ O_D_EGG, O_D_L1, O_D_L2, O_D_L3, O_D_L3D, O_D_L4, O_D_L5, O_D_L6, O_D_PUPA, O_D_ADULT_PREOVIP, O_D_ADULT, O_D_DEAD_ADULT, O_D_OVIPOSITING_ADULT, O_D_BROOD, O_D_FROZEN, NB_DAILY_OUTPUT };
 	extern char DAILY_HEADER[] = "Egg,L1,L2,L3,L3D,L4,L5,L6,Pupa,Adult,DeadAdult,OvipositingAdult,Brood,Frozen";
 
-	//	
+	//
 	enum{ O_A_NB_GENERATION, O_A_MEAN_GENERATION, O_A_GROW_RATE, O_A_ALIVE1, NB_ANNUAL_OUTPUT = O_A_ALIVE1 + NB_GENERATIONS-1 };
 	extern char ANNUAL_HEADER[] = "Gmax,MeanGeneration, GrowRate,Alive1,Alive2,Alive3,Alive4,Alive5,Alive6";
 
 	enum{ O_G_DIAPAUSE, O_G_GROW_RATE, NB_GENERATION_OUTPUT};
 	extern char GENERATION_HEADER[] = "Diapause, GrowRate";
 
-	
+
 
 	CObliqueBandedLeafrollerModel::CObliqueBandedLeafrollerModel()
 	{
@@ -87,7 +87,7 @@ namespace WBSF
 	//	CTPeriod p = weather.GetEntireTPeriod(CTM(CTM::DAILY));
 	//	stat.Init(p.GetNbRef(), p.begin(), SBW::TSpruceBudwormStats::NB_STATS, 0, DAILY_HEADER);
 
-	//	//we simulate 2 years at a time. 
+	//	//we simulate 2 years at a time.
 	//	//we also manager the possibility to have only one year
 	//	for (size_t y = 0; y < weather.size(); y++)
 	//	{
@@ -127,14 +127,14 @@ namespace WBSF
 	ERMsg CObliqueBandedLeafrollerModel::OnExecuteDaily()
 	{
 		ERMsg msg;
-		
+
 		//if daily data, compute sub-daily data
 		if (!m_weather.IsHourly())
 			m_weather.ComputeHourlyVariables();
-		
+
 		//Init spruce budworm data
 		CModelStatVector SBWStat;
-		
+
 		//GetSpruceBudwormBiology(m_weather, SBWStat);
 
 		//one CModelStatVector by generation
@@ -143,7 +143,7 @@ namespace WBSF
 
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
-		size_t maxG = min(NB_GENERATIONS, ObliqueBandedLeafrollerStat.size()); 
+		size_t maxG = min(NB_GENERATIONS, ObliqueBandedLeafrollerStat.size());
 		//m_output.Init(p.size(), p.begin(), NB_GENERATIONS*NB_DAILY_OUTPUT, 0, DAILY_HEADER);
 		m_output.Init(p.size(), p.begin(), NB_DAILY_OUTPUT, 0, DAILY_HEADER);
 
@@ -188,7 +188,7 @@ namespace WBSF
 			stand.m_host.push_front(pHost);
 
 			//run the model for all days of all years
-			//get the annual period 
+			//get the annual period
 			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
 				stand.Live(m_weather.GetDay(d));
@@ -225,7 +225,7 @@ namespace WBSF
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::ANNUAL));
 		m_output.Init(p, NB_ANNUAL_OUTPUT, 0, ANNUAL_HEADER);
-		
+
 
 		//now compute annual grow rates
 		//Get last complete generation
@@ -244,7 +244,7 @@ namespace WBSF
 				for (size_t g = 1; g < maxG; g++)
 				{
 					double pupaEnd = ObliqueBandedLeafrollerStat[g][season.end()][S_PUPA];
-						
+
 					alive += pupaEnd;
 					m_output[TRef][O_A_ALIVE1 + (g-1)] = pupaEnd;
 					meanG += g *pupaEnd;
@@ -272,7 +272,7 @@ namespace WBSF
 
 		vector<CModelStatVector> ObliqueBandedLeafrollerStat;
 		ExecuteDailyAllGenerations(SBWStat, ObliqueBandedLeafrollerStat);
-		
+
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::ANNUAL));
 		m_output.Init(p.size()*(NB_GENERATIONS - 1), CTRef(0,0,0,0,CTM(CTM::ATEMPORAL)), NB_GENERATION_OUTPUT, 0, GENERATION_HEADER);
@@ -308,7 +308,7 @@ namespace WBSF
 	}
 	//************************************************************************************************
 
-	//simulated annaling 
+	//simulated annaling
 	//void CObliqueBandedLeafrollerModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	//{
 	//	//transform value to date/stage
@@ -331,25 +331,25 @@ namespace WBSF
 	//	CModelStatVector statSim;
 	//
 	//	if( m_SAResult.size() > 0)
-	//	{ 
+	//	{
 	//		CStatistic years;
 	//		for(CSAResultVector::const_iterator p= m_SAResult.begin(); p<m_SAResult.end(); p++)
 	//			years += p->m_ref.GetYear();
-	// 
+	//
 	//		int m_firstYear = (int)years[LOWEST];
 	//		int m_lastYear = (int)years[HIGHEST];
 	//
 	//		assert( m_weather.GetFirstYear() == m_firstYear );
 	//		assert( m_weather.GetLastYear() == m_lastYear );
 	//		ExecuteDaily(statSim);
-	// 
+	//
 	//
 	//		for(int i=0; i<(int)m_SAResult.size(); i++)
 	//		{
 	//			if( statSim.is_inside(m_SAResult[i].m_ref) )
 	//			{
 	//				double AISim = statSim[ m_SAResult[i].m_ref ][S_AVERAGE_INSTAR];
-	//				//_ASSERTE( AISim >= 2&&AISim<=8);
+	//				//assert( AISim >= 2&&AISim<=8);
 	//				//when all bug die, a value of -9999 can be compute
 	//				if( AISim>=2 && AISim<=8)
 	//				{
@@ -364,7 +364,7 @@ namespace WBSF
 	//
 	//ERMsg CObliqueBandedLeafrollerModel::OnExecuteAnnual()
 	//{
-	//	_ASSERTE(m_weather.size() > 1);
+	//	assert(m_weather.size() > 1);
 	//
 	//	ERMsg msg;
 	//
@@ -372,7 +372,7 @@ namespace WBSF
 	//	CModelStatVector stat;
 	//	ExecuteDaily(stat, true);
 	//
-	//	
+	//
 	//	CAnnualOutput stateA(m_weather.size() - 1, CTRef(m_weather.GetFirstYear()));
 	//
 	//	for(size_t y=0; y<m_weather.size()-1; y++)
@@ -381,7 +381,7 @@ namespace WBSF
 	//		CTPeriod p = m_weather[y + 1].GetEntireTPeriod();
 	//		for (CTRef d = p.begin(); d <= p.end(); d++)
 	//			statL22 += stat[d][S_L22];
-	//		
+	//
 	//		double gr = statL22[CFL::HIGHEST];
 	//		stateA[y][O_GROWTH_RATE] = gr/100; //initial population is 100 insect
 	//	}

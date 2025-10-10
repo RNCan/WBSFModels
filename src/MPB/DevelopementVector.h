@@ -13,8 +13,8 @@ namespace WBSF
 	{
 	public:
 
-		double operator[](size_t s)const{ _ASSERT(s < NB_STAGES); return m_data[s]; }
-		double& operator[](size_t s){ _ASSERT(s < NB_STAGES); return m_data[s]; }
+		double operator[](size_t s)const{ assert(s < NB_STAGES); return m_data[s]; }
+		double& operator[](size_t s){ assert(s < NB_STAGES); return m_data[s]; }
 
 	protected:
 

@@ -44,7 +44,7 @@ namespace WBSF
 			double sum = 0.0;
 			CDailyWaveVector t;
 			weather.GetDay(day).GetHourlyGeneration(t, HG_DOUBLE_SINE, 1);
-			_ASSERTE(t.size() == 24);
+			assert(t.size() == 24);
 
 			for (int j = 0; j < 24; j++)
 				sum += a + b*t[j] + c*(pow(t[j], 2.0));
@@ -56,7 +56,7 @@ namespace WBSF
 		}
 
 
-		//if (day < weather.GetNbDay()) // emergence occured 
+		//if (day < weather.GetNbDay()) // emergence occured
 		if (p.is_inside(day))
 		{
 			day--;
@@ -73,7 +73,7 @@ namespace WBSF
 				double sum = 0.0;
 				CDailyWaveVector t;
 				weather.GetDay(day).GetHourlyGeneration(t, HG_DOUBLE_SINE, 1);
-				_ASSERTE(t.size() == 24);
+				assert(t.size() == 24);
 
 				for (int j = 0; j < 24; j++)
 					sum += a + b*t[j] + c*(pow(t[j], 2.0));

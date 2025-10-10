@@ -1,12 +1,12 @@
 //**************************************************************************************************************
-// Hemlock Woolly Adelgid winter mortalty model 
+// Hemlock Woolly Adelgid winter mortalty model
 //
 // for more information see :
 //		McAvoy(2017) : Mortality and recovery of hemlock woolly adelgid(Adelges tsugae) to minimum winter temperatures and predictions for the future
 //
 // Modelling : Jaques Regniere
 //
-// 13/10/2017	1.0.0	Rémi Saint-Amant	Creation 
+// 13/10/2017	1.0.0	Rémi Saint-Amant	Creation
 //**************************************************************************************************************
 //  It under the terms of the GNU General Public License as published by
 //     the Free Software Foundation
@@ -35,10 +35,10 @@ namespace WBSF
 	//
 	enum TDaily{ D_TMIN, D_N, D_Q3, D_EQ1, D_EQ2, NB_OUTPUTS_D };
 	enum TAnnual{ A_TMIN, A_N, A_Q3, A_EQ1, A_EQ2, A_S, A_P, A_R, NB_OUTPUTS_A };
-	
+
 	extern const char HEADER_D[] = "Tmin,N,Q3,Eq1,Eq2";
 	extern const char HEADER_A[] = "Tmin,N,Q3,Eq1,Eq2,S,P,R";
-	
+
 
 	CHemlockWoollyAdelgidCMModel::CHemlockWoollyAdelgidCMModel()
 	{
@@ -82,8 +82,8 @@ namespace WBSF
 			for (size_t i = 0; i < 6; i++)
 				m_p[i] = parameters[2+i].GetFloat();
 		}
-		
-			
+
+
 
 		return msg;
 	}
@@ -104,26 +104,26 @@ namespace WBSF
 		ERMsg msg;
 
 		//Execute model on a daily basis
-		
+
 		CModelStatVector output;
 		ExecuteDaily(output);
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM::ANNUAL);
 		p.begin().m_year++;//skip the first winter
 		m_output.Init(p, NB_OUTPUTS_A, -999, HEADER_A);
-		
+
 		for (size_t y = 0; y < p.size(); y++)
 		{
 			int year = p.GetFirstYear() + int(y);
 			CTRef august31(year, AUGUST, DAY_31, 23, m_weather.GetTM());
-			
+
 			m_output[y][A_TMIN] = output[august31][D_TMIN];
 			m_output[y][A_N] = output[august31][D_N];
 			m_output[y][A_Q3] = output[august31][D_Q3];
 			m_output[y][A_EQ1] = output[august31][D_EQ1];
 			m_output[y][A_EQ2] = output[august31][D_EQ2];
 
-	
+
 			double Tmin = output[august31][D_TMIN];
 
 			static size_t EQUATION_POS[NB_COLD_EQ] = { D_EQ1, D_EQ2};
@@ -131,7 +131,7 @@ namespace WBSF
 			double M = output[august31][posE] / 100;
 			double S = m_Z*(1 - M);
 			m_output[y][A_S] = S;
-			
+
 			double P = Eq7(S, Tmin);
 			double R = P / m_Z;
 			m_output[y][A_P] = P;
@@ -146,11 +146,11 @@ namespace WBSF
 
 	double CHemlockWoollyAdelgidCMModel::Eq1(double Tmin)
 	{
-		static double p¹ = -5.7290;
-		static double p² = -0.3311;
-			
+		static double p1 = -5.7290;
+		static double p2 = -0.3311;
 
-		double M = 100 / (1 + exp(-(p¹ + p²*Tmin)));
+
+		double M = 100 / (1 + exp(-(p1 + p2*Tmin)));
 		if (M < 0.1)
 			M = 0;
 		if (M > 99.9)
@@ -165,8 +165,8 @@ namespace WBSF
 		double p1 =  -0.2760;
 		double p2 =  0.0549;
 		double p3 =  0.1416;
-		
-	
+
+
 		double M = 100 / (1 + exp(-(p0 + p1*Tmin + p2*N + p3*Q3)));
 
 
@@ -178,7 +178,7 @@ namespace WBSF
 		return M;
 
 	}
-	
+
 
 	double CHemlockWoollyAdelgidCMModel::Eq7(double S, double Tmin)
 	{
@@ -200,7 +200,7 @@ namespace WBSF
 	{
 		if (v.empty())
 			return -999;
-		
+
 		double sum = 0;
 		for (auto it = v.begin(); it != v.end(); it++)
 			sum += *it;
@@ -221,12 +221,12 @@ namespace WBSF
 
 			double sumDDx = 0;
 			size_t sumNDM1 = 0;
-			
+
 
 			int year = m_weather[y].GetTRef().GetYear();
 			CTPeriod p = CTPeriod(CTRef(year, SEPTEMBER, DAY_01, 0, m_weather.GetTM()), CTRef(year + 1, AUGUST, DAY_31, 23, m_weather.GetTM()));
 			double deltaMonth = m_weather[year][JULY][H_TMAX][MEAN] - m_weather[year][JANUARY][H_TMIN][MEAN];
-			
+
 			std::deque<double> Q3;
 			for (CTRef TRef = p.begin() - int32_t(m_nbDays); TRef < p.begin(); TRef++)
 			{
@@ -235,7 +235,7 @@ namespace WBSF
 				double T = wDay[H_TNTX][MEAN];
 				Q3.push_back(T);
 			}
-			
+
 			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				const CWeatherDay& wDay = m_weather.GetDay(TRef);
@@ -259,11 +259,11 @@ namespace WBSF
 				output[TRef][D_TMIN] = TminEx;
 				output[TRef][D_N] = NDM1;
 				output[TRef][D_Q3] = dQ3Ex;
-				
+
 				output[TRef][D_EQ1] = Eq1(TminEx);
 				output[TRef][D_EQ2] = Eq2(TminEx, NDM1, dQ3Ex);
-				
-			
+
+
 				Q3.pop_front();
 				Q3.push_back(T);
 			}
@@ -285,14 +285,14 @@ namespace WBSF
 		assert(header[C_NO_HWA_ALIVE] == "no_HWA_alive");
 		assert(header[C_DEAD] == "dead");
 		assert(header[C_PER_MORTALITY] == "per_mortality");
-				
+
 		CTRef ref(ToInt(data[C_YEAR]), ToSizeT(data[C_MONTH]) - 1, ToSizeT(data[C_DAY]) - 1);
 
 		std::vector<double> obs;
 		obs.push_back(ToDouble(data[C_PER_MORTALITY]));
 		obs.push_back(ToDouble(data[C_N]));
 
-			
+
 		m_SAResult.push_back(CSAResult(ref, obs));
 
 	}
@@ -325,7 +325,7 @@ namespace WBSF
 
 	bool CHemlockWoollyAdelgidCMModel::GetFValueDaily(CStatisticXY& stat)
 	{
-		
+
 		if (m_SAResult.size() > 0)
 		{
 
@@ -340,7 +340,7 @@ namespace WBSF
 					else
 						years += p->m_ref.GetYear() + 1;
 				}
-				 
+
 				int firstYear = (int)years[LOWEST];
 				int lastYear = (int)years[HIGHEST];
 				assert(lastYear - firstYear >= 0);
@@ -354,10 +354,10 @@ namespace WBSF
 
 				assert(m_weather.GetFirstYear() == firstYear);
 				assert(m_weather.GetLastYear() == lastYear);
-		
+
 				m_bInit = true;
 			}
-			
+
 
 			CModelStatVector statSim;
 			ExecuteDaily(statSim);
@@ -379,6 +379,6 @@ namespace WBSF
 	}
 
 
-	
+
 
 }

@@ -9,12 +9,12 @@
 // 11/05/2016   Rémi Saint-Amant    Compile with WBSF
 // 25/09/2012   Rémi Saint-Amant    Compile with new developement table
 // 31/10/2007	Rémi Saint-Amant    Remove NEWMAT, use AllenWave and tableLookup
-// 29/08/2007   Rémi Saint-Amant    Add Cold tolerance 
+// 29/08/2007   Rémi Saint-Amant    Add Cold tolerance
 // 01/09/2003   Rémi Saint-Amant    Creation
 //*********************************************************************
 
 #include "SLR.h"
-#include "Generations.h"
+#include "../Generations.h"
 #include "../MPBColdTolerance.h"
 #include "../MPBDevRates.h"
 #include "../DevelopementVector.h"
@@ -119,7 +119,7 @@ namespace WBSF
 			data.m_precAMJ += weatherYear[JUNE][H_PRCP][SUM]; //GetStat(STAT_PRCP, SUM);
 			data.m_stabilityFlag = GetStabilityFlag(weatherYear);
 
-			_ASSERTE(CT[y].m_year == weatherYear.GetTRef().GetYear());
+			assert(CT[y].m_year == weatherYear.GetTRef().GetYear());
 			//Skip the first year: No Cold Resistance
 			data.m_S = (y > 0) ? CT[y].m_Psurv : 1;
 
@@ -179,10 +179,10 @@ namespace WBSF
 	}
 
 	//********************************************************************
-	// This is the main module of Logan's MPB seasonality model It is passed 
+	// This is the main module of Logan's MPB seasonality model It is passed
 	//
 	// Input:
-	//  t : 1 years of hourly temperatures 
+	//  t : 1 years of hourly temperatures
 	//  nbGen: number of generations for the stability test. nbGen > 0.
 	//  dayStart: initial oviposition date. minOvipDate <= dayStart <= maxOvipDate.
 	//  minOvipDate and maxOvipDate: biologically feasible min and max ovip date (model parameters)
@@ -217,8 +217,8 @@ namespace WBSF
 
 			for (int s = 0; s < NB_STAGES; s++)
 			{
-				devRates[d][s] = 0; 
-				
+				devRates[d][s] = 0;
+
 				for (size_t h = 0; h < 24; h++)
 					devRates[d][s] += devRates.MPB_RATES_TABLE.GetRate(s, t[h]) / 24.0;
 			}
@@ -244,7 +244,7 @@ namespace WBSF
 
 	double CSLR::GetProbability(CAccumulator& acc, size_t model, size_t y0, size_t runLength)
 	{
-		_ASSERTE(acc.size() > 1);
+		assert(acc.size() > 1);
 
 		//Summarize the overall result:
 
@@ -258,7 +258,7 @@ namespace WBSF
 		case SAFRANYIK_P3P4:	p = acc.GetProbability(CAccumulator::P_SAFRANYIK_P3P4, y0, runLength); break;
 		case COLD_TOLERANCE:p = acc.GetPsurv(y0, runLength); break;
 		case HYBRID_CT:		p = acc.GetProbability(CAccumulator::P_HYBRID_CT, y0, runLength); break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
 
@@ -270,7 +270,7 @@ namespace WBSF
 	//this method is called to load parameters in your variables
 	ERMsg CSLR::ProcessParameter(const CParameterVector& parameters)
 	{
-		_ASSERTE(parameters.size() == 7);
+		assert(parameters.size() == 7);
 
 		ERMsg msg;
 
@@ -284,10 +284,10 @@ namespace WBSF
 		m_n = parameters[6].GetInt();
 
 
-		_ASSERT(m_nbGeneration > 0);
-		_ASSERT(m_dayStart >= 0 && m_dayStart < 365);
-		_ASSERT(m_minOvipDate >= 0 && m_minOvipDate < 365);
-		_ASSERT(m_maxOvipDate >= 0 && m_maxOvipDate < 365);
+		assert(m_nbGeneration > 0);
+		assert(m_dayStart >= 0 && m_dayStart < 365);
+		assert(m_minOvipDate >= 0 && m_minOvipDate < 365);
+		assert(m_maxOvipDate >= 0 && m_maxOvipDate < 365);
 
 		return msg;
 	}

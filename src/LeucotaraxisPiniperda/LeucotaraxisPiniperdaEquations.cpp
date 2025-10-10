@@ -2,16 +2,16 @@
 // File: LeucotaraxisPiniperdaEquations.h
 //
 // Class: CLeucotaraxisPiniperdaEquations
-//          
 //
-// Description: 
+//
+// Description:
 //				stage development rates, relative development rates
 //				stage development rates use optimization table lookup
 //
 //*****************************************************************************
 // 13/03/2025   Rémi Saint-Amant    New model starting at larval stage
 // 03/03/2025   Rémi Saint-Amant    Add adult longevity, pre-oviposition period and fecundity based on few data observation from Tonya Bittner
-// 18/10/2022   Rémi Saint-Amant    Creation 
+// 18/10/2022   Rémi Saint-Amant    Creation
 //*****************************************************************************
 #include "LeucotaraxisPiniperdaEquations.h"
 #include <boost/math/distributions.hpp>
@@ -37,7 +37,7 @@ namespace WBSF
 //NbVal = 1860	Bias = 0.51871	MAE = 8.49113	RMSE = 12.50527	CD = 0.82072	R² = 0.82527
 //pupa0 = 0.12436
 //pupa1 = 0.08390
-//pupa2=   3.20000  
+//pupa2=   3.20000
 //pupa3 = 33.02940
 //pupa4 = 34.80000
 //pupa5 = 1.36097
@@ -50,7 +50,7 @@ namespace WBSF
 	const array<double, LPM::NB_EMERGENCE_PARAMS> CLeucotaraxisPiniperdaEquations::ADULT_EMERG = { 647.8, 41.96, 45, 2.5, 18.5 };//logistic distribution (no longer used)
 	const array<double, LPM::NB_PUPA_PARAMS> CLeucotaraxisPiniperdaEquations::PUPA_PARAM = { 0.124, 0.0839,  3.2, 33.0, 34.8, 1.36, 0.257};//pupa developement at spring
 	const array<double, LPM::NB_C_PARAMS> CLeucotaraxisPiniperdaEquations::C_PARAM = { 0.75, 1.0, 1.0 };
-	
+
 
 
 	CLeucotaraxisPiniperdaEquations::CLeucotaraxisPiniperdaEquations(const CRandomGenerator& RG) :
@@ -97,7 +97,7 @@ namespace WBSF
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P_DEV[s], T));
 
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
@@ -108,7 +108,7 @@ namespace WBSF
 		//psi Tb To Tm sigma
 		vector<double> p(begin(m_pupa_param), end(m_pupa_param));
 		double r = max(0.0, CDevRateEquation::GetRate(CDevRateEquation::WangLanDing_1982, p, T));
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
@@ -121,7 +121,7 @@ namespace WBSF
 		while (rT < 0.2 || rT>2.6)//base on individual observation
 			rT = boost::math::quantile(ln_dist, m_randomGenerator.Randu(true, true));
 
-		_ASSERTE(!_isnan(rT) && _finite(rT));
+		assert(!_isnan(rT) && _finite(rT));
 
 		//covert relative development time into relative development rate
 		//double rR = 1 / rT;don't do that!!
@@ -129,7 +129,7 @@ namespace WBSF
 		return rT;
 	}
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 
 
 	double CLeucotaraxisPiniperdaEquations::GetRelativeDevRate(size_t s)const
@@ -156,7 +156,7 @@ namespace WBSF
 			boost::math::lognormal_distribution<double> lndist(log(L_median), L_sd);
 			double L = (2* L_median - boost::math::quantile(lndist, m_randomGenerator.Rand(0.001, 0.999)));
 			RDR = L_median/L;
-			
+
 		}
 		else
 		{
@@ -170,7 +170,7 @@ namespace WBSF
 				RDR = boost::math::quantile(lndist, m_randomGenerator.Randu(true, true));
 		}
 
-		_ASSERTE(!_isnan(RDR) && _finite(RDR));
+		assert(!_isnan(RDR) && _finite(RDR));
 
 		return RDR;
 	}
@@ -207,7 +207,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], p, T)));
 
-		_ASSERTE(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
 
 		return sr;
 	}

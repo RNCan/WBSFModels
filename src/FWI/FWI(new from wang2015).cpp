@@ -6,7 +6,7 @@
 //Natural Resources Canada
 //**********************************************************************
 
-//#include <cmath>
+#include <cmath>
 #include "FWI(new from wang2015).h"
 
 using namespace std;
@@ -157,12 +157,12 @@ void FWIcalc(double R, double U, double& fwi) {
 /*Eq. 30b*/
 void ComputeFWI(const CFWIInputVector& input, CFWIOutputVector& output, double ffmc0, double dmc0, double dc0)
 {
-	// Initialize FMC, DMC, and DC 
+	// Initialize FMC, DMC, and DC
 //	double ffmc0 = 85.0;
 	//double dmc0 = 6.0;
 	//double dc0 = 15.0;
 
-	// Main loop for calculating indices 
+	// Main loop for calculating indices
 	for (size_t i = 0; i < input.size(); i++)
 	{
 		const CFWIInput& day = input[i];

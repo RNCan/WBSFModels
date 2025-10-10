@@ -2,10 +2,10 @@
 // File: WSB.h
 //
 // Class: CSpruceBarkBeetle, CSpruceBarkBeetleVector
-//          
 //
-// Descrition: CSpruceBarkBeetle represent one WSB insect. 
-//			   CSpruceBarkBeetleVector is a vector of WSB insect. 
+//
+// Descrition: CSpruceBarkBeetle represent one WSB insect.
+//			   CSpruceBarkBeetleVector is a vector of WSB insect.
 //*****************************************************************************
 
 #pragma once
@@ -32,7 +32,7 @@ namespace WBSF
 	enum TWSBStat{
 		S_ADULT_0, S_DEAD_ADULT_0, S_EMERGENCE_0, S_SWARMING_0_P1, S_SWARMING_0_P2, S_SWARMING_0_P3, S_TOTAL_FEMALE_0, S_BROOD_0_P1, S_BROOD_0_P2, S_BROOD_0_P3, S_TOTAL_BROOD_0, S_DIAPAUSE_0,
 		S_EGG_1, S_L1_1, S_L2_1, S_L3_1, S_PUPAE_1, S_TENERAL_ADULT_1, S_ADULT_1, S_DEAD_ADULT_1, S_SWARMING_1_F1_i, S_SWARMING_1_F1_ii, S_SWARMING_1_F1_iii, S_SWARMING_1_F2_i, S_SWARMING_1_F2_ii, S_SWARMING_1_F2_iii, S_SWARMING_1_F3_i, S_SWARMING_1_F3_ii, S_SWARMING_1_F3_iii, S_TOTAL_FEMALE_1, S_BROOD_1, S_TOTAL_BROOD_1, S_DIAPAUSE_1,
-		S_EGG_2, S_L1_2, S_L2_2, S_L3_2, S_PUPAE2, S_TENERAL_ADULT_2, S_ADULT_2,//, S_DEAD_ADULT_2, S_SWARMING_2_F1, S_SWARMING_2_F2, S_SWARMING_2_F3, S_TOTAL_FEMALE_2, S_BROOD_2, S_TOTAL_BROOD_2, S_DIAPAUSE_2, 
+		S_EGG_2, S_L1_2, S_L2_2, S_L3_2, S_PUPAE2, S_TENERAL_ADULT_2, S_ADULT_2,//, S_DEAD_ADULT_2, S_SWARMING_2_F1, S_SWARMING_2_F2, S_SWARMING_2_F3, S_TOTAL_FEMALE_2, S_BROOD_2, S_TOTAL_BROOD_2, S_DIAPAUSE_2,
 		S_DEAD_ATTRITION, S_DEAD_FROZEN, S_DEAD,
 		S_W_STAT, S_DT_STAT, S_DDL_STAT, S_DAY_LENGTH, S_DI50, S_T_MEAN, S_TI50,
 
@@ -62,7 +62,7 @@ namespace WBSF
 		virtual bool CanPack(const CIndividualPtr in)const;
 		virtual void Pack(const CIndividualPtr in);
 
-		double GetRelativeDevRate(int s)const { _ASSERTE(s >= 0 && s < NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage" 
+		double GetRelativeDevRate(int s)const { assert(s >= 0 && s < NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage"
 		int GetTemperatureType(CTRef date)const{ return GetStage() == ADULT ? T_AIR : m_temperatureType; }
 
 		int m_nbEmergence;
@@ -145,7 +145,7 @@ namespace WBSF
 
 
 
-	
+
 	class CSpruceBarkBeetleTree : public CHost
 	{
 	public:
@@ -159,7 +159,7 @@ namespace WBSF
 		double GetLast4Days()const;
 
 	protected:
-		
+
 		std::deque<CWeatherDay> m_last4Days;
 	};
 

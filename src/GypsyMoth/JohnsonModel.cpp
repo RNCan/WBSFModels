@@ -9,7 +9,7 @@ namespace WBSF
 {
 
 
-	// the look up table of emergence proportions 
+	// the look up table of emergence proportions
 	const double  CJohnsonModel::EMERGE_TABLE[28][11] =
 	{
 		0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000,
@@ -82,7 +82,7 @@ namespace WBSF
 		//fd = p.begin()+273;
 
 		int num_under_5 = 0;
-		// calculate the number of cold days for the look up table 
+		// calculate the number of cold days for the look up table
 		for (CTRef i = p.begin() + 273; i <= hatch_day; i++)
 		{
 			double Tair = (weather.GetDay(i)[HOURLY_DATA::H_TMIN][MEAN] + weather.GetDay(i)[HOURLY_DATA::H_TMAX][MEAN]) / 2.0;
@@ -90,26 +90,26 @@ namespace WBSF
 				num_under_5++;
 		}
 
-		// add up the new year up to the first hatch day 
+		// add up the new year up to the first hatch day
 		//RSA: cette seccion a été enlever et mis dans la section précédente car le calcul du DD n'est plus fait comme
 		//avant. Avant on utilisati un calcul de DD sur 2 jour et maintant on utilise un DD sur une seul journée.
-		//for (CTRef i=firstDay; i<=hatch_day; i++) 
+		//for (CTRef i=firstDay; i<=hatch_day; i++)
 		//{
-		//	
+		//
 		//	if (weather.GetDay(i).GetDD(3.0)+3 <= 5.0) //vraiment étrange comme calcul???
 		//		//if(weather.GetDay(i).GetTMean() <= 5.0)  ca ne devrai pas être cela à la place???
 		//		num_under_5++;
 		//}
 
-		// set the column by how many days where under or equal to 5.0 C 
+		// set the column by how many days where under or equal to 5.0 C
 		short day_deg_5 = GetCol(num_under_5);
 
-		// actually build the initialization for the simulation run 
+		// actually build the initialization for the simulation run
 		double prev_day_den = 0.0;
 
-		//revoir le code pour tenir compte 
+		//revoir le code pour tenir compte
 		//des simulations avec plusieurs années
-		//_ASSERTE( param.GetOvipDate() >= 0 && param.GetOvipDate() < 366);
+		//assert( param.GetOvipDate() >= 0 && param.GetOvipDate() < 366);
 		//int ovipDate = weather.GetDayIndex(weather.GetNbYear()-2, param.GetOvipDate()%365, 0);
 		//int ovipDate = m_param.m_ovipDate-p.begin();
 		//for (int i=ovipDate; i<hatch_day; i++)
@@ -132,7 +132,7 @@ namespace WBSF
 				proportions = EMERGE_TABLE[j][day_deg_5] + ((EMERGE_TABLE[j + 1][day_deg_5] - EMERGE_TABLE[j][day_deg_5])*remainder / 23.0);
 
 			double density = proportions * 100;//density in percent
-			_ASSERTE(density >= 0 && density <= 100);
+			assert(density >= 0 && density <= 100);
 			density -= prev_day_den;
 			prev_day_den += density;
 
@@ -198,7 +198,7 @@ namespace WBSF
 			}
 		}
 
-		//	_ASSERTE( day_deg_5 == col);
+		//	assert( day_deg_5 == col);
 		return col;
 	}
 

@@ -1,11 +1,11 @@
 //************** M O D I F I C A T I O N S   L O G ********************
-//Modification: 
+//Modification:
 // 04/05/2017   2.3.1   Rémi Saint-Amant    New compile
 // 11/05/2016		    Rémi Saint-Amant    New compilation with WBSF
 // 27/03/2013		    Rémi Saint-Amant    New compilation
-// 02/08/2012		    Rémi Saint-Amant    Stream compatible 
+// 02/08/2012		    Rémi Saint-Amant    Stream compatible
 // 26/05/2009		    Rémi Saint-Amant    Compile with the new BioSIMModelBase (Compatible with hxGrid)
-// 01/01/2005           Jacques Régnière 
+// 01/01/2005           Jacques Régnière
 //					    Rémi Saint-Amant    Creation
 //**********************************************************************
 #include "MPB-CTModel.h"
@@ -76,7 +76,7 @@ namespace WBSF
 		CT.ComputeAnnual(m_weather);
 
 		const CMPBCTResultVector& result = CT.GetResult();
-		_ASSERT(result.size() == m_weather.GetNbYears());
+		assert(result.size() == m_weather.GetNbYears());
 
 		enum TAnnual { A_TMIN, A_P_SURV, NB_ANNUAL_OUTPUT };
 
@@ -106,7 +106,7 @@ namespace WBSF
 		CT.ComputeDaily(m_weather);
 
 		const CMPBCTResultVector& result = CT.GetResult();
-		_ASSERTE(result.size() == m_weather.GetNbDays());
+		assert(result.size() == m_weather.GetNbDays());
 
 		CDailyOutputVector output(m_weather.GetEntireTPeriod(CTM::DAILY));
 		for (size_t d = 0; d<result.size(); d++)

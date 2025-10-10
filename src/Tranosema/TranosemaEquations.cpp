@@ -37,7 +37,7 @@ namespace WBSF
 		{
 			//	rho25	   HA		   HL		TL		HH		TH
 			0.1144,  -6.1490, -34.3960, 292.10, 108.24, 302.55, //Egg
-			0.2972, -32.9135, -50.8942, 299.83, 100.00, 308.00, //Pupa 
+			0.2972, -32.9135, -50.8942, 299.83, 100.00, 308.00, //Pupa
 		};
 
 		double tK = T + 273;
@@ -80,14 +80,14 @@ namespace WBSF
 		}
 
 
-		_ASSERTE(!_isnan(Rt) && _finite(Rt));
+		assert(!_isnan(Rt) && _finite(Rt));
 		assert(Rt >= 0);
 		return Rt;
 	}
 
 
 	//*****************************************************************************
-	// individual relative development rate 
+	// individual relative development rate
 
 	double CTranosemaEquations::Equation3(size_t s)const
 	{
@@ -103,7 +103,7 @@ namespace WBSF
 
 		double 	r = m_randomGenerator.RandUnbiasedLogNormal(P[s][0], P[s][1]);
 
-		_ASSERTE(!_isnan(r) && _finite(r));
+		assert(!_isnan(r) && _finite(r));
 		if (_isnan(r) || !_finite(r))//just in case
 			r = 1;
 
@@ -159,7 +159,7 @@ namespace WBSF
 
 
 	//*****************************************************************************
-	//survival rate 
+	//survival rate
 
 
 	double CTranosemaEquations::GetSurvivalRate(size_t s, double T)
@@ -178,10 +178,10 @@ namespace WBSF
 		case EGG:
 		case PUPA:	r = 1 / (1 + exp(-(P[s][0] + P[s][1] * T))); break;
 		case ADULT:	r = 1; break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
-		_ASSERTE(!_isnan(r) && _finite(r));
+		assert(!_isnan(r) && _finite(r));
 		if (_isnan(r) || !_finite(r))//just in case
 			r = 1;
 

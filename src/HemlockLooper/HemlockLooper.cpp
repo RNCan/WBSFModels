@@ -2,9 +2,9 @@
 // File: HLRates.h
 //
 // Class: CHemlockLooper
-//          
 //
-// Descrition: the CHemlockLooper represents one hemlock looper. 
+//
+// Descrition: the CHemlockLooper represents one hemlock looper.
 //*****************************************************************************
 // 30/04/2020	Remi Saint-Amant	Update with VS 2017
 // 25/02/2015	Remi Saint-Amant	Update with new BioSIMModelBase
@@ -33,9 +33,9 @@ namespace WBSF
 	//
 	// Input: int creationDay: the day of the creation
 	//		  int stage: the stage of the insect when the object is created
-	//        
 	//
-	// Output: 
+	//
+	// Output:
 	//
 	// Note: m_relativeDevRate member is modified.
 	//*****************************************************************************
@@ -65,9 +65,9 @@ namespace WBSF
 	//*****************************************************************************
 	// AssignRelativeDevRate sets the relative development rate for all stages
 	//
-	// Input: 
+	// Input:
 	//
-	// Output: 
+	// Output:
 	//
 	// Note: m_relativeDevRate member is modified.
 	//*****************************************************************************
@@ -117,7 +117,7 @@ namespace WBSF
 
 
 			double r = m_relativeDevRate[s] * stand.m_development.GetRate(s, lat, T) / nbSteps;
-			_ASSERTE(r >= 0);
+			assert(r >= 0);
 
 			if (s == EGGS)
 			{
@@ -168,7 +168,7 @@ namespace WBSF
 				//Females begin oviposition after 1 days pre-oviposition period
 				if (m_adultAge > PRE_OVIPOSITION)
 				{
-					_ASSERTE(IsAlive());
+					assert(IsAlive());
 					double T = weather[h][H_TAIR];
 					double Fᵗ = m_potentialFecundity - m_totalBroods;
 					double Eᵗ = stand.m_oviposition.GetRate(T, m_potentialFecundity, Fᵗ) / nbSteps;
@@ -203,7 +203,7 @@ namespace WBSF
 			m_status = DEAD;
 			m_death = OLD_AGE;
 		}
-		else 
+		else
 		{
 			if (GetStand()->m_bApplyMortality)
 			{
@@ -225,7 +225,7 @@ namespace WBSF
 						m_status = DEAD;
 						m_death = ATTRITION;
 					}
-				
+
 					if( weather[H_TMIN][MEAN] < CHemlockLooper::FREEZING_POINT)
 					{
 						m_status = DEAD;
@@ -249,7 +249,7 @@ namespace WBSF
 	// GetStat: GetStat is called daily to get the state of the object
 	//
 	// Input: CTRef d: the actual day
-	// CHLStat& stat: the statistic object 
+	// CHLStat& stat: the statistic object
 	//
 	// Output: The stat is modified
 	//*****************************************************************************
@@ -269,7 +269,7 @@ namespace WBSF
 			assert(m_generation == 0);
 			stat[S_EGGS + stage] += m_scaleFactor;
 		}
-		
+
 
 		if (stage != oldStage)
 		{
@@ -303,7 +303,7 @@ namespace WBSF
 				stat[S_DEAD_OVERWINTER] += m_scaleFactor;
 			else if (m_death == FROZEN)
 				stat[S_DEAD_FROZEN] += m_scaleFactor;
-			
+
 
 		}
 	}

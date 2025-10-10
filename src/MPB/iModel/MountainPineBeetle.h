@@ -73,7 +73,7 @@ namespace WBSF
 		}
 
 
-		double GetRelativeDevRate(int s)const { _ASSERTE(s >= 0 && s < NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage" 
+		double GetRelativeDevRate(int s)const { assert(s >= 0 && s < NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage"
 		bool IsEmerging(){ return m_bEmerging; }
 		void CompleteEmergence(size_t death);
 
@@ -155,7 +155,7 @@ namespace WBSF
 
 		//	double GetA0()const{ return m_A0; }
 		//void SetA0(double A0){ m_A0 = A0; }
-		//double GetAmax()const{ return m_Amax;} 
+		//double GetAmax()const{ return m_Amax;}
 		//void SetAmax(double Amax){ m_Amax = Amax;}
 		//double GetTreeSize()const{ return m_treeSize;}
 		//void SetTreeSize(double treeSize){ m_treeSize = treeSize;}
@@ -210,12 +210,12 @@ namespace WBSF
 		bool m_bUseDefenselessTree;
 		double m_initialInfestation;	// km²
 		double m_forestDensity;			// trees/km²
-		double m_forestSize;			// km² 
+		double m_forestSize;			// km²
 		double m_DDAlpha;
 		double m_heightMax;  // height max in cm
 		double m_pupeTeneralColdT; // cold min egg in °C
 
-		CMPBStand(CBioSIMModelBase* pModel) : 
+		CMPBStand(CBioSIMModelBase* pModel) :
 			CStand(pModel),
 			m_rates(pModel->RandomGenerator())
 		{

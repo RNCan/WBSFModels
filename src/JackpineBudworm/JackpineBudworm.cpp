@@ -1,6 +1,6 @@
 //********************* JR 9 Jan 1995 ***********************
 //   This program takes as argument the current project path
-//   and set file name from which it should read its set 
+//   and set file name from which it should read its set
 //   parameters. If not provided, current.cps in the current
 //   directory is used
 //***********************************************************
@@ -56,7 +56,7 @@
 //************** M O D I F I C A T I O N S   L O G ********************
 // 20/09/2016	2.3.0	Rémi Saint-Amant    Change Tair and Trng by Tmin and Tmax
 // 18/04/2016	2.2.0	Rémi Saint-Amant	Use WBSF with BioSIM11
-// 08/07/2010			Rémi Saint-Amant	New Compile 
+// 08/07/2010			Rémi Saint-Amant	New Compile
 // 26/04/2006			Rémi Saint-Amant	translate from fortran and used BioSIMModelBase
 // 09/01/1995			Jacque Régniere		creation
 
@@ -129,7 +129,7 @@ namespace WBSF
 		{
 		case THERRIEN:	ExecuteTherrien(); break;
 		case LYSYK:		ExecuteLysyk(); break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}
 
 		return message;
@@ -150,7 +150,7 @@ namespace WBSF
 			double nbBugs[NB_INSTAR][NB_CLASS] = { 0 };
 
 			//------------------------------------------------------------
-			//    INITIALIZE age OF OVERWINTERING LARVAE                  
+			//    INITIALIZE age OF OVERWINTERING LARVAE
 			//------------------------------------------------------------
 			double overWinAge = 0;
 			double nbOverWinBugs = 100;
@@ -158,50 +158,50 @@ namespace WBSF
 			CTPeriod p = m_weather[y].GetEntireTPeriod();
 			for (size_t d = 0; d < m_weather[y].GetNbDays(); d++)
 			{
-				
+
 				//------------------------------------------------------------
-				//            generate hourly temperature regime               
+				//            generate hourly temperature regime
 				//------------------------------------------------------------
 				CDailyWaveVector t;
 				m_weather[y].GetDay(d).GetHourlyGeneration(t, HG_DOUBLE_SINE, TIME_STEP);//12
 
 
 				//------------------------------------------------------------
-				//       Compute development rate and sum to find the         
-				//       physiological age accumulation for overwintering     
-				//       and active stages.                                   
+				//       Compute development rate and sum to find the
+				//       physiological age accumulation for overwintering
+				//       and active stages.
 				//------------------------------------------------------------
 				double overWinDev = 0;
 				double stageDev[NB_INSTAR] = { 0 };
 				Devel(t, overWinDev, stageDev);
 
 				//------------------------------------------------------------
-				//    calculate the physiological age of the overwintering    
-				//    larvae.                                                  
+				//    calculate the physiological age of the overwintering
+				//    larvae.
 				//------------------------------------------------------------
 				overWinAge += overWinDev;
 
 				//------------------------------------------------------------
-				//    calculate the probability of emergence                  
+				//    calculate the probability of emergence
 				//------------------------------------------------------------
 				double emergeProb = GetEmergeProb(overWinAge);
 
 				//------------------------------------------------------------
-				//    Add total development completed today to physiological  
-				//    age matrix. The age matrix is age[i][j] where i=number  
-				//    of instars and j=number of classes per stage. The       
-				//    physiological age of each cohort is also incremented.   
+				//    Add total development completed today to physiological
+				//    age matrix. The age matrix is age[i][j] where i=number
+				//    of instars and j=number of classes per stage. The
+				//    physiological age of each cohort is also incremented.
 
 
-				// est-ce encore bon???		
-				//    each instar has the age of the first cohort initialized 
-				//    according to the mean age on the physiological age      
-				//    scale stored in the vector u[i].                        
+				// est-ce encore bon???
+				//    each instar has the age of the first cohort initialized
+				//    according to the mean age on the physiological age
+				//    scale stored in the vector u[i].
 				//------------------------------------------------------------
 				for (int i = L2; i < NB_INSTAR; i++)
 				{
 					//The first class have always zero developement
-					_ASSERTE(age[i][0] == 0);
+					assert(age[i][0] == 0);
 					for (int j = NB_CLASS - 1; j >= 1; j--)
 					{
 						age[i][j] = age[i][j - 1] + stageDev[i];
@@ -209,21 +209,21 @@ namespace WBSF
 				}
 
 				//------------------------------------------------------------
-				//    Calculate the probability of transfer matrix, which     
-				//    is called transferProb(NB_INSTAR, NB_CLASS) using the subroutine ComputeTransferProb. 
+				//    Calculate the probability of transfer matrix, which
+				//    is called transferProb(NB_INSTAR, NB_CLASS) using the subroutine ComputeTransferProb.
 				//------------------------------------------------------------
 				double transferProb[NB_INSTAR][NB_CLASS] = { 0 };
 				ComputeTransferProb(age, transferProb);
 
 				//------------------------------------------------------------
-				//    This is a space for an as yet undefined mortality       
-				//    routine.                                                
+				//    This is a space for an as yet undefined mortality
+				//    routine.
 				//------------------------------------------------------------
 
 
 				//------------------------------------------------------------
-				//    calculate the number of each age group of stage i       
-				//    which moults to stage i+1, nbBugsTrans[i][j].  
+				//    calculate the number of each age group of stage i
+				//    which moults to stage i+1, nbBugsTrans[i][j].
 				//------------------------------------------------------------
 				double nbBugsTrans[NB_INSTAR][NB_CLASS] = { 0 };
 				for (int i = L2; i < NB_INSTAR; i++)
@@ -232,7 +232,7 @@ namespace WBSF
 
 
 				//------------------------------------------------------------
-				//    Increment the numbers matrix.                           
+				//    Increment the numbers matrix.
 				//------------------------------------------------------------
 				for (int i = L2; i < NB_INSTAR; i++)
 				{
@@ -243,8 +243,8 @@ namespace WBSF
 				}
 
 				//------------------------------------------------------------
-				//   Calculate the number lost by transfer, and use this to   
-				//   initialize the number entering the next stage.           
+				//   Calculate the number lost by transfer, and use this to
+				//   initialize the number entering the next stage.
 				//------------------------------------------------------------
 				double nbBugsLost[NB_INSTAR] = { 0 };
 
@@ -261,15 +261,15 @@ namespace WBSF
 
 
 				//--------------------------------------------------------------
-				//    Calculate the number of insects which emerge from         
-				//    diapause and use these to initialize the matrix of        
+				//    Calculate the number of insects which emerge from
+				//    diapause and use these to initialize the matrix of
 				//    active feeders. nbOverWinBugs is the number left in overwintering
 				//--------------------------------------------------------------
 				nbBugs[L2][0] = emergeProb * 100;
 				nbOverWinBugs -= nbBugs[L2][0];
 
 				//------------------------------------------------------------
-				//    Calculate the total numbers in each stage i, (total[i]) 
+				//    Calculate the total numbers in each stage i, (total[i])
 				//------------------------------------------------------------
 				double total[NB_INSTAR] = { 0 };
 				for (int i = L2; i < NB_INSTAR; i++)
@@ -287,7 +287,7 @@ namespace WBSF
 				if (nbOverWinBugs >= 100)
 					LY_AI = 2;
 				//------------------------------------------------------------
-				//    output results                                          
+				//    output results
 				//------------------------------------------------------------
 				CTRef TRef = p.begin() + int32_t(d);
 				stat[TRef][O_NB_OVERWIN_BUGS] = nbOverWinBugs;
@@ -302,9 +302,9 @@ namespace WBSF
 	}
 
 	//------------------------------------------------------------
-	//    compute ddays using allen (1976) sine wave method       
-	//    then life stage frequencies and ai with therrien's      
-	//    parameter values                                        
+	//    compute ddays using allen (1976) sine wave method
+	//    then life stage frequencies and ai with therrien's
+	//    parameter values
 	//------------------------------------------------------------
 	void CJackpineModel::ExecuteTherrien()
 	{
@@ -329,7 +329,7 @@ namespace WBSF
 				double AI = 0;
 				Therrien(DDAYS, PINS, AI);
 
-				CTRef TRef = p.begin() + int32_t(d); 
+				CTRef TRef = p.begin() + int32_t(d);
 				for (size_t i = OVERWINDEV; i < NB_INSTAR; i++)
 					stat[TRef][O_NB_OVERWIN_BUGS + i - OVERWINDEV] = PINS[i + 1] * 100;
 
@@ -355,7 +355,7 @@ namespace WBSF
 
 		if (sum > 0)
 		{
-			_ASSERTE(L2 == 0);
+			assert(L2 == 0);
 			for (int i = L2; i < NB_INSTAR; i++)
 			{
 				double prop = total[i] / sum;
@@ -369,11 +369,11 @@ namespace WBSF
 
 
 	//------------------------------------------------------------
-	//  This subroutine is based on a half-cosine function which  
-	//  approxiamates daily temperature fluctuations by           
-	//  interpolation between maxima and minima. the functions    
-	//  are found in regniere, j. 1983. can. entomol. 114: 811-   
-	//  825.                                                      
+	//  This subroutine is based on a half-cosine function which
+	//  approxiamates daily temperature fluctuations by
+	//  interpolation between maxima and minima. the functions
+	//  are found in regniere, j. 1983. can. entomol. 114: 811-
+	//  825.
 	//------------------------------------------------------------
 	/*void CJackpineModel::TCycle(double TMAX[3], double TMIN[3], double TARRAY[24])
 	{
@@ -412,7 +412,7 @@ namespace WBSF
 
 	double CJackpineModel::GetRate(double TK, int stage)
 	{
-		_ASSERTE(stage >= OVERWINDEV && stage <= PUPEA);
+		assert(stage >= OVERWINDEV && stage <= PUPEA);
 
 		//all variable begin with overwintering ans end at PUPEA
 		static const double A[8] = { -0.0408, -0.2396, -0.2948, -0.2041, -0.1667, -0.1051, -0.0683, -0.0995 };
@@ -446,25 +446,25 @@ namespace WBSF
 		return __max(0, RATE);
 	}
 	//------------------------------------------------------------
-	//    This subroutine calculates the amount of physiological  
-	//    development which occurs after exposure to a given      
-	//    temperature for 1 hour. The total development that      
-	//    occurs in a given day is then calculated. For feeding   
-	//    stages, a temperature correction factor (tbud) is used  
-	//    to account for diurnal deviations in bud temperature    
-	//    from recorded air temperature. A bark temperature       
-	//    correction factor (tbark) can be used to correct for    
-	//    solar effects on overwintering larvae.                  
+	//    This subroutine calculates the amount of physiological
+	//    development which occurs after exposure to a given
+	//    temperature for 1 hour. The total development that
+	//    occurs in a given day is then calculated. For feeding
+	//    stages, a temperature correction factor (tbud) is used
+	//    to account for diurnal deviations in bud temperature
+	//    from recorded air temperature. A bark temperature
+	//    correction factor (tbark) can be used to correct for
+	//    solar effects on overwintering larvae.
 	//------------------------------------------------------------
 	void CJackpineModel::Devel(const CDailyWaveVector& T, double& OverWinDev, double stageDev[NB_INSTAR])
 	{
-		//t must be hourly because TBUD and TBARK are hourly; 
-		_ASSERTE(T.size() == 24);
-		_ASSERTE(TIME_STEP == 1);
+		//t must be hourly because TBUD and TBARK are hourly;
+		assert(T.size() == 24);
+		assert(TIME_STEP == 1);
 
 		//------------------------------------------------------------
-		//    set time step for development as a proportion of        
-		//    1 day. here the time step is .04167 days.               
+		//    set time step for development as a proportion of
+		//    1 day. here the time step is .04167 days.
 		//------------------------------------------------------------
 		//static const double P = .04167;
 		const double P = 1.0 / T.size();
@@ -475,7 +475,7 @@ namespace WBSF
 		//	static const double R=1.987;
 
 		//-----------------------------------------
-		//      zero out the counting arrays       
+		//      zero out the counting arrays
 		//-----------------------------------------
 
 		OverWinDev = 0;
@@ -484,7 +484,7 @@ namespace WBSF
 
 
 		//-----------------------------------------
-		//   CALCULATE MICROCLIMATE TEMPERATURES   
+		//   CALCULATE MICROCLIMATE TEMPERATURES
 		//-----------------------------------------
 		for (int i = 0; i < (int)T.size(); i++)
 		{
@@ -492,7 +492,7 @@ namespace WBSF
 			const double TK2 = m_bUseBud ? (T[i] + TBUD[i] + 273.15) : (T[i] + 273.15);
 
 			//-----------------------------------------
-			//    CALCULATE JPBW DEVELOPEMENT RATES    
+			//    CALCULATE JPBW DEVELOPEMENT RATES
 			//-----------------------------------------
 			OverWinDev += GetRate(TK1, OVERWINDEV)*P;
 
@@ -506,18 +506,18 @@ namespace WBSF
 
 
 	//------------------------------------------------------------
-	//    This subroutine calculates the probability of           
-	//    individuals within an instar's age class transfering    
-	//    to the next stage, and stores these probabilities in a  
-	//    matrix called trans[i][j].                              
+	//    This subroutine calculates the probability of
+	//    individuals within an instar's age class transfering
+	//    to the next stage, and stores these probabilities in a
+	//    matrix called trans[i][j].
 	//------------------------------------------------------------
 	void CJackpineModel::ComputeTransferProb(const double age[NB_INSTAR][NB_CLASS], double transferProb[NB_INSTAR][NB_CLASS])
 	{
 		//-----------------------------------------------
-		//    TRANSFORMATION PARAMETERS FOR EACH STAGE.  
+		//    TRANSFORMATION PARAMETERS FOR EACH STAGE.
 		//-----------------------------------------------
 
-		//FOLD is FNEW of the last day. 
+		//FOLD is FNEW of the last day.
 		double ETA[8] = { .2899, .4282, .4048, .5212, .6742, .2536, .1439, 1000000 };
 		double BETA[8] = { 1.5811, 2.9445, 2.2239, 2.1570, 1.8512, 1.5488, 1.9476, 1.0 };
 		double GAMMA[8] = { .6862, .5302, .5583, .4480, .3322, .7350, .8475, 4 };
@@ -556,10 +556,10 @@ namespace WBSF
 	}
 
 	//------------------------------------------------------------
-	//   This subroutine calculates the probability of emergence  
-	//   for overwintering insects.                               
+	//   This subroutine calculates the probability of emergence
+	//   for overwintering insects.
 	//------------------------------------------------------------
-	//FOLDE is FNEWE of the last day. 
+	//FOLDE is FNEWE of the last day.
 	double CJackpineModel::GetEmergeProb(double overWinAge)
 	{
 		static const double ETA = 0.2905;
@@ -597,13 +597,13 @@ namespace WBSF
 		static const double insparm[8] =
 		{
 			189.176, //nbOverWinBugs
-			359.789, //2 
-			420.137, //3 
-			540.139, //4 
-			606.045, //5 
-			680.561, //6 
-			854.619, //7 
-			1068.424 ///PUPAE 
+			359.789, //2
+			420.137, //3
+			540.139, //4
+			606.045, //5
+			680.561, //6
+			854.619, //7
+			1068.424 ///PUPAE
 		};
 
 		static const double hostparm = 3.512;

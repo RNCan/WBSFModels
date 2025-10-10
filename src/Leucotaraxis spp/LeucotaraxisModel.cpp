@@ -58,21 +58,21 @@ namespace WBSF
 		m_P[P_LA_G0 + delta] = 45;
 		m_P[P_LA_G0 + μ] = -999;
 		m_P[P_LA_G0 + ѕ] = 32.06;
-		
+
 		//Lp
 		m_P[P_LP + Τᴴ¹] = 2.5;
 		m_P[P_LP + Τᴴ²] = 18.5;
 		m_P[P_LP + delta] = 45;
 		m_P[P_LP + μ] = 647.8;
 		m_P[P_LP + ѕ] = 41.96;
-		
+
 		//La g2
 		m_P[P_LA_G1 + Τᴴ¹] = 2.5;
 		m_P[P_LA_G1 + Τᴴ²] = 50.0;
 		m_P[P_LA_G1 + delta] = 45;
 		m_P[P_LA_G1 + μ] = 935.8;
 		m_P[P_LA_G1 + ѕ] = 53.11;
-		
+
 
 		//La end of diapause
 		m_P[P_LA_G1 + delta] = 45;
@@ -145,7 +145,7 @@ namespace WBSF
 		{
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
 			double Tjan = round(m_weather[y][JANUARY].GetStat(H_TMIN)[MEAN],2);
-			
+
 			for (size_t s = 0; s < NB_SPECIES; s++)
 			{
 
@@ -196,7 +196,7 @@ namespace WBSF
 
 	void CLeucotaraxisModel::GetCDD(const CWeatherYears& weather, array<CModelStatVector, NB_SPECIES>& CDD)
 	{
-		_ASSERTE(int(m_P[delta]) >= 0);
+		assert(int(m_P[delta]) >= 0);
 
 		for (size_t s = 0; s < NB_SPECIES; s++)
 		{
@@ -205,7 +205,7 @@ namespace WBSF
 		}
 	}
 
-	
+
 	enum TInput { I_SYC, I_SITE, I_YEAR, I_COLLECTION, I_SPECIES, I_G, I_DATE, I_CDD, I_TMIN, I_DAILY_COUNT, NB_INPUTS };
 	enum TInputInternal { I_S, I_N, NB_INPUTS_INTERNAL };
 
@@ -305,7 +305,7 @@ namespace WBSF
 	void CLeucotaraxisModel::CalibrateEmergence(CStatisticXY& stat)
 	{
 		if (m_SAResult.empty())
-			return; 
+			return;
 
 		CModelStatVector P;
 		GetPobs(P);

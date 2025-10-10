@@ -1,5 +1,5 @@
 ﻿//*****************************************************************************
-//WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING 
+//WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 //*****************************************************************************
 // 15/05/2020	Rémi Saint-Amant	ORIGINIAL LABORATORY PARAMETERS
 //*****************************************************************************
@@ -30,7 +30,7 @@ namespace WBSF
 
 	static const double OVIPOSITING_STAGE_AGE = 0.1; //change by RSA 16-05-2018, was 0.05
 	static const double MINIMUM_AGE_LIFTOFF[2] = { 0.15, 0 };
-	
+
 	const double CSpruceBudworm::POTENTIAL_FECUNDITY = 200;
 	//const bool CSpruceBudworm::ALWAYSE_APPLY_ADULT_ATTRITION = true;
 
@@ -56,17 +56,17 @@ namespace WBSF
 		m_Fᴰ = CBioSIMModelBase::VMISS;
 		m_F = CBioSIMModelBase::VMISS;
 		m_A = Equations().get_A(m_sex);					//Generale forewing area [cm²]
-		
+
 		if (m_sex == FEMALE)
 		{
 			m_Fº = round(Equations().get_Fº(m_A));		//generate fecundity without defoliation
 			m_Fᴰ = round((1.0 - 0.0054*m_D)*m_Fº, 0);	//compute fecundity with defoliation
 			m_F = m_Fᴰ;	//set current fecundity
-		} 
+		}
 
 		m_ξ = Equations().get_ξ(m_sex, m_A);			//generate weight term error
 		m_M = Equations().get_M(m_sex, m_A, GetG())*m_ξ;//compute weight
-		
+
 		m_p_exodus = Equations().get_p_exodus();		//generate exodus liftoff position
 		m_bExodus = false;
 		m_bAlreadyExodus = false;
@@ -113,7 +113,7 @@ namespace WBSF
 			m_p_exodus = in.m_p_exodus;
 			m_Fº = in.m_Fº;
 			m_Fᴰ = in.m_Fᴰ;
-			m_F = in.m_F; 
+			m_F = in.m_F;
 			m_bExodus = in.m_bExodus;
 			m_bAlreadyExodus = in.m_bAlreadyExodus;
 			m_D = in.m_D;
@@ -164,13 +164,13 @@ namespace WBSF
 		//if (NeedOverheating())
 			//T += overheat.GetOverheat(((const CWeatherDay&)*weather.GetParent()), h, 16);
 
-		
+
 
 		//Time step development rate
 		double r = Equations().GetRate(s, m_sex, T) / (24.0 / timeStep);
 		//Relative development rate
 		double RR = GetRelativeDevRate(weather[H_TAIR], r);
-		
+
 
 		//development rate for white spruce is accelerated by a factor
 		if (pTree->m_kind == CSBWTree::WHITE_SPRUCE)
@@ -247,7 +247,7 @@ namespace WBSF
 		//Live(weather[0], 24);
 		m_bExodus = false;
 
-		//flight activity, only in live adults 
+		//flight activity, only in live adults
 		if (GetStage() == ADULT && !m_bAlreadyExodus)//
 			m_bExodus = ComputeExodus(weather);
 
@@ -261,8 +261,8 @@ namespace WBSF
 		assert(IsAlive() && m_sex == FEMALE);
 
 
-		if (GetStage() == ADULT && 
-			GetStageAge() > OVIPOSITING_STAGE_AGE && 
+		if (GetStage() == ADULT &&
+			GetStageAge() > OVIPOSITING_STAGE_AGE &&
 			weather[H_TNTX][MEAN] >= 10 &&
 			m_F > 0)
 		{
@@ -314,7 +314,7 @@ namespace WBSF
 	// Output:  Individual's state is updated to follow update
 	void CSpruceBudworm::Die(const CWeatherDay& weather)
 	{
-		//attrition mortality. Killed at the end of time step 
+		//attrition mortality. Killed at the end of time step
 		if (GetStage() == DEAD_ADULT)
 		{
 			//Old age
@@ -358,7 +358,7 @@ namespace WBSF
 		//		m_status = DEAD;
 		//		m_death = OLD_AGE;
 		//	}
-		//	
+		//
 		//}
 		/*else if (m_bRemoveExodus)
 		{
@@ -498,7 +498,7 @@ namespace WBSF
 			double Vᴸ = K * sqrt(m_M) / m_A;//compute liftoff wing-beat to fly with actual weight (Vᴸ)
 			double Vᵀ = Vmax / (1 + exp(-(T - a) / b));//compute potential wing-beat for the current temperature (Vᵀ)
 
-			//potential wing-beat is greater than liftoff wing-beat, then exodus 
+			//potential wing-beat is greater than liftoff wing-beat, then exodus
 			if (Vᵀ > Vᴸ && p > m_p_exodus)
 				bExodus = true;		//this insect is exodus
 		}
@@ -619,7 +619,7 @@ namespace WBSF
 	bool CSpruceBudworm::get_t(const CWeatherDay& wº, __int64 &tº, __int64 &tᶜ, __int64 &tᴹ)
 	{
 		bool bRep = false;
-		
+
 		CSun sun(wº.GetLocation().m_lat, wº.GetLocation().m_lon, wº.GetLocation().GetTimeZone());
 		__int64 tᶳ = sun.GetSunset(wº.GetTRef())*3600;
 		if (tᶳ > 12*3600)//if sunset is after noon (avoid problem in north)
@@ -642,7 +642,7 @@ namespace WBSF
 				double Δo = p3 + p4 * Δs;//h
 				double Δf = Kf * p5 * Δo;//h
 
-				//now calculate the real tº, tᶬ 
+				//now calculate the real tº, tᶬ
 				tᶜ = tᶳ + (Δs * 3600);
 				tº = tᶜ + (Δo * 3600);
 				tᴹ = tº + (Δf * 3600);
@@ -659,7 +659,7 @@ namespace WBSF
 
 
 
-	//Get the eaten foliage 
+	//Get the eaten foliage
 	double CSpruceBudworm::GetEatenFoliage(double RR)const
 	{
 		static const double AVERAGE_WEIGHT[NB_STAGES] = { 0, 0, 0, 0.06, 0.24, 0.96, 3.80, 15.02, 0, 0 };
@@ -853,7 +853,7 @@ namespace WBSF
 	//
 	//CTRef CSBWTree::GetFirstHatchDate()const
 	//{
-	//	_ASSERT( size()>0 );
+	//	assert( size()>0 );
 	//	return size()>0?at(0)->GetCreationDate():CTRef();
 	//}
 
@@ -877,21 +877,21 @@ namespace WBSF
 	//	static const double WASTE	= 0.4;
 	//
 	//
-	//	if( m_bugsFeeding > 0 )	
+	//	if( m_bugsFeeding > 0 )
 	//	{
 	//		double totalFoliage=0;
 	//		switch(m_kind)
 	//		{
 	//		case BALSAM_FIR: totalFoliage=m_budDensity*(UZERO+UMAX*(1-exp(-pow((m_hu/689.7),2.651))));break;
 	//		case WHITE_SPRUCE: totalFoliage=m_budDensity*(UZERO+UMAX*(1-exp(-pow((m_hu/589.7), 3.051)))); break;
-	//		default: _ASSERTE(false);
+	//		default: assert(false);
 	//		}
-	//			
+	//
 	//		double availableFoliage = totalFoliage*m_foliageRatio;
 	//		double currentFoliage= Max(0.0, availableFoliage-(1.0+WASTE)*m_bugsFeeding);
 	//
 	//		m_foliageRatio=currentFoliage/totalFoliage;
-	//		
+	//
 	//		m_bugsFeeding=0;
 	//	}
 	//}
@@ -961,7 +961,7 @@ namespace WBSF
 	//		if (s == L1 && IsChangingStage(RR))
 	//			m_overwinteringDate = weather.GetTRef();
 
-	//		//Emerging 
+	//		//Emerging
 	//		if (s == L2o && IsChangingStage(RR))
 	//			m_emergingL2oDate = weather.GetTRef();
 
@@ -979,7 +979,7 @@ namespace WBSF
 	//			m_bKillByAttrition = true;
 	//	}
 
-	//	//flight activity, only in live adults 
+	//	//flight activity, only in live adults
 	//	if (GetStage() == ADULT)
 	//	{
 	//		m_flightActivity = GetFlightActivity(weather);

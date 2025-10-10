@@ -2,15 +2,15 @@
 // File: SpottedLanternflyEquations.h
 //
 // Class: CSpottedLanternflyEquations
-//          
 //
-// Description: 
+//
+// Description:
 //				stage development rates, relative development rates
 //				stage daily survival
-//				Adult longevity and fecundity 
+//				Adult longevity and fecundity
 //
 //*****************************************************************************
-// 10/11/2022   Rémi Saint-Amant    Creation 
+// 10/11/2022   Rémi Saint-Amant    Creation
 //*****************************************************************************
 #include "SpottedLanternflyEquations.h"
 #include "ModelBased/DevRateEquation.h"
@@ -75,16 +75,16 @@ namespace WBSF
 			//CDevRateEquation::Briere1_1999,//N2(mean+SD+n)
 			//CDevRateEquation::Briere1_1999,//N3(mean+SD+n)
 			//CDevRateEquation::Briere1_1999,//N4(mean+SD+n)
-			
 
 
 
-			
+
+
 
 			CDevRateEquation::Poly1,//Adult(same as N4)
 			CDevRateEquation::Poly1//dead adult
 		};
-		
+
 		//"Variable", "Equation", "psi", "To", "deltaT1", "deltaT2", "sigma"
 
 
@@ -116,7 +116,7 @@ namespace WBSF
 				//{3.730774e-05,6.249316,36.00063 },//N2 (Mean+SD+n)
 				//{2.435172e-05,8.786556,44.75016 },//N3 (Mean+SD+n)
 				//{1.291956e-05,1.502176,42.62676 },//N4 (Mean+SD+n)
-				
+
 
 
 
@@ -129,17 +129,17 @@ namespace WBSF
 
 
 
-		
+
 
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P_DEV[s], T));
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
 
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 
 
 	double CSpottedLanternflyEquations::GetRelativeDevRate(size_t s)const
@@ -148,13 +148,13 @@ namespace WBSF
 		{
 			//Relative development Time (individual variation): sigma
 			//{ 0.2},//Egg(park)
-			
+
 			//{ 0.112523},//EggHacth(Mean+SD+n)
 			//{ 0.296268},//N1	 (Mean+SD+n)
 			//{ 0.317782},//N2	 (Mean+SD+n)
 			//{ 0.741681},//N3	 (Mean+SD+n)
 			//{ 0.257491},//N4	 (Mean+SD+n)
-			
+
 
 			//{0.126928},//EggHacth(I): Lamb_1992
 			{0.147923},//EggHacth(I with fields):Schoolfield_1981
@@ -162,12 +162,12 @@ namespace WBSF
 			{0.301361},//N2(I):Regniere_2012
 			{0.774204},//N3(I):Regniere_2012
 			{0.269008},//N4(I):Regniere_2012
-			
+
 
 			{ 0.2},//Adult(Mean+SD+n)
 			{ 0.0}//dead adult
 		};
-		
+
 		//array<double, NB_STAGES> factor = { 1.37536,m_psy[DEAD_ADULT],m_psy[DEAD_ADULT],m_psy[DEAD_ADULT],m_psy[DEAD_ADULT],m_psy[DEAD_ADULT],m_psy[DEAD_ADULT]};
 		// * factor[s]
 		return GetRelativeDevRate(SIGMA[s]);
@@ -190,7 +190,7 @@ namespace WBSF
 		while (RDR < 0.5 || RDR > 2.3)
 			RDR = boost::math::quantile(dist, m_randomGenerator.Randu());
 
-		_ASSERTE(!_isnan(RDR) && _finite(RDR));
+		assert(!_isnan(RDR) && _finite(RDR));
 
 
 		//Don't inverse
@@ -224,7 +224,7 @@ namespace WBSF
 			CSurvivalEquation::Unknown,		// adult
 			CSurvivalEquation::Unknown,		// Dead
 		};
-	
+
 		static const array< vector<double>, NB_STAGES>  P_SUR =
 		{ {
 			{0.002164923, 20.43299, 28.53151, 2.200288},//egg
@@ -238,7 +238,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], P_SUR[s], T)));
 
-		_ASSERTE(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
 		return sr;
 	}
 
@@ -280,7 +280,7 @@ namespace WBSF
 	//	static const vector<double> P_FEC = { 0.01518, 10.9, 6.535 };
 	//	double r = max(0.0, CDevRateEquation::GetRate(P_EQ, P_FEC, T));
 
-	//	_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+	//	assert(!_isnan(r) && _finite(r) && r >= 0);
 
 	//	return r;
 	//}

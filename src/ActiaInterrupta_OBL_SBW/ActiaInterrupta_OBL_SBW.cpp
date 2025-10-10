@@ -1,6 +1,6 @@
 ﻿//*****************************************************************************
 // Class: CActiaInterrupta_OBL_SBW
-//          
+//
 //
 // Description: Biology of ActiaInterrupta in relation with OBL and SBW
 //*****************************************************************************
@@ -20,7 +20,7 @@ namespace WBSF
 
 	//*********************************************************************************
 	//CActiaInterrupta_OBL_SBW class
-	CActiaInterrupta_OBL_SBW::CActiaInterrupta_OBL_SBW(CHost* pHost, CTRef creationDate, double age, TSex sex, bool bFertil, size_t generation, double scaleFactor, CIndividualPtr& pAssociateHost) :
+	CActiaInterrupta_OBL_SBW::CActiaInterrupta_OBL_SBW(CHost* pHost, CTRef creationDate, double age, TSex sex, bool bFertil, size_t generation, double scaleFactor, const CIndividualPtr& pAssociateHost) :
 		CActiaInterrupta(pHost, creationDate, age, sex, bFertil, generation, scaleFactor)
 	{
 		m_pAssociateHost = pAssociateHost;
@@ -112,7 +112,7 @@ namespace WBSF
 			if (weather.GetTRef().GetDOY() > 173 && dayLength < GetStand()->m_criticalDaylength)
 			{
 				//Switch
-				//Tests indicate that the best hypothesis is 2 (parasitoid enters diapause as soon as its host is induced): 
+				//Tests indicate that the best hypothesis is 2 (parasitoid enters diapause as soon as its host is induced):
 				int Hypothesis = 2;
 
 				if (GetStage() == MAGGOT)
@@ -122,7 +122,7 @@ namespace WBSF
 						//case 1: //test only once when ActiaInterrupta reach diapause age
 						//	//if Jday greater than 173 and the ActiaInterrupta age pass through diapause age this day
 						//	if (m_lastAge <= GetStand()->m_diapauseAge && m_age >= GetStand()->m_diapauseAge)
-						//		//if the host is in diapause, ActiaInterrupta will enter in diapause. If not, this insect will develop until die. 
+						//		//if the host is in diapause, ActiaInterrupta will enter in diapause. If not, this insect will develop until die.
 						//		if (m_pAssociateHost.lock()->IsInDiapause(weather.GetTRef()))
 						//		{
 						//			m_diapauseTRef = weather.GetTRef();
@@ -130,7 +130,7 @@ namespace WBSF
 						//	break;
 							//do not use diapause age, only use host diapause induction
 					case 2:
-						//if the host is induced in diapause, ActiaInterrupta enters in diapause. 
+						//if the host is induced in diapause, ActiaInterrupta enters in diapause.
 						if (m_pAssociateHost.lock()->IsInDiapause(weather.GetTRef()))
 						{
 							m_diapauseTRef = weather.GetTRef();
@@ -138,7 +138,7 @@ namespace WBSF
 						}
 						break;
 						////case 3:
-						////	//if the host is in diapause, ActiaInterrupta enters in diapause. 
+						////	//if the host is in diapause, ActiaInterrupta enters in diapause.
 						////	if (m_pAssociateHost.lock()->IsInDiapause2(weather.GetTRef()))
 						////	{
 						////		m_diapauseTRef = weather.GetTRef();
@@ -156,17 +156,17 @@ namespace WBSF
 	{
 		assert(IsAlive() && m_sex == FEMALE);
 		assert(m_totalBroods <= m_Pmax+1);
-		
+
 		m_totalBroods += m_broods;
 
 		//Oviposition module after Régniere 1983
 		if (m_bFertil && m_broods > 0)
 		{
 			assert(m_age >= ADULT);
-			
+
 			CActiaInterrupta_OBL_SBW_Stand* pStand = GetStand(); assert(pStand);
 			CIndividualPtr pAssociateHost = pStand->SelectRandomHost(true);
-			
+
 			double attRate = pStand->m_generationAttrition;//1% of survival by default
 			double scaleFactor = m_broods * m_scaleFactor*attRate;
 			CIndividualPtr object = make_shared<CActiaInterrupta_OBL_SBW>(m_pHost, weather.GetTRef(), MAGGOT, FEMALE, true, m_generation + 1, scaleFactor, pAssociateHost);

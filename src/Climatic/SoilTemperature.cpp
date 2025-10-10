@@ -1,5 +1,5 @@
 ﻿//**********************************************************************
-// 26/09/2023	1.0.1	Rémi Saint-Amant	Add overheating and snow protection. 
+// 26/09/2023	1.0.1	Rémi Saint-Amant	Add overheating and snow protection.
 //											No longer used mean average over 11 days period
 // 02/10/2019	1.0.0	Rémi Saint-Amant	Creation
 //**********************************************************************
@@ -182,7 +182,7 @@ namespace WBSF
 		//double Litter = 0.5 * m_LAImax;
 		//for (size_t d = 0; d < 11; d++)
 //			A[d] = GetTairAtSurface(m_weather[size_t(0)][DECEMBER][d], NOT_INIT, m_Fo);
-			
+
 
 		for (size_t d = 0; d < m_weather[size_t(0)][DECEMBER].size(); d++)
 		{
@@ -299,8 +299,8 @@ namespace WBSF
 
 	double CSoilTemperatureModel::GetTairAtSurface(const CWeatherDay& weather, size_t h, double Fo)
 	{
-		
-		static const double Fs = 0.71;//[cm¯¹], 
+
+		static const double Fs = 0.71;//[cm¯¹],
 		double Tair = -999;
 		if (h == NOT_INIT)
 		{
@@ -327,7 +327,7 @@ namespace WBSF
 
 	CStatistic CSoilTemperatureModel::GetSoilTemperature(const CWeatherDay& weather, double z, double& Tsoil, double LAI, double& Litter)
 	{
-		_ASSERTE(!isnan(Tsoil));
+		assert(!isnan(Tsoil));
 
 
 		CStatistic stat;
@@ -345,7 +345,7 @@ namespace WBSF
 				CTRef ref = weather[h].GetTRef();
 
 				double Tair = GetTairAtSurface(weather, h, m_Fo);
-				
+
 
 				double delta = GetDeltaSoilTemperature(z, (Tair > Tsoil) ? LAI : 0, Litter, m_F) / 24.0;
 				Tsoil += (Tair - Tsoil) * delta;
@@ -365,13 +365,13 @@ namespace WBSF
 		//	double Ca = (m_Cs + m_Cice)*1E6;
 		//	double Tair = weather[H_TAIR][MEAN];
 		//	double DRz = F*dt * m_Kt / (Ca * square(2.0 * Zs));
-		//	_ASSERTE(!isnan(DRz));
-		//	
+		//	assert(!isnan(DRz));
+		//
 
 
 		//	double Tstar = Tsoil + DRz * (Tair - Tsoil);
 		//	Tsoil = Tstar * exp(-m_Fs*Ds);
-		//	_ASSERTE(!isnan(Tsoil));
+		//	assert(!isnan(Tsoil));
 
 		//	Tsoil = max(-998.0, min(999.0, Tsoil));
 
@@ -457,7 +457,7 @@ namespace WBSF
 		if (fabs(m_z - 100) < 0.1)
 			v = I_TSOIL100 - I_TSOIL5;
 			assert(v != NOT_INIT);
-		
+
 
 		//static const double SOIL_DEPTH[5] = { 5,10,20,50,100 };
 		//for (size_t v = 0; v < 5; v++)

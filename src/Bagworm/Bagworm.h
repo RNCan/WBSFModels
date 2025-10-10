@@ -1,10 +1,10 @@
 //*****************************************************************************
 // File: CBagworm.h
 //
-// Class: 
-//          
+// Class:
 //
-// Descrition:	
+//
+// Descrition:
 //*****************************************************************************
 
 #pragma once
@@ -47,7 +47,7 @@ namespace WBSF
 		}
 */
 
-		double GetRelativeDevRate(int s)const { _ASSERTE(s >= 0 && s < NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage" 
+		double GetRelativeDevRate(int s)const { assert(s >= 0 && s < NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage"
 
 		//void SetMinimumTemperatureDate(CTRef date);
 		void SetClusterWeight(double clusterWeight){ m_clusterWeight = clusterWeight; }

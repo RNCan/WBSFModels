@@ -9,7 +9,7 @@
 namespace WBSF
 {
 	class CWeatherStation;
-	
+
 	class CGMEggParam
 	{
 	public:
@@ -43,9 +43,9 @@ namespace WBSF
 			m_param = param;
 		}
 
-	
+
 		void Reset();
-	
+
 		virtual ERMsg ComputeHatch(const CWeatherStation& weather, const CTPeriod& p) = 0;
 
 		CTRef GetFirstHatch()const;
@@ -56,7 +56,7 @@ namespace WBSF
 
 		double GetEggsPourcent(CTRef day, int phase)const
 		{
-			_ASSERTE(m_eggState.is_inside(day));
+			assert(m_eggState.is_inside(day));
 			return m_eggState[day][phase] / MAXEGGS*100.0;
 		}
 

@@ -2,14 +2,14 @@
 // File: LaricobiusNigrinusEquations.h
 //
 // Class: CLaricobiusNigrinusEquations
-//          
 //
-// Description: 
+//
+// Description:
 //				stage development rates, relative development rates
 //				stage development rates use optimization table lookup
 //
 //*****************************************************************************
-// 10/03/2019   Rémi Saint-Amant    Creation 
+// 10/03/2019   Rémi Saint-Amant    Creation
 //*****************************************************************************
 #include "LaricobiusNigrinusEquations.h"
 #include <boost/math/distributions.hpp>
@@ -32,7 +32,7 @@ namespace WBSF
 
 	//Parameters for logistic distribution
 	//WARNING: logistic describe cumul of egg abundance (cumul under the curve)
-	//here is calibrated directly from January first with 
+	//here is calibrated directly from January first with
 	//				  mu     s     ThLo   ThHi	   N     Bias     MAE      RMSE     CD       R²
 	//EggCreation:	327.2   60.9   0.8    21.7     71   -0.720   3.501    5.232    0.982    0.983
 	//Larvae:       117.0   20.8   6.6    11.9    103   -0.911   5.011    8.385    0.958    0.961
@@ -44,7 +44,7 @@ namespace WBSF
 	//WARNING: logistic describe cumul of egg creation
 	//NbVal = 174	Bias = -0.31065	MAE = 5.09708	RMSE = 8.51067	CD = 0.95783	R² = 0.95910
 	//mu = 220.3
-	//s = 47.5 
+	//s = 47.5
 	//Th1 = 2.1
 	//Th2 = 20.2
 
@@ -89,8 +89,8 @@ namespace WBSF
 	//	{ 0.00, 0.00 },//Active adult
 	//}};
 
-	
-	
+
+
 	const std::array<double, LNF::NB_OVP_PARAMS> CLaricobiusNigrinusEquations::OVP = { 220.3, 47.5, 2.1, 20.2 };//logistic distribution
 	const std::array<double, LNF::NB_ADE_PARAMS> CLaricobiusNigrinusEquations::ADE = { 121,212,-294.5,105.8,34.8,20 };//logistic distribution
 	const std::array<double, LNF::NB_EAS_PARAMS> CLaricobiusNigrinusEquations::EAS = { 1157.8,125.0,-2.5 };//logistic distribution
@@ -165,7 +165,7 @@ namespace WBSF
 				{ 2.488e-02, 1.066e-01, 4, 9.998e+01                }, //adult 1.05: ajustement between Lo and Ln (from McAvoy unpublished)
 		} };
 #endif
-		
+
 
 
 		/*vector<double> p(begin(P_DEV[s]), end(P_DEV[s]));
@@ -176,22 +176,22 @@ namespace WBSF
 		case LARVAE:
 		case PREPUPAE:
 		case PUPAE:	r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], p, T)); break;
-		default: _ASSERTE(false);
+		default: assert(false);
 		}*/
 
 		//static const double CORRECTION[NB_STAGES] = { 1, 1, 1, 1, 1, 1 };
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P_DEV[s], T));// * CORRECTION[s]
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 
 
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
 
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 
 
 	double CLaricobiusNigrinusEquations::GetRelativeDevRate(size_t s)const
@@ -199,7 +199,7 @@ namespace WBSF
 		//if (s == EGG || s == LARVAE /*|| s == AESTIVAL_DIAPAUSE_ADULT*/)
 		//{
 		//	double Э = m_randomGenerator.Randu(true, true);
-		//	rr = 1.0 - log((pow(Э, -m_RDR[s][Ϙ]) - 1.0) / (pow(0.5, -m_RDR[s][Ϙ]) - 1.0)) / m_RDR[s][к];//add -q by RSA 
+		//	rr = 1.0 - log((pow(Э, -m_RDR[s][Ϙ]) - 1.0) / (pow(0.5, -m_RDR[s][Ϙ]) - 1.0)) / m_RDR[s][к];//add -q by RSA
 		//	while (rr<0.4 || rr>2.5)
 		//	{y65
 		//		double Э = m_randomGenerator.Randu(true, true);
@@ -234,7 +234,7 @@ namespace WBSF
 		while (RDR < 0.2 || RDR>2.6)//base on individual observation
 			RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu(true, true));
 
-		_ASSERTE(!_isnan(RDR) && _finite(RDR));
+		assert(!_isnan(RDR) && _finite(RDR));
 
 		return RDR;
 	}
@@ -316,7 +316,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], P_SUR[s], T)));
 
-		_ASSERTE(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
 		return sr;
 	}
 
@@ -337,7 +337,7 @@ namespace WBSF
 		static const double Fo = 72.0;//from McAvoy 2024
 		static const double sigma = 0.355;//from Foley 2022
 		//static const double Fcorrection = 72.0/102.1;//correction between Fo and Fn (from McAvoy 2024)
-		
+
 		boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::square(sigma) / 2.0, sigma);
 		double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.01, 0.99));
 
@@ -356,7 +356,7 @@ namespace WBSF
 		static const vector<double> P_FEC = { 0.01518, 10.9, 6.535 };
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ, P_FEC, T));
 
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
@@ -479,6 +479,6 @@ namespace WBSF
 		return cold_tolerence;
 	}
 
-	
+
 }
 

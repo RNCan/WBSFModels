@@ -13,15 +13,15 @@ USDA Forest Service, Logan Utah
 
 Programmer: Rémi St-Amant
 
-Initial creation Fall 2007 
+Initial creation Fall 2007
 Complete update Fall 2012
 
-Work initiated after the Snowbird workshop of 15 Nov 2005, but interrupted when J Powell 
-announced that a grad student of his was undertaking object-oriented modelling. 
+Work initiated after the Snowbird workshop of 15 Nov 2005, but interrupted when J Powell
+announced that a grad student of his was undertaking object-oriented modelling.
 Work restarted after a meeting at Logan, UT (Regniere-Bentz-Powell) Oct. 1-3, 2007.
 
-Thoughts: 
-	Ovipositing females live until max fec is realized. They can be killed by winter mortality according to Lester & Irwin 2012, 
+Thoughts:
+	Ovipositing females live until max fec is realized. They can be killed by winter mortality according to Lester & Irwin 2012,
 	but are otherwise very long-lived and continue ovipositing as temperature allows.
 
 **************************************************************/
@@ -36,14 +36,14 @@ Thoughts:
 // 27/03/2013  2.3.0	Rémi Saint-Amant    New compilation with WBSF
 // 27/03/2013  2.2		Rémi Saint-Amant    New compilation
 // 17/12/2012  2.1		Rémi Saint-Amant    Add the mode Year by Year adjusted
-// 16/07/2012  2.0		Rémi Saint-Amant    Simplified model 
+// 16/07/2012  2.0		Rémi Saint-Amant    Simplified model
 // 26/05/2009			Rémi Saint-Amant    Compile with the new BioSIMModelBase (Compatible with hxGrid)
 // 12/11/2008			Rémi Saint-Amant	Use the new MPBi class
 // 24/09/2008			Rémi Saint-Amant	Auto ajusting the number of object in the tree
 // 14/12/2007			Rémi Saint-Amant	Integration with the new BioSIM model Base
 // 12/11/2007			Jacques Régnière    Commenting/editing
 // 30/10/2007			Remi Saint-Amant    Consolidation of all forms of MPB models
-// 29/10/2007			Rémi Saint-Amant    Debugging 
+// 29/10/2007			Rémi Saint-Amant    Debugging
 // 23/10/2007			Rémi Saint-Amant    sets things straight
 // 22/10/2007			Jacques Régnière    Modifications
 // 22/11/2005			Rémi Saint-Amant    Creation
@@ -71,16 +71,16 @@ namespace WBSF
 		VERSION = "2.3.1 (2017)";
 
 		//input parameters of MPBiMOD
-		m_n0 = 60;             //Number of females/m² in the initial attack 
+		m_n0 = 60;             //Number of females/m² in the initial attack
 		m_attackStDev = 0;					//Peak Date of initial attack (not initialized here), and its standard deviation
 		m_bFertilEgg = false;			    //Turns brood female fertility on/off
 		m_nbFertilGeneration = -1;
 		m_bAutoBalanceObject = true;          //Creates "super individual" objects to accelerate model
-		m_survivalRate = 0;                 //Basic survival rate (applied to eggs before their creation). 
-		//Sex ratio of 0.7 female also applied at egg creation. Males are not created.  
+		m_survivalRate = 0;                 //Basic survival rate (applied to eggs before their creation).
+		//Sex ratio of 0.7 female also applied at egg creation. Males are not created.
 		m_A0 = 60;                            //Tree defense capacity (attacks/m²/day)
-		m_Amax = 120;                         //Maximum adult beetles (successful attacks) allowed/m² 
-		m_applyColdTolerance = true;          //Apply cold mortality (all stages) 
+		m_Amax = 120;                         //Maximum adult beetles (successful attacks) allowed/m²
+		m_applyColdTolerance = true;          //Apply cold mortality (all stages)
 		m_applyColdToleranceOvipAdult = 1; //Apply cold mortality of ovipositing adults (Lester & Irwin 2012)
 		m_emergenceThreshold = 18;             //Minimum temperature needed for adult emergence. Leads to additional mortality for adults not able to emerge before winter
 		m_bMicroClimate = false;              //Calculate bark temperature from air temperature
@@ -170,7 +170,7 @@ namespace WBSF
 			}
 
 			//Compute R and infestation (%)
-			output[0][A_INFESTED_KM²_CUMUL] = (m_initialInfestation + output[0][A_INFESTED_KM²]);
+			output[0][A_INFESTED_KM2_CUMUL] = (m_initialInfestation + output[0][A_INFESTED_KM2]);
 			output[0][A_R] = -9999;
 
 			for (size_t i = 1; i < output.size(); i++)
@@ -180,13 +180,13 @@ namespace WBSF
 				else
 					output[i][A_R] = 0;
 
-				if (output[i][A_INFESTED_KM²] >= 0)
-					output[i][A_INFESTED_KM²_CUMUL] = output[i - 1][A_INFESTED_KM²_CUMUL] + output[i][A_INFESTED_KM²];
+				if (output[i][A_INFESTED_KM2] >= 0)
+					output[i][A_INFESTED_KM2_CUMUL] = output[i - 1][A_INFESTED_KM2_CUMUL] + output[i][A_INFESTED_KM2];
 				else
 
 				{
-					output[i][A_INFESTED_KM²_CUMUL] = output[i - 1][A_INFESTED_KM²_CUMUL];
-					output[i][A_INFESTED_KM²] = 0;
+					output[i][A_INFESTED_KM2_CUMUL] = output[i - 1][A_INFESTED_KM2_CUMUL];
+					output[i][A_INFESTED_KM2] = 0;
 					output[i][A_R] = 0;
 				}
 			}
@@ -196,7 +196,7 @@ namespace WBSF
 		}
 		else //Eggs non fertile
 		{
-			//run model 
+			//run model
 			CAnnualOutputVector output(m_weather.GetNbYears() - 1, CTRef(m_weather.GetFirstYear(), 0, 0, 0, CTM(CTM::ATEMPORAL)));
 
 
@@ -211,13 +211,13 @@ namespace WBSF
 				ComputeGenerationValue(stat, output[y]);
 			}
 
-			output[0][A_INFESTED_KM²_CUMUL] = (m_initialInfestation + output[0][A_INFESTED_KM²]);
+			output[0][A_INFESTED_KM2_CUMUL] = (m_initialInfestation + output[0][A_INFESTED_KM2]);
 
 			for (size_t i = 1; i < output.size(); i++)
 			{
-				if (output[i][A_INFESTED_KM²] >= 0)
-					output[i][A_INFESTED_KM²_CUMUL] = output[i - 1][A_INFESTED_KM²_CUMUL] + output[i][A_INFESTED_KM²];
-				else output[i][A_INFESTED_KM²_CUMUL] = VMISS;
+				if (output[i][A_INFESTED_KM2] >= 0)
+					output[i][A_INFESTED_KM2_CUMUL] = output[i - 1][A_INFESTED_KM2_CUMUL] + output[i][A_INFESTED_KM2];
+				else output[i][A_INFESTED_KM2_CUMUL] = VMISS;
 			}
 
 			SetOutput(output);
@@ -260,19 +260,19 @@ namespace WBSF
 			}
 		}
 
-		output[0][A_INFESTED_KM²_CUMUL] = (m_initialInfestation + output[0][A_INFESTED_KM²]);
+		output[0][A_INFESTED_KM2_CUMUL] = (m_initialInfestation + output[0][A_INFESTED_KM2]);
 
 
 		for (size_t i = 1; i < output.size(); i++)
 		{
-			if (output[i][A_INFESTED_KM²] >= 0)
+			if (output[i][A_INFESTED_KM2] >= 0)
 			{
-				output[i][A_INFESTED_KM²_CUMUL] = output[i - 1][A_INFESTED_KM²_CUMUL] + output[i][A_INFESTED_KM²];
+				output[i][A_INFESTED_KM2_CUMUL] = output[i - 1][A_INFESTED_KM2_CUMUL] + output[i][A_INFESTED_KM2];
 			}
 			else
 			{
-				output[i][A_INFESTED_KM²_CUMUL] = output[i - 1][A_INFESTED_KM²_CUMUL];
-				output[i][A_INFESTED_KM²] = 0;
+				output[i][A_INFESTED_KM2_CUMUL] = output[i - 1][A_INFESTED_KM2_CUMUL];
+				output[i][A_INFESTED_KM2] = 0;
 				output[i][A_R] = 0;
 			}
 
@@ -324,13 +324,13 @@ namespace WBSF
 			}
 		}
 
-		output[0][D_INFESTED_KM²_CUMUL] = (m_initialInfestation + output[0][D_INFESTED_KM²]);
+		output[0][D_INFESTED_KM2_CUMUL] = (m_initialInfestation + output[0][D_INFESTED_KM2]);
 
 		for (size_t i = 1; i < output.size(); i++)
 		{
-			if (output[i][D_INFESTED_KM²] >= 0)
-				output[i][D_INFESTED_KM²_CUMUL] = output[i - 1][D_INFESTED_KM²_CUMUL] + output[i][D_INFESTED_KM²];
-			else output[i][D_INFESTED_KM²_CUMUL] = VMISS;
+			if (output[i][D_INFESTED_KM2] >= 0)
+				output[i][D_INFESTED_KM2_CUMUL] = output[i - 1][D_INFESTED_KM2_CUMUL] + output[i][D_INFESTED_KM2];
+			else output[i][D_INFESTED_KM2_CUMUL] = VMISS;
 		}
 
 		SetOutput(output);
@@ -452,7 +452,7 @@ namespace WBSF
 		if (!m_weather.IsHourly())
 			m_weather.ComputeHourlyVariables();
 
-		
+
 		if (attacks.empty())
 		{
 			return;
@@ -467,7 +467,7 @@ namespace WBSF
 			y2 = m_weather.GetNbYears() - 1;
 
 		CTPeriod p(m_weather[y1].GetEntireTPeriod(CTM::DAILY).begin(), m_weather[y2].GetEntireTPeriod(CTM::DAILY).end());
-		//Initialize statistics 
+		//Initialize statistics
 		for (size_t g = 0; g < stat.size(); g++)
 			stat[g].Init(p);
 			//stat[g].Init((m_weather[y2].GetEntireTPeriod().End() - m_weather[y1].GetEntireTPeriod().Begin() + 1, m_weather[y1].GetFirstTRef());
@@ -579,13 +579,13 @@ namespace WBSF
 			output[d][c++] += stat[d][S_SEMIVOLTIN];
 			output[d][c++] += stat[d][S_TRIENVOLTIN];
 			output[d][c++] += stat[d][S_NB_OBJECT_ALIVE];
-			_ASSERTE(c == NB_DAILY_OUTPUT - 2);
+			assert(c == NB_DAILY_OUTPUT - 2);
 
 			if (stat[d][S_NB_OBJECT] > 0)
 			{
 				output[d][c++] += stat[d][S_NB_PACK] / stat[d][S_NB_OBJECT];
 				output[d][c++] += stat[d][S_DD_FACTOR] / stat[d][S_NB_OBJECT];
-				_ASSERTE(c == NB_DAILY_OUTPUT);
+				assert(c == NB_DAILY_OUTPUT);
 			}
 		}
 	}
@@ -625,13 +625,13 @@ namespace WBSF
 	output[d][c++] += stat[d][S_SEMIVOLTIN];
 	output[d][c++] += stat[d][S_TRIENVOLTIN];
 	output[d][c++] += stat[d][S_NB_OBJECT_ALIVE];
-	_ASSERTE( c == NB_DAILY_OUTPUT-2 );
+	assert( c == NB_DAILY_OUTPUT-2 );
 
 	if( stat[d][S_NB_OBJECT]>0)
 	{
 	output[d][c++] += stat[d][S_NB_PACK]/stat[d][S_NB_OBJECT];
 	output[d][c++] += stat[d][S_DD_FACTOR]/stat[d][S_NB_OBJECT];
-	_ASSERTE( c == NB_DAILY_OUTPUT );
+	assert( c == NB_DAILY_OUTPUT );
 	}
 	}
 	}
@@ -643,7 +643,7 @@ namespace WBSF
 			return;
 
 		double lastAttack = m_totalInitialAttack;
-		double lastAttackKm² = m_initialInfestation;
+		double lastAttackKm2 = m_initialInfestation;
 
 		for (size_t y = 0; y < m_weather.GetNbYears() - 1; y++)
 		{
@@ -686,7 +686,7 @@ namespace WBSF
 
 					outputStat[A_ATTACK] += stat[d][E_NB_ATTACKS];
 					outputStat[A_SUCCESS_ATTACK] += stat[d][E_NB_SUCESS_ATTACKS];
-					outputStat[A_INFESTED_KM²] += stat[d][E_NB_INFESTED_TREE] / m_forestDensity;
+					outputStat[A_INFESTED_KM2] += stat[d][E_NB_INFESTED_TREE] / m_forestDensity;
 
 					outputStat[A_DD_FACTOR] += stat[d][S_DD_FACTOR] / stat[d][S_NB_OBJECT];
 					outputStat[A_NB_PACK] += stat[d][S_NB_PACK] / stat[d][S_NB_OBJECT];
@@ -716,7 +716,7 @@ namespace WBSF
 			output[y][A_DEAD_BY_TREE] = outputStat[A_DEAD_BY_TREE][SUM];
 			output[y][A_DEAD_DENSITY_DEPENDENCE] = outputStat[A_DEAD_DENSITY_DEPENDENCE][SUM];
 			output[y][A_DEAD_ATTRITION] = outputStat[A_DEAD_ATTRITION][SUM];
-			output[y][A_INFESTED_KM²] = outputStat[A_INFESTED_KM²][SUM];
+			output[y][A_INFESTED_KM2] = outputStat[A_INFESTED_KM2][SUM];
 
 			output[y][A_EGG_DEAD_FROZEN] = outputStat[A_EGG_DEAD_FROZEN][SUM];
 			output[y][A_LARVAL_DEAD_FROZEN] = outputStat[A_LARVAL_DEAD_FROZEN][SUM];
@@ -780,7 +780,7 @@ namespace WBSF
 				outputStat[A_TRIENVOLTIN] += stat[d][S_TRIENVOLTIN];
 				outputStat[A_SUCCESS_ATTACK] += stat[d][E_NB_SUCESS_ATTACKS];
 				outputStat[A_ATTACK] += stat[d][E_NB_ATTACKS];
-				outputStat[A_INFESTED_KM²] += stat[d][E_NB_INFESTED_TREE] / m_forestDensity;
+				outputStat[A_INFESTED_KM2] += stat[d][E_NB_INFESTED_TREE] / m_forestDensity;
 				outputStat[A_DD_FACTOR] += stat[d][S_DD_FACTOR] / stat[d][S_NB_OBJECT];
 				outputStat[A_NB_PACK] += stat[d][S_NB_PACK] / stat[d][S_NB_OBJECT];
 			}
@@ -799,7 +799,7 @@ namespace WBSF
 		output[A_DEAD_BY_TREE] = outputStat[A_DEAD_BY_TREE][SUM];
 		output[A_DEAD_DENSITY_DEPENDENCE] = outputStat[A_DEAD_DENSITY_DEPENDENCE][SUM];
 		output[A_DEAD_ATTRITION] = outputStat[A_DEAD_ATTRITION][SUM];
-		output[A_INFESTED_KM²] = outputStat[A_INFESTED_KM²][SUM];
+		output[A_INFESTED_KM2] = outputStat[A_INFESTED_KM2][SUM];
 		output[A_EGG_DEAD_FROZEN] = outputStat[A_EGG_DEAD_FROZEN][SUM];
 		output[A_LARVAL_DEAD_FROZEN] = outputStat[A_LARVAL_DEAD_FROZEN][SUM];
 		output[A_PUPA_DEAD_FROZEN] = outputStat[A_PUPA_DEAD_FROZEN][SUM];
@@ -825,8 +825,8 @@ namespace WBSF
 
 		//transfer your parameters here
 		size_t cur = 0;
-		m_n0 = parameters[cur++].GetInt();//Number of females/m² in the initial attack 
-		size_t m = parameters[cur++].GetInt();// peak Date of initial attack 
+		m_n0 = parameters[cur++].GetInt();//Number of females/m² in the initial attack
+		size_t m = parameters[cur++].GetInt();// peak Date of initial attack
 		size_t d = parameters[cur++].GetInt() - 1;//and its standard deviation
 
 		//CTRef peakDate = CTRef( m_weather.GetFirstYear(), m, d);
@@ -875,9 +875,9 @@ namespace WBSF
 		m_attacks.Initialize(m_peakDate, m_attackStDev, m_nbObjects, m_totalInitialAttack, OVIPOSITING_ADULT, FEMALE);
 
 
-		//Peak initial attack date +- 3.5*attackVariance must be sometime in first year 
-		//_ASSERTE((m_peakDate - int(3 * m_attackStDev)) >= m_weather[0].GetFirstTRef());
-		//_ASSERTE((m_peakDate + int(3 * m_attackStDev)) <= m_weather[0].GetLastTRef());
+		//Peak initial attack date +- 3.5*attackVariance must be sometime in first year
+		//assert((m_peakDate - int(3 * m_attackStDev)) >= m_weather[0].GetFirstTRef());
+		//assert((m_peakDate + int(3 * m_attackStDev)) <= m_weather[0].GetLastTRef());
 
 		return msg;
 	}
@@ -916,7 +916,7 @@ namespace WBSF
 			{
 				if (m_output.is_inside(m_SAResult[k].m_ref))
 				{
-					if (m_OptimizeOn == 0) //R 
+					if (m_OptimizeOn == 0) //R
 					{
 						double obs = m_SAResult[k].m_obs[0];
 						double sim = m_output[m_SAResult[k].m_ref][A_R];
@@ -933,7 +933,7 @@ namespace WBSF
 					if (m_OptimizeOn == 2) //Km²
 					{
 						double obs = m_SAResult[k].m_obs[1];
-						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM²];
+						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM2];
 
 						if (obs > -999 && sim > -9999)
 							stat.Add(sim, obs);
@@ -941,7 +941,7 @@ namespace WBSF
 					if (m_OptimizeOn == 3) //log(Km²)
 					{
 						double obs = m_SAResult[k].m_obs[1];
-						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM²];
+						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM2];
 
 						if (obs > -999 && sim > -9999)
 							stat.Add(log(sim + 1), log(obs + 1));
@@ -949,14 +949,14 @@ namespace WBSF
 					if (m_OptimizeOn == 4) //P
 					{
 						double obs = m_SAResult[k].m_obs[2];
-						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM²_CUMUL];
+						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM2_CUMUL];
 						if (obs > -999 && sim > -9999)
 							stat.Add(sim, obs);
 					}
 					if (m_OptimizeOn == 5) //log(P)
 					{
 						double obs = m_SAResult[k].m_obs[2];
-						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM²_CUMUL];
+						double sim = m_output[m_SAResult[k].m_ref][A_INFESTED_KM2_CUMUL];
 						if (obs > -999 && sim > -9999)
 							stat.Add(log(sim + 0.01), log(obs + 0.01));
 					}

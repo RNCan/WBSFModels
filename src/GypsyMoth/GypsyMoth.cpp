@@ -17,7 +17,7 @@ namespace WBSF
 
 	CGypsyMoth::CGypsyMoth(int hatchModelType, const CGMEggParam& eggParam)
 	{
-		_ASSERTE(hatchModelType >= JOHNSON_MODEL && hatchModelType < NB_HATCH_MODEL);
+		assert(hatchModelType >= JOHNSON_MODEL && hatchModelType < NB_HATCH_MODEL);
 
 		m_pHatch = NULL;
 		CreateHatchObject(hatchModelType, eggParam);
@@ -52,7 +52,7 @@ namespace WBSF
 		case GRAY_MODEL:m_pHatch = new CGrayModel(eggParam); break;
 		}
 
-		_ASSERTE(m_pHatch);
+		assert(m_pHatch);
 	}
 
 	void CGypsyMoth::SimulateDeveloppement(const CWeatherStation& weather, const CTPeriod& p)
@@ -94,18 +94,18 @@ namespace WBSF
 
 		static const double sex_ratio = .5;
 
-		bool started = false;	// flag simulation in progress 
+		bool started = false;	// flag simulation in progress
 
-		//loop over days, from first hatch-on. 
+		//loop over days, from first hatch-on.
 		//Compute hourly temperatures, calculate development
-		//on an hourly basis BUT update on a daily basis 
+		//on an hourly basis BUT update on a daily basis
 		//	int nbDay = weather.GetNbDay();
 		//int firstHatch = m_pHatch->GetFirstHatch();
 		CTRef firstHatch = m_pHatch->GetFirstHatch();
 		for (CTRef day = firstHatch; day <= p.end(); day++)
 		{
 			//compute day's hourly temperatures
-			//CDailyWaveVector hourly;// hourly temperature array 
+			//CDailyWaveVector hourly;// hourly temperature array
 			//weather.GetDay(day).GetAllenWave(hourly, 12.0, gTimeStep);
 			std::vector<double> hourly(6);
 			for (size_t hh = 0; hh < 6; hh++)
@@ -123,13 +123,13 @@ namespace WBSF
 							double devel_sum = develop(sex, stage, hourly);//day's total development
 							age_cohort[sex][stage][cohort] += devel_sum;
 
-							// attrition based on stage-specific m_survival rates 
+							// attrition based on stage-specific m_survival rates
 							if (devel_sum > 0)
 								if (m_bApplyMortality)
 									den_cohort[sex][stage][cohort] *= (double)(pow(m_SSSurvivalRate[sex][stage], devel_sum));
 
-							// compute recruitment to next stage 
-							double prop_eme_p = eme_cohort[sex][stage][cohort];// previous-day emergence 
+							// compute recruitment to next stage
+							double prop_eme_p = eme_cohort[sex][stage][cohort];// previous-day emergence
 							eme_cohort[sex][stage][cohort] = cdfy(stage, age_cohort[sex][stage][cohort]);
 							if (eme_cohort[sex][stage][cohort] > 0.995)
 								eme_cohort[sex][stage][cohort] = 1;
@@ -145,7 +145,7 @@ namespace WBSF
 				}
 			}
 			//recruitment into 1st instar
-			// start a new cohort only if a significant amount of hatch occurred (>1/1000th) 
+			// start a new cohort only if a significant amount of hatch occurred (>1/1000th)
 
 			if (m_pHatch->GetEggs()[day][HATCHING] > 0.00001 && n_cohorts[0][0] < MAXCOHORTS - 1)
 			{
@@ -180,9 +180,9 @@ namespace WBSF
 				}
 			}
 
-			// compile stage frequencies 
-			double tot_pop = 0;	// total population alive today 
-			double ai = 0;			// accumulator for average instar 
+			// compile stage frequencies
+			double tot_pop = 0;	// total population alive today
+			double ai = 0;			// accumulator for average instar
 			for (int stage = 0; stage < 8; stage++)
 			{
 				m_stageFreq[day][L1 + stage] = 0;
@@ -198,15 +198,15 @@ namespace WBSF
 				tot_pop += m_stageFreq[day][L1 + stage];
 				ai += m_stageFreq[day][L1 + stage] * stage;
 			}
-			_ASSERTE(m_stageFreq[day][MALE_ADULT] == 0);
-			_ASSERTE(m_stageFreq[day][FEMALE_ADULT] == 0);
+			assert(m_stageFreq[day][MALE_ADULT] == 0);
+			assert(m_stageFreq[day][FEMALE_ADULT] == 0);
 
 			m_stageFreq[day][DEAD_ADULT] = recruits[0][8] + recruits[1][8];
 
 
 			//recruits[0][8] = 0;
 			//recruits[1][8] = 0;
-			// Male and female moths separately 
+			// Male and female moths separately
 			for (int cohort = first_cohort[0][7]; cohort < n_cohorts[0][7]; ++cohort)
 			{
 				m_stageFreq[day][MALE_ADULT] += den_cohort[0][7][cohort] *
@@ -229,7 +229,7 @@ namespace WBSF
 			}
 			else
 			{
-				_ASSERTE(m_stageFreq[day][AVR_INS] == 0);
+				assert(m_stageFreq[day][AVR_INS] == 0);
 				if (started)
 				{
 					if (m_stageFreq[day][DEAD_ADULT] > 99.99)
@@ -306,14 +306,14 @@ namespace WBSF
 			CTRef midWindter = m_stageFreq.GetFirstTRef() + int32_t(m_stageFreq.GetTPeriod().length(CTM::DAILY) / 2);
 			//mid summer is 182 day after mid winter
 			CTRef midSummer = midWindter + 182;
-			//CTRef firstDay = GetFirstDay(); 
+			//CTRef firstDay = GetFirstDay();
 			CTRef firstHatch = GetFirstHatch();
 			CTRef medianDiapause = m_pHatch->GetMedian(DIAPAUSE);
 			CTRef medianPosDiapause = m_pHatch->GetMedian(POSDIAPAUSE);
 
 			//Criterion 1: Did the egg stage last less than 365 days ?
 			//if((firstHatch-firstDay)<=365)
-			//flags |= DIAPAUSE_BEFORE_WINTER; 
+			//flags |= DIAPAUSE_BEFORE_WINTER;
 
 			//Criterion 1: Did the diapause last less than mid winter?
 			if (medianDiapause <= midWindter)
@@ -341,7 +341,7 @@ namespace WBSF
 	//for the second winter, all states must be 0 except adult
 	bool CGypsyMoth::TestSecondWinter()const
 	{
-		//_ASSERTE(m_stageFreq.is_inside(midWinterDate));
+		//assert(m_stageFreq.is_inside(midWinterDate));
 
 		CTRef lastDate = m_stageFreq.GetLastTRef();
 

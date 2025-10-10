@@ -67,7 +67,7 @@ namespace WBSF
 			for (size_t p = 0; p < NB_C_PARAMS; p++)
 				m_C_param[p] = parameters[c++].GetFloat();
 
-			
+
 		}
 
 
@@ -123,7 +123,7 @@ namespace WBSF
 		//pHost->Initialize<CLeucotaraxisPiniperda>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, PUPAE));
 		pHost->Initialize<CLeucotaraxisPiniperda>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, double(LARVAE)+ m_C_param[0]));
 
-		//add host to stand			
+		//add host to stand
 		stand.m_host.push_front(pHost);
 
 		CTPeriod p = weather[year].GetEntireTPeriod(CTM(CTM::DAILY));
@@ -162,7 +162,7 @@ namespace WBSF
 					for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					{
 						output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
-						_ASSERTE(!_isnan(output[d][s]));
+						assert(!_isnan(output[d][s]));
 					}
 				}
 			}
@@ -226,7 +226,7 @@ namespace WBSF
 		//	{
 		//		CModelStatVector CDD;
 		//
-		//		//degree day of the La g2 
+		//		//degree day of the La g2
 		//		CDegreeDays DDmodel(CDegreeDays::ALLEN_WAVE, m_adult_emerg[Τᴴ¹], m_adult_emerg[Τᴴ²]);
 		//		DDmodel.GetCDD(int(m_adult_emerg[delta]), m_weather, CDD);
 		//

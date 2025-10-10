@@ -41,7 +41,7 @@ namespace WBSF
 		NB_INPUT_PARAMETER = -1;
 		VERSION = "1.0.3 (2023)";
 
-		
+
 		m_bCumul = false;
 		m_bApplyAttrition = true;
 		m_generationSurvival = 0.4;
@@ -82,7 +82,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		size_t c = 0; 
+		size_t c = 0;
 
 		//		m_stage = parameters[c++].GetInt() + 1;
 			//	m_T = parameters[c++].GetInt()+1;
@@ -106,7 +106,7 @@ namespace WBSF
 				m_EAS[p] = parameters[c++].GetFloat();
 			}
 		}
-		
+
 
 		return msg;
 	}
@@ -131,7 +131,7 @@ namespace WBSF
 		//This is where the model is actually executed
 		m_output.Init(weather.GetEntireTPeriod(CTM(CTM::DAILY)), NB_DAILY_OUTPUTS, 0);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y = 0; y < weather.size(); y++)
 		{
@@ -158,7 +158,7 @@ namespace WBSF
 					}
 				}
 
-				
+
 				m_output[TRef][O_IN_DIAPAUSE] = diapause[SUM];
 				m_output[TRef][O_D_DAY_LENGTH] = weather.GetDayLength(TRef) / 3600.;
 			}
@@ -179,7 +179,7 @@ namespace WBSF
 								for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 								{
 									m_output[d][ss] = m_output[d - 1][ss] + m_output[d][ss] * 100 / stat_g1[SUM];
-									_ASSERTE(!_isnan(m_output[d][ss]));
+									assert(!_isnan(m_output[d][ss]));
 								}
 							}
 						}
@@ -198,7 +198,7 @@ namespace WBSF
 		stand.m_bApplyAttrition = m_bApplyAttrition;
 		stand.m_generationSurvival = m_generationSurvival;
 
-		
+
 		//Set parameters to equation
 
 		assert(stand.m_equations.m_EWD.size() == m_EWD.size());
@@ -225,11 +225,11 @@ namespace WBSF
 
 		pHost->Initialize<CAprocerosLeucopoda>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, TZZ::PUPA, WBSF::FEMALE, true, 0));
 
-		//add host to stand			
+		//add host to stand
 		stand.m_host.push_front(pHost);
 
 		CTPeriod p = weather[year].GetEntireTPeriod(CTM(CTM::DAILY));
-		
+
 
 
 		for (CTRef d = p.begin(); d <= p.end(); d++)
@@ -271,7 +271,7 @@ namespace WBSF
 		//				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 		//				{
 		//					output[g][d][s] = output[g][d - 1][s] + output[g][d][s] * 100 / stat[SUM];
-		//					_ASSERTE(!_isnan(output[g][d][s]));
+		//					assert(!_isnan(output[g][d][s]));
 		//				}
 		//			}
 		//		}
@@ -279,7 +279,7 @@ namespace WBSF
 		//}
 	}
 
-	
+
 
 	//void CAprocerosLeucopodaModel::GetCDD(int year, const CWeatherYears& weather, CModelStatVector& CDD)
 	//{
@@ -322,7 +322,7 @@ namespace WBSF
 	size_t GetStage(std::string name)
 	{
 		static const array<const char*, NB_STAGES> STAGE_NAME = { {"EGG", "LARVA", "PREPUPA", "PUPA", "ADULT"} };
-		
+
 		auto it = find(STAGE_NAME.begin(), STAGE_NAME.end(), MakeUpper(name));
 		return distance(STAGE_NAME.begin(), it);
 	}
@@ -439,9 +439,9 @@ namespace WBSF
 
 	bool CAprocerosLeucopodaModel::GetFValueDaily(CStatisticXY& stat)
 	{
-		
+
 		assert(!m_SAResult.empty() );
-		
+
 		//CTZZStand* pStand = GetStand();
 		//for (size_t p = 0; p < m_EAS.size(); p++)
 			//pStand->m_equations.m_EAS[p] = m_EAS[p];
@@ -483,7 +483,7 @@ namespace WBSF
 		//boost::math::rayleigh_distribution<double> emerge_dist(m_P[ѕ]);
 
 
-		//CModelStatVector CDD; 
+		//CModelStatVector CDD;
 		//GetCDD(m_weather, CDD);
 
 		//double n = 0;
@@ -506,12 +506,12 @@ namespace WBSF
 		for (size_t i = 0; i < m_SAResult.size(); i++)
 		{
 			size_t s = m_SAResult[i].m_obs[I_STAGE];
-			
-			
+
+
 			//double GDD = CDD[m_SAResult[i].m_ref][CDegreeDays::S_DD];
 			double obs = m_SAResult[i].m_obs[I_CUMUL];
 			double sim = m_output[m_SAResult[i].m_ref][GetStageIndex(m_SAResult[i].m_obs)];//Larve Generation 1
-			
+
 			stat.Add(obs, sim);
 
 		}//for all results
@@ -582,7 +582,7 @@ namespace WBSF
 
 	//void CAprocerosLeucopodaModel::FinalizeStat(CStatisticXY& stat)
 	//{
-	//	
+	//
 	//}
 }
 

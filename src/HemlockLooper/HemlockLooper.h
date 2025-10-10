@@ -2,10 +2,10 @@
 // File: HL.h
 //
 // Class: CHemlockLooper, CHLVector
-//          
 //
-// Descrition: CHemlockLooper represent one HL insect. 
-//			   CHLVector is a vector of HL insect. 
+//
+// Descrition: CHemlockLooper represent one HL insect.
+//			   CHLVector is a vector of HL insect.
 //*****************************************************************************
 
 #pragma once
@@ -22,9 +22,9 @@
 namespace WBSF
 {
 
-	
+
 	enum THLStat{
-		S_EGGS, S_L1, S_L2, S_L3, S_L4, S_PUPAE, S_ADULTS, S_DEAD_ADULTS, S_BROODS,  
+		S_EGGS, S_L1, S_L2, S_L3, S_L4, S_PUPAE, S_ADULTS, S_DEAD_ADULTS, S_BROODS,
 		E_EGGS, E_L1, E_L2, E_L3, E_L4, E_PUPAE, E_ADULTS, E_DEAD_ADULTS, E_FEMALES, E_BROODS, E_SWEIGHT, E_SENERGY, E_SCOLD, E_SHATCH, E_NB_HATCH,
 		S_DEAD_ATTRITION, S_DEAD_FROZEN, S_DEAD_OVERWINTER, S_DEAD, S_AVERAGE_INSTAR,
 		NB_HL_STAT
@@ -49,7 +49,7 @@ namespace WBSF
 		virtual size_t GetNbStages()const{ return HemlockLooper::NB_STAGES; }
 		virtual void HappyNewYear();
 
-		double GetRelativeDevRate(int s)const { _ASSERTE(s >= 0 && s < HemlockLooper::NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage" 
+		double GetRelativeDevRate(int s)const { assert(s >= 0 && s < HemlockLooper::NB_STAGES); return m_relativeDevRate[s]; } //Reports individual's relative development rate in "stage"
 
 	protected:
 

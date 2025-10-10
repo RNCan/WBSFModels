@@ -33,7 +33,7 @@ namespace WBSF
 		m_bApplyAttrition = false;
 		m_bCumul = false;
 
-		
+
 		m_adult_emerg = CLeucotaraxisArgenticollisEquations::ADULT_EMERG;
 		m_pupa_param = CLeucotaraxisArgenticollisEquations::PUPA_PARAM;
 		m_C_param = CLeucotaraxisArgenticollisEquations::C_PARAM;
@@ -68,7 +68,7 @@ namespace WBSF
 
 			for (size_t p = 0; p < NB_EOD_PARAMS; p++)
 				m_EOD_param[p] = parameters[c++].GetFloat();
-			
+
 
 			//m_pupa_param = { {0.0196,	0.0530, 3.1,	34.9,	34.9,	1.6836, 0.3828} };
 		}
@@ -93,7 +93,7 @@ namespace WBSF
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		m_output.Init(p, NB_STATS, 0);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
@@ -127,7 +127,7 @@ namespace WBSF
 
 		pHost->Initialize<CLeucotaraxisArgenticollis>(CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0, 400, 100, PUPAE));
 
-		//add host to stand			
+		//add host to stand
 		stand.m_host.push_front(pHost);
 
 		CTPeriod p = weather[year].GetEntireTPeriod(CTM(CTM::DAILY));
@@ -161,7 +161,7 @@ namespace WBSF
 						for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 						{
 							output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
-							_ASSERTE(!_isnan(output[d][s]));
+							assert(!_isnan(output[d][s]));
 						}
 					}
 				}
@@ -198,7 +198,7 @@ namespace WBSF
 				m_DOY[obs.m_obs[O_G]].insert(obs.m_ref.GetDOY());
 			}
 		}
-		
+
 
 
 
@@ -268,7 +268,7 @@ namespace WBSF
 		//	{
 		//		CModelStatVector CDD;
 		//
-		//		//degree day of the La g2 
+		//		//degree day of the La g2
 		//		CDegreeDays DDmodel(CDegreeDays::ALLEN_WAVE, m_adult_emerg[Τᴴ¹], m_adult_emerg[Τᴴ²]);
 		//		DDmodel.GetCDD(int(m_adult_emerg[delta]), m_weather, CDD);
 		//
@@ -319,7 +319,7 @@ namespace WBSF
 
 			//if (m_SAResult.back().m_obs.size() == NB_INPUTS_INTERNAL)
 			//{
-			//	
+			//
 			//
 			//
 			//	CModelStatVector P;
@@ -356,7 +356,7 @@ namespace WBSF
 						size_t stage =  G == 0 ? S_EMERGENCE0 : S_EMERGENCE1a;
 						double obs_y = round(m_SAResult[i].m_obs[O_P], 4);
 						double sim_y = round(output[m_SAResult[i].m_ref][stage], 4);
-						
+
 
 						if (obs_y > -999)
 						{
@@ -373,7 +373,7 @@ namespace WBSF
 								{
 									obs_x = round(100 * (obs_x - m_DOY[G][LOWEST]) / m_DOY[G][RANGE], 4);
 									sim_x = round(100 * (sim_x - m_DOY[G][LOWEST]) / m_DOY[G][RANGE], 4);
-									
+
 									//for (size_t ii = 0; ii < m_SAResult[i].m_obs[O_N]; ii++)
 										stat.Add(obs_x, sim_x);
 								}

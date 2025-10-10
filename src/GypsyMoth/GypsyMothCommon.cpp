@@ -41,11 +41,11 @@
 
 double develop(int sex, int stage, std::vector<double>& t)
 {
-	_ASSERTE( t.size() > 0);
+	assert( t.size() > 0);
 	//int hour;
 	double devel_sum = 0;
 
-	for (size_t i=0; i<t.size(); i++) 
+	for (size_t i=0; i<t.size(); i++)
 	{
 		devel_sum += rat(sex, stage, t[i]);
 	}

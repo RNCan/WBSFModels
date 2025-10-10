@@ -2,14 +2,14 @@
 // File: LeucotaraxisArgenticollisEquations.h
 //
 // Class: CLeucotaraxisArgenticollisEquations
-//          
 //
-// Description: 
+//
+// Description:
 //				stage development rates, relative development rates
 //				stage development rates use optimization table lookup
 //
 //*****************************************************************************
-// 18/10/2022   Rémi Saint-Amant    Creation 
+// 18/10/2022   Rémi Saint-Amant    Creation
 //*****************************************************************************
 #include "LeucotaraxisArgenticollisEquations.h"
 
@@ -35,7 +35,7 @@ namespace WBSF
 	const array<double, LAZ::NB_PUPA_PARAMS> CLeucotaraxisArgenticollisEquations::PUPA_PARAM = { 0.29, 0.1149, 3.1, 27.7, 34.9, 4.588, 0.45 };//Wang/Lang/Ding pupa parameters without diapause
 	const array<double, LAZ::NB_C_PARAMS> CLeucotaraxisArgenticollisEquations::C_PARAM = {0, 2.548, 9.723, 0 };//correction factor to get reasonable parameters for Pupae
 	const array<double, LAZ::NB_EOD_PARAMS> CLeucotaraxisArgenticollisEquations::EOD_PARAM = { -999, 0.04687 };//End of diapause correction
-	
+
 
 	CLeucotaraxisArgenticollisEquations::CLeucotaraxisArgenticollisEquations(const CRandomGenerator& RG) :
 		CEquationTableLookup(RG, LAZ::NB_STAGES, -20, 35, 0.25)
@@ -78,7 +78,7 @@ namespace WBSF
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], p, T));
 
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
@@ -87,7 +87,7 @@ namespace WBSF
 	{
 		vector<double> p(2) = { 1.0/22.5*m_EOD_param[EOD_A],0.0 }
 		double r = max(0.0, CDevRateEquation::GetRate(CDevRateEquation::Poly1, p, T));
-		
+
 		return r;
 	}*/
 
@@ -100,7 +100,7 @@ namespace WBSF
 		vector<double> p(begin(m_pupa_param), end(m_pupa_param));
 
 		double r = max(0.0, min(0.5, CDevRateEquation::GetRate(CDevRateEquation::WangLanDing_1982, p, T)));
-		_ASSERTE(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!_isnan(r) && _finite(r) && r >= 0);
 
 		return r;
 	}
@@ -108,7 +108,7 @@ namespace WBSF
 	double CLeucotaraxisArgenticollisEquations::GetUndiapausedPupaRDR(size_t g)const
 	{
 		//double sigma = g == 0 ? m_pupa_param[PUPA_S] : PUPA_PARAM[PUPA_S];
-		
+
 		double sigma = m_pupa_param[PUPA_S];
 		boost::math::lognormal_distribution<double> ln_dist(-WBSF::square(sigma) / 2.0, sigma);
 		double rT = boost::math::quantile(ln_dist, m_randomGenerator.Rand(0.001, 0.999));
@@ -116,7 +116,7 @@ namespace WBSF
 		//while (rT < 0.2 || rT>2.6)//base on individual observation
 			//rT = boost::math::quantile(ln_dist, m_randomGenerator.Randu(true, true));
 
-		_ASSERTE(!_isnan(rT) && _finite(rT));
+		assert(!_isnan(rT) && _finite(rT));
 
 		//covert relative development time into relative development rate
 		//double rR = 1 / rT;don't do that!!
@@ -126,7 +126,7 @@ namespace WBSF
 
 
 	//*****************************************************************************
-	//CSBRelativeDevRate : compute individual relative development rate 
+	//CSBRelativeDevRate : compute individual relative development rate
 
 
 	double CLeucotaraxisArgenticollisEquations::GetRelativeDevRate(size_t s)const
@@ -141,7 +141,7 @@ namespace WBSF
 			{0.35},//Range 4 to 57 days, median 22.5 days, n = 16 females
 		};
 
-		
+
 		if (RDT[s][σ] <= 0)
 			return 1;
 
@@ -157,7 +157,7 @@ namespace WBSF
 			double L = boost::math::quantile(lndist, m_randomGenerator.Rand(0.001, 0.999));
 			RDR = L_median / L;
 		}
-		else 
+		else
 		{
 			boost::math::lognormal_distribution<double> lndist(-WBSF::square(rdt) / 2.0, rdt);
 			RDR = boost::math::quantile(lndist, m_randomGenerator.Randu(true, true));
@@ -167,7 +167,7 @@ namespace WBSF
 
 
 
-		_ASSERTE(!_isnan(RDR) && _finite(RDR));
+		assert(!_isnan(RDR) && _finite(RDR));
 
 		//covert relative development time into relative development rate
 		//double rR = 1/rT;//do not inverse
@@ -202,7 +202,7 @@ namespace WBSF
 			{},//Adult
 		};
 
-		
+
 
 
 
@@ -211,7 +211,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], p, T)));
 
-		_ASSERTE(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
 
 		return sr;
 	}
@@ -263,7 +263,7 @@ namespace WBSF
 
 		boost::math::lognormal_distribution<double> To(log(E - m), s);
 
-		double to = max(0.0, E - boost::math::quantile(To, m_randomGenerator.Rand(0.01, 0.99)));//Give 4 to 18 
+		double to = max(0.0, E - boost::math::quantile(To, m_randomGenerator.Rand(0.01, 0.99)));//Give 4 to 18
 
 
 		return to;//adjusted to avoid unrealistic rate for pupa

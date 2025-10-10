@@ -5,9 +5,6 @@
       <UniqueIdentifier>{da3796b8-76b6-4d69-a4ca-c7582985183a}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp</Extensions>
     </Filter>
-    <Filter Include="Source Files\MPBBase">
-      <UniqueIdentifier>{471001d6-80ea-43a4-9da3-9e1a9c8c1c59}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\MPB\DevelopementVector.cpp">
@@ -19,21 +16,18 @@
     <ClCompile Include="..\..\src\MPB\MPBColdTolerance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\MPB\SLRModel\Generations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\MPB\SLRModel\MPB-SLRModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\MPB\SLRModel\SLR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\MPB\Generations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\MPB\DevelopementVector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\MPB\SLRModel\Generations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\MPB\MPBColdTolerance.h">
@@ -46,6 +40,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\MPB\SLRModel\SLR.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MPB\Generations.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

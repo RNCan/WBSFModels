@@ -2,7 +2,7 @@
 // File: DevelopementVector.cpp
 //
 // Class: CDevelopementVector
-//          
+//
 //
 //************** MODIFICATIONS  LOG ********************
 // 15/07/2012   Rémi Saint-Amant    Creation
@@ -59,18 +59,18 @@ namespace WBSF
 
 	//*****************************************************
 	// GetNextStageDay : Find the day when the bug change of stage
-	//          
+	//
 	// Input :
 	//  devRates : developement rate table
 	//  firstDay : The first day in the current stage
 	//  stage : The stage to evaluate
 	//
-	// Output 
+	// Output
 	//  return: day of the next stage if sussesfukl. -1 otherwise.
 	//*****************************************************
 	size_t CMPBDevelopmentVector::GetNextStageDay(size_t firstDay, size_t s, double threshold)const
 	{
-		_ASSERTE(s >= 0 || s < NB_STAGES);
+		assert(s >= 0 || s < NB_STAGES);
 
 		size_t index = NOT_INIT;
 
@@ -79,7 +79,7 @@ namespace WBSF
 
 		size_t maxDay = size() * 2;//simulate on 2 years max
 
-		//accumulate all values until reach the next stage 
+		//accumulate all values until reach the next stage
 		for (size_t d = firstDay; d < maxDay; d++)
 		{
 			size_t jd = d%size();
@@ -91,7 +91,7 @@ namespace WBSF
 			}
 		}
 
-		_ASSERTE(index == NOT_INIT || index < maxDay);
+		assert(index == NOT_INIT || index < maxDay);
 
 		return index;
 	}

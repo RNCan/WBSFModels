@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModelBase/BioSIMModelBase.h"
+#include "ModelBased/BioSIMModelBase.h"
 #include "SpruceBeetle.h"
 
 namespace WBSF

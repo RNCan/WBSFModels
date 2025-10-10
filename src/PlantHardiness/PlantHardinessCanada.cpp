@@ -39,7 +39,7 @@ namespace WBSF
 			}
 		}
 
-		_ASSERT(index < 12);
+		assert(index < 12);
 		return index;
 	}
 
@@ -58,7 +58,7 @@ namespace WBSF
 			}
 		}
 
-		_ASSERT(index < 12);
+		assert(index < 12);
 		return index;
 	}
 
@@ -125,7 +125,7 @@ namespace WBSF
 		//cm = coldest month
 		size_t cm = GetColdestMonth(weather);
 		size_t wm = GetWarmerMonth(weather);
-		
+
 		double X1 = GetNormalStat(weather, cm, H_TMIN)[MEAN];
 		double X2 = GetMeanFrosFreePeriod(weather);
 		double P = GetJuneNovemberRain(weather);
@@ -138,8 +138,8 @@ namespace WBSF
 		//Approximation of max wind gust. max gust is 2.5 time the maximum daily mean wind speed (from wikipedia: 2.27-2.75)
 		//https://en.wikipedia.org/wiki/Wind_speed
 		double X7 = std::min(180.0, weather.GetStat(H_WNDS)[HIGHEST]*2.5);
-	
-		//Y: estimated index of suitability 
+
+		//Y: estimated index of suitability
 		double Y = -67.62 + 1.734*X1 + 0.1868*X2 + 69.77*X3 + 1.256*X4 + 0.006119*X5 + 22.37*X6 - 0.01832*X7;
 
 		return std::max(0.0, Y);

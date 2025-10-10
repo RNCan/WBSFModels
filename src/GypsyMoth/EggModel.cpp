@@ -44,7 +44,7 @@ namespace WBSF
 	//cumulatif
 	CTRef CEggModel::GetMedian(int s)const
 	{
-		_ASSERTE(s >= 0 && s <= 4);
+		assert(s >= 0 && s <= 4);
 
 		CTRef median;
 
