@@ -37,7 +37,7 @@ vcxprojets = list.files(path = paste0(path,"msvc/"), pattern = ".vcxproj$", recu
 
 for( i in 1:length(vcxprojets))
 {
-#i=2
+#i=32
 
 	file_title = sub("\\.[^.]+$", "", basename(vcxprojets[i]))
 	file_name_out = sprintf( "%s%s.cbp", file_title,platform);

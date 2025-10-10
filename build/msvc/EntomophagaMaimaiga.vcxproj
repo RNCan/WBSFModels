@@ -39,7 +39,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3C00A8BE-839F-4CEB-939F-CAE90A899B4B}</ProjectGuid>
     <RootNamespace>Models</RootNamespace>
-    <ProjectName>Entomophaga_maimaiga</ProjectName>
+    <ProjectName>EntomophagaMaimaiga</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
