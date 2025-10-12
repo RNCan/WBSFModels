@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
   <FileVersion major="1" minor="6"/>
   <Project>
-    <Option title="DegreeDay"/>
+    <Option title="EntomophagaMaimaiga"/>
     <Option pch_mode="2"/>
     <Option compiler="gcc"/>
     <Build>
       <Target title="Debug">
-        <Option output="bin/Debugx64/DegreeDay.so" prefix_auto="0" extension_auto="0"/>
+        <Option output="bin/Debugx64/EntomophagaMaimaiga.so" prefix_auto="0" extension_auto="0"/>
         <Option object_output="obj/Debugx64/"/>
         <Option type="3"/>
         <Option compiler="gcc"/>
@@ -37,6 +37,8 @@
           <Add library="libboost_serialization.a"/>
           <Add library="libgomp.a"/>
           <Add directory="../../../WBSF/lib/Debugx64"/>
+          <Add library="libgsl.a"/>
+          <Add library="libgsl.a"/>
         </Linker>
         <ExtraCommands>
           <Add after="cp  &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;"/>
@@ -44,7 +46,7 @@
         </ExtraCommands>
       </Target>
       <Target title="Release">
-        <Option output="bin/Releasex64/DegreeDay.so" prefix_auto="0" extension_auto="0"/>
+        <Option output="bin/Releasex64/EntomophagaMaimaiga.so" prefix_auto="0" extension_auto="0"/>
         <Option object_output="obj/Releasex64/"/>
         <Option type="3"/>
         <Option compiler="gcc"/>
@@ -74,6 +76,8 @@
           <Add library="libboost_serialization.a"/>
           <Add library="libgomp.a"/>
           <Add directory="../../../WBSF/lib/Releasex64"/>
+          <Add library="libgsl.a"/>
+          <Add library="libgsl.a"/>
         </Linker>
         <ExtraCommands>
           <Add after="cp &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;"/>
@@ -88,7 +92,16 @@
     <Extensions>
       <lib_finder disable_auto="1"/>
     </Extensions>
-    <Unit filename="..\..\src\Climatic\DegreeDaysModel.h"/>
-    <Unit filename="..\..\src\Climatic\DegreeDaysModel.cpp"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\DDEVF.h"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\eco-climate.h"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\EntomophagaMaimaigaModel.h"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\Inputs.h"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\ODE_Solver.h"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\random_setup.h"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\DDEVF.cpp"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\eco-climate.cpp"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\EntomophagaMaimaigaModel.cpp"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\Inputs.cpp"/>
+    <Unit filename="..\..\src\Entomophaga_maimaiga\ODE_Solver.cpp"/>
   </Project>
 </CodeBlocks_project_file>

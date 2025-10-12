@@ -24,8 +24,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
-					<Add library="libWeatherBased.a" />
 					<Add library="libModelBased.a" />
+					<Add library="libWeatherBased.a" />
 					<Add library="libBasic.a" />
 					<Add library="libboost_filesystem.a" />
 					<Add library="libboost_timer.a" />
@@ -37,7 +37,7 @@
 					<Add directory="../../../WBSF/lib/Debugx64" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='$if(yes){cp  &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;}' />
+					<Add after='cp  &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -59,13 +59,20 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-m64" />
-					<Add library="libWeatherBased.a" />
 					<Add library="libModelBased.a" />
+					<Add library="libWeatherBased.a" />
 					<Add library="libBasic.a" />
+					<Add library="libboost_filesystem.a" />
+					<Add library="libboost_timer.a" />
+					<Add library="libboost_iostreams.a" />
+					<Add library="libboost_locale.a" />
+					<Add library="libboost_process.a" />
+					<Add library="libboost_serialization.a" />
+					<Add library="libgomp.a" />
 					<Add directory="../../../WBSF/lib/Releasex64" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='$if(yes){cp &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;}' />
+					<Add after='cp &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;../../../WBSFInstall/Models/$(TARGET_OUTPUT_BASENAME).so&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>

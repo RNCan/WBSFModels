@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
   <FileVersion major="1" minor="6"/>
   <Project>
-    <Option title="DegreeDay"/>
+    <Option title="MPB-SLR"/>
     <Option pch_mode="2"/>
     <Option compiler="gcc"/>
     <Build>
       <Target title="Debug">
-        <Option output="bin/Debugx64/DegreeDay.so" prefix_auto="0" extension_auto="0"/>
+        <Option output="bin/Debugx64/MPB-SLR.so" prefix_auto="0" extension_auto="0"/>
         <Option object_output="obj/Debugx64/"/>
         <Option type="3"/>
         <Option compiler="gcc"/>
@@ -44,7 +44,7 @@
         </ExtraCommands>
       </Target>
       <Target title="Release">
-        <Option output="bin/Releasex64/DegreeDay.so" prefix_auto="0" extension_auto="0"/>
+        <Option output="bin/Releasex64/MPB-SLR.so" prefix_auto="0" extension_auto="0"/>
         <Option object_output="obj/Releasex64/"/>
         <Option type="3"/>
         <Option compiler="gcc"/>
@@ -88,7 +88,17 @@
     <Extensions>
       <lib_finder disable_auto="1"/>
     </Extensions>
-    <Unit filename="..\..\src\Climatic\DegreeDaysModel.h"/>
-    <Unit filename="..\..\src\Climatic\DegreeDaysModel.cpp"/>
+    <Unit filename="..\..\src\MPB\DevelopementVector.h"/>
+    <Unit filename="..\..\src\MPB\MPBDevRates.h"/>
+    <Unit filename="..\..\src\MPB\MPBColdTolerance.h"/>
+    <Unit filename="..\..\src\MPB\Generations.h"/>
+    <Unit filename="..\..\src\MPB\SLRModel\MPB-SLRModel.h"/>
+    <Unit filename="..\..\src\MPB\SLRModel\SLR.h"/>
+    <Unit filename="..\..\src\MPB\DevelopementVector.cpp"/>
+    <Unit filename="..\..\src\MPB\MPBDevRates.cpp"/>
+    <Unit filename="..\..\src\MPB\MPBColdTolerance.cpp"/>
+    <Unit filename="..\..\src\MPB\Generations.cpp"/>
+    <Unit filename="..\..\src\MPB\SLRModel\MPB-SLRModel.cpp"/>
+    <Unit filename="..\..\src\MPB\SLRModel\SLR.cpp"/>
   </Project>
 </CodeBlocks_project_file>

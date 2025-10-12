@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
   <FileVersion major="1" minor="6"/>
   <Project>
-    <Option title="DegreeDay"/>
+    <Option title="MeteorusTrachynotus-OBL-SBW"/>
     <Option pch_mode="2"/>
     <Option compiler="gcc"/>
     <Build>
       <Target title="Debug">
-        <Option output="bin/Debugx64/DegreeDay.so" prefix_auto="0" extension_auto="0"/>
+        <Option output="bin/Debugx64/MeteorusTrachynotus-OBL-SBW.so" prefix_auto="0" extension_auto="0"/>
         <Option object_output="obj/Debugx64/"/>
         <Option type="3"/>
         <Option compiler="gcc"/>
@@ -22,7 +22,9 @@
           <Add option="-g"/>
           <Add directory="../../../WBSF/src"/>
           <Add directory="..\..\..\WBSF\src"/>
+          <Add directory="..\..\src"/>
           <Add directory="..\..\..\WBSF\src"/>
+          <Add directory="..\..\src"/>
         </Compiler>
         <Linker>
           <Add option="-m64"/>
@@ -44,7 +46,7 @@
         </ExtraCommands>
       </Target>
       <Target title="Release">
-        <Option output="bin/Releasex64/DegreeDay.so" prefix_auto="0" extension_auto="0"/>
+        <Option output="bin/Releasex64/MeteorusTrachynotus-OBL-SBW.so" prefix_auto="0" extension_auto="0"/>
         <Option object_output="obj/Releasex64/"/>
         <Option type="3"/>
         <Option compiler="gcc"/>
@@ -58,7 +60,9 @@
           <Add option="-m64"/>
           <Add directory="../../../WBSF/src"/>
           <Add directory="..\..\..\WBSF\src"/>
+          <Add directory="..\..\src"/>
           <Add directory="..\..\..\WBSF\src"/>
+          <Add directory="..\..\src"/>
         </Compiler>
         <Linker>
           <Add option="-s"/>
@@ -88,7 +92,21 @@
     <Extensions>
       <lib_finder disable_auto="1"/>
     </Extensions>
-    <Unit filename="..\..\src\Climatic\DegreeDaysModel.h"/>
-    <Unit filename="..\..\src\Climatic\DegreeDaysModel.cpp"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus\MeteorusTrachynotus.h"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusEquations.h"/>
+    <Unit filename="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafroller.h"/>
+    <Unit filename="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafrollerEquations.h"/>
+    <Unit filename="..\..\src\SpruceBudworm\SpruceBudworm.h"/>
+    <Unit filename="..\..\src\SpruceBudworm\SpruceBudwormEquations.h"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus_OBL_SBW\MeteorusTrachynotus_OBL_SBW.h"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus_OBL_SBW\MeteorusTrachynotus_OBL_SBW_Model.h"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus\MeteorusTrachynotus.cpp"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusEquations.cpp"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus_OBL_SBW\MeteorusTrachynotus_OBL_SBW.cpp"/>
+    <Unit filename="..\..\src\MeteorusTrachynotus_OBL_SBW\MeteorusTrachynotus_OBL_SBW_Model.cpp"/>
+    <Unit filename="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafroller.cpp"/>
+    <Unit filename="..\..\src\ObliqueBandedLeafroller\ObliqueBandedLeafrollerEquations.cpp"/>
+    <Unit filename="..\..\src\SpruceBudworm\SpruceBudworm.cpp"/>
+    <Unit filename="..\..\src\SpruceBudworm\SpruceBudwormEquations.cpp"/>
   </Project>
 </CodeBlocks_project_file>
