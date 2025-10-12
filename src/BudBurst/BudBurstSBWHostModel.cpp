@@ -7,11 +7,10 @@
 //*********************************************************************
 
 #include "BudBurstSBWHostModel.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/DegreeDays.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
-#include <boost/math/distributions/Rayleigh.hpp>
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/exponential.hpp>
 
@@ -60,7 +59,7 @@ namespace WBSF
 	//this method is call to load your parameter in your variable
 	ERMsg CSBWHostBudBurstModel::ProcessParameters(const CParameterVector& parameters)
 	{
-		ERMsg msg; 
+		ERMsg msg;
 
 		//transfer your parameter here
 		size_t c = 0;
@@ -73,7 +72,7 @@ namespace WBSF
 		assert(m_species < HBB::PARAMETERS[0].size());
 
 		m_P = HBB::PARAMETERS[0][m_species];
-		
+
 
 		//m_SDI = SDI[m_species];
 		if (parameters.size() == 2 + 46 + NB_SDI_PARAMS + 2)
@@ -116,10 +115,10 @@ namespace WBSF
 			m_P.B_eff = parameters[c++].GetReal();
 			m_P.cS_min = parameters[c++].GetReal();
 			m_P.cS_max = parameters[c++].GetReal();
-			//	m_P.S_mu = 
+			//	m_P.S_mu =
 			parameters[c++].GetReal();
 			m_P.BB_thr = parameters[c++].GetReal();
-			//m_P.St_min = 
+			//m_P.St_min =
 			parameters[c++].GetReal();
 
 			m_P.PAR_PS1 = parameters[c++].GetReal();
@@ -167,7 +166,7 @@ namespace WBSF
 		parameters[c++].GetInt();
 		m_SDI_type = SDI_AUGER;
 		assert(m_SDI_type < NB_SDI_TYPE);
-		
+
 
 		m_bCumul = parameters[c++].GetBool();
 
@@ -200,7 +199,7 @@ namespace WBSF
 		m_model.m_version = m_version;
 		m_model.m_bCumul = m_bCumul;
 
-		
+
 
 		msg = m_model.Execute(m_weather, m_output, bModelEx);
 
@@ -218,15 +217,15 @@ namespace WBSF
 
 
 
-	
+
 	enum { I_SPECIES, I_SOURCE, I_SITE, I_LATITUDE, I_LONGITUDE, I_ELEVATION, I_DATE, I_STARCH, I_SUGAR, I_B_LENGTH, I_B_MASS, I_N_MASS, I_SDI, I_N, I_DEF, I_DEF_END_N1, I_DEF_END_N, I_PROVINCE, I_TYPE, NB_INPUTS };
 
 	void CSBWHostBudBurstModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		static const char* SPECIES_NAME[] = { "bf", "ws", "bs", "ns", "rs", "rbs" };
 
-		
-		if (data.size() == NB_INPUTS) 
+
+		if (data.size() == NB_INPUTS)
 		{
 			if (data[I_SPECIES] == SPECIES_NAME[m_species] && data[I_TYPE] == "C")
 			{
@@ -238,12 +237,12 @@ namespace WBSF
 				obs.m_obs.push_back(stod(data[I_SUGAR]));
 				obs.m_obs.push_back(stod(data[I_B_MASS]));
 				obs.m_obs.push_back(stod(data[I_B_LENGTH]));
-				
+
 
 				if (((USE_SDI || USE_SDI_DOY ) && obs.m_obs[0] > -999) ||
 					(USE_STARCH && obs.m_obs[1] > -999) ||
 					(USE_SUGAR && obs.m_obs[2] > -999) ||
-					(USE_MASS && obs.m_obs[3] > -999) || 
+					(USE_MASS && obs.m_obs[3] > -999) ||
 					(USE_LENGTH && obs.m_obs[4] > -999) )
 				{
 					if(obs.m_ref.GetDOY()<213)
@@ -344,9 +343,9 @@ namespace WBSF
 			for (size_t d = 0; d < output.size(); d++)
 			{
 
-				if (_isnan(output[d][O_S_CONC]) || output[d][O_S_CONC] > 250 ||
-					_isnan(output[d][O_ST_CONC]) || output[d][O_ST_CONC] > 250 ||
-					_isnan(output[d][O_BRANCH_MASS]) || output[d][O_BRANCH_MASS] > 0.5)
+				if (isnan(output[d][O_S_CONC]) || output[d][O_S_CONC] > 250 ||
+					isnan(output[d][O_ST_CONC]) || output[d][O_ST_CONC] > 250 ||
+					isnan(output[d][O_BRANCH_MASS]) || output[d][O_BRANCH_MASS] > 0.5)
 				{
 					//return;
 					nbInvalidS++;
@@ -370,7 +369,7 @@ namespace WBSF
 						double obs_SDI = (m_SAResult[i].m_obs[0] - m_stat[0][LOWEST]) / m_stat[0][RANGE];
 						double sim_SDI = (output[m_SAResult[i].m_ref][O_SDI] - m_stat[0][LOWEST]) / m_stat[0][RANGE];
 
-						if (_isnan(sim_SDI) || output[m_SAResult[i].m_ref][O_SDI] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
+						if (isnan(sim_SDI) || output[m_SAResult[i].m_ref][O_SDI] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
 							sim_SDI = Rand(-1.0, 0.0);
 
 
@@ -395,8 +394,8 @@ namespace WBSF
 
 						double obs_cSt = (m_SAResult[i].m_obs[1] - m_stat[1][LOWEST]) / m_stat[1][RANGE];
 						double sim_cSt = (output[m_SAResult[i].m_ref][O_ST_CONC] - m_stat[1][LOWEST]) / m_stat[1][RANGE];
-				
-						if (_isnan(sim_cSt) || output[m_SAResult[i].m_ref][O_ST_CONC] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
+
+						if (isnan(sim_cSt) || output[m_SAResult[i].m_ref][O_ST_CONC] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
 							sim_cSt = Rand(-1.0, 0.0);
 
 						//for (size_t j = 0; j < 5; j++)
@@ -404,15 +403,15 @@ namespace WBSF
 					}
 
 
-					if (USE_SUGAR && m_SAResult[i].m_obs[2] > -999 ) 
+					if (USE_SUGAR && m_SAResult[i].m_obs[2] > -999 )
 					{
 						assert(output[m_SAResult[i].m_ref][O_S_CONC] > -999);
 
-						
+
 						double obs_cS = (m_SAResult[i].m_obs[2] - m_stat[2][LOWEST]) / m_stat[2][RANGE];
 						double sim_cS = (output[m_SAResult[i].m_ref][O_S_CONC] - m_stat[2][LOWEST]) / m_stat[2][RANGE];
 
-						if (_isnan(sim_cS) || output[m_SAResult[i].m_ref][O_S_CONC] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
+						if (isnan(sim_cS) || output[m_SAResult[i].m_ref][O_S_CONC] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
 							sim_cS *= Rand(-1.0, 0.0);
 
 						//for (size_t j = 0; j < 5; j++)
@@ -434,7 +433,7 @@ namespace WBSF
 
 
 
-						if (_isnan(sim_BM) || output[m_SAResult[i].m_ref][O_BUDS_MASS] == -999 || output[m_SAResult[i].m_ref][O_BRANCH_MASS] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
+						if (isnan(sim_BM) || output[m_SAResult[i].m_ref][O_BUDS_MASS] == -999 || output[m_SAResult[i].m_ref][O_BRANCH_MASS] == -999 || (nbInvalidS > 0 && i < min(nbInvalidS, m_SAResult.size() / 2)))
 							sim_BM *= Rand(-1.0, 0.0);
 
 						//for (size_t j = 0; j < 5; j++)
@@ -444,7 +443,7 @@ namespace WBSF
 					if (USE_LENGTH && m_SAResult[i].m_obs[4] > -999 && m_SAResult[i].m_ref.GetDOY() < max_doy_data)
 					{
 						assert(output[m_SAResult[i].m_ref][O_BRANCH_LENGTH] > -999);
-						
+
 						double obs_BM = (m_SAResult[i].m_obs[4]- m_stat[4][LOWEST]) / m_stat[4][RANGE];//Mass gain
 						double sim_BM = (output[m_SAResult[i].m_ref][O_BRANCH_LENGTH]- m_stat[4][LOWEST]) / m_stat[4][RANGE];//mass gain
 

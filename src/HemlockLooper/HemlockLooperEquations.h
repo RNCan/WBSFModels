@@ -2,14 +2,14 @@
 // File: HLDevelopment.h
 //
 // Class: CHLDevelopment
-//          
+//
 //
 // Descrition: the CHLDevelopment can compute hourly Hemlock Looper devlopement rate
 //             HemlockLooperEquations is an optimisation table lookup
 //*****************************************************************************
 #pragma once
 
-//#include "crtdbg.h"
+//#include "cassert"
 #include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
@@ -88,7 +88,7 @@ namespace WBSF
 
 		static const double DEFAULT_P[HemlockLooper::NB_STAGES - 1][NB_PARAM];
 		static const double RHO25_FACTOR[HemlockLooper::NB_STAGES - 1];
-		
+
 	};
 
 

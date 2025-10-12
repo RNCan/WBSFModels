@@ -20,7 +20,7 @@
 //*****************************************************************************
 
 #include <cmath>
-#include "basic/UtilMath.h"
+#include "Basic/UtilMath.h"
 #include "WeatherBased/WeatherStation.h"
 #include "WSpruceBudworm.h"
 

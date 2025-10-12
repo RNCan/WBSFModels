@@ -2,11 +2,11 @@
 // 07/07/2021	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
 #include "LaricobiusOsakensisModel.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/DegreeDays.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
-#include <boost/math/distributions/Rayleigh.hpp>
+
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/math/distributions/non_central_f.hpp>
@@ -200,7 +200,7 @@ void CLaricobiusOsakensisModel::ExecuteDaily(int year, const CWeatherYears& weat
                 for (CTRef d = p.begin() + 1; d <= p.end(); d++)
                 {
                     output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
-                    assert(!_isnan(output[d][s]));
+                    assert(!isnan(output[d][s]));
                 }
             }
         }
@@ -212,7 +212,7 @@ void CLaricobiusOsakensisModel::ExecuteDaily(int year, const CWeatherYears& weat
             for (CTRef d = p.begin() + 1; d <= p.end(); d++)
             {
                 output[d][S_LARVAE] = output[d - 1][S_LARVAE] + output[d][S_LARVAE] * 100 / stat[SUM];
-                assert(!_isnan(output[d][S_LARVAE]));
+                assert(!isnan(output[d][S_LARVAE]));
             }
         }
     }
@@ -270,7 +270,7 @@ double GetSimX(size_t s, CTRef TRefO, double obs, const CModelStatVector& output
             {
                 double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
                 double obsX = obsX1 + (obs - obsY1)*slope;
-                assert(!_isnan(obsX) && _finite(obsX));
+                assert(!isnan(obsX) && finite(obsX));
 
                 x = obsX;
             }

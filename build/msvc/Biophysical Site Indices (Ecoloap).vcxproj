@@ -182,10 +182,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\BiophysicalSiteIndices(Ecoloap)\Biophysical site indices (Ecoloap).cpp" />
+    <ClCompile Include="..\..\src\BiophysicalSiteIndices(Ecoloap)\Biophysical Site Indices (Ecoloap).cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\BiophysicalSiteIndices(Ecoloap)\Biophysical site indices (Ecoloap).h" />
+    <ClInclude Include="..\..\src\BiophysicalSiteIndices(Ecoloap)\Biophysical Site Indices (Ecoloap).h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

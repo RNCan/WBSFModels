@@ -6,7 +6,7 @@
 #include <boost/math/distributions/logistic.hpp>
 
 #include "WeatherBased/DegreeDays.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include "ModelBased/ModelDistribution.h"
 #include "LeucotaraxisModel.h"

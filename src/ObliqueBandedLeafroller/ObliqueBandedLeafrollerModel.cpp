@@ -8,7 +8,7 @@
 
 #include "Basic/UtilStd.h"
 #include "WeatherBased/SnowAnalysis.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ObliqueBandedLeafrollerModel.h"
 #include "ObliqueBandedLeafroller.h"
 

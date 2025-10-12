@@ -9,7 +9,7 @@
 #include "WeatherBased/WeatherDefine.h"
 #include "WeatherBased/GrowingSeason.h"
 //#include "Evapotranspiration.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "GrowingSeasonModel.h"
 
 
@@ -117,15 +117,15 @@ namespace WBSF
 		//m_output.Init(m_weather.GetEntireTPeriod(CTM(CTM::ANNUAL)), NB_OUTPUT);
 		//for (size_t y = 0; y < m_weather.size(); y++)
 		//{
-		//	CTPeriod p = GS.GetGrowingSeason(m_weather[y]); 
+		//	CTPeriod p = GS.GetGrowingSeason(m_weather[y]);
 		//	p.Transform(CTM(CTM::DAILY));
 		//
 		//	m_output[y][O_FIRST_DAY] = p.begin().GetRef();//p.begin().Get__int32();
-		//	m_output[y][O_LAST_DAY] = p.end().GetRef();//p.end().Get__int32(); 
+		//	m_output[y][O_LAST_DAY] = p.end().GetRef();//p.end().Get__int32();
 		//	m_output[y][O_GS_LENGTH] = p.GetLength();
 		//}
 
-		
+
 
 		return msg;
 	}

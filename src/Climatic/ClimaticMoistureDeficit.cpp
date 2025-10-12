@@ -1,6 +1,6 @@
 //**********************************************************************
 // 01/11/2023	1.0		Rémi Saint-Amant	Creation
-// From: Dissecting indices of aridity for assessing the impacts of global climate change 
+// From: Dissecting indices of aridity for assessing the impacts of global climate change
 // Evan H.Girvetz & Chris Zganjar
 // Climatic Change (2014) 126:469–483
 // DOI 10.1007 / s10584 - 014 - 1218 - 9
@@ -10,7 +10,7 @@
 #include "WeatherBased/Evapotranspiration.h"
 #include "WeatherBased/DegreeDays.h"
 #include "WeatherBased/GrowingSeason.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 
 using namespace std;

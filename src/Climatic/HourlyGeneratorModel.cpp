@@ -4,12 +4,12 @@
 
 #include "Basic/Sun.h"
 #include "WeatherBased/WeatherDefine.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "HourlyGeneratorModel.h"
 
 
 using namespace std;
-using namespace WBSF::HOURLY_DATA; 
+using namespace WBSF::HOURLY_DATA;
 
 
 namespace WBSF
@@ -20,7 +20,7 @@ namespace WBSF
 		CModelFactory::RegisterModel(CHourlyGeneratorModel::CreateObject);
 
 
-	CHourlyGeneratorModel::CHourlyGeneratorModel() 
+	CHourlyGeneratorModel::CHourlyGeneratorModel()
 	{
 		// initialise your variable here (optionnal)
 		NB_INPUT_PARAMETER=1;
@@ -30,7 +30,7 @@ namespace WBSF
 	CHourlyGeneratorModel::~CHourlyGeneratorModel()
 	{}
 
-	
+
 
 
 	//this method is call to load your parameter in your variable
@@ -151,7 +151,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		m_output.Init(m_weather.GetEntireTPeriod(CTM(CTM::HOURLY)), 1); 
+		m_output.Init(m_weather.GetEntireTPeriod(CTM(CTM::HOURLY)), 1);
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		size_t i = 0;

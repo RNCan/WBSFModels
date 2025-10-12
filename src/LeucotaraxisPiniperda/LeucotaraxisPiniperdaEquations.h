@@ -3,7 +3,7 @@
 //*****************************************************************************
 #pragma once
 
-#include "crtdbg.h"
+#include "cassert"
 #include "ModelBased/EquationTableLookup.h"
 #include "WeatherBased/DegreeDays.h"
 
@@ -12,11 +12,11 @@
 namespace WBSF
 {
 
-	namespace LPM// Leucotaraxis piniperda (Malloch) 
+	namespace LPM// Leucotaraxis piniperda (Malloch)
 	{
 		enum TStages{ EGG, LARVAE, PUPAE, ADULT, DEAD_ADULT, NB_STAGES= DEAD_ADULT};
 
-		
+
 		enum TRDR { σ, NB_RDR_PARAMS }; //Relative Development Rate
 		enum TEmergence{ μ, ѕ, delta, Τᴴ¹, Τᴴ², NB_EMERGENCE_PARAMS };//Emergence of Adult parameters
 		enum TPUPA { NB_PUPA_DEV=6, PUPA_S= NB_PUPA_DEV, NB_PUPA_PARAMS };//
@@ -37,10 +37,10 @@ namespace WBSF
 		std::array<double, LPM::NB_EMERGENCE_PARAMS> m_adult_emerg;//emergence of adult parameters
 		std::array<double, LPM::NB_PUPA_PARAMS> m_pupa_param;//Pupa parameters
 		std::array<double, LPM::NB_C_PARAMS> m_C_param;//Cumulative Egg Creation parameters
-		
-		
+
+
 		CLeucotaraxisPiniperdaEquations(const CRandomGenerator& RG);
-		
+
 		virtual double ComputeRate(size_t stage, double t)const;
 
 		//relative development

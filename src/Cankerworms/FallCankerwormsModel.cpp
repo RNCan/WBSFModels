@@ -5,7 +5,7 @@
 #include "Basic/Statistic.h"
 #include <cmath>
 #include <cassert>
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 
 using namespace std;
@@ -224,7 +224,7 @@ namespace WBSF
 					//				//double slope = (obsDD2 - obsDD1) / (obsS2 - obsS1);
 					//				//double obsH = obsDD1 + (obsS - obsS1)*slope;
 					//				//double simH = statSim[m_SAResult[i].m_ref][pp];
-					//				//assert(!_isnan(obsH) && !_isnan(simH));
+					//				//assert(!isnan(obsH) && !isnan(simH));
 
 					//				CTRef TrefSim = statSim.GetFirstTRef() + index;
 					//				stat.Add(TrefSim.GetDOY(), m_SAResult[i].m_ref.GetDOY());
@@ -233,7 +233,7 @@ namespace WBSF
 					//	}
 					//}
 				}
-				//******************************************************************************************************************************************************			
+				//******************************************************************************************************************************************************
 				//Diagonal lookup
 				else if (EVALUATION == DIAGONAL)
 				{
@@ -273,8 +273,8 @@ namespace WBSF
 										simDD = (simDD - m_DDStat[MEAN]) / m_DDStat[STD_DEV_OVER_POP];
 										obsS = (obsS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
 										simS = (simS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
-										assert(!_isnan(obsDD) && !_isnan(simDD));
-										assert(!_isnan(obsS) && !_isnan(simS));
+										assert(!isnan(obsDD) && !isnan(simDD));
+										assert(!isnan(obsS) && !isnan(simS));
 
 										stat.Add(simDD, obsDD);
 										stat.Add(simS, obsS);
@@ -284,7 +284,7 @@ namespace WBSF
 						}
 					}*/
 				}
-				//******************************************************************************************************************************************************			
+				//******************************************************************************************************************************************************
 				//CModelStatVector statSim;
 				//m_continuingRatio.m_bCumul = true;
 				//m_continuingRatio.Execute(m_weather, statSim);
@@ -293,10 +293,10 @@ namespace WBSF
 				//{
 				//	if( m_SAResult[k].m_obs[I_AI]>-999 && statSim.is_inside(m_SAResult[k].m_ref) )
 				//	{
-				//	
+				//
 				//		double obs= m_SAResult[k].m_obs[I_AI];
 				//		double sim= statSim[m_SAResult[k].m_ref][CSBWContinuingRatio::O_AVERAGE_INSTAR];
-				//		stat.Add(sim, obs); 
+				//		stat.Add(sim, obs);
 				//	}
 				//}
 			}

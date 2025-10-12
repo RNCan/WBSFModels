@@ -1,6 +1,6 @@
 //**********************************************************************
 // 14/02/2024	1.0		Rémi Saint-Amant	Creation
-// 
+//
 // convert in C++ from Robert Hijmans
 // November 2009
 // License GPL3
@@ -18,7 +18,7 @@
 //      Australian Government Publishing Service, Canberra.
 //
 // and Expanded following the ANUCLIM manual
-// 
+//
 //**********************************************************************
 
 #include "WorldClimVars.h"
@@ -26,7 +26,7 @@
 //#include "WeatherBased/Evapotranspiration.h"
 //#include "WeatherBased/DegreeDays.h"
 //#include "WeatherBased/GrowingSeason.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 
 using namespace std;
@@ -75,8 +75,8 @@ namespace WBSF
 	// BIO_17 = Precipitation of Driest Quarter
 	// BIO_18 = Precipitation of Warmest Quarter
 	// BIO_19 = Precipitation of Coldest Quarter
-	// 
-	
+	//
+
 	enum TAnnualStat {
 		O_BIO_01, O_BIO_02, O_BIO_03, O_BIO_04, O_BIO_05, O_BIO_06, O_BIO_07, O_BIO_08, O_BIO_09, O_BIO_10,
 		O_BIO_11, O_BIO_12, O_BIO_13, O_BIO_14, O_BIO_15, O_BIO_16, O_BIO_17, O_BIO_18, O_BIO_19, NB_ANNUAL_STATS
@@ -100,7 +100,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		
+
 		m_output.Init(m_weather.GetEntireTPeriod(CTM::ANNUAL), NB_ANNUAL_STATS, -999);
 
 
@@ -117,7 +117,7 @@ namespace WBSF
 			std::valarray<float> Tmax(12);
 			std::valarray<float> Tavg(12);
 			std::valarray<float> Prcp(12);
-			
+
 			for (size_t m = 0; m < 12; m++)
 			{
 				Tmin[m] = m_weather[y][m].GetStat(H_TMIN)[MEAN];
@@ -134,7 +134,7 @@ namespace WBSF
 				tmp[m] = (Tavg[m] + Tavg[(m + 1) % 12] + Tavg[(m + 2) % 12]) / 3.0;
 				wet[m] = Prcp[m] + Prcp[(m + 1) % 12] + Prcp[(m + 2) % 12];
 			}
-		
+
 			// P1.Annual Mean Temperature
 			m_output[y][O_BIO_01] = Tavg.sum() / Tavg.size();
 			// P2.Mean Diurnal Range(Mean(period max - min))

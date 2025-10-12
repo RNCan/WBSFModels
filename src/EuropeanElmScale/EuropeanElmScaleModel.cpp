@@ -1,6 +1,6 @@
 //**********************************************************************
-// 09/04/2018	1.0.0	Rémi Saint-Amant	
-//Create from : 
+// 09/04/2018	1.0.0	Rémi Saint-Amant
+//Create from :
 //	Study on Biology and Reproductive methodes of European elm scale and the fauna of ELM pests in Esfahan
 //	Alireza.Jalalizand
 //	2011 International Conference on Life Science and Technology
@@ -10,7 +10,7 @@
 #include <cmath>
 #include <cassert>
 #include "Basic/Statistic.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 
 #include "EuropeanElmScaleModel.h"
@@ -67,9 +67,9 @@ a10                 	= 837.94571
 b10                 	=   3.20018
 
 NbVal = 20	Bias = -1.65000	MAE = 7.35000	RMSE = 8.84590	CD = 0.73460	R² = 0.79322
-a12 = 224.92958 
-a13 = 366.32084 
-b = 1.39300    
+a12 = 224.92958
+a13 = 366.32084
+b = 1.39300
 
 
 //NbVal = 20	Bias = -0.35000	MAE = 4.15000	RMSE = 4.91426	CD = 0.91809	R² = 0.92264
@@ -92,9 +92,9 @@ b = 1.39300
 
 
 
-	
 
-	
+
+
 
 
 	const double CEuropeanElmScaleModel::Am[NB_MALE_PARAMS] =
@@ -155,8 +155,8 @@ b = 1.39300
 	{
 		224.92958,366.32084
 		//190.16365 ,1520.40608
-	};	  
-		
+	};
+
 
 	const double CEuropeanElmScaleModel::Bd =
 	{
@@ -256,7 +256,7 @@ b = 1.39300
 		{
 			m_CRm.m_lowerThreshold = parameters[c++].GetFloat();
 			m_CRf.m_lowerThreshold = parameters[c++].GetFloat();
-			
+
 			m_CRb.m_lowerThreshold = m_CRf.m_lowerThreshold;
 
 
@@ -280,7 +280,7 @@ b = 1.39300
 
 			//m_CRd.m_b[0] = parameters[c++].GetFloat();
 			parameters[c++].GetFloat();
-			
+
 			m_CRd.m_lowerThreshold = parameters[c++].GetFloat();
 			for (size_t i = 0; i < NB_DREISTADT_PARAMS; i++)
 			{
@@ -497,7 +497,7 @@ b = 1.39300
 						}
 					}
 				}
-				 
+
 				//Female
 				{
 
@@ -527,7 +527,7 @@ b = 1.39300
 					//}
 
 					//if (simStat[NB_FEMALE_PARAMS - 1][HIGHEST])
-					{ 
+					{
 						for (size_t v = 0; v < NB_FEMALE_PARAMS; v++)
 						{
 							//double c = obsStat[v][HIGHEST] / simStat[v][HIGHEST];
@@ -606,7 +606,7 @@ b = 1.39300
 						CTRef peakTRef;
 						double peak = 0;
 						CStatistic::SetVMiss(-999);
-						
+
 						for (CTRef d = p.GetFirstAnnualTRef(y); d <= p.GetLastAnnualTRef(y); d++)
 						{
 							if (output[d][CEuropeanElmScaleCRd::O_FIRST_STAGE + 1] > peak)

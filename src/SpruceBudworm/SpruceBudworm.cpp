@@ -1,18 +1,18 @@
 ﻿//*****************************************************************************
 // Class: CSpruceBudworm
-//          
+//
 //
 // Description: the CSpruceBudworm represents a group of SBW insect. scale by m_ScaleFactor
 //*****************************************************************************
 // 12-07-2019	Rémi Saint-Amant	Add sex as enum and not size_t
-// 01-02-2019	Rémi Saint-Amant	Bug correction when sunset is before noon 
+// 01-02-2019	Rémi Saint-Amant	Bug correction when sunset is before noon
 // 19-12-2018	Rémi Saint-Amant	Add option of adult attrition.
-// 03-08-2018	Rémi Saint-Amant	Remove the reduction factor for defoliation. 
+// 03-08-2018	Rémi Saint-Amant	Remove the reduction factor for defoliation.
 // 13/03/2017   Jacques Régnière    Reduced OVERHEATING_FACTOR to 0.04 from 0.11
 // 13/03/2017   Jacques Régnière    Reduced EXODUS_AGE to {0.15, 0}  from { 0.5, 0}
 // 08/01/2017	Rémi Saint-Amant	Add hourly live
 // 22/12/2016   Rémi Saint-Amant	Change flight activity by exodus flight
-// 10/05/2016	Rémi Saint-Amant	Elimination of th optimization under -10 
+// 10/05/2016	Rémi Saint-Amant	Elimination of th optimization under -10
 // 05/03/2015	Rémi Saint-Amant	Update for BioSIM11
 // 27/06/2013	Rémi Saint-Amant	New framework, Bug correction in fix AI
 // 27/09/2011	Rémi Saint-Amant	Add precipitation in live
@@ -284,7 +284,7 @@ namespace WBSF
 		//Live(weather[0], 24);
 		m_bExodus = false;
 
-		//flight activity, only in live adults 
+		//flight activity, only in live adults
 		if (GetStage() == ADULT && !m_bAlreadyExodus)//
 			m_bExodus = ComputeExodus(weather);
 
@@ -347,7 +347,7 @@ namespace WBSF
 	// Output:  Individual's state is updated to follow update
 	void CSpruceBudworm::Die(const CWeatherDay& weather)
 	{
-		//attrition mortality. Killed at the end of time step 
+		//attrition mortality. Killed at the end of time step
 		if (GetStage() == DEAD_ADULT)
 		{
 			//Old age
@@ -458,14 +458,14 @@ namespace WBSF
 
 		if (GetStageAge() >= MINIMUM_AGE_LIFTOFF[m_sex])
 		{
-			__int64 tº = 0;
-			__int64 tᶜ = 0;
-			__int64 tᴹ = 0;
+			int64_t tº = 0;
+			int64_t tᶜ = 0;
+			int64_t tᴹ = 0;
 			if (get_t(wº, tº, tᶜ, tᴹ))
 			{
 				//now compute tau, p and flight
-				static const __int64 Δt = 60;
-				for (__int64 t = tº; t <= tᴹ && !bExodus; t += Δt)
+				static const int64_t Δt = 60;
+				for (int64_t t = tº; t <= tᴹ && !bExodus; t += Δt)
 				{
 					double tau = double(t - tᶜ) / (tᴹ - tᶜ);
 					double h = t / 3600.0;
@@ -515,7 +515,7 @@ namespace WBSF
 			double Vᴸ = K * sqrt(m_M) / m_A;//compute liftoff wing-beat to fly with actual weight (Vᴸ)
 			double Vᵀ = Vmax / (1 + exp(-(T - a) / b));//compute potential wing-beat for the current temperature (Vᵀ)
 
-			//potential wing-beat is greater than liftoff wing-beat, then exodus 
+			//potential wing-beat is greater than liftoff wing-beat, then exodus
 			if (Vᵀ > Vᴸ && p > m_p_exodus)
 				bExodus = true;		//this insect is exodus
 		}
@@ -585,15 +585,15 @@ namespace WBSF
 	//tᴹ [out]: end of liftoff [s] (since the begginning of the day)
 	//Base on: Modeling the circadian rhythm of migratory flight in spruce budworm
 	//Jacques Régnière, Matthew Garcia and Rémi St-Amant
-	bool CSpruceBudworm::get_t(const CWeatherDay& wº, __int64& tº, __int64& tᶜ, __int64& tᴹ)
+	bool CSpruceBudworm::get_t(const CWeatherDay& wº, int64_t& tº, int64_t& tᶜ, int64_t& tᴹ)
 	{
 		bool bRep = false;
 
 		CSun sun(wº.GetLocation().m_lat, wº.GetLocation().m_lon, wº.GetLocation().GetTimeZone());
-		__int64 tᶳ = sun.GetSunset(wº.GetTRef()) * 3600;
+		int64_t tᶳ = sun.GetSunset(wº.GetTRef()) * 3600;
 		if (tᶳ > 12 * 3600)//if sunset is after noon (avoid problem in north)
 		{
-			static const __int64 H19h30 = 18.5;//s at 18:30 normal time (=19:30 Daylight Saving Time)
+			static const int64_t H19h30 = 18.5;//s at 18:30 normal time (=19:30 Daylight Saving Time)
 
 			//sunset hour shifted by t
 			//temperature interpolation between 2 hours
@@ -611,7 +611,7 @@ namespace WBSF
 				double Δo = p3 + p4 * Δs;//h
 				double Δf = Kf * p5 * Δo;//h
 
-				//now calculate the real tº, tᶬ 
+				//now calculate the real tº, tᶬ
 				tᶜ = tᶳ + (Δs * 3600);
 				tº = tᶜ + (Δo * 3600);
 				tᴹ = tº + (Δf * 3600);
@@ -628,7 +628,7 @@ namespace WBSF
 
 
 
-	//Get the eaten foliage 
+	//Get the eaten foliage
 	double CSpruceBudworm::GetEatenFoliage(double RR)const
 	{
 		static const double AVERAGE_WEIGHT[NB_STAGES] = { 0, 0, 0, 0.06, 0.24, 0.96, 3.80, 15.02, 0, 0 };

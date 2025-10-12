@@ -9,10 +9,10 @@
 //*********************************************************************
 #include "DroughtCodeModel.h"
 #include "WeatherBased/WeatherDefine.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/GrowingSeason.h"
 
-using namespace WBSF::HOURLY_DATA; 
+using namespace WBSF::HOURLY_DATA;
 using namespace std;
 
 namespace WBSF
@@ -26,14 +26,14 @@ namespace WBSF
 	CDroughtCode::CDroughtCode()
 	{
 		// initialise your variable here (optionnal)
-		
+
 		VERSION = "2.3.0 (2020)";
 
 		m_bAutoSelect = true;
 		m_FFMC = 85.0;
 		m_DMC = 6.0;
 		m_DC = 15.0;
-		
+
 
 		m_carryOverFraction = 1;
 		m_effectivenessOfWinterPrcp = 0.75;
@@ -102,7 +102,7 @@ namespace WBSF
 		if (!m_weather.IsHourly())
 			m_weather.ComputeHourlyVariables();
 
-		//manual setting 
+		//manual setting
 		CFWI FWI;
 		FWI.m_method = (CFWI::TMethod)m_method;
 		FWI.m_firstDay = m_firstDay;
@@ -136,18 +136,18 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		
+
 		//Compute FWI
 		CModelStatVector output;
 		msg = ExecuteDaily(output);
-		
+
 		//Create output from result
 		m_output.Init(output.GetTPeriod(), 1, -9999);
-		
+
 		for (CTRef d = output.GetFirstTRef(); d <= output.GetLastTRef(); d++)
 			m_output[d][0] = output[d][CFWIStat::DC];
 
-		
+
 		return msg;
 	}
 
@@ -172,7 +172,7 @@ namespace WBSF
 				m_output[mm][v] = resultM[mm][VAR[v]];
 		}
 
-		
+
 
 
 		return msg;
@@ -194,7 +194,7 @@ namespace WBSF
 		for (size_t y = 0; y < resultA.size(); y++)
 			m_output[y][0] = resultA[y][CFWIStat::DC];
 
-		
+
 
 		return msg;
 	}

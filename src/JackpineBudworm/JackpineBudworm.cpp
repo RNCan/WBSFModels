@@ -62,11 +62,12 @@
 
 
 //**********************************************************************
-#include "JackPineBudworm.h"
-#include "Modelbased/EntryPoint.h"
+
 #include <cmath>
 #include <cassert>
 
+#include "ModelBased/EntryPoint.h"
+#include "JackpineBudworm.h"
 
 namespace WBSF
 {
@@ -443,7 +444,7 @@ namespace WBSF
 			RATE = ((ARGA*ARGB) / (1. + ARGC + ARGD));
 		}
 
-		return __max(0, RATE);
+		return std::max(0.0, RATE);
 	}
 	//------------------------------------------------------------
 	//    This subroutine calculates the amount of physiological

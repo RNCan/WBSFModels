@@ -7,7 +7,7 @@
 #include "PlantHardinessCanada.h"
 #include "PlantHardinessUSA.h"
 #include "WeatherBased/WeatherDefine.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 
 using namespace std;
@@ -61,8 +61,8 @@ namespace WBSF
 		if (m_country >= NB_COUNTRY)
 			msg.ajoute("Bad input parameter, Country model is not valid");
 
-		
+
 		return msg;
 	}
-	
+
 }

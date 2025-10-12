@@ -2,16 +2,16 @@
 // File: WSBDevelopment.h
 //
 // Class: CWSBDevelopment
-//          
 //
-// Descrition: the CWSBDevelopment can compute daily Western Spruce Budworm 
+//
+// Descrition: the CWSBDevelopment can compute daily Western Spruce Budworm
 //			   devlopement rate
 //             CWSBTableLookup is an optimisation table lookup
 //*****************************************************************************
 #pragma once
 
-#include "cassert"
-#include "ModelBased\EquationTableLookup.h"
+#include <cassert>
+#include "ModelBased/EquationTableLookup.h"
 
 
 namespace WBSF
@@ -50,7 +50,7 @@ namespace WBSF
 		double m_p[NB_STAGES][NB_PARAMETER];
 		double m_rho25Factor[NB_STAGES];
 
-		
+
 		virtual double ComputeRate(size_t s, double T)const;
 		static const double DEFAULT_P[NB_STAGES][NB_PARAMETER];
 		static const double RHO25_FACTOR[NB_STAGES];

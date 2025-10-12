@@ -4,14 +4,14 @@
 
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
-#include <boost/math/distributions/Rayleigh.hpp>
+
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/exponential.hpp>
 
 #include "WeatherBased/DegreeDays.h"
 #include "WeatherBased/NormalsDatabase.h"
 #include "WeatherBased/WeatherGenerator.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 
 #include "ShootDevelopmentIndex.h"
@@ -37,7 +37,7 @@ namespace WBSF
 	static const bool bRegistred =
 		CModelFactory::RegisterModel(CShootDevelopmentIndexModel::CreateObject);
 
-// O_CU, O_FU, O_PS, O_SDI_DHONT, 
+// O_CU, O_FU, O_PS, O_SDI_DHONT,
 	enum TOutput {O_F0, O_F1, O_F2, O_F3, O_F4, O_F5, O_SDI, NB_OUTPUTS };
 	//enum TOutputA { O_A_BUDBURST, NB_OUTPUTS_A };
 
@@ -110,7 +110,7 @@ namespace WBSF
 		};
 
 
-		assert(!_isnan(R) && _finite(R));
+		assert(!isnan(R) && finite(R));
 
 		return R;
 	}
@@ -118,7 +118,7 @@ namespace WBSF
 	double CShootDevelopmentIndexModel::ForcingResponce(double T)const
 	{
 		double R = 1 / (1 + exp(-(T - m_P[FU_µ]) / m_P[FU_σ]));
-		assert(!_isnan(R) && _finite(R) && R >= 0);
+		assert(!isnan(R) && finite(R) && R >= 0);
 
 		return R;
 	}
@@ -184,7 +184,7 @@ namespace WBSF
 				} };
 
 
-				
+
 				m_P[FU_µ] = P1[m_species][0];
 				m_P[FU_σ] = P1[m_species][1];
 				m_P[SDI_µ] = P1[m_species][2];
@@ -200,7 +200,7 @@ namespace WBSF
 					{12.0, 5.3, 16.64, 1.92, 0.02050},//bs
 					{10.0, 9.6, 27.88, 2.59, 1e-8 },  //ns
 				} };
-				
+
 				m_P[FU_µ] = P2[m_species][0];
 				m_P[FU_σ] = P2[m_species][1];
 				m_P[SDI_µ] = P2[m_species][2];
@@ -369,7 +369,7 @@ namespace WBSF
 
 
 		//				CTRef TRef = weather[y][m][d].GetTRef();
-		//				for (size_t i = 0; i < max_days; i++)//Charrier 2018 use the mean maximum of the last 14 days 
+		//				for (size_t i = 0; i < max_days; i++)//Charrier 2018 use the mean maximum of the last 14 days
 		//				{
 
 		//					if (i < p_CU)
@@ -506,7 +506,7 @@ namespace WBSF
 	//
 	//	CDegreeDays CDD(CDegreeDays::DOUBLE_SINE, m_P[CU_µ], m_P[FU_µ]);
 	//	CModelStatVector DD;
-	//	
+	//
 	//	CDD.Execute(weather, DD);
 	//	for (size_t y = 0; y < weather.GetNbYears(); y++)
 	//	{
@@ -677,7 +677,7 @@ namespace WBSF
 
 			if (!m_SDI_DOY_stat.is_init())
 			{
-#pragma omp critical  
+#pragma omp critical
 				{
 					const CSimulatedAnnealingVector& all_results = GetSimulatedAnnealingVector();
 
@@ -742,7 +742,7 @@ namespace WBSF
 
 			if (data_weather.GetNbYears() == 0)
 			{
-#pragma omp critical  
+#pragma omp critical
 				{
 
 					CTPeriod pp(CTRef((*m_years.begin()) - 1, JANUARY, DAY_01), CTRef(*m_years.rbegin(), DECEMBER, DAY_31));
@@ -882,7 +882,7 @@ namespace WBSF
 					//				else
 					//				{
 					//					stat.clear();
-					//					return false;//reject this solution 
+					//					return false;//reject this solution
 					//				}
 					//			}
 					//		}
@@ -980,7 +980,7 @@ namespace WBSF
 							else
 							{
 								stat.clear();
-								return false;//reject this solution 
+								return false;//reject this solution
 							}
 						}
 

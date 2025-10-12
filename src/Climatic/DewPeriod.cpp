@@ -9,7 +9,7 @@
 //**********************************************************************
 
 
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/Evapotranspiration.h"
 //#include "StdFile.h"
 #include "DewPeriod.h"
@@ -57,7 +57,7 @@ namespace WBSF
 		//	WD=24;
 		//else if(Tdew15>Tmin)
 		//	WD=(asin(2*(Tdew15-Tmin)/(Tmax-Tmin)-1)*2/PI+1)*12;
-		//else 
+		//else
 		//	WD=0;
 
 

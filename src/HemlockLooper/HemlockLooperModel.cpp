@@ -1,13 +1,13 @@
 //*****************************************************************************
 // Individual-based model of Hemlock looper (HL)
-// 
+//
 // Jacques Régnière
 // Canadian Forest Service
-// 
+//
 // Programmer: Rémi Saint-Amant
-// 
+//
 // Spring 2014
-// 
+//
 //*****************************************************************************
 //*****************************************************************************
 // File: HLModel.cpp
@@ -15,7 +15,7 @@
 // Class: CHLModel
 //
 // Description: CHLModel is a BioSIM model that computes Hemmlock Looper
-//              seasonal biology. 
+//              seasonal biology.
 //
 //*****************************************************************************
 // 10/04/2018	1.1.5	Rémi Saint-Amant	Compile with VS 2017
@@ -25,8 +25,8 @@
 // 17/04/2014	1.0.0	Jacques Regniere	Start
 //*****************************************************************************
 
-#include "basic/timeStep.h" 
-#include "Modelbased/EntryPoint.h"
+#include "Basic/TimeStep.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include "HemlockLooper.h"
 #include "HemlockLooperModel.h"
@@ -146,7 +146,7 @@ namespace WBSF
 			//for(size_t y=0; y<m_weather.size()-1; y++)
 			//{
 			//CStatistic s = stat.GetStat( E_L12, m_weather[y+1].GetTPeriod() );
-			//output[y][O_GROWTH_RATE] = s[SUM]/100; 
+			//output[y][O_GROWTH_RATE] = s[SUM]/100;
 			//}
 
 			SetOutput(output);
@@ -170,8 +170,8 @@ namespace WBSF
 			string options;// = "Tmethod=" + ToString(HG_SINE_POWER);
 			m_weather.ComputeHourlyVariables(m_weather.GetVariables(), options);
 		}
-			
-		
+
+
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM::DAILY);
 		//p.begin().m_year++;//skip the first year (initialization)
@@ -181,19 +181,19 @@ namespace WBSF
 
 		//CInitialPopulation inititialPopulation = GetFirstOviposition();
 		//CInitialPopulation inititialPopulation(CTRef(m_weather.GetFirstYear(), SEPTEMBER, DAY_15), 5);
-		
+
 		CInitialPopulation inititialPopulation;
 
 		//for (size_t y1 = 0; y1 < m_weather.size() - 1; y1++)
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
-			
+
 
 			//Create stand
 			int year = m_weather[y].GetTRef().GetYear();
 			if (!m_bComputeWinterMortality || y==0)
 				inititialPopulation = CInitialPopulation(CTRef(year, JANUARY, DAY_01), 0);
-			
+
 
 			CHLStand stand(this);
 
@@ -203,22 +203,22 @@ namespace WBSF
 			//always add trees in stand first
 			CHLTreePtr pTree = make_shared<CHLTree>(&stand);
 			stand.m_host.push_front(pTree);
-			
+
 
 
 			//Create the initial population
 			pTree->Initialize<CHemlockLooper>(inititialPopulation);
 
-			//if Simulated Annealing, set 
+			//if Simulated Annealing, set
 			if (ACTIVATE_PARAMETRIZATION)
 			{
 				stand.m_development.SetEggParam(m_Tmin, m_eggsParam);
 				//stand.m_development.SetRho25(m_rho25Factor);
-				//stand.m_rates.Save("D:\\Rates.csv"); 
+				//stand.m_rates.Save("D:\\Rates.csv");
 			}
 
 
-			
+
 			if (m_bComputeWinterMortality && y>0)
 			{
 				for (size_t yy = y; yy < y+2; yy++)
@@ -226,11 +226,11 @@ namespace WBSF
 					for (size_t m = 0; m < m_weather[yy].size(); m++)
 					{
 						for (size_t d = 0; d < m_weather[yy][m].size(); d++)
-						{ 
+						{
 							CTRef TRef = m_weather[yy][m][d].GetTRef();
 							stand.Live(m_weather[yy][m][d]);
 							if (stat.is_inside(TRef) && yy == y+1)
-								stand.GetStat(TRef, stat[TRef]); 
+								stand.GetStat(TRef, stat[TRef]);
 							//	stat[TRef][E_FEMALES] = stand.GetNbObjectAlive();
 							//	stat[TRef][S_DEAD_ATTRITION] = stand.GetFirstHost()->size();
 							//}
@@ -258,7 +258,7 @@ namespace WBSF
 					}
 				}
 			}
-			
+
 			if (m_bComputeWinterMortality)
 			{
 				inititialPopulation = stat.GetInitialPopulation(E_BROODS, m_weather[y + 1].GetEntireTPeriod(CTM::DAILY));
@@ -345,9 +345,9 @@ namespace WBSF
 
 
 	//**************************
-	
 
-	//simulated annaling 
+
+	//simulated annaling
 	void CHLModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_DATA_ECLOSION)
@@ -511,7 +511,7 @@ namespace WBSF
 				assert(false); //todo
 				double NLL = 0;// statLH[NEGATIVE_LOG_LIKELIHOOD];
 				//Try to maximize MAE of log(LH)
-				if (NLL > -999 && !_isnan(NLL) && _finite(NLL))
+				if (NLL > -999 && !isnan(NLL) && finite(NLL))
 					stat.Add(NLL, 0);
 			}
 		}
@@ -536,8 +536,8 @@ namespace WBSF
 				double sim = dayStat.GetAverageInstar(S_EGGS, S_DEAD_ADULTS, EGGS, true);
 				assert(sim = -999 || (sim >= 2 && sim <= 8));
 
-				//some obs 0 or 100 were set to -999  
-				if (obs >= 2 && obs <= 8 && 
+				//some obs 0 or 100 were set to -999
+				if (obs >= 2 && obs <= 8 &&
 					sim >= 2 && sim <= 8)
 				{
 					stat.Add(sim, obs);

@@ -1,6 +1,6 @@
 //**********************************************************************
 //
-// 04/05/2017   2.0.1   Rémi Saint-Amant    New hourly generation 
+// 04/05/2017   2.0.1   Rémi Saint-Amant    New hourly generation
 // 20/09/2016	2.0.0	Rémi Saint-Amant    Compile with WBSF
 // 30/05/2013			Rémi Saint-Amant	Revision of parameter. Add Cumulative mode and Provicial location (NE, SE)
 // 08/04/2011			Rémi Saint-Amant	Create specific  SBW to Manitoba
@@ -32,24 +32,24 @@ namespace WBSF
 
 	//South-East
 	//NbVal=   451	Bias=-0.94932	MAE=32.48847	RMSE=41.97562	CD= 0.71717	R²= 0.80037
-	//a1                  	= 231.85385  
-	//a2                  	= 282.87228  
-	//a3                  	= 323.86385  
-	//a4                  	= 394.70047  
-	//a5                  	= 473.23165  
+	//a1                  	= 231.85385
+	//a2                  	= 282.87228
+	//a3                  	= 323.86385
+	//a4                  	= 394.70047
+	//a5                  	= 473.23165
 
 	//North-West
 	//NbVal=   444	Bias= 4.75682	MAE=26.01399	RMSE=34.54547	CD= 0.78561	R²= 0.81650
-	//a1                  	= 219.89726  
-	//a2                  	= 270.45967  
-	//a3                  	= 318.75441  
-	//a4                  	= 372.80927  
-	//a5                  	= 452.21838  
-	//a5                  	= 445.17697 
+	//a1                  	= 219.89726
+	//a2                  	= 270.45967
+	//a3                  	= 318.75441
+	//a4                  	= 372.80927
+	//a5                  	= 452.21838
+	//a5                  	= 445.17697
 	//341.28	612.6425963
 	//325.44	590.9731343
-	//	
-	//	
+	//
+	//
 	//493	885
 	//402	730
 
@@ -79,7 +79,7 @@ namespace WBSF
 			{ 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 } //NorthWest
 		}
 	};
-	//	
+	//
 	//NbVal=    84	Bias= 0.55493	MAE= 3.34010	RMSE= 3.89913	CD= 0.99853	R²= 0.99861
 	//	a1                  	= 263.81189 { 256.21677, 281.35533}	VM={   2.22222,   4.44444}
 	//	b1                  	=   1.13245 {   0.85168,   1.21330}	VM={   0.02640,   0.08800}
@@ -91,7 +91,7 @@ namespace WBSF
 	//	b4                  	=   0.98720 {   0.96914,   1.01974}	VM={   0.00632,   0.01778}
 	//	a5                  	= 637.28373 { 609.12855, 675.19347}	VM={   8.68056,  26.04167}
 	//	b5                  	=   1.05417 {   0.80261,   1.22321}	VM={   0.13500,   0.45000}
-	//	
+	//
 	//static const double A[NB_STAGE] = {263.8, 361.5, 418.4, 533.4, 637.3 };
 	//static const double B[NB_STAGE] = {1.13, 1.88, 1.24, 0.98, 1.05};
 
@@ -270,8 +270,8 @@ namespace WBSF
 										double obsS2 = statSim[index + 1][pp];
 										double slope = (obsDD2 - obsDD1) / (obsS2 - obsS1);
 										double obsDD = obsDD1 + (obsS - obsS1)*slope;
-										assert(!_isnan(obsDD) && _finite(obsDD));
-										assert(!_isnan(obsS) && _finite(obsS));
+										assert(!isnan(obsDD) && finite(obsDD));
+										assert(!isnan(obsS) && finite(obsS));
 
 										m_DDStat += obsDD;
 										m_stageStat[p] += obsS;
@@ -329,11 +329,11 @@ namespace WBSF
 				//bValid = L2>=0 && L4>=0 && L5>=0 && L6>=0;
 				//if( bValid )
 				//{
-				//	stat.Add(L3>=0?statSim[L3][CSBWContinuingRatio::O_DD]:-999, 310); 
-				//	stat.Add(L4>=0?statSim[L4][CSBWContinuingRatio::O_DD]:-999, 380); 
-				//	stat.Add(L5>=0?statSim[L5][CSBWContinuingRatio::O_DD]:-999, 475); 
-				//	stat.Add(L6>=0?statSim[L6][CSBWContinuingRatio::O_DD]:-999, 580); 
-				////stat.Add(Pupa>=0?statSim[Pupa][CSBWContinuingRatio::O_DD]:-999, 720); 
+				//	stat.Add(L3>=0?statSim[L3][CSBWContinuingRatio::O_DD]:-999, 310);
+				//	stat.Add(L4>=0?statSim[L4][CSBWContinuingRatio::O_DD]:-999, 380);
+				//	stat.Add(L5>=0?statSim[L5][CSBWContinuingRatio::O_DD]:-999, 475);
+				//	stat.Add(L6>=0?statSim[L6][CSBWContinuingRatio::O_DD]:-999, 580);
+				////stat.Add(Pupa>=0?statSim[Pupa][CSBWContinuingRatio::O_DD]:-999, 720);
 				//}
 
 				//******************************************************************************************************************************************************
@@ -395,7 +395,7 @@ namespace WBSF
 										double slope = (obsDD2 - obsDD1) / (obsS2 - obsS1);
 										double obsH = obsDD1 + (obsS - obsS1)*slope;
 										double simH = statSim[m_SAResult[i].m_ref][CSBWContinuingRatio::O_DD];
-										assert(!_isnan(obsH) && !_isnan(simH));
+										assert(!isnan(obsH) && !isnan(simH));
 
 										stat.Add(simH, obsH);
 									}
@@ -404,7 +404,7 @@ namespace WBSF
 						}
 					}
 				}
-				//******************************************************************************************************************************************************			
+				//******************************************************************************************************************************************************
 				//Diagonal lookup
 				else if (EVALUATION == DIAGONAL)
 				{
@@ -428,7 +428,7 @@ namespace WBSF
 
 									short year = m_SAResult[i].m_ref.GetYear();
 									//long index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(year, JANUARY, DAY_01, year, DECEMBER, LAST_DAY));
-									size_t index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31))); 
+									size_t index = statSim.GetFirstIndex(pp, ">=", obsS, 1, CTPeriod(CTRef(year, JANUARY, DAY_01), CTRef(year, DECEMBER, DAY_31)));
 									if (index != NOT_INIT && index >= 1)
 									{
 										double obsDD1 = statSim[index][CSBWContinuingRatio::O_DD];
@@ -445,8 +445,8 @@ namespace WBSF
 										simDD = (simDD - m_DDStat[MEAN]) / m_DDStat[STD_DEV_OVER_POP];
 										obsS = (obsS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
 										simS = (simS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
-										assert(!_isnan(obsDD) && !_isnan(simDD));
-										assert(!_isnan(obsS) && !_isnan(simS));
+										assert(!isnan(obsDD) && !isnan(simDD));
+										assert(!isnan(obsS) && !isnan(simS));
 
 										stat.Add(simDD, obsDD);
 										stat.Add(simS, obsS);
@@ -456,7 +456,7 @@ namespace WBSF
 						}
 					}
 				}
-				//******************************************************************************************************************************************************			
+				//******************************************************************************************************************************************************
 				//CModelStatVector statSim;
 				//m_continuingRatio.m_bCumul = true;
 				//m_continuingRatio.Execute(m_weather, statSim);
@@ -465,10 +465,10 @@ namespace WBSF
 				//{
 				//	if( m_SAResult[k].m_obs[I_AI]>-999 && statSim.is_inside(m_SAResult[k].m_ref) )
 				//	{
-				//	
+				//
 				//		double obs= m_SAResult[k].m_obs[I_AI];
 				//		double sim= statSim[m_SAResult[k].m_ref][CSBWContinuingRatio::O_AVERAGE_INSTAR];
-				//		stat.Add(sim, obs); 
+				//		stat.Add(sim, obs);
 				//	}
 				//}
 			}

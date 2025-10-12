@@ -48,9 +48,10 @@ Thoughts:
 // 22/10/2007			Jacques Régnière    Modifications
 // 22/11/2005			Rémi Saint-Amant    Creation
 //*********************************************************************
+#include "Basic/TimeStep.h"
+#include "ModelBased/EntryPoint.h"
+
 #include "MPBiModel.h"
-#include "Basic/timeStep.h"
-#include "Modelbased/EntryPoint.h"
 
 using namespace std;
 //using namespace WBSF::HOURLY_DATA;

@@ -6,7 +6,7 @@
 #include "WeatherBased/WeatherDefine.h"
 #include "WeatherBased/GrowingSeason.h"
 #include "WeatherBased/SnowAnalysis.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "FWI.h"
 #include "FBP.h"
 #include "FBP-Model.h"
@@ -53,7 +53,7 @@ namespace WBSF
 		bool m_fbpMod = false;
 		m_ignition.clear();
 		m_fuel_type = FUEL_C2;
-		
+
 		m_method = CFWI::ALL_HOURS_CALCULATION;
 	}
 
@@ -72,7 +72,7 @@ namespace WBSF
 			m_bAutoSelect = false;
 
 			//transfer your parameter here
-			
+
 			m_firstDay = CMonthDay(parameters[c++].GetString());
 			m_lastDay = CMonthDay(parameters[c++].GetString());
 			m_FFMC = parameters[c++].GetReal();
@@ -91,7 +91,7 @@ namespace WBSF
 		else //if (parameters.size() == 8)
 		{
 			m_bAutoSelect = true;
-			
+
 			m_nbDaysStart = parameters[c++].GetInt();
 			m_TtypeStart = parameters[c++].GetInt();
 			m_thresholdStart = parameters[c++].GetReal();
@@ -107,7 +107,7 @@ namespace WBSF
 		string str_igni = parameters[c++].GetString();
 		if (str_igni.empty())
 			m_ignition = CTRef::GetCurrentTRef(CTM::HOURLY);
-		else 
+		else
 			m_ignition.FromFormatedString(str_igni);
 
 		m_fuel_type = parameters[c++].GetInt();
@@ -133,7 +133,7 @@ namespace WBSF
 		FWI.m_nbDaysEnd = m_nbDaysEnd;
 		FWI.m_TtypeEnd = m_TtypeEnd;
 		FWI.m_thresholdEnd = m_thresholdEnd;
-		//manual setting 
+		//manual setting
 		FWI.m_firstDay = m_firstDay;
 		FWI.m_lastDay = m_lastDay;
 		FWI.m_FFMC = m_FFMC;

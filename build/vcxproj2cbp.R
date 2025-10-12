@@ -1,24 +1,20 @@
 library(xml2)
 library(stringr)
-#library(XML)
 
 
 
-# Using xml2
-#cbp <- read_xml("/home/remi/Project/WBSFModels/build/cb/DegreeDay(Linux).cbp")
-#cbp <- read_xml("E:/ProjectCP/WBSFModels/build/cb/DegreeDay(Linux).cbp")
+LINUX = TRUE
 
 
-# Find all files nodes anywhere in the document
-#cbp_files <- xml_find_all(cbp, ".//Unit")
-
-#remove these nodes from the template project
-#xml_remove(cbp_files)
-
-#template = cbp
-platform = "(Windows)"
-path = "E:/ProjectCP/WBSFModels/build/"
-
+if(LINUX)
+{
+  platform = "(Linux)"
+  path = "/home/remi/Project/WBSFModels/build/"
+}else
+{
+  platform = "(Windows)"
+  path = "E:/ProjectCP/WBSFModels/build/"
+}
 
 workspace_str = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>
 <CodeBlocks_workspace_file>
@@ -37,36 +33,40 @@ vcxprojets = list.files(path = paste0(path,"msvc/"), pattern = ".vcxproj$", recu
 
 for( i in 1:length(vcxprojets))
 {
-#i=32
+#i=1
 
+  ###################################################################################
+  #Initialisation
+  
+  #Model title
 	file_title = sub("\\.[^.]+$", "", basename(vcxprojets[i]))
 	file_name_out = sprintf( "%s%s.cbp", file_title,platform);
 	file_path_out = sprintf( "%scb/%s", path,file_name_out);
 	print(file_title)
 
 	
-	#read template code::black oproject file (xml)
+	#read template code::block project file (xml file)
 	template <- read_xml(paste0(path,"cb/Template",platform,".cbp"))
 	
-	#read vcx project (xml file)
+	#read current vcx project (xml file)
 	vcxproj <- read_xml(vcxprojets[i])
 	#remove namespace
 	vcxproj = xml_ns_strip(vcxproj)
 	
-	
+	#change project name
 	project_name = xml_text(xml_find_first(vcxproj, "//ProjectName"))
 	if(is.na(project_name))
 		project_name=file_title
 	
 	
 	
-	
-	#replace title
+	###################################################################################	
+	#replace title and targets
 	xml_title = xml_find_first(template, "//Project/Option[@title]")
 	xml_attr(xml_title, "title") <- project_name
 	
 	
-	#replace 
+	#replace targets (ie Debug/Release)
 	xml_outputs = xml_find_all(template, "//Build/Target/Option[@output]")
 	for( j in 1:length(xml_outputs) )
 	{
@@ -77,13 +77,15 @@ for( i in 1:length(vcxprojets))
 	}
 	
 	
-
-	#find all include
+	###################################################################################	
+	#replace compiled files and include directories
+	
+	#find all compiled files
 	vcxproj_include = xml_attr(xml_find_all(vcxproj, ".//ItemGroup/ClInclude"), "Include")
 	vcxproj_include = c( vcxproj_include,  xml_attr(xml_find_all(vcxproj, ".//ItemGroup/ClCompile"), "Include") );
 
 	parent_node <- xml_find_first(template, "//Project")
-	# Add all includes to the parent
+	# Add all compiled files to the parent
 	for( j in 1:length(vcxproj_include) )
 	{
 		xml_add_child(parent_node, "Unit", filename=vcxproj_include[j])
@@ -93,26 +95,26 @@ for( i in 1:length(vcxprojets))
 	#change Additional Directories
 	IncludeDirectories = xml_text(xml_find_first(vcxproj, ".//AdditionalIncludeDirectories"))
 	
-	#remove some directory
-	
+	#remove local include directory
 	IncludeDirectories = sub(";C:\\\\local\\\\boost_1_89_0", "", IncludeDirectories)
 	IncludeDirectories = sub(";C:\\\\local\\\\boost_1_89_0", "", IncludeDirectories)
 	IncludeDirectories = sub(";C:\\\\local\\\\gdal-3-11-3", "", IncludeDirectories)
 	IncludeDirectories = sub(";C:\\\\local\\\\gsl-2-4-0", "", IncludeDirectories)
 	IncludeDirectories = unlist(str_split(IncludeDirectories, ";"))
-	
-	
-	#LibDirectory = xml_text(xml_find_first(vcxproj, ".//AdditionalLibraryDirectories"))
 
-	parent_node <- xml_find_all(template, "//Build/Target/Compiler")#/Add[@directory]
+  #Add include directory
+	parent_node <- xml_find_all(template, "//Build/Target/Compiler")
 	
 	for( j in 1:length(parent_node) )
 	{
-		#xml_attr(parent_node[j], "directory") <- IncludeDirectories
 		for(k in 1:length(IncludeDirectories) )
 			xml_add_child(parent_node, "Add", directory=IncludeDirectories[k])
 	}
 
+	###################################################################################	
+	#Add dependencies
+	
+	#special case of EntomophagaMaimaiga (need gsl)
 	if(file_title=="EntomophagaMaimaiga")
 	{
 		parent_node <- xml_find_all(template, "//Build/Target/Linker")
@@ -122,6 +124,7 @@ for( i in 1:length(vcxprojets))
 		}
 	}
 	
+	#Special case of WaterBalance (need gdal)
 	if(file_title=="WaterBalance")
 	{
 		parent_node <- xml_find_all(template, "//Build/Target/Linker")
@@ -131,16 +134,17 @@ for( i in 1:length(vcxprojets))
 		}
 	}
 
-
-	# View the modified document
-	#print(parent_node)
-
+	###################################################################################	
+	#Save Code::Block project
 	write_xml(template, file_path_out)
 	
 	
 	#add this project to the workspace
 	xml_add_child(workspace_parent, "Project", filename=file_name_out)
-	#print(workspace)
+	
+	# View the modified document
+	#print(parent_node)
+	
 }
 
 

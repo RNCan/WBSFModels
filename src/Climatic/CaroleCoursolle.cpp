@@ -6,7 +6,7 @@
 #include "WeatherBased/Evapotranspiration.h"
 #include "WeatherBased/DegreeDays.h"
 #include "WeatherBased/GrowingSeason.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 
 using namespace std;
@@ -33,14 +33,14 @@ namespace WBSF
 	CCCModel::~CCCModel()
 	{}
 
-	
+
 	//MAT : mean annual air temperature
 	//MCMT : mean coldest month temperature
 	//EMT : mean of annual extreme minimum temperature
 	//MWMT : mean warmest month temperature
 	//BFFP : begin of frost free period
 	//EFFP : end of frost free period
-	//FFPL : frost free period length (days) 
+	//FFPL : frost free period length (days)
 	//NFFD : number of frost free days
 	//CHDD0 : chilling degree days (< 0°C) from August 1st
 	//CHDD5 : chilling degree days (< 5°C) from August 1st
@@ -48,7 +48,7 @@ namespace WBSF
 	//PPT: total annul precipitation
 	//PPT5: total precipitation from May to September
 	enum TAnnualStat { O_MAT, O_MCMT, O_EMT, O_MWMT, O_BFFP, O_EFFP, O_FFPL, O_NFFD, O_CHDD0, O_CHDD5, O_PPT, O_PPT5, NB_ANNUAL_STATS };
-	
+
 
 	//this method is call to load your parameter in your variable
 	ERMsg CCCModel::ProcessParameters(const CParameterVector& parameters)
@@ -78,7 +78,7 @@ namespace WBSF
 		CModelStatVector output;
 		output.Init(m_weather.GetEntireTPeriod(CTM::ANNUAL), NB_ANNUAL_STATS, -999);
 
-		
+
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
 			int year = m_weather.GetFirstYear() + int(y);
@@ -99,7 +99,7 @@ namespace WBSF
 			output[y][O_CHDD5] = CHDD(m_weather[y], 5);
 			output[y][O_PPT] = m_weather[y].GetStat(H_PRCP)[SUM];
 			output[y][O_PPT5] = PPT5(m_weather[y]);
-			
+
 			//output[y][O_CDD5] = CDD5(m_weather[y]);
 		}
 
@@ -183,7 +183,7 @@ namespace WBSF
 	}
 
 
-	
+
 	//CHDD0 : chilling degree days under 0 (from August first)
 	double CCCModel::CHDD(const CWeatherYear& weather, double threshold)
 	{
@@ -203,7 +203,7 @@ namespace WBSF
 	}
 
 
-	
+
 	double CCCModel::CDD5(const CWeatherYear& weather, double threshold)
 	{
 		CDegreeDays model(CDegreeDays::DAILY_AVERAGE, threshold);
@@ -225,14 +225,14 @@ namespace WBSF
 	}
 
 
-	
+
 	double CCCModel::PPT5(const CWeatherYear& weather)
 	{
 		double sumP = 0;
 		for (size_t m = MAY; m <= SEPTEMBER; m++)
 		{
 			sumP += weather[m].GetStat(H_PRCP)[SUM];
-			
+
 		}
 
 		return sumP;

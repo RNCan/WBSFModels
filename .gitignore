@@ -6,6 +6,8 @@
 *.lo
 *.o
 *.obj
+bin/
+obj/
 
 # Precompiled Headers
 *.gch
@@ -39,3 +41,9 @@
 
 # debug information files
 *.dwo
+
+#Depend and layout
+*.depend
+*.layout
+
+

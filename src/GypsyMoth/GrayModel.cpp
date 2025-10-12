@@ -1,9 +1,9 @@
-// Gray's egg development model.     
-// RECODED WITH SOME CHANGES BY JACQUES   
-// Prediapause rates and variability from Gray et al. 1991 (Envir. Ent. 20(6)) 
-// Diapause rates and variability from Experiment 9                   
-// Postdiapause rates and variability from Experiment 10              
-//  VERSION DATE:16-11/2008    
+// Gray's egg development model.
+// RECODED WITH SOME CHANGES BY JACQUES
+// Prediapause rates and variability from Gray et al. 1991 (Envir. Ent. 20(6))
+// Diapause rates and variability from Experiment 9
+// Postdiapause rates and variability from Experiment 10
+//  VERSION DATE:16-11/2008
 //***************************  Modifications  *************************
 // JR 25/02/1999: corrected as per David's recommendation the date referencing
 //              in routine sinewave().
@@ -15,16 +15,15 @@
 //RSA 22/05/2005: Incorporate to BioSIM model Base
 // JR 31/10/2005: Gross error in calculations of variability corrected
 // JR 16/11/2008: Adaptation to Gray 2009 Environmental Entomology (all changes commented with "Gray 2009" for searching)
-// JR 18/02/2009: Because of unresolved issues with Gray 2009, a switch is added to use or not the Gray 2009 changes   
+// JR 18/02/2009: Because of unresolved issues with Gray 2009, a switch is added to use or not the Gray 2009 changes
 //RSA 08/03/2011: Really add the switch
 //RSA 25/01/2012: Compute over many years
 //RSA 16/11/2016: Compute with BioSIM 11
 //*********************************************************************
-#include <stdio.h>
-#include <conio.h>
+#include <cstdio>
 #include <cmath>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 #include "GrayModel.h"
 #include "WeatherBased/WeatherStation.h"
@@ -138,8 +137,8 @@ namespace WBSF
 		initialize_ages();		//make all ages=0 and inhibitor titres=1
 
 
-		//daily loop from m_ovipDate-on 
-		CEggState tot_eggs(NB_EGG_OUTPUT);      //used for accounting 
+		//daily loop from m_ovipDate-on
+		CEggState tot_eggs(NB_EGG_OUTPUT);      //used for accounting
 		tot_eggs[PREDIAPAUSE] = MAXEGGS;
 
 		for (CTRef day = p.begin(); day < m_param.m_ovipDate; day++)
@@ -170,7 +169,7 @@ namespace WBSF
 			m_eggState[day][HATCH] = MAXEGGS;
 
 
-		//compute haching 
+		//compute haching
 		ComputeHatching();
 
 		free_Gray_arrays();
@@ -190,7 +189,7 @@ namespace WBSF
 		{
 			double T = wDay[h][HOURLY_DATA::H_TAIR];
 
-			//prediapause rates are age-independent 
+			//prediapause rates are age-independent
 			double prediap_rate = prediapause_rate(T);
 			//prediapause development
 			for (int prediapause_class = 0; prediapause_class < number_classes[0]; prediapause_class++)
@@ -206,7 +205,7 @@ namespace WBSF
 						diapause_eggs[prediapause_class] += class_size[0];
 					}
 				}
-				else //eggs of this classs are PAST the prediapause phase 
+				else //eggs of this classs are PAST the prediapause phase
 				{
 					if (diapause_eggs[prediapause_class] > 0)
 					{
@@ -246,7 +245,7 @@ namespace WBSF
 												postdiapause_eggs[prediapause_class][diapause_class] -= class_size[2];
 											}
 										}
-									} //postdiapause classes 
+									} //postdiapause classes
 								}
 							}
 						} //diapause classes
@@ -322,7 +321,7 @@ namespace WBSF
 		double ln_RP = 0;
 		double rate = 0;
 
-		//calculate prediapause rates for a lookup table  
+		//calculate prediapause rates for a lookup table
 		int i = 0;
 		for (int temp = round_off(lower_thresh[0]); temp <= round_off(upper_thresh[0]); temp++)
 		{
@@ -330,14 +329,14 @@ namespace WBSF
 			rate = psiI*(exp(rhoI*T) - exp(rhoI*TmI - (TmI - T) / deltaTI));
 			if (rate > 0)
 				prediapause_table[i] = rate*(double)(GRAY_TIME_STEP / 24.0);
-			else 
+			else
 				prediapause_table[i] = 0;
 			i++;
 		}
 
 		prediapause_table[i] = prediapause_table[i - 1];
 
-		//calculate PDR (rate), RP, RS, and effective resistance in diapause  
+		//calculate PDR (rate), RP, RS, and effective resistance in diapause
 		int temp_range_diapause = (round_off)(upper_thresh[1] - lower_thresh[1] + 1);
 		std::vector<double> RS(temp_range_diapause);
 		std::vector<double> RP(temp_range_diapause);
@@ -353,10 +352,10 @@ namespace WBSF
 			RP[i] = 1.0 + RP_c*pow(exp(Z), 6.0);
 			rate = max(0.0, exp(PDR_c + PDR_t*(double)temp + PDR_t2*pow((double)temp, 2.0) + PDR_t4*pow((double)temp, 4.0)));
 			RS[i] = RS_c + RS_rp*RP[i];
-			
+
 			if (rate > 0)
 				PDR[i] = rate;
-			else 
+			else
 				PDR[i] = 0;
 		}
 
@@ -380,7 +379,7 @@ namespace WBSF
 				rate = max(0.0, (1 - inhibitor_titre*eff_res[i]))*PDR[i];
 				if (rate <= 0)
 					diapause_table[i][j] = 0;
-				else 
+				else
 					diapause_table[i][j] = rate*pctDay;
 			}
 			d_inhibitor_table[i][inhib_titre_range] = d_inhibitor_table[i][inhib_titre_range - 1];
@@ -408,7 +407,7 @@ namespace WBSF
 				//New equation (6) in Gray 2009. Environ. Entomol.
 				//			rate_zero=tauIII*exp(deltaIII*(double)temp);
 				//#else
-				// 2005 code: 
+				// 2005 code:
 				rate_zero = tauIII + deltaIII*(double)temp;
 				//#endif
 				a_t = omegaIII + kappaIII*(double)temp + psiIII*pow((double)temp, 2.0) + thetaIII*pow((double)temp, 3.0);
@@ -418,7 +417,7 @@ namespace WBSF
 					postdiapause_table[i][j] = 0;
 				else if (rate >= 1)
 					postdiapause_table[i][j] = 1 * pctDay;
-				else 
+				else
 					postdiapause_table[i][j] = rate*pctDay;
 			}
 
@@ -433,7 +432,7 @@ namespace WBSF
 	}
 
 
-	//Calculates the variability factor for each class in each phase 
+	//Calculates the variability factor for each class in each phase
 	void CGrayModel::calc_variability(void)
 	{
 		int nClass = 0;
@@ -479,7 +478,7 @@ namespace WBSF
 		{
 			if (T < lower_thresh[0])
 				TP = 0;
-			else 
+			else
 				TP = round_off(upper_thresh[0]) - round_off(lower_thresh[0]);
 		}
 		else
@@ -562,7 +561,7 @@ namespace WBSF
 		{
 			if (T < lower_thresh[2])
 				TP = 0;
-			else 
+			else
 				TP = round_off(upper_thresh[2]) - round_off(lower_thresh[2]);
 
 			T_fraction = 0.0;
@@ -579,7 +578,7 @@ namespace WBSF
 		return(dev_rate);
 	}
 
-	//Setup reads necessary parameters from setup file      
+	//Setup reads necessary parameters from setup file
 	//Remove all the spaces, newlines, and null at the end of a string
 	void strip(char *line)
 	{

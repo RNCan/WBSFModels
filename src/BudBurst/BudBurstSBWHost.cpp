@@ -6,7 +6,7 @@
 #include <deque>
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
-#include <boost/math/distributions/Rayleigh.hpp>
+
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/exponential.hpp>
 
@@ -163,12 +163,12 @@ namespace WBSF
 							//Calculate unitary ps
 							//convert total solar radiation (SRAD) [Watt/m²] into Photo Active Radiation (PAR) μmol*m²/s
 							double PAR = hData[H_SRAD] * 2.1;//Photo Active Radiation (PAR) μmol*m²/s
-							//The approximation 1 Watt/m² ≈ 4.57 μmol.m2/s comes from the Plant Growth Chamber Handbook(chapter 1, radiation; https://www.controlledenvironments.org/wp-content/uploads/sites/6/2017/06/Ch01.pdf). 
-							//Note that the value of 4.57 converts Watts/m2 to μmol.m2/s, assuming that the Watt/m² is for radiation from 400 to 700 nm. 
-							//However, I don't know that anyone ever measures solar radiation in Watt/m² in the 400-700 nm range. 
-							//Pyranometers measure total solar radiation. 
-							//Since only about 45% of the energy of solar radiation is actually in the 400-700 nm range. 
-							//the conversion of total solar radiation to PAR is ~2.1, rather than 4.57. 
+							//The approximation 1 Watt/m² ≈ 4.57 μmol.m2/s comes from the Plant Growth Chamber Handbook(chapter 1, radiation; https://www.controlledenvironments.org/wp-content/uploads/sites/6/2017/06/Ch01.pdf).
+							//Note that the value of 4.57 converts Watts/m2 to μmol.m2/s, assuming that the Watt/m² is for radiation from 400 to 700 nm.
+							//However, I don't know that anyone ever measures solar radiation in Watt/m² in the 400-700 nm range.
+							//Pyranometers measure total solar radiation.
+							//Since only about 45% of the energy of solar radiation is actually in the 400-700 nm range.
+							//the conversion of total solar radiation to PAR is ~2.1, rather than 4.57.
 							//As mentioned by others, that is an approximation, but a pretty good one.
 
 							//double RC_PAR_PS = P.PAR_PS1 * (1 - pow(1 - P.PAR_PS3 / P.PAR_PS2, 1 - PAR / P.PAR_PS2)) + abs(P.PAR_PS3);
@@ -209,7 +209,7 @@ namespace WBSF
 						//{
 						//	CStatistic Tmax14Days_stat;
 						//	CTRef TRef = weather[y][m][d].GetTRef();
-						//	for (size_t i = 0; i < 14; i++)//Charrier 2018 use the mean maximum of the last 14 days 
+						//	for (size_t i = 0; i < 14; i++)//Charrier 2018 use the mean maximum of the last 14 days
 						//	{
 						//		Tmax14Days_stat += weather.GetDay(TRef - i)[H_TMAX];
 						//	}
@@ -330,7 +330,7 @@ namespace WBSF
 				//Mdw = mass of 3 buds during the simulation
 
 
-				output[TRef][O_S_CONC] = x.S / (x.Mdw + x.Bdw);//Sugars concentration [mg/g DW] 
+				output[TRef][O_S_CONC] = x.S / (x.Mdw + x.Bdw);//Sugars concentration [mg/g DW]
 				output[TRef][O_ST_CONC] = x.St / (x.Mdw + x.Bdw);// Starch concentration [mg/g DW]
 				output[TRef][O_BRANCH_LENGTH] = max(2.3, Weight2Length(m_species, x.Bdw - m_P.Bdw_0 + x.Mdw, W2L_REMI));//[g]
 				output[TRef][O_BUDS_MASS] = x.Mdw;//[g]
@@ -390,7 +390,7 @@ namespace WBSF
 					output[TRef][O_C] = x.C;
 					output[TRef][O_INHIBITOR] = x.I;
 					output[TRef][O_SUGAR] = x.S;//[mg]
-					output[TRef][O_STARCH] = x.St;//[mg] 
+					output[TRef][O_STARCH] = x.St;//[mg]
 					output[TRef][O_PS] = outputEx.PS;
 					output[TRef][O_MOBILIZATION] = outputEx.Mobilization;
 					output[TRef][O_MOBILIZATION_STOCK] = outputEx.Mobilization_Stock;
@@ -415,7 +415,7 @@ namespace WBSF
 					output[TRef][O_RC_G_TSOIL] = m_mean_T_day[d].RC_G_Tsoil;
 					output[TRef][O_BUDBURST] = x.Budburst_switch;
 				}
-				
+
 			}
 
 

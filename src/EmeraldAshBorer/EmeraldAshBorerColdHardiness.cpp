@@ -4,7 +4,7 @@
 // 08/05/2017	1.0.0	Rémi Saint-Amant	Create from articles Cuddington 2018
 //**************************************************************************************************************
 
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/ContinuingRatio.h"
 #include "EmeraldAshBorerColdHardiness.h"
 #include "TreeMicroClimate.h"
@@ -179,7 +179,7 @@ namespace WBSF
 	{
 		double Tbark = Tair;
 
-		//Annual bark temperature. Only valid lower -17. 
+		//Annual bark temperature. Only valid lower -17.
 		if (Tair <= -17)
 		{
 			switch (type)

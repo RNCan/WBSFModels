@@ -4,7 +4,7 @@
 #include "BudBurst.h"
 #include "WeatherBased/WeatherDefine.h"
 #include "WeatherBased/DegreeDays.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 
 using namespace std;
@@ -178,7 +178,7 @@ namespace WBSF
 
 
 		CTPeriod pp(weather.GetEntireTPeriod(CTM::ANNUAL));
-		output.Init(pp, NB_ANNUAL_OUTPUTS); 
+		output.Init(pp, NB_ANNUAL_OUTPUTS);
 
 
 		//for (size_t y = 0; y < weather.GetNbYears() - 1; y++)
@@ -230,7 +230,7 @@ namespace WBSF
 			{
 				const CWeatherDay& wDay = weather[y].GetDay(TRef);
 
-				
+
 				if (TRef.GetDOY() >= m_beginDOY)
 					CDD += DD[TRef][0];
 
@@ -433,7 +433,7 @@ namespace WBSF
 			//
 			//			if (!m_BB_DOY_stat.is_init() )
 			//			{
-			//#pragma omp critical  
+			//#pragma omp critical
 			//				{
 			//					const CSimulatedAnnealingVector& all_results = GetSimulatedAnnealingVector();
 			//

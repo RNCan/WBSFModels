@@ -5,7 +5,7 @@
 //***********************************************************
 #include "LeucotaraxisArgenticollisModel.h"
 #include "LeucotaraxisArgenticollisEquations.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/DegreeDays.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include <boost/math/distributions/weibull.hpp>
@@ -161,7 +161,7 @@ namespace WBSF
 						for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 						{
 							output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
-							assert(!_isnan(output[d][s]));
+							assert(!isnan(output[d][s]));
 						}
 					}
 				}
@@ -228,7 +228,7 @@ namespace WBSF
 				{
 					double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 					double obsX = obsX1 + (obs - obsY1) * slope;
-					assert(!_isnan(obsX) && _finite(obsX));
+					assert(!isnan(obsX) && finite(obsX));
 
 					x = obsX;
 				}

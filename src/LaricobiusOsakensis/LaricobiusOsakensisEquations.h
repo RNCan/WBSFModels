@@ -3,7 +3,7 @@
 //*****************************************************************************
 #pragma once
 
-#include "crtdbg.h"
+#include "cassert"
 #include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF

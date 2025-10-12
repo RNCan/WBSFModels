@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "Daily vs Hourly.h"
 
 
@@ -99,7 +99,7 @@ namespace WBSF
 			CWVariables vars = m_weather.GetVariables();
 			assert(vars.count() == m_info.m_outputVariables.size());
 
-			m_weather.ComputeHourlyVariables(); 
+			m_weather.ComputeHourlyVariables();
 
 
 			CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::HOURLY));

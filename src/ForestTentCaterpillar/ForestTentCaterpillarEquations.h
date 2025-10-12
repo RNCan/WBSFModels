@@ -3,7 +3,7 @@
 //*****************************************************************************
 #pragma once
 
-#include "crtdbg.h"
+#include <cassert>
 #include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
@@ -24,7 +24,7 @@ namespace WBSF
 	public:
 
 		CForestTentCaterpillarEquations(const CRandomGenerator& RG);
-		
+
 		virtual double ComputeRate(size_t stage, double t)const;
 
 		//relative development

@@ -441,14 +441,14 @@ namespace WBSF
 
 		if (GetStageAge() >= MINIMUM_AGE_LIFTOFF[m_sex])
 		{
-			__int64 tº = 0;
-			__int64 tᶜ = 0;
-			__int64 tᴹ = 0;
+			int64_t tº = 0;
+			int64_t tᶜ = 0;
+			int64_t tᴹ = 0;
 			if (get_t(wº, tº, tᶜ, tᴹ))
 			{
 				//now compute tau, p and flight
-				static const __int64 Δt = 60;
-				for (__int64 t = tº; t <= tᴹ && !bExodus; t += Δt)
+				static const int64_t Δt = 60;
+				for (int64_t t = tº; t <= tᴹ && !bExodus; t += Δt)
 				{
 					double tau = double(t - tᶜ) / (tᴹ - tᶜ);
 					double h = t / 3600.0;
@@ -566,18 +566,18 @@ namespace WBSF
 
 
 
-	//bool CSpruceBudworm::get_t(const CWeatherDay& wº, __int64 &tº, __int64 &tᴹ)const
+	//bool CSpruceBudworm::get_t(const CWeatherDay& wº, int64_t &tº, int64_t &tᴹ)const
 	//{
-	//	static const __int64 Δtᶠ = 5 * 3600;//s
-	//	static const __int64 Δtᶳ = 3600;//s
-	//	static const __int64 Δt = 60;//s
+	//	static const int64_t Δtᶠ = 5 * 3600;//s
+	//	static const int64_t Δtᶳ = 3600;//s
+	//	static const int64_t Δt = 60;//s
 	//	static const double Tº = 25.4;//°C
 
-	//	__int64 tᵀº = 0;
+	//	int64_t tᵀº = 0;
 
 
 	//	CSun sun(wº.GetLocation().m_lat, wº.GetLocation().m_lon, wº.GetLocation().GetTimeZone());
-	//	__int64 tᶳ = (sun.GetSunset(wº.GetTRef())) * 3600;//[s]
+	//	int64_t tᶳ = (sun.GetSunset(wº.GetTRef())) * 3600;//[s]
 	//	if (tᶳ > 12 * 3600)//if sunset is after noon (avoid problem in north)
 	//	{
 
@@ -587,7 +587,7 @@ namespace WBSF
 
 
 	//		assert(tº > 0);
-	//		for (__int64 t = tº; t <= tᴹ && tᵀº == 0; t += Δt)
+	//		for (int64_t t = tº; t <= tᴹ && tᵀº == 0; t += Δt)
 	//		{
 	//			//sunset hour shifted by t
 	//			double h = t / 3600.0;
@@ -616,15 +616,15 @@ namespace WBSF
 	//tᴹ [out]: end of liftoff [s] (since the begginning of the day)
 	//Base on: Modeling the circadian rhythm of migratory flight in spruce budworm
 	//Jacques Régnière, Matthew Garcia and Rémi St-Amant
-	bool CSpruceBudworm::get_t(const CWeatherDay& wº, __int64 &tº, __int64 &tᶜ, __int64 &tᴹ)
+	bool CSpruceBudworm::get_t(const CWeatherDay& wº, int64_t &tº, int64_t &tᶜ, int64_t &tᴹ)
 	{
 		bool bRep = false;
 
 		CSun sun(wº.GetLocation().m_lat, wº.GetLocation().m_lon, wº.GetLocation().GetTimeZone());
-		__int64 tᶳ = sun.GetSunset(wº.GetTRef())*3600;
+		int64_t tᶳ = sun.GetSunset(wº.GetTRef())*3600;
 		if (tᶳ > 12*3600)//if sunset is after noon (avoid problem in north)
 		{
-			static const __int64 H19h30 = 18.5;//s at 18:30 normal time (=19:30 Daylight Saving Time)
+			static const int64_t H19h30 = 18.5;//s at 18:30 normal time (=19:30 Daylight Saving Time)
 
 			//sunset hour shifted by t
 			//temperature interpolation between 2 hours
@@ -1022,7 +1022,7 @@ namespace WBSF
 	//if (!m_bAlreadyFlow)
 
 
-	//__int64 h4 = 4;
+	//int64_t h4 = 4;
 
 
 	//double CSpruceBudworm::GetFlightActivity(const CWeatherDay& weather)

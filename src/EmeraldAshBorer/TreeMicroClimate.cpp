@@ -3,7 +3,7 @@
 // 08/05/2017	1.0.0	Rémi Saint-Amant	Create from articles
 //**************************************************************************************************************
 
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/ContinuingRatio.h"
 #include "TreeMicroClimate.h"
 
@@ -39,7 +39,7 @@ namespace WBSF
 		double range = m_Tmax - m_Tmin;
 		assert(range >= 0);
 
-		int time_factor = (int)hourTmax - 6;  //  "rotates" the radian clock to put the hourTmax at the top  
+		int time_factor = (int)hourTmax - 6;  //  "rotates" the radian clock to put the hourTmax at the top
 		double theta = ((int)h - time_factor)*3.14159 / 12.0;
 		double T = (m_Tmin + m_Tmax) / 2 + range / 2 * sin(theta);
 
@@ -47,16 +47,16 @@ namespace WBSF
 	}
 
 	//*******************************************************************************************
-	
+
 	CNewtonianBarkTemperature::CNewtonianBarkTemperature(double Tair, double K):
 		m_K(K),
 		m_Tt(0)
 	{
-		
+
 		assert(Tair > -60 && Tair < 60);
-		
+
 		//after Vermunt 2012
-		//We used an initial condition of T0 = 0 ◦C, 
+		//We used an initial condition of T0 = 0 ◦C,
 		//and gave the model 48 time steps(h) to converge.
 		for (size_t h = 0; h< 48; h++)
 		{

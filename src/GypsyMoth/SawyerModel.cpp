@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <conio.h>
+#include <cstdio>
 #include <cmath>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 #include "SawyerModel.h"
 #include "GypsyMothCommon.h"
@@ -118,7 +117,7 @@ namespace WBSF
 			//weather.GetDay(day).GetAllenWave(Htemp, 12, gTimeStep);
 
 			double dayout = 0.;
-			//loop over time steps 
+			//loop over time steps
 			const CWeatherDay& wDay = weather.GetDay(day);
 			for (size_t h = 0; h < 24; h += SAWYER_TIME_STEP)
 			{
@@ -160,13 +159,13 @@ namespace WBSF
 			}
 			tout += dayout;
 
-			//if(first_hatch == 730 && tout >= 0.1) 
+			//if(first_hatch == 730 && tout >= 0.1)
 			//{
 			//	first_hatch =  day;
 			//	dayout=tout;
 			//}
 
-			//m_hatching[day]=(float)dayout; 
+			//m_hatching[day]=(float)dayout;
 			if (tout >= 0.1)
 			{
 				m_eggState[day][HATCHING] = dayout;
@@ -205,7 +204,7 @@ namespace WBSF
 			a = fkdt / del;
 			b = 1. + (del - delp[i]) / fkdt;
 			dr = r[i];
-			r[i] = __max(0., dr + a*(vin - b*dr));
+			r[i] = std::max(0., dr + a*(vin - b*dr));
 			delp[i] = del;
 
 			vin = dr;
@@ -245,7 +244,7 @@ namespace WBSF
 
 		double dt = SAWYER_TIME_STEP / 24.;
 
-		//calculate prediapause rates for a lookup table  
+		//calculate prediapause rates for a lookup table
 		for (temp = round_off(lower_thresh[0]), i = 0; temp <= round_off(upper_thresh[0]); temp++)
 		{
 			T = (double)temp - lower_thresh[0];
@@ -253,7 +252,7 @@ namespace WBSF
 
 			if (rate > 0)
 				prediap_table[i] = rate*dt; //(double)timeStep/24.;
-			else 
+			else
 				prediap_table[i] = 0;
 			i++;
 		}
@@ -263,7 +262,7 @@ namespace WBSF
 	}
 
 
-	//Calculates the variability factor for each class in each phase 
+	//Calculates the variability factor for each class in each phase
 	void CSawyerModel::calc_prediapause_variability(void)
 	{
 		int nClass;

@@ -3,11 +3,11 @@
 // 07/03/2019	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
 #include "LaricobiusNigrinusModel.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/DegreeDays.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
-#include <boost/math/distributions/Rayleigh.hpp>
+
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/exponential.hpp>
 
@@ -252,7 +252,7 @@ namespace WBSF
 					for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					{
 						output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
-						assert(!_isnan(output[d][s]));
+						assert(!isnan(output[d][s]));
 					}
 				}
 			}
@@ -322,7 +322,7 @@ namespace WBSF
 				{
 					double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 					double obsX = obsX1 + (obs - obsY1) * slope;
-					assert(!_isnan(obsX) && _finite(obsX));
+					assert(!isnan(obsX) && finite(obsX));
 
 					x = obsX;
 				}

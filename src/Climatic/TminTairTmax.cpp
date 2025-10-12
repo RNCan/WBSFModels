@@ -15,11 +15,11 @@ using namespace WBSF::HOURLY_DATA;
 
 namespace WBSF
 {
-	 
+
 
 	//this line link this model with the EntryPoint of the DLL
 	static const bool bRegistred = CModelFactory::RegisterModel(CTminTairTmax::CreateObject);
-	
+
 	static size_t GetNbDayWithPrcp(const CWeatherYear& weather);
 	static size_t GetNbDayWithPrcp(const CWeatherMonth& weather);
 	static size_t GetNbFrostDay(const CWeatherYear& weather);
@@ -50,7 +50,7 @@ namespace WBSF
 		return msg;
 	}
 
-	
+
 	ERMsg CTminTairTmax::OnExecuteAnnual()
 	{
 		ERMsg msg;
@@ -94,7 +94,7 @@ namespace WBSF
 	}
 
 
-	
+
 	ERMsg CTminTairTmax::OnExecuteDaily()
 	{
 		ERMsg msg;
@@ -108,9 +108,9 @@ namespace WBSF
 			{
 				for (size_t d = 0; d<m_weather[y][m].size(); d++)
 				{
-					const CWeatherDay& wDay = m_weather[y][m][d]; 
+					const CWeatherDay& wDay = m_weather[y][m][d];
 
-					CTRef ref = wDay.GetTRef(); 
+					CTRef ref = wDay.GetTRef();
 					m_output[ref][DAILY_TMIN] = round(wDay[H_TMIN][LOWEST],1);
 					m_output[ref][DAILY_TAIR] = round(wDay[H_TAIR][MEAN], 1);
 					m_output[ref][DAILY_TMAX] = round(wDay[H_TMAX][HIGHEST], 1);
@@ -141,7 +141,7 @@ namespace WBSF
 					{
 						const CHourlyData& data = m_weather[y][m][d][h];
 
-						CTRef ref = data.GetTRef(); 
+						CTRef ref = data.GetTRef();
 						m_output[ref][HOURLY_TMIN] = round( data[H_TAIR], 1);
 						m_output[ref][HOURLY_TAIR] = round( data[H_TAIR], 1);
 						m_output[ref][HOURLY_TMAX] = round( data[H_TAIR], 1);
@@ -155,7 +155,7 @@ namespace WBSF
 
 //
 //
-//	//simulated annaling 
+//	//simulated annaling
 //	void CTminTairTmax::AddSAResult(const StringVector& header, const StringVector& data)
 //	{
 //
@@ -242,8 +242,8 @@ namespace WBSF
 ////					//double test = data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM];
 ////					//CFL::RH2Td(data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM], data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM]);
 ////
-////					if (!_isnan(sim) && !_isnan(obs) &&
-////						_finite(sim) && _finite(obs))
+////					if (!isnan(sim) && !isnan(obs) &&
+////						finite(sim) && finite(obs))
 ////						stat.Add(sim, obs);
 ////				}
 ////
@@ -382,7 +382,7 @@ namespace WBSF
 //
 //	//NOTE: Begin and END are ZERO-BASED Julian dates
 //	//Source:
-//	//Boughner, C.C. 1964. Distribution of growing degree days in Canada. 
+//	//Boughner, C.C. 1964. Distribution of growing degree days in Canada.
 //	//Can. Met. Memoirs 17. Met. Br., Dept. of Transport. 40 p.
 //	//CPeriod GetGrowingSeason(CWeatherYear& weather)
 //	//{
@@ -555,5 +555,5 @@ namespace WBSF
 //		return (weather[H_TMIN][LOWEST] <= 0 ? 1 : 0);
 //	}
 //*/
-	
+
 }

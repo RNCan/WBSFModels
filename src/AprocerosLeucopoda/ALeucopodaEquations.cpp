@@ -97,7 +97,7 @@ namespace WBSF
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], p, T))* BOOST_FACTOR;
 
-		assert(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!isnan(r) && finite(r) && r >= 0);
 
 		return r;
 	}
@@ -134,7 +134,7 @@ namespace WBSF
 			RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
 
 
-		assert(!_isnan(RDR) && _finite(RDR));
+		assert(!isnan(RDR) && finite(RDR));
 
 		return RDR;
 	}
@@ -207,7 +207,7 @@ namespace WBSF
 
 		double sr = (s < ADULT) ? max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], p, T))) : 1;
 
-		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!isnan(sr) && finite(sr) && sr >= 0 && sr <= 1);
 
 		return sr;
 	}
@@ -264,7 +264,7 @@ namespace WBSF
 		vector<double> p(begin(P_LAMBDA), end(P_LAMBDA));
 
 		double lambda = max(0.0, CDevRateEquation::GetRate(LAMBDA_EQ, p, T));
-		assert(!_isnan(lambda) && _finite(lambda));
+		assert(!isnan(lambda) && finite(lambda));
 
 		double brood = 0;
 		if (t >= to)

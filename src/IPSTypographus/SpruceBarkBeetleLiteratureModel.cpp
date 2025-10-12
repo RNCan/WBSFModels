@@ -1,17 +1,17 @@
 //*****************************************************************************
 // Individual-based model of Spruce Bark Beetle (SBB)
-// 
+//
 // Rémi Saint-Amant
 // Canadian Forest Service
-// 
+//
 //*****************************************************************************
 //*****************************************************************************
 // File: WSBModel.cpp
 //
 // Class: CSpruceBarkBeetleLiteratureModel
 //
-// Description: CSpruceBarkBeetleLiteratureModel simulate European Spruce Bark Beetle 
-//              seasonal biology from literature models. 
+// Description: CSpruceBarkBeetleLiteratureModel simulate European Spruce Bark Beetle
+//              seasonal biology from literature models.
 //
 //*****************************************************************************
 // 22/01/2016	1.1.0	Rémi Saint-Amant	Using Weather-Based Simulation Framework (WBSF)
@@ -20,10 +20,10 @@
 
 //#define NO_MINMAX
 
-#include "Basic/timeStep.h"
+#include "Basic/TimeStep.h"
 #include "Basic/UtilMath.h"
 #include "WeatherBased/SnowMelt.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "SpruceBarkBeetleLiteratureModel.h"
 
 using namespace std;
@@ -45,7 +45,7 @@ namespace WBSF
 	//	CModelStatVector stat;
 	//	m_CR.Execute(m_weather, stat);
 	//
-	//	
+	//
 	//
 	//	SetOutput(output);
 	//
@@ -124,11 +124,11 @@ namespace WBSF
 
 			if(ohTmin> ohTmax)
 				Switch(ohTmin, ohTmax);
-			
+
 			weaDay.SetStat(H_TMIN, ohTmin);
 			weaDay.SetStat(H_TMAX, ohTmax);
 
-			
+
 		}
 	};
 
@@ -206,7 +206,7 @@ namespace WBSF
 				ohTmin = -0.1493 + 0.8359 * Tmin + 0.5417 * Sin + 0.16980 * Trange + 0.00000 * Tmin * Sin + 0.005741 * Tmin * Trange + 0.02370 * Sin * Trange;
 				ohTmax = 0.4196 + 0.9372 * Tmax - 0.4265 * Sin + 0.05171 * Trange + 0.03125 * Tmax * Sin - 0.004270 * Tmax * Trange + 0.09888 * Sin * Trange;
 			}
-			
+
 
 
 			if (ohTmin > ohTmax)
@@ -268,9 +268,9 @@ namespace WBSF
 
 		COverheatPtr overheat[4] = { COverheatPtr(new CTOpenTopPhloem), COverheatPtr(new CTOpenBottomPhloem), COverheatPtr(new CTClosePhloem), COverheatPtr(new CTSoil) };
 
-		//CDailyWaveVector TtopOpen;// hourly temperature array 
-		//CDailyWaveVector TbottomOpen;// hourly temperature array 
-		//CDailyWaveVector Tclose;// hourly temperature array 
+		//CDailyWaveVector TtopOpen;// hourly temperature array
+		//CDailyWaveVector TbottomOpen;// hourly temperature array
+		//CDailyWaveVector Tclose;// hourly temperature array
 
 
 
@@ -295,10 +295,10 @@ namespace WBSF
 				for (size_t d = 0; d < m_weather[y][m].size(); d++)
 				{
 					//Regniere Bark Temperature
-					//CDailyWaveVector Tallen;// hourly temperature array 
+					//CDailyWaveVector Tallen;// hourly temperature array
 					//m_weather[y][m][d].GetAllenWave(Tallen, 16, 1);//16 is a factor of 4. Number usually used
 
-					//CDailyWaveVector T[4];// hourly temperature array 
+					//CDailyWaveVector T[4];// hourly temperature array
 					//for (size_t i = 0; i < 4; i++)
 					//{
 					//	//m_weather[y][m][d].GetAllenWave(T[i], 16, 1, *overheat[i]);//16 is a factor of 4. Number usually used
@@ -362,7 +362,7 @@ namespace WBSF
 
 		//	double sumDiapause = stat.GetStat(S_DIAPAUSE_1, p)[SUM];
 		//	double sumSwarming = stat.GetStat(S_SWARMING_1_F1_i+m_swarmingNo, p)[SUM];
-		//	
+		//
 		//	double swarmingJday = 365;
 		//	if( sumSwarming>0 )
 		//	{
@@ -420,7 +420,7 @@ namespace WBSF
 		CTPeriod p = m_weather.GetEntireTPeriod();
 		stat.Init(p);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y1 = 0; y1 < p.GetNbYears(); y1++)
 		{
@@ -557,7 +557,7 @@ namespace WBSF
 
 
 
-	//Simulated Annealing 
+	//Simulated Annealing
 	void CSpruceBarkBeetleLiteratureModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (data.size() == 8)

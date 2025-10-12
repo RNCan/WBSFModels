@@ -4,7 +4,7 @@
 // 21/01/2016	1.2.0	Rémi Saint-Amant	Using Weather-based simulation framework (WBSF)
 // 25/05/2013			Rémi Saint-Amant	Creation from old climatic model
 //**********************************************************************
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "EvapotranspirationModel.h"
 
 
@@ -127,36 +127,36 @@ namespace WBSF
 		return msg;
 	}
 
-	
 
 
 
-	//simulated Annealing 
+
+	//simulated Annealing
 	//void CEvapotranspirationModel::AddSAResult(const CStdStringVector& header, const CStdStringVector& data)
 	//{
 	//
-	//	
+	//
 	//
 	//	if( header.size()==12)
 	//	{
 	//		std::vector<double> obs(4);
-	//	
+	//
 	//		CTRef TRef(data[2].ToShort(),data[3].ToShort()-1,data[4].ToShort()-1,data[5].ToShort());
 	//		for(int i=0; i<4; i++)
 	//			obs[i] = data[i+6].ToDouble();
-	//		
+	//
 	//
 	//		assert( obs.size() == 4 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
-	//	} 
+	//	}
 	//
 	//	/*if( header.size()==26)
 	//	{
-	//		std::vector<double> obs(24); 
-	//	
+	//		std::vector<double> obs(24);
+	//
 	//		for(int h=0; h<24; h++)
 	//			obs[h] = data[h+2].ToDouble();
-	//	
+	//
 	//
 	//		assert( obs.size() == 24 );
 	//		m_SAResult.push_back( CSAResult(CTRef(), obs ) );
@@ -164,11 +164,11 @@ namespace WBSF
 	//	else if( header.size()==13)
 	//	{
 	//		std::vector<double> obs(7);
-	//	
+	//
 	//		CTRef TRef(data[2].ToShort(),data[3].ToShort()-1,data[4].ToShort()-1,data[5].ToShort());
 	//		for(int c=0; c<7; c++)
 	//			obs[c] = data[c+6].ToDouble();
-	//	
+	//
 	//
 	//		assert( obs.size() == 7 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
@@ -176,11 +176,11 @@ namespace WBSF
 	//	else if( header.size()==12)
 	//	{
 	//		std::vector<double> obs(7);
-	//	
+	//
 	//		CTRef TRef(data[2].ToShort(),data[3].ToShort()-1,data[4].ToShort()-1);
 	//		for(int c=0; c<7; c++)
 	//			obs[c] = data[c+5].ToDouble();
-	//	
+	//
 	//
 	//		assert( obs.size() == 7 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
@@ -188,11 +188,11 @@ namespace WBSF
 	//	else if( header.size()==11)
 	//	{
 	//		std::vector<double> obs(7);
-	//	
+	//
 	//		CTRef TRef(data[2].ToShort(),data[3].ToShort()-1);
 	//		for(int c=0; c<7; c++)
 	//			obs[c] = data[c+4].ToDouble();
-	//	
+	//
 	//
 	//		assert( obs.size() == 7 );
 	//		m_SAResult.push_back( CSAResult(TRef, obs ) );
@@ -204,10 +204,10 @@ namespace WBSF
 	//	if( m_SAResult.size() > 0)
 	//	{
 	//		CHourlyStatVector data;
-	//		GetHourlyStat(data); 
+	//		GetHourlyStat(data);
 	//
-	//		for(size_t d=0; d<m_SAResult.size(); d++) 
-	//		{ 
+	//		for(size_t d=0; d<m_SAResult.size(); d++)
+	//		{
 	//			if( m_SAResult[d].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[d].m_ref))
 	//			{
 	//				static const int HOURLY_TYPE[6] = {HOURLY_T,HOURLY_TDEW,HOURLY_REL_HUM,HOURLY_WIND_SPEED,HOURLY_VPD,HOURLY_VPD};
@@ -218,15 +218,15 @@ namespace WBSF
 	//				//double test = data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM];
 	//				//CFL::RH2Td(data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM], data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM]);
 	//
-	//				if( !_isnan(sim)  && !_isnan(obs) &&
-	//					 _finite(sim) &&  _finite(obs) )
+	//				if( !isnan(sim)  && !isnan(obs) &&
+	//					 finite(sim) &&  finite(obs) )
 	//					stat.Add(sim,obs);
 	//			}
 	//
 	//			HxGridTestConnection();
-	//				
+	//
 	//		}
-	//		
+	//
 	///*
 	//		if( m_SAResult[0].m_obs.size() == 24 )
 	//		{
@@ -249,7 +249,7 @@ namespace WBSF
 	//			//			const CWeatherDay& wDay = m_weather[y][m][d];
 	//			//			for(int h=0; h<24; h++)
 	//			//			{
-	//			//				
+	//			//
 	//			//				//switch(m_varType)
 	//			//				//{
 	//			//				////case T_MN:
@@ -264,7 +264,7 @@ namespace WBSF
 	//			//		}
 	//			//	}
 	//			//}
-	//	
+	//
 	//
 	//			//assert( m_SAResult.size() == 1 );
 	//			//assert( m_SAResult[0].m_obs.size() == 24 );
@@ -275,11 +275,11 @@ namespace WBSF
 	//		}
 	//		else if( m_SAResult[0].m_obs.size() == 7 )
 	//		{
-	//			
+	//
 	//
 	//			for(size_t i=0; i<m_SAResult.size(); i++)
 	//			{
-	//				
+	//
 	//				if( m_SAResult[i].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[i].m_ref))
 	//				{
 	//					double obs =  m_SAResult[i].m_obs[m_varType];
@@ -288,7 +288,7 @@ namespace WBSF
 	//				}
 	//
 	//				HxGridTestConnection();
-	//				
+	//
 	//			}
 	//		}
 	//		*/
@@ -297,18 +297,18 @@ namespace WBSF
 	//
 	//void CEvapotranspirationModel::GetFValueDaily(CStatisticXY& stat)
 	//{
-	//  
-	//	if( m_SAResult.size() > 0) 
+	//
+	//	if( m_SAResult.size() > 0)
 	//	{
 	//		OnExecuteDaily();
 	//		const CDailyStatVector& data = (const CDailyStatVector&) GetOutput();
 	//
 	//		for(size_t i=0; i<m_SAResult.size(); i++)
 	//		{
-	//				
+	//
 	//			if( m_SAResult[i].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[i].m_ref))
 	//			{
-	//					
+	//
 	//				static const int DAILY_TYPE[6] = {DAILY_TMIN, DAILY_TMAX, DAILY_MEAN_TDEW, DAILY_MEAN_REL_HUM, DAILY_MEAN_WNDS, DAILY_MEAN_VPD};
 	//				double obs =  m_SAResult[i].m_obs[m_varType];
 	//				double sim = data[m_SAResult[i].m_ref][DAILY_TYPE[m_varType]];
@@ -316,7 +316,7 @@ namespace WBSF
 	//			}
 	//
 	//			HxGridTestConnection();
-	//				
+	//
 	//		}
 	//	}
 	//}
@@ -327,22 +327,22 @@ namespace WBSF
 	//
 	//	if( m_SAResult.size() > 0)
 	//	{
-	//		
+	//
 	//		OnExecuteMonthly();
 	//		const CMonthlyStatVector& data = (const CMonthlyStatVector&) GetOutput();
 	//
 	//		for(size_t i=0; i<m_SAResult.size(); i++)
 	//		{
-	//				
+	//
 	//			if( m_SAResult[i].m_obs[m_varType] >-999 && data.is_inside( m_SAResult[i].m_ref))
 	//			{
 	//
-	//					
+	//
 	//				static const int MONTHLY_TYPE[6] = {MONTHLY_MEAN_TMIN,MONTHLY_MEAN_TMAX, MONTHLY_MEAN_TDEW, MONTHLY_MEAN_REL_HUM, MONTHLY_MEAN_WNDS, MONTHLY_MEAN_VPD};
 	//				double obs =  m_SAResult[i].m_obs[m_varType];
 	//				double sim = data[m_SAResult[i].m_ref][MONTHLY_TYPE[m_varType]];
 	//
-	//				
+	//
 	//
 	//
 	//
@@ -350,7 +350,7 @@ namespace WBSF
 	//			}
 	//
 	//			HxGridTestConnection();
-	//				
+	//
 	//		}
 	//	}
 	//}

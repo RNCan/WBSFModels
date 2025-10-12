@@ -1,7 +1,7 @@
 //**********************************************************************
 //
 // 02/06/2021 Rémi Saint-Amant	Update to BioSIM 11
-// 02/03/2011 Rémi Saint-Amant	New build 
+// 02/03/2011 Rémi Saint-Amant	New build
 // 08/04/2011 Rémi Saint-Amant	Create a specific class for spruce budworm
 // 01/07/2010 Rémi St-Amant and J. Régnière	Generalization to Continuing Ratio Model
 //
@@ -14,7 +14,7 @@
 #include "SBW-Lysyk-Model.h"
 #include <cmath>
 #include <cassert>
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -27,7 +27,7 @@ namespace WBSF
 	static const bool bRegistred =
 		CModelFactory::RegisterModel(CSBWLysykModel::CreateObject);
 
-	
+
 
 
 	enum TOutput { O_DD, O_L2, O_L3, O_L4, O_L5, O_L6, O_L7, O_L8, O_AI, NB_OUTPUTS};
@@ -76,7 +76,7 @@ namespace WBSF
 
 
 		static const double BASE_TEMP = 8.0;
-		 
+
 
 		stat.Init(m_weather.GetEntireTPeriod(CTM::DAILY), NB_OUTPUTS);
 
@@ -85,7 +85,7 @@ namespace WBSF
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::DAILY);
 			CTRef start_date(p.begin().GetYear(), MARCH, DAY_01);
 			double DD_sum = 0.0;
-			
+
 			for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 			{
 				const CWeatherDay& day = m_weather.GetDay(TRef);
@@ -106,19 +106,19 @@ namespace WBSF
 				{
 					AI += p[i] * (i + 2);
 				}
-	
+
 				size_t c=0;
 				stat[TRef][c++] = WBSF::round(DD_sum,1);
 				for(int i=0; i< NB_STAGES; i++)
 					stat[TRef][c++] = WBSF::round(p[i]*100,1);
-			
+
 				stat[TRef][c++] = WBSF::round(AI,1);
 			}
 		}
-	
+
 		return msg;
 	}
-	
+
 	std::array<double, CSBWLysykModel::NB_STAGES> CSBWLysykModel::ContinuingRatio(double ddays)const
 	{
 		static const std::array < std::array<double, NB_PARAMS>, NB_SPECIES> P =
@@ -129,16 +129,16 @@ namespace WBSF
 
 
 		size_t s = m_species;
-		
+
 		std::array<double, NB_STAGES> p = { 0 };
 		p[L2] = 1;//100% in L2 stage
-		
-		if(ddays > 0) 
+
+		if(ddays > 0)
 		{
 			std::array<double, NB_PARAMS> v = { 0 };
 			//Exiting first (initial) stage
 			p[L2]=1./(1.+exp(-((P[s][A2]-ddays)/sqrt(square(P[s][B])*ddays))));
-	
+
 			//Intermediate stages
 			for(size_t L=L3; L < L8; L++)
 			{
@@ -146,21 +146,21 @@ namespace WBSF
 				size_t A = L;
 				double Pi2 = 1./(1.+exp(-((P[s][A]-ddays)/sqrt(square(P[s][B])*ddays))));
 				double Pi1 = 1./(1.+exp(-((P[s][A-1]-ddays)/sqrt(square(P[s][B])*ddays))));
-				
+
 				//if( (Pi2<0.98 || Pi1<0.98) && (Pi2>0.02 || Pi1>0.02) && (Pi2-Pi1) < 0 )
 					//bValid = false;
-	
+
 				//p[i] = Pi2-Pi1;
 				p[A] = max(0.0, Pi2-Pi1 );
 			}
-			
+
 			//Entering final stage (could be death of last stage, for example, if last parameters are a longevity)
 			p[L8]=1./(1.+exp((P[s][A7]-ddays)/sqrt(square(P[s][B])*ddays)));
 		}
-	
+
 		return p;
 	}
-	
+
 
 
 

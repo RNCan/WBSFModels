@@ -3,7 +3,7 @@
 //*****************************************************************************
 #pragma once
 
-#include "crtdbg.h"
+#include "cassert"
 #include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
@@ -22,7 +22,7 @@ namespace WBSF
 	{
 	public:
 
-		
+
 
 		CSpruceBudwormEquations(const CRandomGenerator& RG);
 
@@ -44,11 +44,11 @@ namespace WBSF
 		double get_ξ(size_t sex, double A)const;
 		double get_P(double T)const;
 		static double get_L(double A);
-		
+
 		double get_p_exodus()const;
 		double get_defoliation(double defoliation)const;
 
-		
+
 	protected:
 
 		enum TEquation{ E_EGG, E_L1, E_L2o, E_L2, E_L3, E_L4, E_L5, E_L6_MALE, E_L6_FEMALE, E_PUPAE_MALE, E_PUPAE_FEMALE, E_ADULT, NB_EQUATION };
@@ -63,7 +63,7 @@ namespace WBSF
 
 		static const double P[NB_EQUATION][NB_PARAMETER];
 		static double b1Factor[SBW::NB_STAGES];
-		
+
 
 		//relative development
 		enum TRelDevParameters{ A1, A2, NB_REL_DEV_PARAMETERS };

@@ -187,7 +187,7 @@ namespace WBSF
 			r = max(0.0, -0.037 + 0.003 * T);*/
 
 
-		assert(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!isnan(r) && finite(r) && r >= 0);
 
 		return r;
 	}
@@ -240,7 +240,7 @@ namespace WBSF
 			rr = 1 - log((pow(Э, -m_D[s][Ϙ]) - 1) / (pow(0.5, -m_D[s][Ϙ]) - 1)) / m_D[s][к];
 		}
 
-		assert(!_isnan(rr) && _finite(rr));
+		assert(!isnan(rr) && finite(rr));
 		return rr;
 	}
 

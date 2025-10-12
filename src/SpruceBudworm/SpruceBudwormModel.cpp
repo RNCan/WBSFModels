@@ -28,7 +28,7 @@
 //*****************************************************************************
 #include "Basic/ModelStat.h"
 #include "Basic/UtilStd.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "SpruceBudwormModel.h"
 #include "SpruceBudworm.h"
 

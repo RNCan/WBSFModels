@@ -1,21 +1,21 @@
 //*****************************************************************************
 // Individual-based model of Western Spruce Busdworm (WSB)
-// 
+//
 // Jacques Régnière
 // Canadian Forest Service
-// 
+//
 // Programmer: Rémi St-Amant
-// 
+//
 // Winter 2009
-// 
+//
 //*****************************************************************************
 //*****************************************************************************
 // File: WSBModel.cpp
 //
 // Class: CWSBModel
 //
-// Description: CWSBModel is a BioSIM model that computes Western Spruce Busdworm 
-//              seasonal biology. There are two model, one base on individual 
+// Description: CWSBModel is a BioSIM model that computes Western Spruce Busdworm
+//              seasonal biology. There are two model, one base on individual
 //				model. The other is base developement rate.(a revoir)
 //
 //*****************************************************************************
@@ -24,7 +24,7 @@
 // 01/04/2018	3.2.0	Rémi Saint-Amant    Compile with VS 2017
 // 29/08/2017	3.1.3	Rémi Saint-Amant    Revised model
 // 04/05/2017	3.1.2	Rémi Saint-Amant    New hourly generation
-// 23/12/2016	3.1.1	Rémi Saint-Amant    Correctiopn on overheating 
+// 23/12/2016	3.1.1	Rémi Saint-Amant    Correctiopn on overheating
 // 20/09/2016	3.1.0	Rémi Saint-Amant    Change Tair and Trng by Tmin and Tmax
 // 21/01/2016	3.0.0	Rémi Saint-Amant	Update with BioSIM 11.0
 // 19/09/2013	2.10	Rémi Saint-Amant	Add Shoot Devel as output variable
@@ -36,8 +36,8 @@
 // 23/01/2009			Rémi Saint-Amant    Creation
 //*****************************************************************************
 
-#include "Basic/timeStep.h"
-#include "Modelbased/EntryPoint.h"
+#include "Basic/TimeStep.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include "WSpruceBudworm.h"
 #include "WSBModel.h"
@@ -84,7 +84,7 @@ namespace WBSF
 		m_bApplyAsynchronyMortality = true;
 		m_bApplyWindowMortality = true;
 
-		m_nbObjects = 400;       //Number of females in the initial attack 
+		m_nbObjects = 400;       //Number of females in the initial attack
 		m_nbMinObjects = 100;
 		m_nbMaxObjects = 1000;
 		memset(m_rho25Factor, 0, NB_STAGES * sizeof(m_rho25Factor[0]));
@@ -212,8 +212,8 @@ namespace WBSF
 		//This is where the model is actually executed
 		stat.Init(p, NB_WSB_STAT);
 
-		//we simulate 2 years at a time. 
-		//we also manager the possibility to have only one year 
+		//we simulate 2 years at a time.
+		//we also manager the possibility to have only one year
 		for (size_t y1 = 0; y1 < m_weather.GetNbYears(); y1++)
 		{
 			CTPeriod p = m_weather[y1].GetEntireTPeriod(CTM(CTM::DAILY));
@@ -328,7 +328,7 @@ namespace WBSF
 
 
 
-	//simulated annaling 
+	//simulated annaling
 	void CWSBModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_DATA_EMERGENCE)
@@ -489,7 +489,7 @@ namespace WBSF
 
 				double NLL = statLH[LIKELIHOOD];
 				//Try to maximize MAE of log(LH)
-				if (NLL > -9999 && !_isnan(NLL) && _finite(NLL))
+				if (NLL > -9999 && !isnan(NLL) && finite(NLL))
 					stat.Add(NLL, 0);
 			}
 		}
@@ -514,7 +514,7 @@ namespace WBSF
 				double sim = 0;// dayStat.GetAverageInstar(false);
 				assert(sim = -9999 || (sim >= 2 && sim <= 8));
 
-				//some obs 0 or 100 were set to -9999 
+				//some obs 0 or 100 were set to -9999
 				if (obs >= 2 && obs <= 8 &&
 					sim >= 2 && sim <= 8)
 				{

@@ -1,6 +1,6 @@
 ﻿//**********************************************************************
 // 31/01/2020	1.1.3	Rémi Saint-Amant	Bug correction to manage multiple years
-// 06/08/2013			Rémi Saint-Amant	Create from excel file 
+// 06/08/2013			Rémi Saint-Amant	Create from excel file
 //**********************************************************************
 #include <cmath>
 #include <cassert>
@@ -9,7 +9,7 @@
 #include "Basic/UtilStd.h"
 #include "Basic/CSV.h"
 #include "WeatherBased/DegreeDays.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "Insect Development Database III.h"
 
 
@@ -106,7 +106,7 @@ namespace WBSF
 		m_insectInfo = IDDatabase[name];
 		m_bCumulative = parameters[c++].GetBool();
 
-		
+
 		/*if (insectIndex >= 0 && insectIndex < IDDatabase.Get().size())
 		{
 			m_insectInfo = IDDatabase[insectIndex];

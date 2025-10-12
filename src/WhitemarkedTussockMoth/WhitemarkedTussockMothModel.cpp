@@ -2,7 +2,7 @@
 // 22/04/2019	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
 #include "WhitemarkedTussockMothModel.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/DegreeDays.h"
 
 using namespace WBSF::HOURLY_DATA;
@@ -41,7 +41,7 @@ namespace WBSF
 			m_H[p] = CWhitemarkedTussockMothEquations::H[p];
 		}
 
-		
+
 		m_egg_factor = {1.0,0.59};
 
 		m_col_weight.fill({ {0,0,0,0,0} });
@@ -106,7 +106,7 @@ namespace WBSF
 			{
 				m_H[p] = parameters[c++].GetFloat();
 			}
-			
+
 			for (size_t p = 0; p < 2; p++)
 				m_egg_factor[p] = parameters[c++].GetFloat();
 		}
@@ -174,7 +174,7 @@ namespace WBSF
 		pHost->m_nbMaxObjects = 1000;
 		pHost->Initialize<CWhitemarkedTussockMoth>(CInitialPopulation(p.begin(), 0, 400, 100, EGG));
 
-		//add host to stand			
+		//add host to stand
 		stand.m_host.push_front(pHost);
 
 
@@ -326,7 +326,7 @@ namespace WBSF
 				{
 					double slope = (simX2 - simX1) / (simY2 - simY1);
 					double obsX = simX1 + (obsY - simY1)*slope;
-					assert(!_isnan(obsX) && _finite(obsX));
+					assert(!isnan(obsX) && finite(obsX));
 
 					x = obsX;
 				}
@@ -374,9 +374,9 @@ namespace WBSF
 
 		static const size_t COLPOS[2][5] = { { S_EGG0, S_LARVAE0, S_PUPA0, S_ADULT0, S_EGG_MASS0 },{ S_EGG1, S_LARVAE1, S_PUPA1, S_ADULT1, S_EGG_MASS1 } };
 
-		//static const double HATCH_GDD[3][2] = 
+		//static const double HATCH_GDD[3][2] =
 		//{
-		//	{72.0,0.9},//mean of SE = 1.3, 
+		//	{72.0,0.9},//mean of SE = 1.3,
 		//	{71.5,1.8},
 		//	{67.7,1.2}
 		//};
@@ -431,10 +431,10 @@ namespace WBSF
 		//			}
 		//		}
 		//	}
-		//	
+		//
 		//	stat.Add((HATCH_GDD[y][0] - 70.4) / 2.351, (statHatch[MEAN] - 70.4) / 2.351);
 		//	stat.Add((HATCH_GDD[y][1] - 1.3) / 0.458, (statHatch[STD_ERR] - 1.3) / 0.458);
-		//	
+		//
 		//}
 		//return;
 
@@ -460,7 +460,7 @@ namespace WBSF
 			output.Init(m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY)), NB_STATS, 0);
 			ExecuteDaily(m_weather[y], output);
 
-			
+
 			for (size_t i = 0; i < m_SAResult.size(); i++)
 			{
 				if (m_SAResult[i].m_ref.GetYear() == year)
@@ -482,7 +482,7 @@ namespace WBSF
 						//}
 
 
-		
+
 						if (obs_y > 0 && obs_y<100)
 						{
 							double obs_x = m_SAResult[i].m_ref.GetDOY();
@@ -643,7 +643,7 @@ namespace WBSF
 //	//Copyright 1985 - Regents of the University of California.All rights reserved.
 //
 //	//LOGICAL * 2 AB                     //T = ABOVE; F = BELOW
-//	//INTEGER * 2 ERROR                  
+//	//INTEGER * 2 ERROR
 //	//C
 //	//REAL * 4 ARG,
 //	//*DDAY, //DEGREE - DAYS

@@ -49,7 +49,7 @@ namespace WBSF
 
 		double Rt = max(0.0, CDevRateEquation::GetRate(EQ_TYPE[s], p, T));
 
-		assert(!_isnan(Rt) && _finite(Rt));
+		assert(!isnan(Rt) && finite(Rt));
 		assert(Rt >= 0);
 
 		return Rt;
@@ -113,7 +113,7 @@ namespace WBSF
 
 		double Rt = max(0.0, CDevRateEquation::GetRate(EQ_TYPE[e], p, T));
 
-		assert(!_isnan(Rt) && _finite(Rt));
+		assert(!isnan(Rt) && finite(Rt));
 		assert(Rt >= 0);
 
 		return Rt;

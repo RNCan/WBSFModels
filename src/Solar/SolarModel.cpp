@@ -4,7 +4,7 @@
 //**************************************************************************************************************
 
 #include "Basic/Sun.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "SolarModel.h"
 
 
@@ -17,11 +17,11 @@ namespace WBSF
 	//links this class with the EntryPoint of the DLL
 	static const bool bRegistred =
 		CModelFactory::RegisterModel(CSolarModel::CreateObject);
-	
+
 	enum TColdHardinessD { O_SUNRISE, O_SOLAR_NOON, O_SUNSET, O_DAY_LENGTH, O_TH, O_DD, O_SUM_DD, O_Y_SIM, NB_OUTPUTS_D };
 
 
-	
+
 	extern const char HEADER_D[] = "Sunrise,SolarNoon,Sunset,DayLength";
 
 
@@ -74,7 +74,7 @@ namespace WBSF
 			const CWeatherDay& wday = m_weather.GetDay(TRef);
 			double day_length = round(wday.GetDayLength() / 3600.0,1);
 			double threshold = round(m_ADE[ʎ0] +m_ADE[ʎ1] * 1 / (1 + exp(-(day_length - m_ADE[ʎ2]) / m_ADE[ʎ3])),1);
-			double T = round(wday[H_TNTX][MEAN],1); 
+			double T = round(wday[H_TNTX][MEAN],1);
 			double DD = max(0.0, threshold - T);//DD can be negative
 			assert(DD >= 0);
 

@@ -2,7 +2,7 @@
 //22/05/2017	Rémi Saint-Amant	Creation
 //*********************************************************************
 #include "WeatherBased/WeatherDefine.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ClimdexVariables.h"
 #include "ClimdexModel.h"
 
@@ -44,7 +44,7 @@ namespace WBSF
 		CTPeriod simulationP = m_weather.GetEntireTPeriod(CTM::DAILY);
 		if (!simulationP.is_inside(m_basePeriod))
 			msg.ajoute("The base period " + m_basePeriod.GetFormatedString() + " is not inside the simulation period " + simulationP.GetFormatedString());
-			
+
 
 		return msg;
 	}
@@ -60,7 +60,7 @@ namespace WBSF
 		climdex.m_nn = m_nn;
 		climdex.m_bUseBootstrap = m_bUseBootstrap;
 		msg = climdex.Execute(CTM::MONTHLY, m_weather, m_output);
-		
+
 
 		return msg;
 	}

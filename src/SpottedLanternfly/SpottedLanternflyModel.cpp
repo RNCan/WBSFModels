@@ -2,7 +2,7 @@
 // 07/07/2021	1.0.0	Rémi Saint-Amant   Creation
 //***********************************************************
 #include "SpottedLanternflyModel.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 
 using namespace WBSF::HOURLY_DATA;
@@ -25,7 +25,7 @@ namespace WBSF
 		NB_INPUT_PARAMETER = -1;
 		VERSION = "1.0.0 (2022)";
 
-		
+
 		m_bApplyAttrition = true;
 		m_bApplyFrost = true;
 		m_bCumul = true;
@@ -76,7 +76,7 @@ namespace WBSF
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
 		m_output.Init(p, NB_OUTPUTS, 0);
 
-		//we simulate 2 years at a time. 
+		//we simulate 2 years at a time.
 		//we also manager the possibility to have only one year
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
@@ -114,7 +114,7 @@ namespace WBSF
 
 		pHost->Initialize<CSpottedLanternfly>(CInitialPopulation(p.begin(), 0, 400, 100, EGG));
 
-		//add host to stand			
+		//add host to stand
 		stand.m_host.push_front(pHost);
 
 
@@ -134,7 +134,7 @@ namespace WBSF
 
 		if (m_bCumul)
 		{
-			
+
 			for (size_t s = 0; s < NB_STAGES; s++)
 			{
 				size_t ss = (s == 0) ? S_EGG_HATCH : S_EGG + s;
@@ -151,7 +151,7 @@ namespace WBSF
 			//for (size_t s = 0; s < DEAD_ADULT; s++)
 				//output = ;
 		}
-		
+
 		//stat = output.GetStat(S_ADULT, p);
 		//if (stat.is_init() && stat[SUM] > 0)
 		//{
@@ -222,7 +222,7 @@ namespace WBSF
 			{
 				if (m_SAResult[i].m_ref.GetYear() == year)
 				{
-					//flies catch 
+					//flies catch
 
 					if (m_SAResult[i].m_obs[I_CUMUL_EGG_HATCH] > -999)
 					{
@@ -247,7 +247,7 @@ namespace WBSF
 		if (m_EOD[CDD_Τᴴ¹] > m_EOD[CDD_Τᴴ²])
 			return false;
 
-		//T  Time Survival   
+		//T  Time Survival
 		static double S[15][3] = {
 { 5 ,  7.0, 0.2},
 { 5 , 28.0, 1.2},
@@ -283,7 +283,7 @@ namespace WBSF
 
 		//	CHCDD[TRef][0] = CHDD;
 		//}
-		
+
 		vector<pair<double, double>> SS;
 		double totalS = 254.0;
 		for (size_t i = 0; i < 15; i++)
@@ -341,9 +341,9 @@ namespace WBSF
 			ExecuteDaily(m_weather[year], output);
 			GetEggHacth(m_EOD, m_weather[year], output);
 
-			
 
-			
+
+
 			CTPeriod p = output.GetTPeriod();
 			CModelStatVector cumcul_output(p, DEAD_ADULT, 0);
 
@@ -364,7 +364,7 @@ namespace WBSF
 			{
 				if (m_SAResult[i].m_ref.GetYear() == year)
 				{
-					//flies catch 
+					//flies catch
 					for (size_t s = N1; s <= N4; s++)
 					{
 						if (m_SAResult[i].m_obs[I_CUMUL_EGG_HATCH + s] > -999)
@@ -424,7 +424,7 @@ namespace WBSF
 			{
 				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 				double obsX = obsX1 + (obs - obsY1) * slope;
-				assert(!_isnan(obsX) && _finite(obsX));
+				assert(!isnan(obsX) && finite(obsX));
 
 				DOY = obsX;
 			}

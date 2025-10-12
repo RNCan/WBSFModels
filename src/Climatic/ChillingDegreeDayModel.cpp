@@ -1,7 +1,7 @@
 ﻿//*****************************************************************************
 // DegreeDay summation
 // Rémi Saint-Amant
-// 
+//
 //*****************************************************************************
 //*****************************************************************************
 // File: ChillingDegreDaysModel.cpp
@@ -24,7 +24,7 @@
 //*****************************************************************************
 
 #include <array>
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ChillingDegreeDayModel.h"
 
 
@@ -47,7 +47,7 @@ namespace WBSF
 		NB_INPUT_PARAMETER = 3; //set the number of parameters for this model
 		VERSION = "1.0.0 (2022)"; //set the version of this model
 
-		//This model has 8 input parameters 
+		//This model has 8 input parameters
 		m_firstDate = CMonthDay(AUGUST, DAY_01);
 		m_lastDate = CMonthDay(APRIL, DAY_30);
 		m_threshold = 0;
@@ -70,15 +70,15 @@ namespace WBSF
 		m_threshold = parameters[c++].GetReal();//for reverse model
 		m_firstDate = CMonthDay(parameters[c++].GetString());
 		m_lastDate = CMonthDay(parameters[c++].GetString());
-		
 
-		
+
+
 		if (!m_firstDate.IsValid())
-			msg.ajoute("Model error: beginning date is invalid."); 
-	
+			msg.ajoute("Model error: beginning date is invalid.");
+
 		if (!m_lastDate.IsValid())
 			msg.ajoute("Model error: ending date is invalid.");
-			
+
 		//perform verification
 	//	if (m_firstDate.GetTRef(0) < m_lastDate.GetTRef(0))
 		//	msg.ajoute("Model error: beginning date must be greater than ending date.");
@@ -94,15 +94,15 @@ namespace WBSF
 	{
 		ERMsg msg;//define error message result
 
-		
+
 		m_output.Init(m_weather.GetEntireTPeriod(CTM::DAILY), 1, -999);
 
-		
+
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
-			
+
 			int year = m_weather.GetFirstYear() + int(y);
-			
+
 			CTRef begin = m_firstDate.GetTRef(year);
 			CTRef end = m_lastDate.GetTRef(year);
 			if(end<= begin)
@@ -148,7 +148,7 @@ namespace WBSF
 	//	CModelStatVector stats;
 	//	m_DD.Execute(m_weather, stats);
 	//	ComputeFinal(CTM(CTM::ANNUAL), stats, m_output);
-	//	 
+	//
 
 	//	return msg;
 	//}

@@ -160,7 +160,7 @@ namespace WBSF
 		default: assert(false);
 		}
 
-		assert(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!isnan(r) && finite(r) && r >= 0);
 
 		return r;
 	}
@@ -189,7 +189,7 @@ namespace WBSF
 		default: assert(false);
 		}
 
-		assert(!_isnan(rr) && _finite(rr));
+		assert(!isnan(rr) && finite(rr));
 
 		return rr;
 	}

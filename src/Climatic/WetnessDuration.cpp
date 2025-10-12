@@ -7,7 +7,7 @@
 
 
 #include "Basic/Sun.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/Evapotranspiration.h"
 #include "WetnessDuration.h"
 
@@ -115,11 +115,11 @@ namespace WBSF
 
 
 		//NbVal=   720	Bias=-0.40044	MAE= 3.85938	RMSE= 4.96637	CD= 0.37430	R²= 0.39480
-		//x0                  	=  -0.80650  
-		//x1                  	=   0.54394  
-		//x2                  	=   1.00000  
-		//x3                  	=   0.49111  
-		//x4                  	=   1.08240  
+		//x0                  	=  -0.80650
+		//x1                  	=   0.54394
+		//x2                  	=   1.00000
+		//x3                  	=   0.49111
+		//x4                  	=   1.08240
 		double K[5] = { -0.8, 0.55, 1, 0.5, 1 };
 		//double K[5] = {m_x0,m_x1,m_x2,m_x3,m_x4};
 		//static const double K[4] = {-1.1, 1.1, -2.8, 0.2};
@@ -236,7 +236,7 @@ namespace WBSF
 	}
 	*/
 
-	//2.  For the extended threshold leaf wetness model the RH is classified as follows 
+	//2.  For the extended threshold leaf wetness model the RH is classified as follows
 	double CWetnessDurationModel::GetWetnessDurationExtT(CWeatherDay& hourlyDay)const
 	{
 		//if( m_x0>m_x1)
@@ -251,17 +251,17 @@ namespace WBSF
 			//}
 			//else
 			//{
-				//x0                  	=  27.67887  
-				//x1                  	=  96.60543  
-				//x2                  	=  -1.52337  
-				//x3                  	=  21.48100 
+				//x0                  	=  27.67887
+				//x1                  	=  96.60543
+				//x2                  	=  -1.52337
+				//x3                  	=  21.48100
 				//If RH<70% then hour is DRY (0)
 				//if( RH<m_x0)//70
 				//{
 				//	bWet=false;
 				//}
 				//else  If RH>87% then hour is wet (1)
-				//else 
+				//else
 				//if( RH>m_x1)//87
 				//{
 				//	bWet=true;
@@ -303,26 +303,26 @@ namespace WBSF
 		return max(0.0, min(24.0, WD + 0.16*prcp));
 
 		//		NbVal=   734	Bias= 0.99541	MAE= 3.50158	RMSE= 4.67131	CD= 0.30291	R²= 0.42217
-		//x0                  	=  -1.53774  
-		//x1                  	=  93.99692  
-		//x4                  	=   0.08814  
+		//x0                  	=  -1.53774
+		//x1                  	=  93.99692
+		//x4                  	=   0.08814
 //NbVal=   720	Bias= 0.07164	MAE= 3.45338	RMSE= 4.45647	CD= 0.49619	R²= 0.51406
-//x0                  	=  -1.73950  
-//x1                  	=  86.21532  
-//x4                  	=   0.16381  
+//x0                  	=  -1.73950
+//x1                  	=  86.21532
+//x4                  	=   0.16381
 //NbVal=   355	Bias=-0.25221	MAE= 2.93518	RMSE= 3.74560	CD= 0.10009	R²= 0.20804
-//x0                  	=  -3.15589  
-//x1                  	=  84.29987  
-//x4                  	=   0.03816  
+//x0                  	=  -3.15589
+//x1                  	=  84.29987
+//x4                  	=   0.03816
 
-			//else 
+			//else
 			//{
 			//	if( RH<m_x0)//70
 			//	{
 			//		bWet=false;
 			//	}
 			//	//else  If RH>87% then hour is wet (1)
-			//	//else 
+			//	//else
 			//	if( RH>m_x1)//87
 			//	{
 			//		bWet=true;
@@ -330,8 +330,8 @@ namespace WBSF
 			//	bWet=m_bWetPrevious;
 			//}
 
-	//If RH is between 70 -87% then  Hour is WET (1) if the RH is 3% higher than the previous hour OR it is DRY (0) if it is 2% lower than the previous hour 
-	//ELSE it is considered the same as the previous hour. 
+	//If RH is between 70 -87% then  Hour is WET (1) if the RH is 3% higher than the previous hour OR it is DRY (0) if it is 2% lower than the previous hour
+	//ELSE it is considered the same as the previous hour.
 
 
 
@@ -365,19 +365,19 @@ namespace WBSF
 
 		//	N=     65401	T=  0.00020	F=14823.92487
 		//NbVal=   432	Bias= 0.34594	MAE= 4.00190	RMSE= 5.50883	CD= 0.03973	R²= 0.25505
-		//x0                  	=   0.17023  
-		//x1                  	=   0.24141  
-		//x2                  	=   2.03876  
-		//x4                  	=   0.20339  
+		//x0                  	=   0.17023
+		//x1                  	=   0.24141
+		//x2                  	=   2.03876
+		//x4                  	=   0.20339
 		//
 		//NbVal=   720	Bias= 0.49882	MAE= 4.24834	RMSE= 5.46293	CD= 0.24292	R²= 0.31821
-		//x0                  	=   2.55440  
-		//x1                  	=   0.75859  
-		//x2                  	=  18.28395  
-		//x3                  	=   0.00965  
-		//x4                  	=   0.18136  
+		//x0                  	=   2.55440
+		//x1                  	=   0.75859
+		//x2                  	=  18.28395
+		//x3                  	=   0.00965
+		//x4                  	=   0.18136
 
-			//if( h1==-1 && (DPD<0.17023 && sRad<0.24141) ) 
+			//if( h1==-1 && (DPD<0.17023 && sRad<0.24141) )
 		const CWeatherDay& nextHourlyDay = hourlyDay.GetNext();
 
 
@@ -476,9 +476,9 @@ namespace WBSF
 
 		//N=     25117	T=  0.32946	F=22713.29868
 		//NbVal=   720	Bias= 0.08309	MAE= 4.31113	RMSE= 5.61660	CD= 0.19973	R²= 0.30455
-		//x0                  	=  15.00099  
-		//x1                  	=  -9.08771  
-		//x4                  	=   0.03112  
+		//x0                  	=  15.00099
+		//x1                  	=  -9.08771
+		//x4                  	=   0.03112
 
 		//double prcp = hourlyDay.GetDailyStat(H_PRCP)[SUM];
 
@@ -747,9 +747,9 @@ namespace WBSF
 	//
 	//
 	//	for(size_t y=0; y<m_weather.size(); y++)
-	//    {		
+	//    {
 	//		int year = m_weather.GetFirstYear() + int(y);
-	//		
+	//
 	//		CStatistic statWD;
 	//		for (size_t m = 0; m<m_weather[y].size(); m++)
 	//		{
@@ -778,7 +778,7 @@ namespace WBSF
 	//
 	//	//CWeatherStation weather(m_weather);
 	//	//weather.AjusteMeanForHourlyRequest();
-	//	
+	//
 	//	//CYearsVector hourlyData;
 	//	//weather.GetHourlyVar(hourlyData, m_info.m_loc);
 	//	CWetnessDurationStat dailyStat;
@@ -822,7 +822,7 @@ namespace WBSF
 	//}
 	//
 	//
-	 
+
 	ERMsg CWetnessDurationModel::OnExecuteDaily()
 	{
 		ERMsg msg;
@@ -835,14 +835,14 @@ namespace WBSF
 
 
 		m_output.Init(m_weather.GetEntireTPeriod(CTM(CTM::DAILY)), 1);
-		
+
 		/*if( m_obs.empty() )
 		{
 			m_dailyData = m_weather;
 			m_dailyData.AjusteMeanForHourlyRequest(m_info.m_loc);
 			m_dailyData.GetHourlyVar(m_obs, m_info.m_loc);
 		}*/
-	
+
 		for (size_t y = 0; y<m_weather.size(); y++)
 		{
 			int year = m_weather.GetFirstYear() + int(y);
@@ -861,7 +861,7 @@ namespace WBSF
 		return msg;
 
 	}
-	
+
 
 	ERMsg CWetnessDurationModel::OnExecuteHourly()
 	{
@@ -912,7 +912,7 @@ namespace WBSF
 
 
 	//********************************************************************************************************************
-	//simulated annaling 
+	//simulated annaling
 	void CWetnessDurationModel::AddHourlyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
 		if (header.size() == NB_INPUT_HOURLY + 6)
@@ -980,7 +980,7 @@ namespace WBSF
 		//			//me.m_obs[ref][H_ADD3] = (float)Fcd;
 		//			//me.m_obs[ref][H_ADD4] = (float)Rln;
 		//			//me.m_obs[ref][H_ADD5] = (float)me.m_obs[ref].GetNetLongWaveRadiationH(1);
-		//			
+		//
 		//		}
 		//	}
 		//}
@@ -1047,8 +1047,8 @@ namespace WBSF
 			////CWetnessDurationStat hourlyStat;
 			////OnExecuteHourly(hourlyStat);
 
-			//for(size_t h=0; h<m_SAResult.size(); h++) 
-			//{ 
+			//for(size_t h=0; h<m_SAResult.size(); h++)
+			//{
 			//
 			//	CTRef TRef = m_SAResult[h].m_ref;
 			//	if (simStat.is_inside(TRef) && m_SAResult[h].m_obs[H_WETNESS]>-999)
@@ -1059,7 +1059,7 @@ namespace WBSF
 			//	}
 
 			//	HxGridTestConnection();
-			//		
+			//
 			//}
 		}
 
@@ -1130,7 +1130,7 @@ namespace WBSF
 		//					wDay[H_WNDS] = m_SAResult[i].m_obs[D_WIND_SPEED];
 		//				if( m_SAResult[i].m_obs[D_SRAD]>-999)
 		//					wDay[H_SRAD] = m_SAResult[i].m_obs[D_SRAD];
-		//				
+		//
 		//				//me.m_dailyData.SetData(ref, wDay);
 		//			}
 		//		}
@@ -1179,9 +1179,9 @@ namespace WBSF
 		//						CWetnessDurationStat hStat;
 		//						PM.Execute(m_obs, hStat);
 		//						Hourly2Daily(hStat, me.m_PMStat);
-		//						
+		//
 		//					}
-		//					
+		//
 		//					WD = m_PMStat[m_dailyData[y][m][d].GetTRef()][WETNESS_DURATION];
 		//					break;
 		//				}
@@ -1207,7 +1207,7 @@ namespace WBSF
 		//						SWEB.Execute(m_obs, hStat);
 		//						Hourly2Daily(hStat, me.m_SWEBStat);
 		//					}
-		//					
+		//
 		//					WD = m_SWEBStat[m_dailyData[y][m][d].GetTRef()][WETNESS_DURATION];
 		//					break;
 		//				}
@@ -1252,13 +1252,13 @@ namespace WBSF
 
 			//for(size_t i=0; i<m_SAResult.size(); i++)
 			//{
-			//	
+			//
 			//	CTRef TRef = m_SAResult[i].m_ref;
 			//	if(m_SAResult[i].m_obs[D_WETNESS]>-999 && m_obs.is_inside(TRef) && m_obs[TRef][0] >-999)
 			//	{
 			//		double obsWD = m_SAResult[i].m_obs[D_WETNESS];
 			//		double simWD = m_obs[TRef][0];
-			//		
+			//
 			//		stat.Add(simWD,obsWD);
 			//	}
 
@@ -1372,18 +1372,18 @@ namespace WBSF
 	//Rs: incoming solar radiation (Wm -2 )
 	//RL: incoming long wave radiation (Wm -z)
 	//Ta: air temperature (°C)
-	//hc: heat and water vapour transfer coefficients for one side of the leaf (Wm -2 °C-1) 
+	//hc: heat and water vapour transfer coefficients for one side of the leaf (Wm -2 °C-1)
 	//hw: = water vapour transfer coefficients for one side of the leaf (W m -2 )
 	//P = atmospheric pressure (mb)
 	//esa = ambient saturated water vapour pressure (mb)
-	//e = ambient vapour pressure (mb) 
-	//ΔT[out]: difference between leaf and air temperature 
+	//e = ambient vapour pressure (mb)
+	//ΔT[out]: difference between leaf and air temperature
 	double CDewDuration::GetΔT(double Rs, double RL, double Ta, double hc, double hw, double P, double esa, double e)
 	{
 
 		static const double a = 0.5;//short wave absorptivity of the leaf
-		static const double oo[NB_CANOPY] = { 0.17,0.23,0.24 }; //albedo of the surface underneath the leaf 
-		static const double ϵ = 0.95;//emissivity 
+		static const double oo[NB_CANOPY] = { 0.17,0.23,0.24 }; //albedo of the surface underneath the leaf
+		static const double ϵ = 0.95;//emissivity
 
 		//slope of the saturation vapour pressure curve at Ta [mbar/°C]
 		double s = CASCE_ETsz::GetSlopeOfSaturationVaporPressure(Ta) * 10;
@@ -1461,8 +1461,8 @@ namespace WBSF
 		double Aᵐ = pow(A, m);
 
 		//Equation [3]
-		//The diffuse radiation was considered to be half the difference between 
-		//the radiation on a horizontal surface below and above the atmosphere (List, 1971). 
+		//The diffuse radiation was considered to be half the difference between
+		//the radiation on a horizontal surface below and above the atmosphere (List, 1971).
 		//the total estimated clear sky solar radiation (W/m²)
 		double Rst = Aᵐ * Rspo*sinɸ + 0.5*Rspo*(1 - Aᵐ)*sinɸ;
 
@@ -1476,7 +1476,7 @@ namespace WBSF
 	{
 		//Equation [4]
 		//The global solar radiation for days with some cloud cover (Rsc)
-		//was obtained using the correction suggested by Mateer (1963) 
+		//was obtained using the correction suggested by Mateer (1963)
 		double Rsc = Rst * (1.02 - (0.1831 / (1.27 - c)));
 		return max(0.0, Rsc);
 	}
@@ -1528,7 +1528,7 @@ namespace WBSF
 		double Rd = (1 - c)*Rsd + c * Rcd;
 		return Rd;
 	}
-	//Solar radiation on a sunlit leaf was estimated from eq. 3 when c = 0 and from eq. 4 when c>0. 
+	//Solar radiation on a sunlit leaf was estimated from eq. 3 when c = 0 and from eq. 4 when c>0.
 	//A comparison between measured and estimated values showed a standard error of estimate
 	//(S.E.E.) of 23 W/m² and an r² value of 0.99 (Pedro, Jr., 1980).
 
@@ -1539,7 +1539,7 @@ namespace WBSF
 	double CDewDuration::GetRL(double Tws, double ews, double c)
 	{
 		//Equation [6]
-		//The incoming long wave radiation was estimated according to Angstrom (1924) 
+		//The incoming long wave radiation was estimated according to Angstrom (1924)
 		//using empirical constants from Morgan et al. (1971)
 		enum TCloud { CIRUS, CIRROTRATUS, ALTOCUMULUS, ALTOSTATUS, CUMULONIMBUS, CUMULUS, STATOCUMULUS, NIMBOSTRATUS, FOG, NB_CLOUD_TYPE };
 		double K[NB_CLOUD_TYPE] = { 0.04, 0.08, 0.16, 0.20, 0.20, 0.20, 0.22, 0.25, 0.25 };
@@ -1558,7 +1558,7 @@ namespace WBSF
 	//to the leaf since the DD measurements were made at 3/4 canopy height. A
 	//correction was made to the incoming longwave radiation based on the observed
 	//fraction of sky seen from that position (0.58) following Cain (1972)
-	//RLt[out] = total incoming longwave radiation at the measurement site in the tree [W/m²]  
+	//RLt[out] = total incoming longwave radiation at the measurement site in the tree [W/m²]
 	double CDewDuration::GetRLt(double RL, double Ta)
 	{
 		//Equation [7]
@@ -1566,7 +1566,7 @@ namespace WBSF
 		//at the experimental sites (S.E.E. = 12/m² , r² = 0.75) than other empirical
 		//equations for RL available in the literature (Pedro, Jr., 1980).
 
-		//RLt = total incoming longwave radiation (Wm -2) at the measurement site in the tree. 
+		//RLt = total incoming longwave radiation (Wm -2) at the measurement site in the tree.
 		//No such correction was used for the corn and soybean canopies since DD measurements were made near the canopy tops.
 
 		double RLt = 0.58*RL + 0.42*σ*quart(Ta + 273);
@@ -1575,7 +1575,7 @@ namespace WBSF
 
 	//For those periods of time when dew was forming or evaporating it was found that only very slight
 	//	differences existed between vapour pressures in the crop (e) and at the weather station (ews).
-	//	These differences did not significantly affect the ability of the model to estimate DD 
+	//	These differences did not significantly affect the ability of the model to estimate DD
 	//	and therefore it was taken that e = ews.
 
 
@@ -1606,7 +1606,7 @@ namespace WBSF
 	double CDewDuration::GetRn(double Rs, double RL, double Tws)
 	{
 		//Equation [9]
-		//The first term on the right side of eq. 9 assumes a shortwave absorptivity of 0.75 
+		//The first term on the right side of eq. 9 assumes a shortwave absorptivity of 0.75
 		//while the second and third terms assume a longwave absorptivity or emissivity of 0.95.
 		//Rs and RL were estimated from astronomical parameters and cloud cover fraction as described above.
 
@@ -1616,7 +1616,7 @@ namespace WBSF
 	}
 
 
-	//Uws: wind speed at the weather station 
+	//Uws: wind speed at the weather station
 	//Zws: (Zws = 10m)
 	//Zc: crop height (m)
 	double CDewDuration::GetUc(double Zc, double Zws, double Uws, double Rn)
@@ -1624,11 +1624,11 @@ namespace WBSF
 		//zero plane displacement (m) . The value of d was estimated (Campbell, 1977) as d = 0.64*Zc.
 		double d = 0.64*Zc;
 
-		//p is an exponent which depends on the roughness parameter and on the stability. 
+		//p is an exponent which depends on the roughness parameter and on the stability.
 		//Average values of the power law exponent (p) for corn, soybean, and apple as a function
 		//of net radiation (Rn) and wind speed at the weather station (Uws)
 		//Crop        Uws (m/s) at 10m          Rn (W/m²)
-		//                                     
+		//
 		//
 		static const double p[3][2][3] =
 		{
@@ -1704,11 +1704,11 @@ namespace WBSF
 
 	//Two radiation environments were considered for horizontal leaves:
 	//(1) An exposed leaf, which received the full rays of the sun during the morning and was open to the cold sky during the night.
-	//(2) A shaded leaf, which was exposed to the cold sky during the night but was shaded from the sun during the morning. 
+	//(2) A shaded leaf, which was exposed to the cold sky during the night but was shaded from the sun during the morning.
 	//The total, global, solar radiation was assumed to fall on the exposed leaf while only diffuse solar radiation was assumed
 	//for the shaded leaf. Both leaves were assumed to receive the total RL from the sky.
 
-	//	
+	//
 	//void CDewDuration::Execute(const CWeatherStation& weather, CWetnessDurationStat& stat)
 	//{
 	//	//CWeatherStation weather(weatherIn);
@@ -1769,7 +1769,7 @@ namespace WBSF
 						double c = hDay[h].GetVarEx(H_FNCD);
 						double Tws = hDay[h][H_TAIR];		//[°C]
 						double ews = hDay[h][H_EA] * 10;	//[mb]
-						double esaws = hDay[h][H_ES] * 10;	//[mb]   
+						double esaws = hDay[h][H_ES] * 10;	//[mb]
 						double Zws = 10;					//[m]
 						double Uws = hDay[h][H_WNDS] * 1000 / 3600;		//km/h --> m/s
 						double Rs1 = hDay[h][H_SRAD]/**1000000/3600*/;	//MJ/(m²·h) --> W/m²;
@@ -1812,9 +1812,9 @@ namespace WBSF
 						}
 
 						////(2.5023e6 - 2430.54 * Tdl);
-						//latent heat of vaporization 
+						//latent heat of vaporization
 						double L = 2260000;				//[J/kg]
-						//Cp = specific heat of air 
+						//Cp = specific heat of air
 						double Cp = 1004.67;			//[J/(kg·°C)]
 
 						double hc = Gethc(Uc);			//[W/(m²·°C)]
@@ -1822,14 +1822,14 @@ namespace WBSF
 
 
 						double P = hDay[h][H_PRES] * 10;	//[mb]
-						double e = ews;					//[mb]   
+						double e = ews;					//[mb]
 						double esa = esaws;				//[mb]   //if e = ews, we assume that esa = esaws
 
 						double ΔT = GetΔT(Rs, RL, Ta, hc, hw, P, esa, e);
 						double Tl = GetTl(Ta, ΔT);
 						double esl = e0(Tl) * 10;	//[mb]
 
-						//latent heat flux 
+						//latent heat flux
 						double LE = GetLE(hw, P, esl, e);	//[W/m²]
 
 
@@ -1839,11 +1839,11 @@ namespace WBSF
 						//{
 							//WD=1;
 						//NbVal=   720	Bias= 0.50639	MAE= 4.54889	RMSE= 5.77953	CD= 0.15263	R²= 0.25004
-						//x0                  	=   0.01280  
-						//x1                  	=   0.64924  
-						//x2                  	=   0.04360  
-						//x3                  	=   4.84347  
-						//x4                  	=  99.20118  
+						//x0                  	=   0.01280
+						//x1                  	=   0.64924
+						//x2                  	=   0.04360
+						//x3                  	=   4.84347
+						//x4                  	=  99.20118
 
 						//test+=hourlyData[y][m][d][h][H_PRCP]*m_x4;
 						//}
@@ -1896,7 +1896,7 @@ namespace WBSF
 					//double prcp = hourlyData[y][m][d].GetDailyStat(H_PRCP)[SUM];
 					//WD = max(0.0, Min(24, WD+m_x4*prcp));
 
-					//CTRef ref = hourlyData[y][m][d][h].GetTRef(); 
+					//CTRef ref = hourlyData[y][m][d][h].GetTRef();
 					//stat[ref][WETNESS_DURATION] = WD;
 
 
@@ -1915,8 +1915,8 @@ namespace WBSF
 	//1- Dz = 2/3 of Zc and not Z
 	//2- remove c form Uc calculation
 	//3- Remove *0.5 from the Dp equation
-	//4- Multiply Ep by *0.5 
-	//5- we adjuste solar radiation. 
+	//4- Multiply Ep by *0.5
+	//5- we adjuste solar radiation.
 
 	//void CSWEB::Execute(const CWeatherStation& weatherIn, CWetnessDurationStat& stat)
 	//{
@@ -1953,8 +1953,8 @@ namespace WBSF
 		assert(weather.IsHourly());
 
 
-		//specific gas constant for dry air 
-		static const double Rspecific = 287.058; // J/(kg·K) 
+		//specific gas constant for dry air
+		static const double Rspecific = 287.058; // J/(kg·K)
 		//The maximum water storage for a leaf is a function of age and species (Hall et al., 1997), however, a commonly accepted value for Cl is 0.02 cm (Noilhan and Planton, 1989).
 		static const double Cl = 0.02;
 
@@ -2038,16 +2038,16 @@ namespace WBSF
 
 								//with daily values 1996-1997
 								//NbVal=   427	Bias= 0.53396	MAE= 3.35363	RMSE= 4.50189	CD= 0.52130	R²= 0.56656
-								//x0                  	=  -0.08786  
-								//x1                  	=  -1.55769  
-								//x2                  	=   1.91481  
-								//x3                  	=  -2.59569  
+								//x0                  	=  -0.08786
+								//x1                  	=  -1.55769
+								//x2                  	=   1.91481
+								//x3                  	=  -2.59569
 								//with daily values 1996-1998
 								//NbVal=   720	Bias= 0.36889	MAE= 3.53639	RMSE= 4.79616	CD= 0.41645	R²= 0.48481
-								//x0                  	=  -0.03150  
-								//x1                  	=  -0.48987  
-								//x2                  	=   0.58576  
-								//x3                  	=   0.45235  
+								//x0                  	=  -0.03150
+								//x1                  	=  -0.48987
+								//x2                  	=   0.58576
+								//x3                  	=   0.45235
 								Rn = max(0.0, 0 - 0.5*Rln + 0.5*sqrt(LWRadDaySum[MEAN]) + 0.5*Rln*sqrt(LWRadDaySum[MEAN]));
 								//Rn = max(0.0, m_x0 + m_x1*Rln + m_x2*sqrt(LWRadDaySum[MEAN])+m_x3*Rln*sqrt(LWRadDaySum[MEAN]));
 
@@ -2076,7 +2076,7 @@ namespace WBSF
 
 							double Si = max(0.0, min(C, S + I + D));
 
-							//Initial canopy water budget 
+							//Initial canopy water budget
 							double Wind = GetWind(Si, C);
 							//actual fraction of wet area to total canopy surface area
 							double W = GetW(Wind, Wmax);
@@ -2159,10 +2159,10 @@ namespace WBSF
 	//Zc Height of canopy (cm)
 
 
-	//The surface wetness (SW) is estimated from the index of the fraction of canopy wet surface area, 
+	//The surface wetness (SW) is estimated from the index of the fraction of canopy wet surface area,
 	//Wind during a given time interval as shown in Eqs. (1) and (2):
 
-	//SW = surface wetness, 
+	//SW = surface wetness,
 	//Wind = index of fraction of canopy wet surface area
 	//Wth = surface wetness threshold (0.1).
 	int CSWEB::GetSW(double Wind)
@@ -2173,14 +2173,14 @@ namespace WBSF
 		return SW;
 	}
 
-	//S[IN] = canopy water storage (cm) 
+	//S[IN] = canopy water storage (cm)
 	//C[IN] = maximum canopy water storage (cm).
 	//Wind[OUT] = index of fraction of canopy wet surface area
 	double CSWEB::GetWind(double S, double C)
 	{
-		//Wind is estimated from: (i) the relative volume of water stored in the canopy and (ii) the change in surface area to volume ratio during drying. 
-		//Wet surface area decreases in a non-linear fashion as the water stored in a canopy decreases due to the volume-to-area argument. 
-		//hat is, the water volume changes as a cubic power, while the wet area changes as a square (Deardorff, 1978). 
+		//Wind is estimated from: (i) the relative volume of water stored in the canopy and (ii) the change in surface area to volume ratio during drying.
+		//Wet surface area decreases in a non-linear fashion as the water stored in a canopy decreases due to the volume-to-area argument.
+		//hat is, the water volume changes as a cubic power, while the wet area changes as a square (Deardorff, 1978).
 		//Equation [3]
 		double Wind = pow(S / C, 0.6667);
 
@@ -2207,16 +2207,16 @@ namespace WBSF
 	//Wd = average fraction of wet area to total area of non-wettable leaves.
 	double CSWEB::GetWmax()//double p, double Wf, double Wd)
 	{
-		//The factor Wmax is assumed to be the same for both dew and rain. 
-		//When a leaf surface is wettable, it favors water distribution as a film. When a leaf surface is non-wettable, it  water distribution as drops. 
+		//The factor Wmax is assumed to be the same for both dew and rain.
+		//When a leaf surface is wettable, it favors water distribution as a film. When a leaf surface is non-wettable, it  water distribution as drops.
 		//A simple technique for determining Wmax in terms of leaf wettability is to partition the canopy leaf area into wettable and nonwettable
 		//fractions and then assign a proportion of maximum wet area to each fraction
 		//Equation [5]
 			//double Wmax = p*Wf+ (1-p)*Wd;
 			//double Wmax = 0.5;
 
-			//The proportion of wettable and non-wettable leaves could be based on observed or estimated leaf age. Values of Wd and Wf could be determined 
-			//by selecting representative wettable and non-wettable leaves and determining the fraction of wet surface area in the laboratory after simulated rain or dew. 
+			//The proportion of wettable and non-wettable leaves could be based on observed or estimated leaf age. Values of Wd and Wf could be determined
+			//by selecting representative wettable and non-wettable leaves and determining the fraction of wet surface area in the laboratory after simulated rain or dew.
 			//In our studies, we used a value of 0.5 for Wmax since tests in the lab showed immature grape leaves are highly wettable and mature leaves are non-wettable.
 		static const double Wmax = 0.5;
 
@@ -2224,12 +2224,12 @@ namespace WBSF
 	}
 
 	//LAI = leaf area index
-	//Cl = maximum water storage for an average leaf (cm). The LAI for a grape canopy can be either measured (Grantz and Williams, 1993) or estimated from a crop model. 
-	//C = maximum water storage for a canopy (cm)	
+	//Cl = maximum water storage for an average leaf (cm). The LAI for a grape canopy can be either measured (Grantz and Williams, 1993) or estimated from a crop model.
+	//C = maximum water storage for a canopy (cm)
 	double CSWEB::GetC(double LAI, double Cl)
 	{
 		//In the construction of the canopy water budget, the maximum water storage is computed by multiplying the leaf area index (LAI) and the maximum water storage
-		//for a single leaf (Cl) having average properties of all leaves. 
+		//for a single leaf (Cl) having average properties of all leaves.
 		//Equation [6]
 		double C = LAI * Cl;
 		return C;
@@ -2244,7 +2244,7 @@ namespace WBSF
 	double CSWEB::GetS(double I, double Dp, double E)
 	{
 		//With the maximum fraction of canopy allowed as wet surface area and maximum water storage determined for a canopy, the water budget can be computed
-		//in terms of intercepted precipitation, condensation and evaporation from a vegetative surface. 
+		//in terms of intercepted precipitation, condensation and evaporation from a vegetative surface.
 
 
 		//Equation [7]
@@ -2255,12 +2255,12 @@ namespace WBSF
 	}
 
 
-	//LAI[IN] = leaf area index 
+	//LAI[IN] = leaf area index
 	//P[IN] = precipitation as rain (cm)
 	//I[OUT] = intercepted rain (cm),
 	double CSWEB::GetI(double LAI, double P)
 	{
-		//The canopy water budget changes over time. In the model time steps, interception and condensation add to the water budget. 
+		//The canopy water budget changes over time. In the model time steps, interception and condensation add to the water budget.
 		//If the balance is positive then evaporation may subtract from the budget. The equation for the interception of precipitation, which is assumed
 		//to be rain, was derived from the work of Norman and Campbell (1983)
 		//Equation [8]
@@ -2284,7 +2284,7 @@ namespace WBSF
 
 		//The condensation and evaporation processes in the canopy water budget are based on a combination formulation developed by Tanner and Fuchs (1968).
 		//Equation [9] is only for explanation
-		//According to the original assumptions of the model, daytime net radiation is assumed not to contribute to evaporation in a shaded grape canopy. 
+		//According to the original assumptions of the model, daytime net radiation is assumed not to contribute to evaporation in a shaded grape canopy.
 		//Equation 10
 		double Ep = Δ / (λ*(Δ + δ))*(p*Cp*(h / Δ)*(Es - Ea));
 		assert(Ep >= 0);
@@ -2297,7 +2297,7 @@ namespace WBSF
 	double CSWEB::GetE(double Ep, double W)
 	{
 
-		//In order to compute the actual total moisture lost from the entire canopy, the evaporation, E must be multiplied by the actual fraction of canopy wet surface area. 
+		//In order to compute the actual total moisture lost from the entire canopy, the evaporation, E must be multiplied by the actual fraction of canopy wet surface area.
 		//Equation [11]
 		double E = Ep * W;
 		return E;
@@ -2308,11 +2308,11 @@ namespace WBSF
 	//λ[IN] = latent heat of vaporization (J/g)
 	//δ[IN] = psychrometric constant (mbar/°C),
 	//Rnc[IN] = Canopy net radiant flux (J/(min·cm²) )
-	//Dp[OUT] = the potential condensation of dew (cm/min) 
+	//Dp[OUT] = the potential condensation of dew (cm/min)
 	double CSWEB::GetDp(double Δ, double λ, double δ, double Rnc)
 	{
-		//In addition to evaporation, at night the contribution of condensation must also be considered. Since the aerodynamic term cannot be negative, 
-		//only the net radiation term makes a contribution to the potential condensation of dew 
+		//In addition to evaporation, at night the contribution of condensation must also be considered. Since the aerodynamic term cannot be negative,
+		//only the net radiation term makes a contribution to the potential condensation of dew
 		//Equation [12]
 		double Dp = Δ / (λ*(Δ + δ))*Rnc*0.5;//remove the 0.5 factor to get same result than Excel file
 		return Dp;
@@ -2358,7 +2358,7 @@ namespace WBSF
 		static const double cf = 4.1;//shape scale constant for film (cm0.5 min0.5)
 
 		//In the present study, the shape scale constant, c, becomes a variable in the SWEB model. As a leaf surface becomes wetter, the moisture transfer increasingly
-		//behaves as if the water shape is a film. Conversely, as a leaf surface becomes drier, the moisture transfer behaves as if the water shape is a drop. 
+		//behaves as if the water shape is a film. Conversely, as a leaf surface becomes drier, the moisture transfer behaves as if the water shape is a drop.
 		//To account for this change in behavior due to water shape, the shape scale variable, c, is weighted between constants for drops, cd and film,
 		//cf according to the fraction of the leaf surface that is wet.
 		//Equation [14]
@@ -2369,7 +2369,7 @@ namespace WBSF
 
 
 
-	//Uz = wind speed (cm/min) 
+	//Uz = wind speed (cm/min)
 	//Z =  reference height of Uz (cm)
 	//Zc = height of canopy (cm)
 	//Uc = wind speed at average height of the canopy (cm/min)
@@ -2379,9 +2379,9 @@ namespace WBSF
 
 		//static const double α = 1.3;
 		double Dz = 2.0 / 3 * Zc; //zero plane displacement (cm), Use Zc instead of Z
-		double Zo = 1.0 / 10 * Zc; //Zo = roughness length (cm)	
+		double Zo = 1.0 / 10 * Zc; //Zo = roughness length (cm)
 		//The canopy wind speed, Uc is affected by the height and density of a canopy. The canopy wind speed is computed from the logarithmic wind profile equation
-		//(Monteith and Unsworth, 1990) and an analytical wind speed profile (Landsberg and James, 1971). 
+		//(Monteith and Unsworth, 1990) and an analytical wind speed profile (Landsberg and James, 1971).
 		//Equation [15]
 		double a = log((Zc - Dz) / Zo);
 		double b = log((Z - Dz) / Zo);

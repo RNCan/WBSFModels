@@ -133,7 +133,7 @@ namespace WBSF
 
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P_DEV[s], T));
-		assert(!_isnan(r) && _finite(r) && r >= 0);
+		assert(!isnan(r) && finite(r) && r >= 0);
 
 		return r;
 	}
@@ -190,7 +190,7 @@ namespace WBSF
 		while (RDR < 0.5 || RDR > 2.3)
 			RDR = boost::math::quantile(dist, m_randomGenerator.Randu());
 
-		assert(!_isnan(RDR) && _finite(RDR));
+		assert(!isnan(RDR) && finite(RDR));
 
 
 		//Don't inverse
@@ -238,7 +238,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], P_SUR[s], T)));
 
-		assert(!_isnan(sr) && _finite(sr) && sr >= 0 && sr <= 1);
+		assert(!isnan(sr) && finite(sr) && sr >= 0 && sr <= 1);
 		return sr;
 	}
 
@@ -265,7 +265,7 @@ namespace WBSF
 	//	boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::square(sigma) / 2.0, sigma);
 	//	double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.001, 0.999));
 
-	//	assert(!_isnan(Fi) && _finite(Fi));
+	//	assert(!isnan(Fi) && finite(Fi));
 
 
 	//	return Fi;
@@ -280,7 +280,7 @@ namespace WBSF
 	//	static const vector<double> P_FEC = { 0.01518, 10.9, 6.535 };
 	//	double r = max(0.0, CDevRateEquation::GetRate(P_EQ, P_FEC, T));
 
-	//	assert(!_isnan(r) && _finite(r) && r >= 0);
+	//	assert(!isnan(r) && finite(r) && r >= 0);
 
 	//	return r;
 	//}

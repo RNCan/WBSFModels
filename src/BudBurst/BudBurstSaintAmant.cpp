@@ -2,12 +2,12 @@
 //21/01/2020	1.0.0	Rémi Saint-Amant	Creation
 //*********************************************************************
 #include "BudBurstSaintAmant.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include "WeatherBased/DegreeDays.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
-#include <boost/math/distributions/Rayleigh.hpp>
+//
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/exponential.hpp>
 
@@ -45,9 +45,9 @@ namespace WBSF
 
 	static const double MIN_SDI = 0;
 	static const double MAX_SDI = 5;
-	static const double MIN_STRACH = 5;//Deslauriers data 
-	static const double MAX_STRACH = 70;//Deslauriers data 
-	static const double MIN_SUGAR = 7;//Deslauriers data 
+	static const double MIN_STRACH = 5;//Deslauriers data
+	static const double MAX_STRACH = 70;//Deslauriers data
+	static const double MIN_SUGAR = 7;//Deslauriers data
 	static const double MAX_SUGAR = 85;//Schaberg
 
 
@@ -115,14 +115,14 @@ namespace WBSF
 
 	double CBudBurstSaintAmantModel::ChillingResponce(double T)const
 	{
-		double R =  1 / (1 + exp(-(T - m_P[CU_µ]) / m_P[CU_σ])); 
+		double R =  1 / (1 + exp(-(T - m_P[CU_µ]) / m_P[CU_σ]));
 		//switch (RICHARDSON)
 		//{
 		//c//ase SIGMOID: 	R = 1 / (1 + exp(-(T - m_P[CU_µ]) / m_P[CU_σ])); 		// break;
 			//case CHUINE: R = 1 / (1 + exp(-((T - m_P[CU_µ]) / m_P[CU_σ¹] + square(T - m_P[CU_µ]) / m_P[CU_σ²]))); break;
-		//case RICHARDSON: 
-			
-			//R = max(0.0, min(m_P[CU_σ] - T, m_P[CU_σ] - m_P[CU_µ])); 
+		//case RICHARDSON:
+
+			//R = max(0.0, min(m_P[CU_σ] - T, m_P[CU_σ] - m_P[CU_µ]));
 			//break;
 			//case UTAH:
 			//{
@@ -151,7 +151,7 @@ namespace WBSF
 		//};
 
 
-		assert(!_isnan(R) && _finite(R));
+		assert(!isnan(R) && finite(R));
 
 		return R;
 	}
@@ -159,7 +159,7 @@ namespace WBSF
 	double CBudBurstSaintAmantModel::ForcingResponce(double T)const
 	{
 		double R = 1 / (1 + exp(-(T - m_P[FU_µ]) / m_P[FU_σ]));
-		assert(!_isnan(R) && _finite(R) && R >= 0);
+		assert(!isnan(R) && finite(R) && R >= 0);
 
 		return R;
 	}
@@ -225,7 +225,7 @@ namespace WBSF
 
 
 		CTPeriod pp(weather.GetEntireTPeriod(CTM::DAILY));
-		
+
 
 
 		size_t p_S_in = size_t(m_P[S_IN_DAYS]);
@@ -243,7 +243,7 @@ namespace WBSF
 			m_last_p_St_out = p_St_out;
 			m_last_p_CU = p_CU;
 			m_last_p_FU = p_FU;
-			
+
 
 			m_Tmean.resize(pp.length(CTM::DAILY));
 
@@ -264,7 +264,7 @@ namespace WBSF
 
 
 						size_t max_days = max(p_S_in, max(p_S_out, max(p_St_in, p_St_out)));
-						for (size_t i = 0; i < max_days; i++)//Charrier 2018 use the mean maximum of the last 14 days 
+						for (size_t i = 0; i < max_days; i++)//Charrier 2018 use the mean maximum of the last 14 days
 						{
 
 							if (i < p_S_in)
@@ -359,7 +359,7 @@ namespace WBSF
 							double T_S_out_days = m_Tmean[TRef - pp.begin()].T_S_out[S_OUT_STAT];
 							double T_St_in_days = m_Tmean[TRef - pp.begin()].T_St_in[ST_IN_STAT];
 							double T_St_out_days = m_Tmean[TRef - pp.begin()].T_St_out[ST_OUT_STAT];
-							
+
 							double T_CU = m_Tmean[TRef - pp.begin()].T_CU[CU_STAT];
 							double T_FU = m_Tmean[TRef - pp.begin()].T_FU[FU_STAT];
 							//double T = weather[y][m][d][H_TNTX][MEAN];
@@ -452,7 +452,7 @@ namespace WBSF
 
 
 
-	
+
 	enum { I_SPECIES, I_SOURCE, I_SITE, I_LATITUDE, I_LONGITUDE, I_ELEVATION, I_DATE, I_STARCH, I_SUGAR, I_MASS, I_SDI, I_N, I_DEF, I_DEF_END_N1, I_DEF_END_N, I_PROVINCE, I_TYPE, NB_INPUTS };
 	void CBudBurstSaintAmantModel::AddDailyResult(const std::vector<std::string>& header, const std::vector<std::string>& data)
 	{
@@ -544,7 +544,7 @@ namespace WBSF
 
 		//				double sim_y = 0;
 
-		//						
+		//
 		//				//boost::math::logistic_distribution<double> SDI_dist(m_SDI[μ], m_SDI[ѕ]);
 		//				boost::math::weibull_distribution<double> SDI_dist(m_SDI[μ], m_SDI[ѕ]);
 		//				sim_y = round(cdf(SDI_dist, CDD[ii]) * MAX_STAGE, ROUND_VAL);
@@ -577,7 +577,7 @@ namespace WBSF
 
 	bool CBudBurstSaintAmantModel::GetFValueDaily(CStatisticXY& stat)
 	{
-		//return CalibrateSDI(stat); 
+		//return CalibrateSDI(stat);
 		if (!m_SAResult.empty())
 		{
 			if ((m_P[S_IN_σ_PS] > -0.1 && m_P[S_IN_σ_PS] < 0.1) ||
@@ -588,7 +588,7 @@ namespace WBSF
 				)
 				return false;
 
-			
+
 			if (!m_SDI_DOY_stat.is_init())
 			{
 				const CSimulatedAnnealingVector& all_results = GetSimulatedAnnealingVector();
@@ -649,10 +649,10 @@ namespace WBSF
 			{
 				if (output.is_inside(m_SAResult[i].m_ref))
 				{
-					
+
 					if (USE_SDI && m_SAResult[i].m_obs[0] > -999 && m_SAResult[i].m_ref.GetDOY() < 213 && output[m_SAResult[i].m_ref][O_SDI] > -999)
 					{
-						
+
 						double obs_SDI = m_SAResult[i].m_obs[0];
 						double sim_SDI = output[m_SAResult[i].m_ref][O_SDI];
 						stat.Add(obs_SDI / 5, sim_SDI / 5);
@@ -679,7 +679,7 @@ namespace WBSF
 					{
 						double obs_starch = (m_SAResult[i].m_obs[1] - MIN_STRACH) / (MAX_STRACH - MIN_STRACH);
 						double sim_starch = (output[m_SAResult[i].m_ref][O_ST_CONC] - MIN_STRACH) / (MAX_STRACH - MIN_STRACH);
-						
+
 						for (size_t j = 0; j < 5; j++)
 							stat.Add(obs_starch, sim_starch);
 					}

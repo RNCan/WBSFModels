@@ -10,7 +10,7 @@
 
 #include "WeatherBased/WeatherDefine.h"
 #include "WeatherBased/DegreeDays.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ASCE-ETsz.h"
 
 using namespace WBSF::HOURLY_DATA;
@@ -56,7 +56,7 @@ namespace WBSF
 		((CETStatVector&)m_output).Init(p);
 
 		CASCE_ETsz ASCE2005(m_referenceType, m_extended);
-		
+
 		ASCE2005.Execute(m_weather, m_output);
 
 
@@ -67,7 +67,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		//Init output 
+		//Init output
 		CTPeriod p = m_weather.GetEntireTPeriod();
 		//((CETStatVector&)m_output).Init(p);
 
@@ -95,16 +95,16 @@ namespace WBSF
 			CASCE_ETsz ETsz(m_referenceType, m_extended);
 			ETsz.Execute(m_weather, m_output);
 		}
-	
+
 
 		return msg;
 	}
-	
+
 	ERMsg CASCE_ETszModel::OnExecuteMonthly()
 	{
 		ERMsg msg;
 
-		
+
 		CASCE_ETsz ETsz(m_referenceType, m_extended);
 
 		//CModelStatVector stat;
@@ -122,7 +122,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		
+
 		CASCE_ETsz ETsz(m_referenceType, m_extended);
 
 		//CModelStatVector stat;
@@ -149,7 +149,7 @@ namespace WBSF
 
 		if (m_info.m_modelName.find("Ex", 0) != -1)
 			m_extended = true;
-		
+
 
 		return msg;
 	}

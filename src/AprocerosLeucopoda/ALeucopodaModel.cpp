@@ -7,7 +7,7 @@
 
 #include "Basic/UtilStd.h"
 #include "WeatherBased/DegreeDays.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include "ALeucopodaModel.h"
 
@@ -179,7 +179,7 @@ namespace WBSF
 								for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 								{
 									m_output[d][ss] = m_output[d - 1][ss] + m_output[d][ss] * 100 / stat_g1[SUM];
-									assert(!_isnan(m_output[d][ss]));
+									assert(!isnan(m_output[d][ss]));
 								}
 							}
 						}
@@ -271,7 +271,7 @@ namespace WBSF
 		//				for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 		//				{
 		//					output[g][d][s] = output[g][d - 1][s] + output[g][d][s] * 100 / stat[SUM];
-		//					assert(!_isnan(output[g][d][s]));
+		//					assert(!isnan(output[g][d][s]));
 		//				}
 		//			}
 		//		}
@@ -407,7 +407,7 @@ namespace WBSF
 	//			{
 	//				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 	//				double obsX = obsX1 + (obs - obsY1)*slope;
-	//				assert(!_isnan(obsX) && _finite(obsX));
+	//				assert(!isnan(obsX) && finite(obsX));
 
 	//				x = obsX;
 	//			}

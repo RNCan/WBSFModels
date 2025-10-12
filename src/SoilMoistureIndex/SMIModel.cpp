@@ -4,11 +4,11 @@
 // 27/03/2017	2.1.1	Rémi Saint-Amant    recompile
 // 20/09/2016	2.1.0	Rémi Saint-Amant    Change Tair and Trng by Tmin and Tmax
 // 05/09/2016	2.0		Rémi Saint-Amant	Integrated in WBSF
-// 20/06/2013	1.1		Rémi Saint-Amant	Update 
+// 20/06/2013	1.1		Rémi Saint-Amant	Update
 // 25/07/2011	1.0		Rémi Saint-Amant	Creation
 //*********************************************************************
 #include "SMIModel.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/WeatherStation.h"
 
 
@@ -55,7 +55,7 @@ namespace WBSF
 					//Input:
 					double Tmin = m_weather[y][m][d][H_TMIN][MEAN]; //Minimum daily temperature (°C)
 					double Tmax = m_weather[y][m][d][H_TMAX][MEAN]; //Maximum daily temperature (°C)
-					double ppt = m_weather[y][m][d][H_PRCP][SUM]; //Precipitation (mm) 
+					double ppt = m_weather[y][m][d][H_PRCP][SUM]; //Precipitation (mm)
 
 					//Calculate:
 					//Saturation vapour pressure for Tmax
@@ -82,7 +82,7 @@ namespace WBSF
 					//Daily actual evapotranspiration (mm d-1)
 					double AET = PET*GetAETFactor(SMI);
 
-					//Daily water runoff (mm d-1) 
+					//Daily water runoff (mm d-1)
 					double Runoff = max(0.0, SMI + ppt - AET - m_SMImax);
 
 					//Soil moisture at end of day d (mm)
@@ -172,7 +172,7 @@ namespace WBSF
 		ERMsg msg;
 
 		//Compute daily values
-		CModelStatVector outputD; 
+		CModelStatVector outputD;
 		ComputeDailyValue(outputD);
 
 		//init output

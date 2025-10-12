@@ -12,7 +12,7 @@
 //*********************************************************************
 
 #include "CMIModel.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/WeatherStation.h"
 #include "WeatherBased/DegreeDays.h"
 
@@ -38,14 +38,14 @@ namespace WBSF
 		assert(m_weather.size() > 0);
 
 		ERMsg msg;
-	
+
 		int c = 0;
 		m_bLimitToZero = parameters[c++].GetBool();
-		
+
 		return msg;
 	}
 
-	
+
 
 	ERMsg CCMIModel::OnExecuteAnnual()
 	{
@@ -58,7 +58,7 @@ namespace WBSF
 		CDegreeDays DD(CDegreeDays::DAILY_AVERAGE, 5);
 		CModelStatVector DD5;
 		DD.Execute(m_weather, DD5);
-		
+
 
 		//Create output vector
 		m_output.Init(m_weather.GetNbYears() - 1, CTRef(m_weather.GetFirstYear()+1), NB_A_OUTPUT);
@@ -98,7 +98,7 @@ namespace WBSF
 
 		}
 
-	
+
 
 		return msg;
 	}
@@ -108,7 +108,7 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		
+
 		//Create output vector
 		m_output.Init(m_weather.GetNbYears() * 12, CTRef(m_weather.GetFirstYear(), JANUARY), NB_M_OUTPUT);
 
@@ -135,7 +135,7 @@ namespace WBSF
 			}
 		}
 
-		
+
 
 		return msg;
 	}
@@ -175,7 +175,7 @@ namespace WBSF
 	//Calculate Simplified Penman-Monteith PET (annual)
 	double CCMIModel::GetSPMPET(const CWeatherStation& weather, CTPeriod& p)
 	{
-		
+
 		double PETwyr = 0;
 
 		for (size_t y = 0; y < weather.GetNbYears(); y++)

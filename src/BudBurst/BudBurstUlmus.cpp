@@ -1,17 +1,17 @@
 ﻿//*********************************************************************
 //06/04/2024	1.0.0	Rémi Saint-Amant	Creation
-// 
-// Model based on article: 
+//
+// Model based on article:
 // A.Santini (2004). Vegetative bud-burst variability of European elms
-// 
+//
 // calibration for Ulmus americana based on data
 // Smith (1915). Phenological dates and meteorological data recorded by Thomas Mikesell between 1873 and 1912 at Wauseon, Ohio.
 //		We used "In blossom" column adjusted with "Buds start" column.
-// Carol K.Augspurger (2009). Spring 2007 warmth and frost: phenology, damage and refoliation in a temperate deciduous forest 
+// Carol K.Augspurger (2009). Spring 2007 warmth and frost: phenology, damage and refoliation in a temperate deciduous forest
 // Calinger (2023). A century of climate warming results in growing season extension Delayed autumn leaf phenology in north central North America
 //*********************************************************************
 #include "BudBurstUlmus.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/DegreeDays.h"
 
 
@@ -51,7 +51,7 @@ namespace WBSF
 		m_P = P[AMERICANA];
 
 
-		
+
 	}
 
 
@@ -71,7 +71,7 @@ namespace WBSF
 		m_species = parameters[c++].GetInt();
 		assert(m_species < NB_SPECIES);
 
-		
+
 		m_P = P[m_species];
 		if (parameters.size() == 1 + NB_PARAMS)
 		{
@@ -135,7 +135,7 @@ namespace WBSF
 
 		int CD = 0;//ChillingDay
 		double TT = 0;//TermalTime
-		
+
 		for (size_t yyy = 0; yyy < 2; yyy++)
 		{
 			size_t y = yy + yyy - 1;
@@ -149,7 +149,7 @@ namespace WBSF
 				{
 					CTRef TRef = weather[y][m][d].GetTRef();
 
-					
+
 					if (weather[y][m][d].GetStat(H_TAIR)[MEAN] < m_P[P_T1])
 						CD++;
 
@@ -158,7 +158,7 @@ namespace WBSF
 						TT += max(0.0, weather[y][m][d].GetStat(H_TAIR)[MEAN] - m_P[P_T2]);
 						//TT += m_DD[TRef][0];
 					}
-					
+
 					double TTT = m_P[P_A] + m_P[P_B] * exp(m_P[P_R] * CD);
 					output[TRef][O_TTT] = TTT;
 					output[TRef][O_BUDBURST] = TT / TTT;//TT < TTT ? 0 : 1;
@@ -220,7 +220,7 @@ namespace WBSF
 					m_data_weather[year] = m_weather[year];
 				}
 
-				
+
 
 			}
 
@@ -249,7 +249,7 @@ namespace WBSF
 			for (size_t i = 0; i < m_SAResult.size(); i++)
 			{
 				//assert(output.is_inside(m_SAResult[i].m_ref));
-				//if (output[m_SAResult[i].m_ref.GetYear()].IsInit()) 
+				//if (output[m_SAResult[i].m_ref.GetYear()].IsInit())
 				{
 					double BB_obs = m_SAResult[i].m_obs[0];
 					//double BB_sim = output[m_SAResult[i].m_ref.GetYear()].GetDOY() + 1;

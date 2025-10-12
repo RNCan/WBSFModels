@@ -716,7 +716,7 @@ namespace WBSF
 			{
 				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 				double obsX = obsX1 + (obs - obsY1) * slope;
-				assert(!_isnan(obsX) && _finite(obsX));
+				assert(!isnan(obsX) && finite(obsX));
 
 				DOY = obsX;
 			}

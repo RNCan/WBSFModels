@@ -1,6 +1,6 @@
 ﻿//**********************************************************************
 // 31/01/2020	1.1.3	Rémi Saint-Amant	Bug correction to manage multiple years
-// 06/08/2013			Rémi Saint-Amant	Create from excel file 
+// 06/08/2013			Rémi Saint-Amant	Create from excel file
 //**********************************************************************
 #include <cmath>
 #include <cassert>
@@ -9,7 +9,7 @@
 #include "Basic/CSV.h"
 #include "Basic/UtilStd.h"
 #include "WeatherBased/DegreeDays.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "Insect Development Database II.h"
 
 using namespace std;

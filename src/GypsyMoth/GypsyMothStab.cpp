@@ -9,14 +9,14 @@
 //RSA 18/05/2005: integretion to BioSIMModelBase + cleaning
 //JR  13/05/2005: harmonized this Gypmphen with the Stability version.
 //
-//JR 2/3/1999: made the model output one line on day 273, if first hatch occurs 
+//JR 2/3/1999: made the model output one line on day 273, if first hatch occurs
 //           on or after 273. That is to ensure output
 //		   files are not empty. BioSIM does not like empty output files.
 //
 //JR 24/3/1999: added function Reset() in Gymphen.cpp to initialize arrays
 //		   in an attempt to solve the DLL vs EXE problem
-//JR 25/3/1999: added function free_arrays() to free allocated global arrays 
-//			(currently only **hatching). Johnson() also allocates (and frees) 
+//JR 25/3/1999: added function free_arrays() to free allocated global arrays
+//			(currently only **hatching). Johnson() also allocates (and frees)
 //			*day_deg.
 //JR 26/4/1999: added Eggs_left to replace eggs_hatching[][] as an output variable
 //			because hatching rate is hard to interpret graphically.
@@ -24,7 +24,7 @@
 //**********************************************************************/
 #include "GypsyMothStab.h"
 #include "GypsyMoth.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 namespace WBSF
 {
@@ -70,9 +70,9 @@ namespace WBSF
 
 		return message;
 	}
-	
+
 	//****************************************************************************************************************
-	
+
 	ERMsg CGypsyMothStability::OnExecuteAnnual()
 	{
 		if (!m_weather.IsHourly())
@@ -248,18 +248,18 @@ namespace WBSF
 	}
 	*/
 	//This method is called to compute solution
-		//ERMsg CGypsyMothStability::Execute() 
+		//ERMsg CGypsyMothStability::Execute()
 		//{
 		//    ERMsg message;
 		//
 		//
 		//	CGypsyMothVector gypsyMothVector;
 		//	gypsyMothVector.resize(m_nbGenerations);
-		//	
+		//
 		//	//bool stabilityFlag = false;
 		//	CGMEggInputParam paramTmp = m_param;
 		//
-		//	for(int g=0; g<m_nbGenerations; g++) 
+		//	for(int g=0; g<m_nbGenerations; g++)
 		//	{
 		//		//simulate developement
 		//		gypsyMothVector[g].SimulateDeveloppement(paramTmp, m_weather);
@@ -269,11 +269,11 @@ namespace WBSF
 		//
 		//		int flags = 0;
 		//		bool viabilityFlag = gypsyMothVector[g].GetViabilityFlag(paramTmp, flags);
-		//	
+		//
 		//		bool bStability =	viabilityFlag && ( g==m_nbGenerations-1 || newOvipDate%365 == paramTmp.GetOvipDate());
 		//
 		//		m_outputFile << g+1 << paramTmp.GetOvipDate()+1 << firstHatch+1 << newOvipDate+1;
-		//		
+		//
 		//		m_outputFile << (flags&CGypsyMoth::DIAPAUSE_BEFORE_WINTER?1:0) << (flags&CGypsyMoth::POSDIAPAUSE_BEFORE_SUMMER?1:0) << (flags&CGypsyMoth::FIRST_WINTER_EGG?1:0) << (flags&CGypsyMoth::ADULT_BEFORE_WINTER?1:0) << (viabilityFlag?1:0);
 		//		m_outputFile <<( bStability?1:0);
 		//		m_outputFile.EndLine();

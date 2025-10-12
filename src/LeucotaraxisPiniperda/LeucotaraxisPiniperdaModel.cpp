@@ -5,7 +5,7 @@
 //***********************************************************
 #include "LeucotaraxisPiniperdaModel.h"
 #include "LeucotaraxisPiniperdaEquations.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/DegreeDays.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include <boost/math/distributions/logistic.hpp>
@@ -162,7 +162,7 @@ namespace WBSF
 					for (CTRef d = p.begin() + 1; d <= p.end(); d++)
 					{
 						output[d][s] = output[d - 1][s] + output[d][s] * 100 / stat[SUM];
-						assert(!_isnan(output[d][s]));
+						assert(!isnan(output[d][s]));
 					}
 				}
 			}

@@ -11,7 +11,7 @@
 // 17/04/2014   Jacques Régnière    Creation from wsb model
 //*****************************************************************************
 #include <cmath>
-#include "basic/UtilMath.h"
+#include "Basic/UtilMath.h"
 #include "WeatherBased/WeatherStation.h"
 #include "HemlockLooper.h"
 

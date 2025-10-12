@@ -11,7 +11,7 @@
 #include "WeatherBased/WeatherDefine.h"
 #include "WeatherBased/DegreeDays.h"
 #include "WeatherBased/ASCE_ETc.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ETcModel.h"
 
 
@@ -20,7 +20,7 @@ using namespace std;
 
 namespace WBSF
 {
-	
+
 
 	//this line link this model with the EntryPoint of the DLL
 	static const bool bRegistred =
@@ -98,7 +98,7 @@ namespace WBSF
 
 
 	//	CStatistic statDD5;
-	//	//Compute corrected evapotranpiration 
+	//	//Compute corrected evapotranpiration
 	//	for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
 	//	{
 	//		if (TRef >= March15)
@@ -130,7 +130,7 @@ namespace WBSF
 
 		return msg;
 	}
-	
+
 	ERMsg CASCE_ETcModel::OnExecuteMonthly()
 	{
 		ERMsg msg;

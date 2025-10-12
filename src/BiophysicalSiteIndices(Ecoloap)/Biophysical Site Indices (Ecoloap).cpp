@@ -2,18 +2,18 @@
 // 11-09-2018	2.0.0	Rémi Saint-Amant	Update with BioSIM 11.5.0
 //											Change in unit of aridity and ET [mm instead of cm]
 //											mean of VPD instead of summation
-// 12-04-1999			Jacques Régnière	Creation from existing code  
+// 12-04-1999			Jacques Régnière	Creation from existing code
 //**********************************************************************
 
-//#include <cmath>
-#include "Biophysical site indices (Ecoloap).h"
+
+#include "Biophysical Site Indices (Ecoloap).h"
 #include "ModelBased/EntryPoint.h"
 
 namespace WBSF
 {
 
 	using namespace HOURLY_DATA;
-	
+
 
 	//this line links this model with the EntryPoint of the DLL
 	static const bool bRegistred =
@@ -57,7 +57,7 @@ namespace WBSF
 			Aridite(m_weather[y], A, ET, PU);
 			double uVPD = UtilDeficitVaporPressure(m_weather[y])*10;//[kPa] --> [hPa]
 
-			m_output[y][O_DJ5] = DJ5;	
+			m_output[y][O_DJ5] = DJ5;
 			m_output[y][O_PU] = PU;		//[mm]
 			m_output[y][O_A] = A;		//[mm] since version 2.0.0
 			m_output[y][O_DPV] = uVPD;	//[hPa] (mbar), mean instead of summation since version 2.0.0
@@ -100,11 +100,11 @@ namespace WBSF
 			Ta[m] += (Tmin + Tmax) / 2;
 			P[m] += prcp;
 		}
-		 
+
 		//calculer les statistiques mensuelles
 		double I = 0;
 		for (size_t m = 0; m < 12; m++)
-		{ 
+		{
 			//cumuler I
 			if (Ta[m][MEAN] > 0)
 				I += pow(Ta[m][MEAN] / 5.0, 1.5);

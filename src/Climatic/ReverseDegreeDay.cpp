@@ -1,17 +1,17 @@
 //*****************************************************************************
 // find date at witch DegreeDay summation append
-// 
+//
 // Canadian Forest Service
-// 
+//
 // Programmer: Rémi St-Amant
-// 
+//
 //*****************************************************************************
 //*****************************************************************************
 // File: CReverseDegreeDayModel.h
 //
 // Class: CReverseDegreeDayModel
 //
-// Description: 
+// Description:
 //
 //*****************************************************************************
 // 20/09/2016	2.5.0	Rémi Saint-Amant    Change Tair and Trng by Tmin and Tmax
@@ -19,7 +19,7 @@
 // 21/01/2016	2.4.0	Rémi Saint-Amant	Using Weather-based simulation framework (WBSF)
 // 04/03/2011			Rémi Saint-Amant	New compile
 //*****************************************************************************
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "Basic/Statistic.h"
 #include "ReverseDegreeDay.h"
 
@@ -43,7 +43,7 @@ namespace WBSF
 		//uses the same number of parameters than the model interface
 		NB_INPUT_PARAMETER = 8;
 		VERSION = "2.5.0 (2016)";
-		
+
 		m_DDSummation = 0;
 
 		CMonthDay m_firstDate = CMonthDay(JANUARY, DAY_01);
@@ -142,7 +142,7 @@ namespace WBSF
 
 		int cur = 0;
 
-		//read the 5 input parameters: must be in the same order than the 
+		//read the 5 input parameters: must be in the same order than the
 		//model's interface. Julian days are shifted in zero base.
 
 		m_DD.m_method = parameters[cur++].GetInt();

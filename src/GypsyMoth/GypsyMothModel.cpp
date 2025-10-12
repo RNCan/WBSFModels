@@ -12,14 +12,14 @@
 //RSA 18/05/2005: integretion to BioSIMModelBase + cleaning
 //JR  13/05/2005: harmonized this Gypmphen with the Stability version.
 //
-//JR  02/03/1999: made the model output one line on day 273, if first hatch occurs 
+//JR  02/03/1999: made the model output one line on day 273, if first hatch occurs
 //           on or after 273. That is to ensure output
 //		   files are not empty. BioSIM does not like empty output files.
 //
 //JR  24/03/1999: added function Reset() in Gymphen.cpp to initialize arrays
 //		   in an attempt to solve the DLL vs EXE problem
-//JR  25/03/1999: added function free_arrays() to free allocated global arrays 
-//			(currently only **hatching). Johnson() also allocates (and frees) 
+//JR  25/03/1999: added function free_arrays() to free allocated global arrays
+//			(currently only **hatching). Johnson() also allocates (and frees)
 //			*day_deg.
 //JR  26/04/1999: added Eggs_left to replace eggs_hatching[][] as an output variable
 //			because hatching rate is hard to interpret graphically.
@@ -28,11 +28,11 @@
 
 #include "GypsyMothModel.h"
 #include "GypsyMoth.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 using namespace std;
 
-namespace WBSF 
+namespace WBSF
 {
 
 
@@ -91,7 +91,7 @@ namespace WBSF
 		//fill output matrix
 		if (m_outputStyle == REGULAR)
 			ComputeRegularValue(stat, output);
-		else 
+		else
 			ComputeCumulativeValue(stat, output);
 
 		//Set output to the framework
@@ -116,14 +116,14 @@ namespace WBSF
 		stat.Init(period);
 
 		period = m_weather.GetEntireTPeriod(CTM::DAILY);
-		
+
 
 		CGMEggParam eggParamTmp = m_eggParam;
 		//first: do the generation over the first two years
 		//if( m_bConditionOvipDate )
-		//eggParamTmp.m_ovipDate = GetInitialOvipDate(); 
+		//eggParamTmp.m_ovipDate = GetInitialOvipDate();
 
-		//Do simulation only if the ovip date of the first generation 
+		//Do simulation only if the ovip date of the first generation
 		//if( eggParamTmp.m_ovipDate.IsInit() )
 		//{
 		for (size_t y = 0; y < m_weather.GetNbYears() - 1; y++)
@@ -187,7 +187,7 @@ namespace WBSF
 			//	//Test: force the last line to be termiated
 			//	for(int i=EGG; i<TOT_POP; i++)
 			//		output[d][i] = 0;
-			//	
+			//
 			//	output[d][DEAD_ADULT] = 100;
 			//}
 		}
@@ -214,7 +214,7 @@ namespace WBSF
 			{
 				bool firstDay = d == p2.begin();
 
-				//double totPop=stat[d][EGG]+stat[d][TOT_POP]; 
+				//double totPop=stat[d][EGG]+stat[d][TOT_POP];
 
 
 				//cumulative frequencies (as a %)
@@ -239,7 +239,7 @@ namespace WBSF
 				{
 					if (totPop > 0)
 						output[d][j] = 100 * cumFreq[j] / totPop;
-					else 
+					else
 						output[d][j] = firstDay ? 0 : output[d - 1][j];
 				}
 
@@ -252,10 +252,10 @@ namespace WBSF
 					if (sumFemale > 0.0001)
 						output[d][O_FEMALE_MOTH] = output[d - 1][O_FEMALE_MOTH] + 100 * stat[d][FEMALE_ADULT] / sumFemale;
 
-					//if(sumMale2>0) 
+					//if(sumMale2>0)
 					//output[d][O_MALE_EMERGED]=output[d-1][O_MALE_EMERGED] + (100*stat[d][MALE_EMERGED])/sumMale2;
 
-					//if(sumFemale2>0) 
+					//if(sumFemale2>0)
 					//output[d][O_FEMALE_EMERGED]=output[d-1][O_FEMALE_EMERGED] + (100*stat[d][FEMALE_EMERGED])/sumFemale2;
 				}
 			}

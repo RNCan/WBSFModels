@@ -13,11 +13,11 @@
 
 
 #include <time.h>
-#include <stdio.h>
+#include <cstdio>
 #include <cmath>
 #include <cassert>
 #include "Basic/UtilMath.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 
 namespace WBSF

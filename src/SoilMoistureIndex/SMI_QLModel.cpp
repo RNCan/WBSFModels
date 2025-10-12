@@ -5,17 +5,17 @@
 //05/09/2016	2.0		Rémi Saint-Amant	Integrated in WBSF
 //25/07/2011			Rémi Saint-Amant	Integrate in BioSIM
 //30/11/2013			Mike Michaelian		Creation
-//			SMI_QL (Quadratic-linear model) is a derivation of 
+//			SMI_QL (Quadratic-linear model) is a derivation of
 //			the original SMI (Bilinear model). The original model assumes AET=PET when SMI>=SMIcrit
-//			and decreases linearly to zero when SMI<SMIcrit. This QL model assumes AET=PET when 
+//			and decreases linearly to zero when SMI<SMIcrit. This QL model assumes AET=PET when
 //			SMI>=SMIcrit and decreases to zero using a quadratic function when SMI<SMIcrit.
 //			Another difference between the SMI and SMI_QL models is that the default SMIcrit is
-//			set to 300 rather than 200. Other than these two changes, the code for the original SMI 
+//			set to 300 rather than 200. Other than these two changes, the code for the original SMI
 //			and this new SMI_QL model is identical
 //*********************************************************************
 #include "SMI_QLModel.h"
-#include "ModelBased\EntryPoint.h"
-#include "weatherBased\WeatherStation.h"
+#include "ModelBased/EntryPoint.h"
+#include "WeatherBased/WeatherStation.h"
 
 
 using namespace WBSF::HOURLY_DATA;
@@ -36,7 +36,7 @@ namespace WBSF
 		VERSION = "2.1.2 (2020)";
 
 		//The initial SMIstart is default to 200 and then after the first calculation SMIstart is set to the previous day's SMI
-		m_SMIcrit = 300.0; //Critical soil moisture (mm) 
+		m_SMIcrit = 300.0; //Critical soil moisture (mm)
 		m_SMImax = 400.0; //Maximum soil moisture (mm)
 	}
 
@@ -48,10 +48,10 @@ namespace WBSF
 		const double elev = m_weather.m_elev; //Elevation (m)
 
 		output.Init(m_weather.GetEntireTPeriod(CTM::DAILY), NB_DAILY_OUTPUT);
-		
+
 		for (size_t y = 0; y < m_weather.GetNbYears(); y++)
 		{
-			//int year = 
+			//int year =
 			for (size_t m = 0; m < 12; m++)
 			{
 				for (size_t d = 0; d < m_weather[y][m].GetNbDays(); d++)
@@ -61,9 +61,9 @@ namespace WBSF
 					//Input:
 					double Tmin = m_weather[y][m][d][H_TMIN][MEAN]; //Minimum daily temperature (°C)
 					double Tmax = m_weather[y][m][d][H_TMAX][MEAN]; //Maximum daily temperature (°C)
-					double ppt = m_weather[y][m][d][H_PRCP][SUM]; //Precipitation (mm) 
+					double ppt = m_weather[y][m][d][H_PRCP][SUM]; //Precipitation (mm)
 
-					//Declare Actual Evapotranspriation 
+					//Declare Actual Evapotranspriation
 					double AET=0;
 
 					//Calculate:
@@ -199,7 +199,7 @@ namespace WBSF
 			m_output[y][O_PSMI_MEAN] = stat[MEAN];
 			m_output[y][O_PSMI_MAX] = stat[HIGHEST];
 		}
-		
+
 		return msg;
 	}
 

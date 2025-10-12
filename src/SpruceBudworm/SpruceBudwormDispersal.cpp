@@ -11,7 +11,7 @@
 //*****************************************************************************
 #include "Basic/ModelStat.h"
 #include "Basic/UtilStd.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "SpruceBudwormDispersal.h"
 #include "SpruceBudworm.h"
 
@@ -47,7 +47,7 @@ namespace WBSF
 			m_G = sex == FEMALE ? G : -999;
 			m_Fº = Fº;
 			m_Fᴰ = Fᴰ;
-			
+
 		}
 
 		CTRef m_TRef;
@@ -123,7 +123,7 @@ namespace WBSF
 			stand.m_bApplyAdultAttrition = true;
 			stand.m_defoliation = m_defoliation;
 			stand.m_adult_longivity_max = m_adult_longivity_max;
-			
+
 
 			CSBWTreePtr pTree(new CSBWTree(&stand));
 			stand.m_host.push_front(pTree);
@@ -152,7 +152,7 @@ namespace WBSF
 							budworm.Live(w, 1);
 
 							//compute brood and flight activity only once
-							if (budworm.GetStage() == ADULT) 
+							if (budworm.GetStage() == ADULT)
 							{
 								size_t sex = budworm.GetSex();
 
@@ -166,7 +166,7 @@ namespace WBSF
 							budworm.Die(dayº);
 						}//temperature is over -10 ºC
 					}//if is alive
-				}//for all insect 
+				}//for all insect
 
 				HxGridTestConnection();
 			}//for all hours of a year

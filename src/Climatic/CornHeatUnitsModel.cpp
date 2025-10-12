@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "CornHeatUnitsModel.h"
 
 using namespace std;
@@ -13,7 +13,7 @@ using namespace WBSF::HOURLY_DATA;
 
 namespace WBSF
 {
-	
+
 	//this line link this model with the EntryPoint of the DLL
 	static const bool bRegistred = CModelFactory::RegisterModel(CCornHeatUnitsModel::CreateObject);
 
@@ -43,13 +43,13 @@ namespace WBSF
 
 
 		size_t c = 0;
-		
+
 		m_planting_date.Set(parameters[c++].GetString());
 		if (!m_planting_date.IsValid())
 			msg.ajoute("Invalid planting date. Date must have format \"mm-dd\" ");
 
 		m_frost_threshold = parameters[c++].GetReal();
-		
+
 		return msg;
 	}
 
@@ -85,7 +85,7 @@ namespace WBSF
 
 		return msg;
 	}
-	
+
 	void CCornHeatUnitsModel::ExecuteDaily(CModelStatVector& output)
 	{
 		ERMsg msg;
@@ -112,14 +112,14 @@ namespace WBSF
 							sum_CHU += GetCHU(m_weather[y][m][d]);
 
 						m_output[ref][O_CHU] = sum_CHU;
-						
+
 					}
 				}
 			}
 		}
 	}
 
-	
+
 
 
 
@@ -132,7 +132,7 @@ namespace WBSF
 		return CHU;
 	}
 
-	
-	
-	
+
+
+
 }

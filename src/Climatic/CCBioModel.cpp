@@ -11,7 +11,7 @@
 #include "WeatherBased/Evapotranspiration.h"
 #include "WeatherBased/DegreeDays.h"
 #include "WeatherBased/GrowingSeason.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "CCBioModel.h"
 
 using namespace std;
@@ -69,7 +69,7 @@ namespace WBSF
 			for (size_t m = 0; m < 12; m++)
 			{
 				size_t mm = y * 12 + m;
-				
+
 				m_output[mm][O_MONTHLY_TMIN] = m_weather[y][m][H_TMIN][MEAN];
 				m_output[mm][O_MONTHLY_TMAX] = m_weather[y][m][H_TMAX][MEAN];
 				m_output[mm][O_MONTHLY_TAVG] = m_weather[y][m][H_TAIR][MEAN];
@@ -98,7 +98,7 @@ namespace WBSF
 		CModelStatVector ET;
 		HamonET.Execute(m_weather, ET);
 		ET.Transform(CTM::MONTHLY, SUM);
-		
+
 
 		CDegreeDays CDD5(CDegreeDays::DAILY_AVERAGE, 5);
 		CModelStatVector DD5;
@@ -111,8 +111,8 @@ namespace WBSF
 
 		CGrowingSeason GS;
 		CFrostFreePeriod  FF;
-		
-		
+
+
 
 
 		std::vector<double> Pwv;
@@ -129,7 +129,7 @@ namespace WBSF
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM::MONTHLY);
 			CTPeriod GSp = GS.GetPeriod(m_weather[y]);//definition have probably change since the first version
 			CTPeriod FFp = FF.GetPeriod(m_weather[y]);
-			
+
 
 			CStatistic ETStat = ET.GetStat(0, p);
 			m_output[y][O_ANNUAL_TMIN] = m_weather[y][H_TMIN][MEAN];
@@ -157,7 +157,7 @@ namespace WBSF
 			m_output[y][O_ANNUAL_FPP] = FFp.length(CTM::DAILY);
 			m_output[y][O_ANNUAL_FDD] = DD0.GetStat(0, FFp)[SUM]; //m_weather[y].GetDD(0, Fp);
 
-			
+
 			//growing season period
 			m_output[y][O_ANNUAL_GSSDAY] = GSp.begin().GetDOY() + 1;
 			m_output[y][O_ANNUAL_GSFDAY] = GSp.end().GetDOY() + 1;
@@ -165,7 +165,7 @@ namespace WBSF
 			m_output[y][O_ANNUAL_GSDD] = DD0.GetStat(0, GSp)[SUM]; //m_weather[y].GetDD(0, GSp);
 		}
 
-		
+
 
 
 		return msg;
@@ -297,7 +297,7 @@ namespace WBSF
 		{
 			stat += (weather[m][H_PRCP][SUM] - HamonPET[CTRef(year,m)][0]);
 		}
-			
+
 
 		return stat[COEF_VAR];
 	}

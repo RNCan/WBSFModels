@@ -13,7 +13,7 @@
 //  It is provided "as is" without express or implied warranty.
 //**************************************************************************************************************
 
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/ContinuingRatio.h"
 #include "HemlockWoollyAdelgid.h"
 #include <queue>

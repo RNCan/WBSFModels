@@ -1,21 +1,21 @@
 //*****************************************************************************
-//                BioSIM-ready                   
-//            Phenology model for                 
-//                                               
+//                BioSIM-ready
+//            Phenology model for
+//
 //Pikonema alaskensis Yellow-Headed Spruce Sawfly
-//                                               
-//           Data from D. Lavigne                 
-//                   NBDNRE                      
-//                                               
-//     Analysis and coding by J. Regniere        
-//        Canadian Forest Service, LFC           
+//
+//           Data from D. Lavigne
+//                   NBDNRE
+//
+//     Analysis and coding by J. Regniere
+//        Canadian Forest Service, LFC
 //*****************************************************************************
 // File: YHSSModel.cpp
 //
 // Class: CCYHSSModel
 //
 // Description: CYHSSModel is a BioSIM model that computes Yellowheaded Spruce Sawfly
-//              seasonal biology. 
+//              seasonal biology.
 //
 //*****************************************************************************
 // 04/05/2017	2.3.1	Rémi Saint-Amant    New hourly generation
@@ -23,10 +23,10 @@
 // 22/01/2016	2.2.0	Rémi Saint-Amant	Using Weather-Based Simulation Framework (WBSF)
 // 01/03/2011			Rémi Saint-Amant    Integration with new BioSIMModelBase
 // 22/04/2009			Rémi Saint-Amant    Integration with BioSIMModelBase
-// 01/03/2000			Jacques Regniere	Creation 
+// 01/03/2000			Jacques Regniere	Creation
 //*****************************************************************************
 #include "WeatherBased/DegreeDays.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "YHSSModel.h"
 
 
@@ -79,7 +79,7 @@ namespace WBSF
 		static const double THRESHOLD = 0;
 
 		CDegreeDays DD(CDegreeDays::DAILY_AVERAGE, THRESHOLD);
-		
+
 
 		CYHSSStatVector stat(m_weather.GetEntireTPeriod(CTM(CTM::DAILY)));
 
@@ -110,7 +110,7 @@ namespace WBSF
 				//		adults alive
 				tot_adult[jd] = freq[0];
 				cum_adult += (tot_adult[jd] - tot_adult[jd - m_adultLongevity]) / m_adultLongevity;
-				
+
 
 				stat[TRef][O_DEGREE_DAY] = dd;
 
@@ -119,7 +119,7 @@ namespace WBSF
 
 				for (size_t i = 0; i < 6; i++)
 					stat[TRef][O_L1 + i] = freq[i + 3];
-				
+
 				stat[TRef][O_AI] = ai;
 			}
 		}
@@ -189,6 +189,6 @@ namespace WBSF
 	}
 
 
-	
+
 
 }

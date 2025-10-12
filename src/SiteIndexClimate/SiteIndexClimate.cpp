@@ -6,7 +6,7 @@
 //Ung (1999)
 
 #include "SiteIndexClimate.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/WeatherStation.h"
 
 using namespace WBSF::HOURLY_DATA;
@@ -55,7 +55,7 @@ namespace WBSF
 		//initialiser les compteurs
 		double Ta[12] = { 0 };
 		double P[12] = { 0 };
-		
+
 		//calculer les totaux mensuels
 		double I = 0;
 		for (size_t m = 0; m < 12; m++)
@@ -79,7 +79,7 @@ namespace WBSF
 				A += std::max( 0.0, Et - P[m]);
 			}
 		}
-		
+
 		return A;
 	}
 
@@ -112,8 +112,8 @@ namespace WBSF
 				Et += 16*pow(10.*Ta[m] / I, alpha);//mm
 			}
 		}
-		
-		
+
+
 		return Et;
 	}
 
@@ -131,7 +131,7 @@ namespace WBSF
 				dpv += 6.108*(pow(10., T1) - pow(10., T2));
 			}
 		}
-		
+
 		return dpv;
 	}
 
@@ -170,7 +170,7 @@ namespace WBSF
 			m_output[y][O_DD5] = GetDegreeDays(m_weather[y]);
 			m_output[y][O_UTIL_PRCP] = GetUtilPrcp(m_weather[y]);
 			m_output[y][O_ARIDITY] = GetAridite(m_weather[y]);
-			m_output[y][O_DPV] = GetVaporPressureDeficit(m_weather[y]); 
+			m_output[y][O_DPV] = GetVaporPressureDeficit(m_weather[y]);
 			m_output[y][O_PET] = GetEvapotranspiration(m_weather[y]);
 		}
 

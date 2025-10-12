@@ -7,7 +7,7 @@
 // 08/05/2012			Rémi Saint-Amant	Create from Lucie Voyer data
 //**************************************************************************************************************
 
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/ContinuingRatio.h"
 #include "WhitePineWeevil.h"
 
@@ -29,21 +29,21 @@ namespace WBSF
 
 
 	//NbVal=    70	Bias= 0.14066	MAE= 3.21604	RMSE= 4.78397	CD= 0.98476	R²= 0.98489
-	//	Egga                	= 163.522  
+	//	Egga                	= 163.522
 	//	Eggb                	= 2.82250
 	//	L1a                 	= 234.141
 	//	L1b                 	= 2.63746
-	//	L2a                 	= 258.929  
-	//	L2b                 	= 1.03911   
-	//	L3a                 	= 316.171  
+	//	L2a                 	= 258.929
+	//	L2b                 	= 1.03911
+	//	L3a                 	= 316.171
 	//	L3b                 	= 2.60322
-	//	L4a                 	= 468.543  
-	//	L4b                 	= 3.66616  
-	//	Pupaa               	= 733.439  
-	//	Pupab               	= 2.75011  
-	//	Adulta               	= 807.158  
-	//	Adultb               	= 2.15406  
-	
+	//	L4a                 	= 468.543
+	//	L4b                 	= 3.66616
+	//	Pupaa               	= 733.439
+	//	Pupab               	= 2.75011
+	//	Adulta               	= 807.158
+	//	Adultb               	= 2.15406
+
 
 	const size_t CWhitePineWeevilModel::FISRT_HL_JDAY = 1 - 1;   //first of March zero base
 	const double CWhitePineWeevilModel::THRESHOLD = 7.2;			//°C
@@ -136,7 +136,7 @@ namespace WBSF
 		enum TInputAllStage{ E_ID, E_YEAR, E_MONTH, E_DAY, E_DD, E_EGG, E_EGG_CUMUL, E_L1, E_CUMUL_L1, E_L2, E_CUMUL_L2, E_L3, E_CUMUL_L3, E_L4, E_CUMUL_L4, E_PUPA, E_CUMUL_PUPA, E_ADULT, E_CUMUL_ADULT, NB_INPUTS_STAGE };
 		enum TInputDD{ P_YEAR, P_MONTH, P_DAY, P_DD, NB_INPUTS_DD };
 
-		
+
 
 		if (header.size() == NB_INPUTS_STAGE)
 		{

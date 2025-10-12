@@ -3,7 +3,7 @@
 //**********************************************************************
 
 #include <iostream>
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 //#include "Climatic.h"
 #include "ClimaticWind.h"
 
@@ -21,7 +21,7 @@ namespace WBSF
 
 	enum TAnnualStatWind { ANNUAL_MEAN_WNDS, ANNUAL_MEAN_WNDS0, ANNUAL_MEAN_WNDS35= ANNUAL_MEAN_WNDS0+35, NB_ANNUAL_STATS_WIND };
 	enum TMonthlyStatWind { MONTHLY_MEAN_WNDS, MONTHLY_MEAN_WNDS0, MONTHLY_MEAN_WNDS35 = ANNUAL_MEAN_WNDS0 + 35, NB_MONTHLY_STATS_WIND };
-	
+
 	//Contructor
 	CClimaticWindModel::CClimaticWindModel()
 	{
@@ -84,7 +84,7 @@ namespace WBSF
 
 					for (size_t i = 0; i < 36; i++)
 						m_output[y * 12 + m][MONTHLY_MEAN_WNDS0 + i] = round(wndd[i], 1);
-				
+
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace WBSF
 		return msg;
 	}
 
-	 
+
 	array<double, 36> CClimaticWindModel::GetWindD(const CWeatherYear& weather)
 	{
 		array<double, 36> wndd = { 0 };

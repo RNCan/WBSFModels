@@ -8,7 +8,7 @@
 #include "Basic/Sun.h"
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "VaporPressureDeficit.h"
 
 
@@ -28,7 +28,7 @@ namespace WBSF
 	static double GetDaylightVaporPressureDeficit(const CWeatherYear& weather);
 	static double GetDaylightVaporPressureDeficit(const CWeatherMonth& weather);
 	static double GetDaylightVaporPressureDeficit(const CWeatherDay& weather);
-	
+
 	static double GetVPD(const CWeatherYear& weather);
 	static double GetVPD(const CWeatherMonth& weather);
 	static double GetVPD(const CWeatherDay& weather);
@@ -55,7 +55,7 @@ namespace WBSF
 		return msg;
 	}
 
-	
+
 	ERMsg CVPDModel::OnExecuteAnnual()
 	{
 		ERMsg msg;
@@ -140,10 +140,10 @@ namespace WBSF
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM::HOURLY);
 		m_output.Init(p, NB_OUTPUTS, -9999);
 
-		
+
 		CSun sun(m_weather.m_lat, m_weather.m_lon);
-		
-		
+
+
 		for (size_t y = 0; y<m_weather.size(); y++)
 		{
 			for (size_t m = 0; m<m_weather[y].size(); m++)
@@ -204,7 +204,7 @@ namespace WBSF
 
 			for (size_t h = sunrise; h <= sunset; h++)
 				VPD += max(0.0f, weather[h][H_ES] - weather[h][H_EA]);
-				
+
 		}
 		else
 		{
@@ -251,7 +251,7 @@ namespace WBSF
 			double T = Tᴸ + i*(Tᴴ - Tᴸ) / 100.0;
 			sum += e0(T) - e0(Tᴰ);
 		}
-		
+
 		return sum;
 	}*/
 
@@ -262,22 +262,22 @@ namespace WBSF
 	}
 
 
-	// Function to evalute the value of integral 
+	// Function to evalute the value of integral
 	double trapezoidal(double Tᴰ, double Tᴸ, double Tᴴ, int n = 100)
 	{
-		// Grid spacing 
+		// Grid spacing
 		double h = (Tᴴ - Tᴸ) / n;
 
-		// Computing sum of first and last terms 
-		// in above formula 
+		// Computing sum of first and last terms
+		// in above formula
 		double s = ʃ(Tᴰ, Tᴸ) + ʃ(Tᴰ, Tᴴ);
 
-		// Adding middle terms in above formula 
+		// Adding middle terms in above formula
 		for (int i = 1; i < n; i++)
 			s += 2 * ʃ(Tᴰ, Tᴸ + i * h);
 
-		// h/2 indicates (b-a)/2n. Multiplying h/2 
-		// with s. 
+		// h/2 indicates (b-a)/2n. Multiplying h/2
+		// with s.
 		return (h / 2)*s;
 	}
 	//return vapor pressure deficit [kPa]
@@ -295,7 +295,7 @@ namespace WBSF
 
 
 			//test from Castellvi(1996)
-		/*	
+		/*
 			double Tᴰ = e0(weather[H_TDEW][MEAN]);
 			double Tn = e0(weather[H_TMIN][MEAN]);
 			double Tx = e0(weather[H_TMAX][MEAN]);
@@ -318,10 +318,10 @@ namespace WBSF
 			double h = std::max(1.0, std::min(100.0, weather[H_RELH][MEAN]));
 			stat += e0(Ta)*(1- h /100.0);
 */
-			
+
 		}
 
 		return stat[MEAN];
 	}
-	
+
 }

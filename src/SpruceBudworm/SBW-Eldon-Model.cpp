@@ -1,7 +1,7 @@
 //**********************************************************************
 //
 // 02/06/2021 Rémi Saint-Amant	Update to BioSIM 11
-// 02/03/2011 Rémi Saint-Amant	New build 
+// 02/03/2011 Rémi Saint-Amant	New build
 // 08/04/2011 Rémi Saint-Amant	Create a specific class for spruce budworm
 // 01/07/2010 Rémi St-Amant and J. Régnière	Generalization to Continuing Ratio Model
 //
@@ -11,7 +11,7 @@
 #include "SBW-Eldon-Model.h"
 #include <cmath>
 #include <cassert>
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 
 using namespace std;
 using namespace WBSF::HOURLY_DATA;
@@ -82,14 +82,14 @@ namespace WBSF
 		{DBL_MAX, 7.0},
 	} };
 
-	double findAI(double DD) 
+	double findAI(double DD)
 	{
 		ELDON_array::const_iterator it2 = std::lower_bound(ELDON_CHART.begin(), ELDON_CHART.end(), ELDON_t(DD,0));
 		ELDON_array::const_iterator it1 = it2 - 1;
 		assert(it1 != ELDON_CHART.end() && it2 != ELDON_CHART.end());
 		//if(it == ELDON_CHART.end())
 			//return 2;
-		
+
 		return it1->second + (DD - it1->first)*(it2->second - it1->second) / (it2->first - it1->first);
 	}
 

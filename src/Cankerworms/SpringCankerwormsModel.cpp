@@ -5,7 +5,7 @@
 #include "Basic/Statistic.h"
 #include <cmath>
 #include <cassert>
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/SimulatedAnnealingVector.h"
 
 using namespace std;
@@ -103,7 +103,7 @@ b9                  	=   0.74483
 			m_springCR.m_b[i] = B[i];
 		}
 
-		
+
 		if (parameters.size() > 1)
 		{
 			m_springCR.m_lowerThreshold = parameters[c++].GetFloat();
@@ -123,9 +123,9 @@ b9                  	=   0.74483
 	{
 		ERMsg msg;
 
-		
+
 		m_springCR.Execute(m_weather, m_output);
-		
+
 
 		//m_output.Init(m_weather.GetEntireTPeriod(CTM::DAILY), NB_OUTPUT);
 		//for (size_t i = 0; i < out.size(); i++)
@@ -175,7 +175,7 @@ b9                  	=   0.74483
 	bool CSpringCankerwormsModel::GetFValueDaily(CStatisticXY& stat)
 	{
 		ERMsg msg;
-		
+
 		if (m_SAResult.size() > 0)
 		{
 			//remove unused years
@@ -301,7 +301,7 @@ b9                  	=   0.74483
 						}
 					}*/
 				}
-				//******************************************************************************************************************************************************			
+				//******************************************************************************************************************************************************
 				//Diagonal lookup
 				else if (EVALUATION == DIAGONAL)
 				{
@@ -341,8 +341,8 @@ b9                  	=   0.74483
 										simDD = (simDD - m_DDStat[MEAN]) / m_DDStat[STD_DEV_OVER_POP];
 										obsS = (obsS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
 										simS = (simS - m_stageStat[p][MEAN]) / m_stageStat[p][STD_DEV_OVER_POP];
-										assert(!_isnan(obsDD) && !_isnan(simDD));
-										assert(!_isnan(obsS) && !_isnan(simS));
+										assert(!isnan(obsDD) && !isnan(simDD));
+										assert(!isnan(obsS) && !isnan(simS));
 
 										stat.Add(simDD, obsDD);
 										stat.Add(simS, obsS);
@@ -352,7 +352,7 @@ b9                  	=   0.74483
 						}
 					}*/
 				}
-				//******************************************************************************************************************************************************			
+				//******************************************************************************************************************************************************
 				//CModelStatVector statSim;
 				//m_continuingRatio.m_bCumul = true;
 				//m_continuingRatio.Execute(m_weather, statSim);
@@ -361,10 +361,10 @@ b9                  	=   0.74483
 				//{
 				//	if( m_SAResult[k].m_obs[I_AI]>-999 && statSim.is_inside(m_SAResult[k].m_ref) )
 				//	{
-				//	
+				//
 				//		double obs= m_SAResult[k].m_obs[I_AI];
 				//		double sim= statSim[m_SAResult[k].m_ref][CSBWContinuingRatio::O_AVERAGE_INSTAR];
-				//		stat.Add(sim, obs); 
+				//		stat.Add(sim, obs);
 				//	}
 				//}
 			}

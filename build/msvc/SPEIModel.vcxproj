@@ -107,7 +107,7 @@
     <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\pdfs.cpp" />
     <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\spei.cpp" />
     <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\SPEIModel.cpp" />
-    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\thornthwaite.cpp" />
+    <ClCompile Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\Thornthwaite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\auxiliary.h" />
@@ -115,7 +115,7 @@
     <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\pdfs.h" />
     <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\spei.h" />
     <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\SPEIModel.h" />
-    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\thornthwaite.h" />
+    <ClInclude Include="..\..\src\StandardizedPrecipitationEvapotranspirationIndex\Thornthwaite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

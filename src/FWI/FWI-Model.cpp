@@ -1,5 +1,5 @@
 //*********************************************************************
-//22/02/2024	3.2.4	Rémi Saint-Amant    VS 2022. Bug correction in begin date when no snow. 
+//22/02/2024	3.2.4	Rémi Saint-Amant    VS 2022. Bug correction in begin date when no snow.
 //24/07/2023	3.2.3	Rémi Saint-Amant    Update with new Growing season calculation
 //19/10/2020	3.2.2	Rémi Saint-Amant    Add wind direction
 //09/10/2020	3.2.1	Rémi Saint-Amant    Add hourly computation. Use of noon to noon prcp in FWI computation
@@ -12,7 +12,7 @@
 //12/02/2016	3.0.0	Rémi Saint-Amant	Using WBSF. Hourly model.
 //06/02/2012	2.3		Rémi Saint-Amant	Correction of a bug in starting date
 //18/05/2011    2.2     Rémi Saint-Amant	Use of new FWI class
-//11/03/2009	1.1		Rémi Saint-Amant	Change input order and add startThreshold 
+//11/03/2009	1.1		Rémi Saint-Amant	Change input order and add startThreshold
 //05/03/2009	1.0		Rémi Saint-Amant	Compile with new FWI kernel
 //27/02/2009	----	Rémi Saint-Amant	Include new variable for monthly model
 //25/11/2008	----	Rémi Saint-Amant	Add Annual model
@@ -23,14 +23,14 @@
 #include "WeatherBased/WeatherDefine.h"
 #include "WeatherBased/GrowingSeason.h"
 #include "WeatherBased/SnowAnalysis.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "FWI.h"
 #include "FWI-Model.h"
 #include "FWI(new from wang2015).h"
 
 
 using namespace std;
-using namespace WBSF::HOURLY_DATA; 
+using namespace WBSF::HOURLY_DATA;
 
 
 namespace WBSF
@@ -45,7 +45,7 @@ namespace WBSF
 //**************************************************************************************************
 //CFWIModel
 
-	CFWIModel::CFWIModel() 
+	CFWIModel::CFWIModel()
 	{
 		// initialize your variable here (optional)
 		NB_INPUT_PARAMETER=10;
@@ -80,8 +80,8 @@ namespace WBSF
 	ERMsg CFWIModel::ProcessParameters(const CParameterVector& parameters)
 	{
 		ERMsg msg;
-		
-		
+
+
 		if (WBSF::Find(m_info.m_modelName, "fixed"))
 		{
 			m_bAutoSelect = false;
@@ -119,7 +119,7 @@ namespace WBSF
 			m_VanWagnerType = parameters[c++].GetInt();
 			m_fbpMod = parameters[c++].GetBool();
 		}
-		
+
 		return msg;
 	}
 
@@ -140,7 +140,7 @@ namespace WBSF
 		FWI.m_nbDaysEnd = m_nbDaysEnd;
 		FWI.m_TtypeEnd = m_TtypeEnd;
 		FWI.m_thresholdEnd = m_thresholdEnd;
-		//manual setting 
+		//manual setting
 		FWI.m_firstDay = m_firstDay;
 		FWI.m_lastDay = m_lastDay;
 		FWI.m_FFMC = m_FFMC;
@@ -153,13 +153,13 @@ namespace WBSF
 		FWI.m_effectivenessOfWinterPrcp = m_effectivenessOfWinterPrcp;
 		FWI.m_VanWagnerType = CFWI::TVanWagner(m_VanWagnerType);
 		FWI.m_fbpMod = m_fbpMod;
-	
+
 		msg = FWI.Execute(m_weather, output);
 
-		
+
 		//compare with wang code;
 
-		
+
 		//CFWIInputVector in;
 		//for (CTRef TRef = m_firstDay.GetTRef(m_weather.GetFirstYear()); TRef <= m_lastDay.GetTRef(m_weather.GetFirstYear()); TRef++)
 		//{
@@ -199,8 +199,8 @@ namespace WBSF
 	{
 		ERMsg msg;
 
-		
-		
+
+
 		//Init class member
 		m_method = CFWI::ALL_HOURS_CALCULATION;
 		msg = ExecuteDaily(m_output);
@@ -231,7 +231,7 @@ namespace WBSF
 		msg = ExecuteDaily(resultD);
 		CFWIStat::Covert2M(resultD, m_output);
 
-		
+
 
 
 		return msg;

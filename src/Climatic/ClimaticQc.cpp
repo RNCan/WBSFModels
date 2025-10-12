@@ -1,27 +1,27 @@
 ﻿//**********************************************************************
 // 09/03/2022	4.1.0	Rémi Saint-Amant    Use of new Growing Season and FrostFree class
 // 10/09/2018	4.0.1	Rémi Saint-Amant    Daylight VPD change to total VPD
-// 10/09/2018	4.0.0	Rémi Saint-Amant    Change in units of aridity, pet 
+// 10/09/2018	4.0.0	Rémi Saint-Amant    Change in units of aridity, pet
 //											mean of VPD instead of summation
 //											Add PET as output
-// 10/09/2018	3.1.2	Rémi Saint-Amant    Bug correction in aridity 
+// 10/09/2018	3.1.2	Rémi Saint-Amant    Bug correction in aridity
 // 27/07/2018	3.1.1	Rémi Saint-Amant    Change in name SB -> Qc. Compile with VS 2017
 // 20/09/2016	3.1.0	Rémi Saint-Amant    Change Tair and Trng by Tmin and Tmax
 // 21/01/2016	3.0.0	Rémi Saint-Amant	Using Weather-based simulation framework (WBSF)
 // 03/03/2009			Rémi Saint-Amant	Update with new BioSIMModelBase (hxGrid)
 // 20/11/2008			Rémi Saint-Amant	New variable: TMean growing season and July Tmean
 //**********************************************************************
-#include <stdio.h>
+#include <cstdio>
 #include <cmath>
 #include <cassert>
-#include <float.h>
+#include <cfloat>
 #include <limits>
 
 #include "WeatherBased/WeatherDefine.h"
 #include "WeatherBased/Evapotranspiration.h"
 #include "WeatherBased/DegreeDays.h"
 #include "WeatherBased/GrowingSeason.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ClimaticQc.h"
 
 

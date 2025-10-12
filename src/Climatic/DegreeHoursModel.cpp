@@ -1,11 +1,11 @@
 ﻿//*****************************************************************************
 // DegreeDay summation
-// 
+//
 // Jacques Régnière
 // Canadian Forest Service
-// 
+//
 // Programmer: Rémi Saint-Amant
-// 
+//
 //*****************************************************************************
 //*****************************************************************************
 // File: DegreDaysModel.cpp
@@ -13,7 +13,7 @@
 // Class: CDegreeHoursModel
 //
 // Description: CDegreeHoursModel is a BioSIM's model that computes heating degree hours.
-//              The model accept any number of years and can return the 
+//              The model accept any number of years and can return the
 //				hourly, degree hours value or the cumulative value.
 //
 // Input parameters:
@@ -32,7 +32,7 @@
 //*****************************************************************************
 
 #include <array>
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "DegreeHoursModel.h"
 
 
@@ -46,7 +46,7 @@ namespace WBSF
 	static const bool bRegistred =
 		CModelFactory::RegisterModel(CDegreeHoursModel::CreateObject);
 
-	 
+
 	static const int ERROR_BEGINNING_DATE = ERROR_USER_BASE + 1;
 	static const int ERROR_ENDING_DATE = ERROR_USER_BASE + 2;
 
@@ -58,7 +58,7 @@ namespace WBSF
 		NB_INPUT_PARAMETER = 8; //set the number of parameters for this model
 		VERSION = "3.1.0 (2016)"; //set the version of this model
 
-		//This model has 8 input parameters 
+		//This model has 8 input parameters
 		CMonthDay m_firstDate = CMonthDay(JANUARY, DAY_01);
 		CMonthDay m_lastDate = CMonthDay(DECEMBER, DAY_31);
 	}
@@ -77,8 +77,8 @@ namespace WBSF
 
 		ERMsg msg;
 
-		//read the 5 input parameters: must be in the same order than the 
-		//model's interface. 
+		//read the 5 input parameters: must be in the same order than the
+		//model's interface.
 
 		int c = 0;
 
@@ -87,7 +87,7 @@ namespace WBSF
 		m_DH.m_upperThreshold = parameters[c++].GetReal();
 		m_DH.m_cutoffType = parameters[c++].GetInt();
 
-		m_firstDate = CMonthDay(parameters[c++].GetString()); 
+		m_firstDate = CMonthDay(parameters[c++].GetString());
 		m_lastDate = CMonthDay(parameters[c++].GetString());
 		m_DH.m_bCumulative = parameters[c++].GetBool();
 		double notUse = parameters[c++].GetReal();//for reverse model
@@ -101,7 +101,7 @@ namespace WBSF
 
 
 		assert(m_DH.m_cutoffType >= 0 && m_DH.m_cutoffType < CDegreeDays::NB_CUTOFF);
-		
+
 
 		return msg;
 	}
@@ -113,7 +113,7 @@ namespace WBSF
 		if (m_weather.IsDaily())
 			m_weather.ComputeHourlyVariables();
 
-		 
+
 		CModelStatVector stats;
 
 		CTPeriod p = m_weather.GetEntireTPeriod();
@@ -137,9 +137,9 @@ namespace WBSF
 	}
 
 	//Call by the framework to implement daily computation
-	
 
-	
+
+
 
 	ERMsg CDegreeHoursModel::GetErrorMessage(int errorID)
 	{

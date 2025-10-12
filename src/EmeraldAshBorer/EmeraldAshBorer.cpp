@@ -5,7 +5,7 @@
 // 08/05/2017	1.0.0	Rémi Saint-Amant	Create from articles Lyons and Jones 2006
 //**************************************************************************************************************
 
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "ModelBased/ContinuingRatio.h"
 #include "EmeraldAshBorer.h"
 #include "TreeMicroClimate.h"
@@ -14,7 +14,7 @@
 #include "ModelBased/SimulatedAnnealingVector.h"
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/beta.hpp>
-#include <boost/math/distributions/Rayleigh.hpp>
+
 #include <boost/math/distributions/logistic.hpp>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/math/distributions/non_central_f.hpp>
@@ -213,7 +213,7 @@ namespace WBSF
 
 	//void CEmeraldAshBorerModel::ExecuteDaily(CModelStatVector& output)
 	//{
-	//	
+	//
 	//	output.Init(m_weather.GetEntireTPeriod(), NB_STAGES, 0, HEADER);//+3 for DD, death and AI
 	//	COverheat overheating(0.0);
 
@@ -231,7 +231,7 @@ namespace WBSF
 	//			const CWeatherDay& wDay = m_weather.GetDay(TRef);
 	//			CMicroClimate micro(wDay);
 	//			double T = micro.GetTair();
-	//			
+	//
 	//			for (size_t s = 0; s < 2; s++)
 	//			{
 	//				if (stage[s] < ADULT)
@@ -270,7 +270,7 @@ namespace WBSF
 	//			}
 	//		}
 	//	}
-	//	
+	//
 	//	//CR.Execute(m_weather, output);
 	//}
 
@@ -483,7 +483,7 @@ namespace WBSF
 			{
 				double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
 				double obsX = obsX1 + (obs - obsY1) * slope;
-				assert(!_isnan(obsX) && _finite(obsX));
+				assert(!isnan(obsX) && finite(obsX));
 
 				DOY = obsX;
 			}
@@ -552,7 +552,7 @@ namespace WBSF
 						}
 					}
 
-					//flies catch 
+					//flies catch
 					if (m_SAResult[i].m_obs[I_CUMUL_CATCH] > -999)
 					{
 						double obs = m_SAResult[i].m_obs[I_CUMUL_CATCH];

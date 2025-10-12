@@ -10,7 +10,7 @@
 // 29/06/2010			Rémi Saint-Amant	Compatible with HxGrid. Remove extrem
 // 30/10/2009			Rémi Saint-Amant	Change CPeriod by CTPeriod
 // 03/03/2009			Rémi Saint-Amant	Integrate with new BioSIMModelBase (hxGrid)
-// 19/11/2008			Rémi Saint-Amant	Update with VS9 and new BioSIMModelBase 
+// 19/11/2008			Rémi Saint-Amant	Update with VS9 and new BioSIMModelBase
 // 27/05/2008			Rémi Saint-Amant	Used of wind speed in the computation of ASC2000 PET
 // 01/12/2002			Rémi Saint-Amant	2 variables was added: Degree-day and % of snow
 // 15/07/2002			Rémi Saint-Amant	Creation
@@ -21,7 +21,7 @@
 #include "Basic/UtilTime.h"
 #include "Basic/UtilMath.h"
 #include "WeatherBased/GrowingSeason.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "Climatic.h"
 
 
@@ -79,7 +79,7 @@ namespace WBSF
 		return msg;
 	}
 
-	
+
 	ERMsg CClimaticModel::OnExecuteAnnual()
 	{
 		ERMsg msg;
@@ -112,16 +112,16 @@ namespace WBSF
 			m_output[y][ANNUAL_MEAN_TDEW] = round(Tdew, 1);
 			m_output[y][ANNUAL_MEAN_REL_HUM] = round(relHum, 1);
 			m_output[y][ANNUAL_SUN] = round(annualSun, 1);
-			
+
 			m_output[y][ANNUAL_FROST_DAY] = frostDay;
 			m_output[y][ANNUAL_FROSTFREE_DAY] = frostFreeDay;
 			m_output[y][ANNUAL_WET_DAY] = nbWetDay;
 			m_output[y][ANNUAL_DRY_DAY] = nbDryDay;
-			
-			
+
+
 		}
 
-	
+
 
 		return msg;
 	}
@@ -168,7 +168,7 @@ namespace WBSF
 				m_output[y * 12 + m][MONTHLY_FROSTFREE_DAY] = frostFreeDay;
 				m_output[y * 12 + m][MONTHLY_WET_DAY] = nbWetDay;
 				m_output[y * 12 + m][MONTHLY_DRY_DAY] = nbDryDay;
-				
+
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace WBSF
 					const CWeatherDay& wDay = m_weather[y][m][d];
 					CTRef ref = wDay.GetTRef();
 
-					
+
 
 					if (m_bEx)
 					{
@@ -236,7 +236,7 @@ namespace WBSF
 
 		CTPeriod p = m_weather.GetEntireTPeriod();
 		m_output.Init(p, m_bEx ? NB_HOURLY_OUTPUTS_EX : NB_HOURLY_OUTPUTS, -999);
-		
+
 
 
 		for (size_t y = 0; y<m_weather.size(); y++)
@@ -294,7 +294,7 @@ namespace WBSF
 
 		return stat;
 	}
-	
+
 	size_t CClimaticModel::GetNbFrostDay(const CWeatherYear& weather)
 	{
 		size_t stat = 0;

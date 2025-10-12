@@ -4,13 +4,13 @@
 // Description: CMeteorusTrachynotus_OBL_SBW_Model is a BioSIM model of MeteorusTrachynotus and ObliqueBandedLeafroller model
 //*****************************************************************************
 // 28/10/2020	1.0.2	Rémi Saint-Amant	Add SBW rpoportion as input parameters
-// 26/10/2020	1.0.1	Rémi Saint-Amant	Add 
+// 26/10/2020	1.0.1	Rémi Saint-Amant	Add
 // 27/02/2020	1.0.0	Rémi Saint-Amant	Creation
 //*****************************************************************************
 
 #include "Basic/UtilStd.h"
 #include "WeatherBased/SnowAnalysis.h"
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "MeteorusTrachynotus_OBL_SBW_Model.h"
 
 
@@ -29,14 +29,14 @@ namespace WBSF
 	static const bool bRegistred =
 		CModelFactory::RegisterModel(CMeteorusTrachynotus_OBL_SBW_Model::CreateObject);
 
-	
+
 	enum TDailyOutput { O_D_IMMATURE, O_D_PUPA, O_D_ADULT, O_D_DEAD_ADULT, O_D_OVIPOSITING_ADULT, O_D_BROOD_OBL, O_D_BROOD_SBW, O_D_ATTRITION, O_D_CUMUL_REATCH_ADULT, O_D_CUMUL_DIAPAUSE, O_D_TOTAL, NB_DAILY_OUTPUT, O_D_DAY_LENGTH = NB_DAILY_OUTPUT * NB_GENERATIONS, O_D_NB_OBL, O_D_NB_OBL_L3D, O_D_NB_SBW, O_D_DIAPAUSE_AGE, O_SBW_WITH_METEO, NB_DAILY_OUTPUT_EX };
 	enum TGenerationOutput{ O_G_YEAR, O_G_GENERATION, O_G_ADULTS, O_G_BROODS_OBL, O_G_BROODS_SBW, O_G_DIAPAUSE, O_G_FECONDITY, O_G_GROWTH_RATE, O_G_DEAD_ADULT, O_G_HOST_DIE, O_G_FROZEN, NB_GENERATION_OUTPUT };
 	enum TAnnualOutput{ O_A_NB_GENERATION, O_A_ADULTS, O_A_BROODS_OBL, O_A_BROODS_SBW, O_A_DIAPAUSE, O_A_FECONDITY, O_A_GROWTH_RATE, O_A_DEAD_ADULT, O_A_HOST_DIE, O_A_FROZEN, NB_ANNUAL_OUTPUT };
 
 	CMeteorusTrachynotus_OBL_SBW_Model::CMeteorusTrachynotus_OBL_SBW_Model()
 	{
-		//NB_INPUT_PARAMETER is used to determine if the DLL 
+		//NB_INPUT_PARAMETER is used to determine if the DLL
 		//uses the same number of parameters than the model interface
 		NB_INPUT_PARAMETER = 7;
 		VERSION = "1.0.2 (2020)";
@@ -76,29 +76,29 @@ namespace WBSF
 		return msg;
 	}
 
-	
+
 	//************************************************************************************************
 	// Daily method
-	
+
 	//This method is called to compute the solution
 	ERMsg CMeteorusTrachynotus_OBL_SBW_Model::OnExecuteDaily()
 	{
 		ERMsg msg;
-		
+
 
 
 		//if daily data, compute sub-daily data
 		if (m_weather.IsDaily())
 			m_weather.ComputeHourlyVariables();
-		
-		
+
+
 		//one CModelStatVector by generation
 		vector<CModelStatVector> MeteorusTrachynotusStat;
 		ExecuteDailyAllGenerations(MeteorusTrachynotusStat);
 
 		//merge generations vector into one output vector (max of 5 generations)
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::DAILY));
-		size_t maxG = min(NB_GENERATIONS, MeteorusTrachynotusStat.size()); 
+		size_t maxG = min(NB_GENERATIONS, MeteorusTrachynotusStat.size());
 		m_output.Init(p.size(), p.begin(), NB_DAILY_OUTPUT_EX, 0);
 
 		for (CTRef TRef = p.begin(); TRef <= p.end(); TRef++)
@@ -121,9 +121,9 @@ namespace WBSF
 			m_output[TRef][O_D_NB_OBL_L3D] = MeteorusTrachynotusStat[0][TRef][S_NB_OBL_L3D];
 			m_output[TRef][O_D_NB_SBW] = MeteorusTrachynotusStat[0][TRef][S_NB_SBW];
 			m_output[TRef][O_D_DIAPAUSE_AGE] = diapauseAge;
-			
-			
-			 
+
+
+
 		}
 
 
@@ -138,7 +138,7 @@ namespace WBSF
 
 		for (size_t y = 0; y < m_weather.size(); y++)
 		{
-			//get the annual period 
+			//get the annual period
 			CTPeriod p = m_weather[y].GetEntireTPeriod(CTM(CTM::DAILY));
 
 			//Create stand
@@ -171,7 +171,7 @@ namespace WBSF
 			stand.m_criticalDaylength = m_criticalDaylength;
 			stand.m_lethalTemp = m_lethalTemp;
 			stand.m_preOvip = m_preOvip;
-			
+
 			//run the model for all days of all years
 			for (CTRef d = p.begin(); d <= p.end(); d++)
 			{
@@ -199,13 +199,13 @@ namespace WBSF
 		if (m_weather.IsDaily())//if daily data, compute sub-daily data
 			m_weather.ComputeHourlyVariables();
 
-		
+
 		vector<CModelStatVector> MeteorusTrachynotusStat;
 		ExecuteDailyAllGenerations(MeteorusTrachynotusStat);
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::ANNUAL));
 		m_output.Init(p, NB_ANNUAL_OUTPUT, 0);
-		
+
 
 		//now compute annual growth rates
 		//Get last complete generation
@@ -216,7 +216,7 @@ namespace WBSF
 			{
 				CTPeriod season(CTRef(TRef.GetYear(), JANUARY, DAY_01), CTRef(TRef.GetYear(), DECEMBER, DAY_31));
 				m_output[TRef][O_A_NB_GENERATION] = maxG;
-				
+
 				for (size_t g = 0; g < maxG; g++)
 				{
 					static const size_t VAR_IN[7] = { M_ADULT,  S_BROODS_OBL,  S_BROODS_SBW, M_DIAPAUSE, M_DEAD_ADULT, M_HOST_DIE, M_FROZEN};
@@ -228,7 +228,7 @@ namespace WBSF
 						m_output[TRef][VAR_OUT[i]] += stat[SUM];
 					}
 				}
-				
+
 				if (m_output[TRef][O_A_ADULTS] > 0)
 					m_output[TRef][O_A_FECONDITY] = (m_output[TRef][O_A_BROODS_OBL] + m_output[TRef][O_A_BROODS_SBW]) / m_output[TRef][O_A_ADULTS];
 
@@ -236,7 +236,7 @@ namespace WBSF
 			}
 		}
 
-			
+
 
 		return msg;
 	}
@@ -248,10 +248,10 @@ namespace WBSF
 		if (m_weather.IsDaily())//if daily data, compute sub-daily data
 			m_weather.ComputeHourlyVariables();
 
-		
+
 		vector<CModelStatVector> MeteorusTrachynotusStat;
 		ExecuteDailyAllGenerations(MeteorusTrachynotusStat);
-		
+
 
 		CTPeriod p = m_weather.GetEntireTPeriod(CTM(CTM::ANNUAL));
 		m_output.Init(p.size()*NB_GENERATIONS, CTRef(0,0,0,0,CTM(CTM::ATEMPORAL)), NB_GENERATION_OUTPUT, -999, "");
@@ -292,6 +292,6 @@ namespace WBSF
 
 		return msg;
 	}
-	
+
 
 }

@@ -3,7 +3,7 @@
 //*********************************************************************
 
 
-#include "Modelbased/EntryPoint.h"
+#include "ModelBased/EntryPoint.h"
 #include "WeatherBased/WeatherStation.h"
 
 #include "WaterBalance.h"

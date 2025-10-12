@@ -13,8 +13,8 @@
 #include <cassert>
 #include <vector>
 #include <deque>
-#include "basic/UtilTime.h"
-#include "basic/ModelStat.h"
+#include "Basic/UtilTime.h"
+#include "Basic/ModelStat.h"
 #include "ModelBased/IndividualBase.h"
 #include "SBBEquations.h"
 

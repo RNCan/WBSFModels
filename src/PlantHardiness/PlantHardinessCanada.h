@@ -2,7 +2,7 @@
 
 #include "Basic/ERMsg.h"
 #include "WeatherBased/WeatherStation.h"
-#include "Basic/modelStat.h"
+#include "Basic/ModelStat.h"
 
 namespace WBSF
 {

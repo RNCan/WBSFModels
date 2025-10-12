@@ -3,7 +3,7 @@
 //*****************************************************************************
 #pragma once
 
-#include "crtdbg.h"
+#include "cassert"
 #include "ModelBased/EquationTableLookup.h"
 
 namespace WBSF
@@ -27,26 +27,26 @@ namespace WBSF
 		static const double P[WTM::NB_STAGES][WTM::NB_DEV_RATE_PARAMS];
 		static const double D[WTM::NB_STAGES][WTM::NB_RDR_PARAMS]; //development parameter
 		static const double H[WTM::NB_HATCH_PARAMS]; //hatch parameter
-		
+
 		double m_P[WTM::NB_STAGES][WTM::NB_DEV_RATE_PARAMS];
 		double m_D[WTM::NB_STAGES][WTM::NB_RDR_PARAMS];
 		double m_H[WTM::NB_HATCH_PARAMS];
-		
+
 
 		CWhitemarkedTussockMothEquations(const CRandomGenerator& RG);
-		
+
 		virtual double ComputeRate(size_t stage, double t)const;
-		
+
 
 		//relative development
 		double GetRelativeDevRate(size_t s)const;
 		double GetHatchCDD()const;
 		double GetFecondity()const;
-	
+
 
 	protected:
-		
-	
+
+
 
 	};
 
