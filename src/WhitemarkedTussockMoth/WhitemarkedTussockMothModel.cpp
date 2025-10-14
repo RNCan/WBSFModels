@@ -326,7 +326,7 @@ namespace WBSF
 				{
 					double slope = (simX2 - simX1) / (simY2 - simY1);
 					double obsX = simX1 + (obsY - simY1)*slope;
-					assert(!isnan(obsX) && finite(obsX));
+					assert(!isnan(obsX) && isfinite(obsX));
 
 					x = obsX;
 				}

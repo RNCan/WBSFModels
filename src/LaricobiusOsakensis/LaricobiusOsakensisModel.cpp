@@ -270,7 +270,7 @@ double GetSimX(size_t s, CTRef TRefO, double obs, const CModelStatVector& output
             {
                 double slope = (obsX2 - obsX1) / (obsY2 - obsY1);
                 double obsX = obsX1 + (obs - obsY1)*slope;
-                assert(!isnan(obsX) && finite(obsX));
+                assert(!isnan(obsX) && isfinite(obsX));
 
                 x = obsX;
             }

@@ -489,7 +489,7 @@ namespace WBSF
 
 				double NLL = statLH[LIKELIHOOD];
 				//Try to maximize MAE of log(LH)
-				if (NLL > -9999 && !isnan(NLL) && finite(NLL))
+				if (NLL > -9999 && !isnan(NLL) && isfinite(NLL))
 					stat.Add(NLL, 0);
 			}
 		}

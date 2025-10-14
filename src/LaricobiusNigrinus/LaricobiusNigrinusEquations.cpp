@@ -181,11 +181,11 @@ namespace WBSF
 
 		//static const double CORRECTION[NB_STAGES] = { 1, 1, 1, 1, 1, 1 };
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P_DEV[s], T));// * CORRECTION[s]
-		assert(!isnan(r) && finite(r) && r >= 0);
+		assert(!isnan(r) && isfinite(r) && r >= 0);
 
 
 
-		assert(!isnan(r) && finite(r) && r >= 0);
+		assert(!isnan(r) && isfinite(r) && r >= 0);
 
 		return r;
 	}
@@ -234,7 +234,7 @@ namespace WBSF
 		while (RDR < 0.2 || RDR>2.6)//base on individual observation
 			RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu(true, true));
 
-		assert(!isnan(RDR) && finite(RDR));
+		assert(!isnan(RDR) && isfinite(RDR));
 
 		return RDR;
 	}
@@ -316,7 +316,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], P_SUR[s], T)));
 
-		assert(!isnan(sr) && finite(sr) && sr >= 0 && sr <= 1);
+		assert(!isnan(sr) && isfinite(sr) && sr >= 0 && sr <= 1);
 		return sr;
 	}
 
@@ -341,7 +341,7 @@ namespace WBSF
 		boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::square(sigma) / 2.0, sigma);
 		double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.01, 0.99));
 
-		assert(!isnan(Fi) && finite(Fi));
+		assert(!isnan(Fi) && isfinite(Fi));
 
 
 		return Fi;
@@ -356,7 +356,7 @@ namespace WBSF
 		static const vector<double> P_FEC = { 0.01518, 10.9, 6.535 };
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ, P_FEC, T));
 
-		assert(!isnan(r) && finite(r) && r >= 0);
+		assert(!isnan(r) && isfinite(r) && r >= 0);
 
 		return r;
 	}

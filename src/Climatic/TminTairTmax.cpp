@@ -243,7 +243,7 @@ namespace WBSF
 ////					//CFL::RH2Td(data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM], data[m_SAResult[i].m_ref][MONTHLY_MEAN_REL_HUM]);
 ////
 ////					if (!isnan(sim) && !isnan(obs) &&
-////						finite(sim) && finite(obs))
+////						isfinite(sim) && isfinite(obs))
 ////						stat.Add(sim, obs);
 ////				}
 ////

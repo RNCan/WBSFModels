@@ -80,7 +80,7 @@ namespace WBSF
 		}
 
 
-		assert(!isnan(Rt) && finite(Rt));
+		assert(!isnan(Rt) && isfinite(Rt));
 		assert(Rt >= 0);
 		return Rt;
 	}
@@ -103,8 +103,8 @@ namespace WBSF
 
 		double 	r = m_randomGenerator.RandUnbiasedLogNormal(P[s][0], P[s][1]);
 
-		assert(!isnan(r) && finite(r));
-		if (isnan(r) || !finite(r))//just in case
+		assert(!isnan(r) && isfinite(r));
+		if (isnan(r) || !isfinite(r))//just in case
 			r = 1;
 
 		return r;
@@ -181,8 +181,8 @@ namespace WBSF
 		default: assert(false);
 		}
 
-		assert(!isnan(r) && finite(r));
-		if (isnan(r) || !finite(r))//just in case
+		assert(!isnan(r) && isfinite(r));
+		if (isnan(r) || !isfinite(r))//just in case
 			r = 1;
 
 		return r;

@@ -112,7 +112,7 @@ namespace WBSF
 		}
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P, T));
-		assert(!isnan(r) && finite(r) && r >= 0 && r <= 1);
+		assert(!isnan(r) && isfinite(r) && r >= 0 && r <= 1);
 
 		return r;
 	}
@@ -138,7 +138,7 @@ namespace WBSF
 	double CPopilliaJaponicaEquations::GetRateDiapause(double t)const
 	{
 		double r = max(0.0, CDevRateEquation::GetRate(CDevRateEquation::WangLanDing_1982, m_EOD, t));
-		assert(!isnan(r) && finite(r) && r >= 0);
+		assert(!isnan(r) && isfinite(r) && r >= 0);
 
 		return r;// *m_psy[DEAD_ADULT];
 	}
@@ -196,7 +196,7 @@ namespace WBSF
 
 		//double test1 = boost::math::quantile(dist, 0.001);
 		//double test2 = boost::math::quantile(dist, 0.999);
-		assert(!isnan(RDR) && finite(RDR));
+		assert(!isnan(RDR) && isfinite(RDR));
 
 
 		//Don't inverse
@@ -243,7 +243,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], P_SUR[s], T)));
 
-		assert(!isnan(sr) && finite(sr) && sr >= 0 && sr <= 1);
+		assert(!isnan(sr) && isfinite(sr) && sr >= 0 && sr <= 1);
 		return sr;
 	}
 
@@ -279,7 +279,7 @@ namespace WBSF
 	//	boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::Square(sigma) / 2.0, sigma);
 	//	double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.001, 0.999));
 
-	//	ASSERT(!isnan(Fi) && finite(Fi));
+	//	ASSERT(!isnan(Fi) && isfinite(Fi));
 
 
 	//	return Fi;
@@ -294,7 +294,7 @@ namespace WBSF
 	//	static const vector<double> P_FEC = { 0.01518, 10.9, 6.535 };
 	//	double r = max(0.0, CDevRateEquation::GetRate(P_EQ, P_FEC, T));
 
-	//	assert(!isnan(r) && finite(r) && r >= 0);
+	//	assert(!isnan(r) && isfinite(r) && r >= 0);
 
 	//	return r;
 	//}

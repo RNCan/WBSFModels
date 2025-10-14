@@ -83,7 +83,7 @@ namespace WBSF
 		double r = Equation1(e, T);
 
 
-		assert(!isnan(r) && finite(r));
+		assert(!isnan(r) && isfinite(r));
 		assert(r >= 0);
 		return r;
 	}
@@ -96,8 +96,8 @@ namespace WBSF
 	{
 		double 	r = m_randomGenerator.RandUnbiasedLogNormal(1.0, 0.4); //Was 0.25
 
-		assert(!isnan(r) && finite(r));
-		if (isnan(r) || !finite(r))//just in case
+		assert(!isnan(r) && isfinite(r));
+		if (isnan(r) || !isfinite(r))//just in case
 			r = 1;
 
 		return r;

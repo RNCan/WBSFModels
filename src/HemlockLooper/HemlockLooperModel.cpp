@@ -511,7 +511,7 @@ namespace WBSF
 				assert(false); //todo
 				double NLL = 0;// statLH[NEGATIVE_LOG_LIKELIHOOD];
 				//Try to maximize MAE of log(LH)
-				if (NLL > -999 && !isnan(NLL) && finite(NLL))
+				if (NLL > -999 && !isnan(NLL) && isfinite(NLL))
 					stat.Add(NLL, 0);
 			}
 		}

@@ -123,7 +123,7 @@ double CLaricobiusOsakensisEquations::ComputeRate(size_t s, double T)const
     //because the larval stage development rate and mortality was difficulty to estimate, we evaluate larval corrected by percent by stage
     static const double PROP_BY_STAGE[LOF::NB_STAGES] = { 1, 0.206, 0.203, 0.227, 0.364, 1, 1, 1, 1 };
     double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P_DEV[s], T)) / PROP_BY_STAGE[s];
-    assert(!isnan(r) && finite(r) && r >= 0);
+    assert(!isnan(r) && isfinite(r) && r >= 0);
 
 
     return r;
@@ -155,7 +155,7 @@ double CLaricobiusOsakensisEquations::GetRelativeDevRate(size_t s)const
     while (RDR < 0.2 || RDR>2.6)//base on individual observation
         RDR = boost::math::quantile(RDR_dist, m_randomGenerator.Randu());
 
-    assert(!isnan(RDR) && finite(RDR));
+    assert(!isnan(RDR) && isfinite(RDR));
 
     return RDR;
 }
@@ -224,7 +224,7 @@ double CLaricobiusOsakensisEquations::GetDailySurvivalRate(size_t s, double T)co
 
     double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], P_SUR[s], T)));
 
-    assert(!isnan(sr) && finite(sr) && sr >= 0 && sr <= 1);
+    assert(!isnan(sr) && isfinite(sr) && sr >= 0 && sr <= 1);
     return sr;
 }
 
@@ -251,7 +251,7 @@ double CLaricobiusOsakensisEquations::GetFecondity()const
     boost::math::lognormal_distribution<double> fecondity(log(Fo) - WBSF::square(sigma) / 2.0, sigma);
     double Fi = boost::math::quantile(fecondity, m_randomGenerator.Rand(0.001, 0.999));
 
-    assert(!isnan(Fi) && finite(Fi));
+    assert(!isnan(Fi) && isfinite(Fi));
 
 
     return Fi;
@@ -266,7 +266,7 @@ double CLaricobiusOsakensisEquations::GetFecondityRate(double age, double T)cons
     static const vector<double> P_FEC = { 0.01518, 10.9, 6.535 };
     double r = max(0.0, CDevRateEquation::GetRate(P_EQ, P_FEC, T));
 
-    assert(!isnan(r) && finite(r) && r >= 0);
+    assert(!isnan(r) && isfinite(r) && r >= 0);
 
     return r;
 }

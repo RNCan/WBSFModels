@@ -97,7 +97,7 @@ namespace WBSF
 
 		double r = max(0.0, CDevRateEquation::GetRate(P_EQ[s], P_DEV[s], T));
 
-		assert(!isnan(r) && finite(r) && r >= 0);
+		assert(!isnan(r) && isfinite(r) && r >= 0);
 
 		return r;
 	}
@@ -108,7 +108,7 @@ namespace WBSF
 		//psi Tb To Tm sigma
 		vector<double> p(begin(m_pupa_param), end(m_pupa_param));
 		double r = max(0.0, CDevRateEquation::GetRate(CDevRateEquation::WangLanDing_1982, p, T));
-		assert(!isnan(r) && finite(r) && r >= 0);
+		assert(!isnan(r) && isfinite(r) && r >= 0);
 
 		return r;
 	}
@@ -121,7 +121,7 @@ namespace WBSF
 		while (rT < 0.2 || rT>2.6)//base on individual observation
 			rT = boost::math::quantile(ln_dist, m_randomGenerator.Randu(true, true));
 
-		assert(!isnan(rT) && finite(rT));
+		assert(!isnan(rT) && isfinite(rT));
 
 		//covert relative development time into relative development rate
 		//double rR = 1 / rT;don't do that!!
@@ -170,7 +170,7 @@ namespace WBSF
 				RDR = boost::math::quantile(lndist, m_randomGenerator.Randu(true, true));
 		}
 
-		assert(!isnan(RDR) && finite(RDR));
+		assert(!isnan(RDR) && isfinite(RDR));
 
 		return RDR;
 	}
@@ -207,7 +207,7 @@ namespace WBSF
 
 		double sr = max(0.0, min(1.0, CSurvivalEquation::GetSurvival(S_EQ[s], p, T)));
 
-		assert(!isnan(sr) && finite(sr) && sr >= 0 && sr <= 1);
+		assert(!isnan(sr) && isfinite(sr) && sr >= 0 && sr <= 1);
 
 		return sr;
 	}
