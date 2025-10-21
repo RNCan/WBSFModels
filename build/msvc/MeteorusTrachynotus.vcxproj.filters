@@ -13,17 +13,19 @@
     <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusEquations.cpp">
       <Filter>SourceTranosema</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotus.h">
-      <Filter>SourceTranosema</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusEquations.h">
-      <Filter>SourceTranosema</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusModel.cpp">
       <Filter>SourceTranosema</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusModel.h">
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusModel.h">
       <Filter>SourceTranosema</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotusEquations.h">
+      <Filter>SourceTranosema</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MeteorusTrachynotus\MeteorusTrachynotus.h">
+      <Filter>SourceTranosema</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
