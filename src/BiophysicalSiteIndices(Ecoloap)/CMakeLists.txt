@@ -1,17 +1,20 @@
 cmake_minimum_required(VERSION 3.24)
 
+get_target_property(WBSF_BASIC_INCLUDES WBSFBasic INTERFACE_INCLUDE_DIRECTORIES)
+
 project(BiophysicalSiteIndicesEcoloap)
 
-set(CMAKE_CXX_STANDARD 17)
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 file(GLOB SOURCE_FILES ./*.h ./*.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
 )
 
 # Build as dynamic library
@@ -20,13 +23,15 @@ add_library(BiophysicalSiteIndicesEcoloap SHARED
 )
 
 target_link_libraries(BiophysicalSiteIndicesEcoloap PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
 )
 
 

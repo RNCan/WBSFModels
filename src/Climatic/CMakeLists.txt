@@ -26,6 +26,42 @@ target_link_libraries(ClimaticLib PUBLIC
 	Boost::boost		
 )
 
+######################  AllenWave  ######################
+
+project(AllenWave)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES AllenWaveModel.h AllenWaveModel.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+
+# Build as dynamic library
+add_library(AllenWave SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(AllenWave PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  ASCE-ETc  ######################
+
 project(ASCE-ETc)
 
 find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
@@ -92,6 +128,72 @@ target_link_libraries(ASCE-ETsz PUBLIC
 	WBSFWeatherBased
 )
 
+######################  BlueStainVariables  ######################
+
+project(BlueStainVariables)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES BlueStainVariables.h BlueStainVariables.cpp BlueStainVariablesModel.h BlueStainVariablesModel.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+# Build as dynamic library
+add_library(BlueStainVariables SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(BlueStainVariables PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  CaroleCoursolle  ######################
+
+project(CaroleCoursolle)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES CaroleCoursolle.h CaroleCoursolle.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+# Build as dynamic library
+add_library(CaroleCoursolle SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(CaroleCoursolle PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
 ######################  CCBio  ######################
 
 project(CCBio)
@@ -114,6 +216,72 @@ add_library(CCBio SHARED
 )
 
 target_link_libraries(CCBio PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  ChillingDegreeDay  ######################
+
+project(ChillingDegreeDay)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES ChillingDegreeDayModel.h ChillingDegreeDayModel.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+# Build as dynamic library
+add_library(ChillingDegreeDay SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(ChillingDegreeDay PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  ClimateMoistureIndex  ######################
+
+project(ClimateMoistureIndex)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES CMIModel.h CMIModel.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+# Build as dynamic library
+add_library(ClimateMoistureIndex SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(ClimateMoistureIndex PUBLIC
 	Boost::thread		
 	Boost::chrono
 	Boost::filesystem
@@ -148,6 +316,39 @@ add_library(Climatic SHARED
 )
 
 target_link_libraries(Climatic PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  ClimateMoistureDeficit  ######################
+
+project(ClimaticMoistureDeficit)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES ClimaticMoistureDeficit.h ClimaticMoistureDeficit.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+# Build as dynamic library
+add_library(ClimaticMoistureDeficit SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(ClimaticMoistureDeficit PUBLIC
 	Boost::thread		
 	Boost::chrono
 	Boost::filesystem
@@ -216,6 +417,40 @@ add_library(ClimaticWind SHARED
 )
 
 target_link_libraries(ClimaticWind PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  Climdex  ######################
+
+project(Climdex)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES ClimdexModel.h ClimdexModel.cpp ClimdexVariables.h ClimdexVariables.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+
+# Build as dynamic library
+add_library(Climdex SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(Climdex PUBLIC
 	Boost::thread		
 	Boost::chrono
 	Boost::filesystem
@@ -420,6 +655,40 @@ add_library(DewPeriod SHARED
 )
 
 target_link_libraries(DewPeriod PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  HourlyGenerator  ######################
+
+project(HourlyGenerator)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES HourlyGeneratorModel.h HourlyGeneratorModel.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+
+# Build as dynamic library
+add_library(HourlyGenerator SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(HourlyGenerator PUBLIC
 	Boost::thread		
 	Boost::chrono
 	Boost::filesystem
@@ -669,6 +938,40 @@ target_link_libraries(TminTairTmax PUBLIC
 	WBSFWeatherBased
 )
 
+######################  UnderbarkTemperature  ######################
+
+project(UnderbarkTemperature)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES UnderbarkTemperature.h UnderbarkTemperature.cpp UnderbarkTemperatureModel.h UnderbarkTemperatureModel.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+
+# Build as dynamic library
+add_library(UnderbarkTemperature SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(UnderbarkTemperature PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
 ######################  VaporPressureDeficit  ######################
 
 project(VaporPressureDeficit)
@@ -692,6 +995,40 @@ add_library(VaporPressureDeficit SHARED
 )
 
 target_link_libraries(VaporPressureDeficit PUBLIC
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  VHR_to_Landsat  ######################
+
+project(VHR_to_Landsat)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES VHR_to_Landsat.h VHR_to_Landsat.cpp)
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
+)
+
+# Build as dynamic library
+add_library(VHR_to_Landsat SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(VHR_to_Landsat PUBLIC
 	Boost::thread		
 	Boost::chrono
 	Boost::filesystem

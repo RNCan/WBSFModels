@@ -1,17 +1,20 @@
-cmake_minimum_required(VERSION 3.24)
+######################  SoilMoistureIndex  ######################
+
+get_target_property(WBSF_BASIC_INCLUDES WBSFBasic INTERFACE_INCLUDE_DIRECTORIES)
 
 project(SoilMoistureIndex)
 
-set(CMAKE_CXX_STANDARD 17)
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
-file(GLOB SOURCE_FILES SMIModel.h SMIModel.cpp)
+set(SOURCE_FILES SMIModel.h SMIModel.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
 )
 
 # Build as dynamic library
@@ -20,29 +23,34 @@ add_library(SoilMoistureIndex SHARED
 )
 
 target_link_libraries(SoilMoistureIndex PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
 )
 
 ######################  SoilMoistureIndexQL  ######################
 
+get_target_property(WBSF_BASIC_INCLUDES WBSFBasic INTERFACE_INCLUDE_DIRECTORIES)
+
 project(SoilMoistureIndexQL)
 
-set(CMAKE_CXX_STANDARD 17)
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
-file(GLOB SOURCE_FILES SMI_QLModel.h SMI_QLModel.cpp)
+set(SOURCE_FILES SMI_QLModel.h SMI_QLModel.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}    
+  ${WBSF_BASIC_INCLUDES}  
 )
 
 # Build as dynamic library
@@ -51,12 +59,13 @@ add_library(SoilMoistureIndexQL SHARED
 )
 
 target_link_libraries(SoilMoistureIndexQL PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
+	Boost::thread		
+	Boost::chrono
+	Boost::filesystem
+	Boost::serialization
+	Boost::process
+	Boost::locale
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
 )
-
