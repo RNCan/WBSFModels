@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.25)
 
 project(GypsyMothLib)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCE_FILES EggModel.h EggModel.cpp 
                  GrayModel.h GrayModel.cpp 
@@ -14,10 +15,7 @@ set(SOURCE_FILES EggModel.h EggModel.cpp
 )
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}     
 )
 
 # Build as static library
@@ -25,20 +23,24 @@ add_library(GypsyMothLib STATIC
   ${SOURCE_FILES}
 )
 
+target_link_libraries(GypsyMothLib PUBLIC
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased	
+)
+
 ######################  GypsyMothSeasonality  ######################
 
 project(GypsyMothSeasonality)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES GypsyMothModel.h GypsyMothModel.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}     
 )
 
 # Build as dynamic library
@@ -47,30 +49,21 @@ add_library(GypsyMothSeasonality SHARED
 )
 
 target_link_libraries(GypsyMothSeasonality PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
-    GypsyMothLib
+	GypsyMothLib
 )
 
 ######################  GypsyMothStability  ######################
 
 project(GypsyMothStability)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES GypsyMothStab.h GypsyMothStab.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}     
 )
 
 # Build as dynamic library
@@ -79,12 +72,5 @@ add_library(GypsyMothStability SHARED
 )
 
 target_link_libraries(GypsyMothStability PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
 	GypsyMothLib
 )

@@ -270,8 +270,8 @@ namespace WBSF
 										double obsS2 = statSim[index + 1][pp];
 										double slope = (obsDD2 - obsDD1) / (obsS2 - obsS1);
 										double obsDD = obsDD1 + (obsS - obsS1)*slope;
-										assert(!isnan(obsDD) && finite(obsDD));
-										assert(!isnan(obsS) && finite(obsS));
+										assert(!isnan(obsDD) && isfinite(obsDD));
+										assert(!isnan(obsS) && isfinite(obsS));
 
 										m_DDStat += obsDD;
 										m_stageStat[p] += obsS;
