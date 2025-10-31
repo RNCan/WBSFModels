@@ -110,7 +110,7 @@ namespace WBSF
 		};
 
 
-		assert(!isnan(R) && finite(R));
+		assert(!isnan(R) && isfinite(R));
 
 		return R;
 	}
@@ -118,7 +118,7 @@ namespace WBSF
 	double CShootDevelopmentIndexModel::ForcingResponce(double T)const
 	{
 		double R = 1 / (1 + exp(-(T - m_P[FU_µ]) / m_P[FU_σ]));
-		assert(!isnan(R) && finite(R) && R >= 0);
+		assert(!isnan(R) && isfinite(R) && R >= 0);
 
 		return R;
 	}

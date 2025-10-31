@@ -1,11 +1,6 @@
 #pragma once
 
-#if _MSC_VER
-#include "gdal/ogrsf_frmts.h"
-#else
 #include "ogrsf_frmts.h"
-#endif
-
 
 #include "ModelBased/BioSIMModelBase.h"
 #include "Basic/UtilTime.h"

@@ -1,60 +1,48 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.25)
 
-project(HemlockWoollyAdelgid)
+project(HemlockWoollyAdelgidColdTolerance)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCE_FILES HemlockWoollyAdelgid.h HemlockWoollyAdelgid.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}     
 )
 
 # Build as dynamic library
-add_library(HemlockWoollyAdelgid SHARED
+add_library(HemlockWoollyAdelgidColdTolerance SHARED
   ${SOURCE_FILES}
 )
 
-target_link_libraries(HemlockWoollyAdelgid PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
+target_link_libraries(HemlockWoollyAdelgidColdTolerance PUBLIC
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased	
 )
 
 ######################  HWAPhenology  ######################
 
-project(HWAPhenology)
+project(HemlockWoollyAdelgidPhenology)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCE_FILES HWAPhenology.h HWAPhenology.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}     
 )
 
 # Build as dynamic library
-add_library(HWAPhenology SHARED
+add_library(HemlockWoollyAdelgidPhenology SHARED
   ${SOURCE_FILES}
 )
 
-target_link_libraries(HWAPhenology PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
+target_link_libraries(HemlockWoollyAdelgidPhenology PUBLIC
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased	
 )
 

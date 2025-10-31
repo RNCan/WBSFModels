@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.25)
 
-project(SpruceBudwormBiology)
+project(SpruceBudwormLib)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES 
@@ -14,9 +15,6 @@ set(SOURCE_FILES
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
 )
 
 # Build as dynamic library
@@ -24,9 +22,20 @@ add_library(SpruceBudwormLib STATIC
   ${SOURCE_FILES}
 )
 
+target_link_libraries(SpruceBudwormLib PUBLIC
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
+)
+
+######################  SpruceBudwormBiology  ######################
+
 project(SpruceBudwormBiology)
 
-set(CMAKE_CXX_STANDARD 17)
+find_package(Boost CONFIG REQUIRED COMPONENTS thread chrono filesystem serialization process locale iostreams timer)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES 
@@ -36,9 +45,6 @@ set(SOURCE_FILES
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
 )
 
 # Build as dynamic library
@@ -46,14 +52,7 @@ add_library(SpruceBudwormBiology SHARED
   ${SOURCE_FILES}
 )
 
-target_link_libraries(SpruceBudwormBiology PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
+target_link_libraries(SpruceBudwormBiology PUBLIC	
 	SpruceBudwormLib
 )
 
@@ -61,7 +60,8 @@ target_link_libraries(SpruceBudwormBiology PUBLIC
 
 project(SpruceBudwormDispersal)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES 
@@ -71,9 +71,6 @@ set(SOURCE_FILES
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
 )
 
 # Build as dynamic library
@@ -81,14 +78,7 @@ add_library(SpruceBudwormDispersal SHARED
   ${SOURCE_FILES}
 )
 
-target_link_libraries(SpruceBudwormDispersal PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
+target_link_libraries(SpruceBudwormDispersal PUBLIC	
 	SpruceBudwormLib
 )
 
@@ -96,7 +86,8 @@ target_link_libraries(SpruceBudwormDispersal PUBLIC
 
 project(SpruceBudwormLaboratory)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES 
@@ -108,9 +99,6 @@ set(SOURCE_FILES
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
 )
 
 # Build as dynamic library
@@ -119,13 +107,6 @@ add_library(SpruceBudwormLaboratory SHARED
 )
 
 target_link_libraries(SpruceBudwormLaboratory PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
 	SpruceBudwormLib
 )
 
@@ -133,7 +114,8 @@ target_link_libraries(SpruceBudwormLaboratory PUBLIC
 
 project(SpruceBudwormEldon)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES 
@@ -143,9 +125,6 @@ set(SOURCE_FILES
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
 )
 
 # Build as dynamic library
@@ -154,21 +133,15 @@ add_library(SpruceBudwormEldon SHARED
 )
 
 target_link_libraries(SpruceBudwormEldon PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
 	SpruceBudwormLib
 )
 
-######################  SpruceBudwormEldon  ######################
+######################  SpruceBudwormLysyk  ######################
 
 project(SpruceBudwormLysyk)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
 set(SOURCE_FILES 
@@ -178,9 +151,6 @@ set(SOURCE_FILES
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../msvc/stdafx
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../wbs/src
-  ${EXTERNAL_PROJECTS_DIR}  
 )
 
 # Build as dynamic library
@@ -189,13 +159,31 @@ add_library(SpruceBudwormLysyk SHARED
 )
 
 target_link_libraries(SpruceBudwormLysyk PUBLIC
-	${EXTERNAL_LIB_DIR}/libboost_thread-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_chrono-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_filesystem-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	${EXTERNAL_LIB_DIR}/libboost_serialization-vc143-mt$<$<CONFIG:Debug>:-gd>-x64-1_84.lib 
-	version.lib
-	Basic
-	ModelBase
 	SpruceBudwormLib
 )
 
+######################  SpruceBudwormManitoba  ######################
+
+project(SpruceBudwormManitoba)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use the GLOB command to get all the source files
+set(SOURCE_FILES 
+  SBWManitobaModel.cpp
+  SBWManitobaModel.h
+  )
+
+include_directories( 
+  ${CMAKE_CURRENT_SOURCE_DIR}  
+)
+
+# Build as dynamic library
+add_library(SpruceBudwormManitoba SHARED
+  ${SOURCE_FILES}
+)
+
+target_link_libraries(SpruceBudwormManitoba PUBLIC
+	SpruceBudwormLib
+)

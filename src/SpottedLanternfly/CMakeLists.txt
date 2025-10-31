@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(SpruceBeetle)
+project(SpottedLanternfly)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,18 +9,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB SOURCE_FILES ./*.h ./*.cpp)
 
 include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}  
+  ${CMAKE_CURRENT_SOURCE_DIR}     
 )
 
 # Build as dynamic library
-add_library(SpruceBeetle SHARED
+add_library(SpottedLanternfly SHARED
   ${SOURCE_FILES}
 )
 
-target_link_libraries(SpruceBeetle PUBLIC
+target_link_libraries(SpottedLanternfly PUBLIC
 	WBSFBasic
 	WBSFModelBased
-	WBSFWeatherBased	
+	WBSFWeatherBased
 )
 
 
