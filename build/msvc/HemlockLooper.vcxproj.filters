@@ -18,8 +18,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooper.h" />
-    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooperEquations.h" />
-    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooperModel.h" />
+    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooperEquations.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\HemlockLooper\HemlockLooperModel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
