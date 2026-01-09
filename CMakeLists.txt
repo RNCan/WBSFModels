@@ -154,7 +154,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   set_target_properties(InsectDevelopmentDatabaseIII PROPERTIES FOLDER "WBSFModels/Agriculture")
   set_target_properties(MagareyInfection PROPERTIES FOLDER "WBSFModels/Agriculture")
 
-  set_target_properties(FBPLib PROPERTIES FOLDER "WBSFModels/Fire")
+  set_target_properties(FWILib PROPERTIES FOLDER "WBSFModels/Fire")
   set_target_properties(FBP PROPERTIES FOLDER "WBSFModels/Fire")
   set_target_properties(FWI PROPERTIES FOLDER "WBSFModels/Fire")
   set_target_properties(FWIDroughtCode PROPERTIES FOLDER "WBSFModels/Fire")

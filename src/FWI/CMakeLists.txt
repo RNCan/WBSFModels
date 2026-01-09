@@ -1,23 +1,23 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(FBPLib)
+project(FWILib)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
-set(SOURCE_FILES FWI.h FWI.cpp FBP.h FBP.cpp)
+set(SOURCE_FILES FWI.h FWI.cpp)
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
 )
 
 # Build as static library
-add_library(FBPLib STATIC
+add_library(FWILib STATIC
   ${SOURCE_FILES}
 )
 
-target_link_libraries(FBPLib PUBLIC
+target_link_libraries(FWILib PUBLIC
 	WBSFBasic
 	WBSFModelBased
 	WBSFWeatherBased
@@ -31,7 +31,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use the GLOB command to get all the source files
-set(SOURCE_FILES "FWI(new from wang2015).h" "FWI(new from wang2015).cpp" FWI-Model.h FWI-Model.cpp)
+set(SOURCE_FILES FBP.h FBP.cpp FBP-Model.h FBP-Model.cpp)
 
 include_directories( 
   ${CMAKE_CURRENT_SOURCE_DIR}  
@@ -43,7 +43,7 @@ add_library(FBP SHARED
 )
 
 target_link_libraries(FBP PUBLIC
-	FBPLib
+	FWILib
 )
 
 ######################  FWI  ######################
@@ -66,7 +66,7 @@ add_library(FWI SHARED
 )
 
 target_link_libraries(FWI PUBLIC
-	FBPLib
+	FWILib
 )
 
 ######################  FWIDroughtCode  ######################
@@ -89,7 +89,7 @@ add_library(FWIDroughtCode SHARED
 )
 
 target_link_libraries(FWIDroughtCode PUBLIC
-	FBPLib
+	FWILib
 )
 
 ######################  SummerMoisture  ######################
@@ -112,5 +112,7 @@ add_library(SummerMoisture SHARED
 )
 
 target_link_libraries(SummerMoisture PUBLIC
-	FBPLib
+	WBSFBasic
+	WBSFModelBased
+	WBSFWeatherBased
 )
