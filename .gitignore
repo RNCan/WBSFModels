@@ -46,5 +46,5 @@ obj/
 *.depend
 *.layout
 
-
+.vs
 /build/msvc/.vs
