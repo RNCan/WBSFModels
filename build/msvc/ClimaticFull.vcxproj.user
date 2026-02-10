@@ -9,11 +9,13 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommand>..\..\bin\Releasex$(PlatformArchitecture)\BioSIM11.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>"E:\ProjectCP\WBSFTools\build\msvc\bin\Debugx64\BioSIM_APITest.exe"</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>E:\ProjectCP\WBSFTools\BioSIM_APITest</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommand>..\..\bin\Releasex$(PlatformArchitecture)\BioSIM11.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>"E:\ProjectCP\WBSFTools\build\msvc\bin\Debugx64\BioSIM_APITest.exe"</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>E:\ProjectCP\WBSFTools\BioSIM_APITest</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
 </Project>

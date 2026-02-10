@@ -1,13 +1,13 @@
 ﻿//**********************************************************************
 // 31/01/2020   3.2.0	Rémi Saint-Amant    Add m_prcp_thres and Ex models with wind direction clusters in new model ClimaticWind
-// 16/03/2018	3.1.2	Rémi Saint-Amant    hourly and daily SRad in MJ/m² instread of W/m²
+// 16/03/2018	3.1.2	Rémi Saint-Amant    hourly and daily SRad in MJ/m² instead of W/m²
 // 11/04/2017	3.1.1	Rémi Saint-Amant    Recompile
 // 20/09/2016	3.1.0	Rémi Saint-Amant    Change Tair and Trng by Tmin and Tmax
 // 21/01/2016	3.0.0	Rémi Saint-Amant	Using Weather-based simulation framework (WBSF)
 // 27/11/2014			Rémi Saint-Amant	Compiled 64 bits with new framework
 // 05/04/2013			Rémi Saint-Amant	Remove DD and ET from this model
 // 26/02/2013			Rémi Saint-Amant	Add hourly model
-// 29/06/2010			Rémi Saint-Amant	Compatible with HxGrid. Remove extrem
+// 29/06/2010			Rémi Saint-Amant	Compatible with HxGrid. Remove extreme
 // 30/10/2009			Rémi Saint-Amant	Change CPeriod by CTPeriod
 // 03/03/2009			Rémi Saint-Amant	Integrate with new BioSIMModelBase (hxGrid)
 // 19/11/2008			Rémi Saint-Amant	Update with VS9 and new BioSIMModelBase
@@ -49,7 +49,7 @@ namespace WBSF
 	//enum THourlyStatEx { NB_HOURLY_OUTPUTS_EX };
 
 
-	//Contructor
+	//Constructor
 	CClimaticModel::CClimaticModel()
 	{
 		//specify the number of input parameter
